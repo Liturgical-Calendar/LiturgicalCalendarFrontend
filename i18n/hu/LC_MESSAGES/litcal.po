@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-29 00:34+0000\n"
-"PO-Revision-Date: 2026-08-29 09:37+0000\n"
+"POT-Creation-Date: 2026-09-03 00:52+0000\n"
+"PO-Revision-Date: 2026-09-03 00:53+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hu/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15.2\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #: index.php:5
 msgid ""
@@ -122,16 +122,18 @@ msgstr "Minden %1$s útvonalon elérhető kérési paraméterek"
 
 #. translators: part of page title - refers to the Catholic liturgical calendar
 #: index.php:65 usage.php:35 examples.php:106 liturgyOfAnyDay.php:23
-#: layout/header.php:257 admin-permissions.php:77 admin-permissions.php:304
-#: admin-permissions.php:397 admin-tests.php:144 admin-tests.php:343
-#: permission-requests.php:244
+#: layout/header.php:257 includes/change-request-i18n.php:56
+#: admin-permissions.php:83 admin-permissions.php:413 admin-tests.php:144
+#: admin-tests.php:350 permission-requests.php:249 sanctorale.php:224
 msgid "General Roman Calendar"
 msgstr "Általános római naptár"
 
 #: index.php:74 layout/header.php:19 layout/header.php:229 admin-decrees.php:43
 #: admin-permissions.php:37 admin-tests.php:38 permission-requests.php:32
 #: admin-applications.php:34 admin-dashboard.php:40 admin-users.php:34
-#: developer-dashboard.php:35 temporale.php:25 user-profile.php:24
+#: admin-locales.php:39 admin-changes.php:46 change-requests.php:38
+#: developer-dashboard.php:35 temporale.php:25 sanctorale.php:91
+#: user-profile.php:24
 msgid "Catholic Liturgical Calendar"
 msgstr "Katolikus liturgikus naptár"
 
@@ -333,7 +335,7 @@ msgid "View JavaScript Example"
 msgstr "JavaScript példa megtekintése"
 
 #. translators: card header for FullCalendar example
-#: usage.php:103
+#: usage.php:103 sanctorale.php:127 sanctorale.php:312
 msgid "Calendar"
 msgstr "Naptár"
 
@@ -850,233 +852,243 @@ msgstr ""
 
 #. translators: context = liturgical color
 #. translators: liturgical color - green
-#: src/LitColor.php:33 includes/messages.php:76
+#: src/LitColor.php:33 includes/messages.php:100
 msgid "green"
 msgstr "zöld"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - purple/violet
-#: src/LitColor.php:36 includes/messages.php:78
+#: src/LitColor.php:36 includes/messages.php:102
 msgid "purple"
 msgstr "viola"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - white
-#: src/LitColor.php:39 includes/messages.php:72
+#: src/LitColor.php:39 includes/messages.php:96
 msgid "white"
 msgstr "fehér"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - red
-#: src/LitColor.php:42 includes/messages.php:74
+#: src/LitColor.php:42 includes/messages.php:98
 msgid "red"
 msgstr "piros"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - rose/pink
-#: src/LitColor.php:45 includes/messages.php:80
+#: src/LitColor.php:45 includes/messages.php:104
 msgid "rose"
 msgstr "rózsaszín"
 
-#: src/LitCommon.php:58
+#: src/LitCommon.php:86
 msgid "Proper"
 msgstr "Proprium"
 
 #. translators: context = from the Common of nn
-#: src/LitCommon.php:60
+#: src/LitCommon.php:88
 msgid "Dedication of a Church"
 msgstr "Templom felszentelése"
 
 #. translators: context = from the Common of nn
-#: src/LitCommon.php:62
+#: src/LitCommon.php:90
 msgid "Blessed Virgin Mary"
 msgstr "Boldogságos Szűz Mária"
 
 #. translators: context = from the Common of nn
-#: src/LitCommon.php:64
+#: src/LitCommon.php:92
 msgid "Martyrs"
 msgstr "Vértanúk"
 
 #. translators: context = from the Common of nn
-#: src/LitCommon.php:66
+#: src/LitCommon.php:94
 msgid "Pastors"
 msgstr "Lelkivezetők"
 
 #. translators: context = from the Common of nn
-#: src/LitCommon.php:68
+#: src/LitCommon.php:96
 msgid "Doctors"
 msgstr "Egyháztanítók"
 
 #. translators: context = from the Common of nn
-#: src/LitCommon.php:70
+#: src/LitCommon.php:98
 msgid "Virgins"
 msgstr "Szűzek"
 
 #. translators: context = from the Common of nn
-#: src/LitCommon.php:72
+#: src/LitCommon.php:100
 msgid "Holy Men and Women"
 msgstr "Szent férfiak és nők"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:75
+#: src/LitCommon.php:103
 msgid "For One Martyr"
 msgstr "Egy vértanúért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:77
+#: src/LitCommon.php:105
 msgid "For Several Martyrs"
 msgstr "Több vértanúért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:79
+#: src/LitCommon.php:107
 msgid "For Missionary Martyrs"
 msgstr "Misszionárius vértanúkért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:81
+#: src/LitCommon.php:109
 msgid "For One Missionary Martyr"
 msgstr "Egy misszionárius vértanúért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:83
+#: src/LitCommon.php:111
 msgid "For Several Missionary Martyrs"
 msgstr "Több misszionárius vértanúért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:85
+#: src/LitCommon.php:113
 msgid "For a Virgin Martyr"
 msgstr "Egy szűz vértanúért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:87
+#: src/LitCommon.php:115
 msgid "For a Holy Woman Martyr"
 msgstr "Egy szent női vértanúért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:89
+#: src/LitCommon.php:117
 msgid "For a Pope"
 msgstr "Egy pápáért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:91
+#: src/LitCommon.php:119
 msgid "For a Bishop"
 msgstr "Egy püspökért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:93
+#: src/LitCommon.php:121
 msgid "For One Pastor"
 msgstr "Egy lelkipásztorért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:95
+#: src/LitCommon.php:123
 msgid "For Several Pastors"
 msgstr "Több lelkipásztorért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:97
+#: src/LitCommon.php:125
 msgid "For Founders of a Church"
 msgstr "Egyházalapítókért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:99
+#: src/LitCommon.php:127
 msgid "For One Founder"
 msgstr "Egy alapítóért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:101
+#: src/LitCommon.php:129
 msgid "For Several Founders"
 msgstr "Több alapítóért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:103
+#: src/LitCommon.php:131
 msgid "For Missionaries"
 msgstr "Misszionáriusokért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:105
+#: src/LitCommon.php:133
 msgid "For One Virgin"
 msgstr "Egy szűzért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:107
+#: src/LitCommon.php:135
 msgid "For Several Virgins"
 msgstr "Több szűzért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:109
+#: src/LitCommon.php:137
 msgid "For Several Saints"
 msgstr "Több szentért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:111
+#: src/LitCommon.php:139
 msgid "For One Saint"
 msgstr "Egy szentért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:113
+#: src/LitCommon.php:141
 msgid "For an Abbot"
 msgstr "Egy apátért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:115
+#: src/LitCommon.php:143
 msgid "For a Monk"
 msgstr "Egy szerzetesért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:117
+#: src/LitCommon.php:145
 msgid "For a Nun"
 msgstr "Egy apácáért"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:119
+#: src/LitCommon.php:147
 msgid "For Religious"
 msgstr "Vallásosoknak"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:121
+#: src/LitCommon.php:149
 msgid "For Those Who Practiced Works of Mercy"
 msgstr "Azoknak, akik irgalmasságot gyakoroltak"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:123
+#: src/LitCommon.php:151
 msgid "For Educators"
 msgstr "Oktatóknak"
 
 #. translators: context = from the Common of nn: nn
-#: src/LitCommon.php:125
+#: src/LitCommon.php:153
 msgid "For Holy Women"
 msgstr "Szent nőknek"
 
+#. translators: context = Masses and Prayers for Various Needs and Occasions
+#: src/LitCommon.php:156
+msgid "For Giving Thanks to God for the Gift of Human Life [USA]"
+msgstr "Istennek hála az Emberi élet ajándékáért [USA]"
+
+#. translators: context = Masses and Prayers for Various Needs and Occasions
+#: src/LitCommon.php:158
+msgid "For the Preservation of Peace and Justice"
+msgstr "A béke és az igazság megőrzéséért"
+
 #. translators: (singular feminine) glue between "From the Common" and the actual common. Latin: leave empty!
-#: src/LitCommon.php:173 src/LitCommon.php:185
+#: src/LitCommon.php:210 src/LitCommon.php:222
 msgctxt "(SING_FEMM)"
 msgid "of the"
 msgstr "a"
 
 #. translators: (plural feminine) glue between "From the Common" and the actual common. Latin: leave empty!
-#: src/LitCommon.php:176
+#: src/LitCommon.php:213
 msgctxt "(PLUR_FEMM)"
 msgid "of"
 msgstr "nak"
 
 #. translators: (plural masculine) glue between "From the Common" and the actual common. Latin: leave empty!
-#: src/LitCommon.php:182
+#: src/LitCommon.php:219
 msgctxt "(PLUR_MASC)"
 msgid "of"
 msgstr "nak"
 
 #. translators: (singular masculine) glue between "From the Common" and the actual common. Latin: leave empty!
-#: src/LitCommon.php:188
+#: src/LitCommon.php:225
 msgctxt "(SING_MASC)"
 msgid "of the"
 msgstr "a"
 
-#: src/LitCommon.php:278
+#: src/LitCommon.php:322 sanctorale.php:229
 msgid "From the Common"
 msgstr "Közösből"
 
 #. translators: when there are multiple possible commons, this will be the glue "or from the common of..."
-#: src/LitCommon.php:282
+#: src/LitCommon.php:326
 msgid "or"
 msgstr "vagy"
 
@@ -1089,12 +1101,12 @@ msgstr "hétköznap"
 #. translators: liturgical grade 1 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: src/LitGrade.php:105 admin-decrees.php:721
+#: src/LitGrade.php:105 admin-decrees.php:732 sanctorale.php:304
 msgid "Commemoration"
 msgstr "Megemlékezés"
 
 #. translators: liturgical rank. Keep Capitalized
-#: src/LitGrade.php:108
+#: src/LitGrade.php:108 sanctorale.php:305
 msgid "Optional memorial"
 msgstr "Nem kötelező emléknap"
 
@@ -1102,7 +1114,7 @@ msgstr "Nem kötelező emléknap"
 #. translators: liturgical grade 3 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: src/LitGrade.php:111 admin-decrees.php:709
+#: src/LitGrade.php:111 admin-decrees.php:720 sanctorale.php:306
 msgid "Memorial"
 msgstr "Emléknap"
 
@@ -1226,50 +1238,51 @@ msgid "Property to change"
 msgstr "Tulajdonság megváltoztatása"
 
 #. translators: form field label for the name of a liturgical event
-#: src/Utilities.php:301 src/FormControls.php:124 includes/messages.php:19
+#: src/Utilities.php:301 src/FormControls.php:139 includes/messages.php:19
 #: admin-tests.php:108 temporale.php:135
 msgid "Name"
 msgstr "Név"
 
-#: src/Utilities.php:302 src/FormControls.php:288 admin-decrees.php:471
-#: admin-decrees.php:512 temporale.php:75 temporale.php:136
+#: src/Utilities.php:302 src/FormControls.php:303 admin-decrees.php:472
+#: admin-decrees.php:513 temporale.php:75 temporale.php:136 sanctorale.php:293
 msgid "Grade"
 msgstr "Fokozat"
 
 #. translators: form field label for the day of the month
-#: src/FormControls.php:131 includes/messages.php:21 admin-decrees.php:392
+#: src/FormControls.php:146 includes/messages.php:21 admin-decrees.php:393
+#: sanctorale.php:172
 msgid "Day"
 msgstr "Nap"
 
-#: src/FormControls.php:136
+#: src/FormControls.php:151
 msgid "switch on for mobile celebration as opposed to fixed date"
 msgstr "Kapcsolja be mozgó liturgikus ünnepléshez (fix dátum helyett)"
 
 #. translators: form field label for the month of the year
-#: src/FormControls.php:141 includes/messages.php:23 admin-decrees.php:400
+#: src/FormControls.php:156 includes/messages.php:23 admin-decrees.php:401
 msgid "Month"
 msgstr "Hónap"
 
-#: src/FormControls.php:143 admin-decrees.php:382
+#: src/FormControls.php:158 admin-decrees.php:383
 msgid "Mobile"
 msgstr "Mozgó"
 
 #. translators: form field label for liturgical color selection
-#: src/FormControls.php:162 includes/messages.php:25
+#: src/FormControls.php:177 includes/messages.php:25
 msgid "Liturgical color"
 msgstr "Liturgikus szín"
 
 #. translators: form field label - first year a liturgical event takes effect
-#: src/FormControls.php:171 includes/messages.php:27
+#: src/FormControls.php:186 includes/messages.php:27
 msgid "Since"
 msgstr "Óta"
 
 #. translators: form field label - last year a liturgical event is observed
-#: src/FormControls.php:178 includes/messages.php:29
+#: src/FormControls.php:193 includes/messages.php:29
 msgid "Until"
 msgstr "Addig"
 
-#: src/FormControls.php:278 admin-decrees.php:500
+#: src/FormControls.php:293 admin-decrees.php:501
 msgid "Common (or Proper)"
 msgstr "Általános (vagy Sajátos)"
 
@@ -1286,7 +1299,7 @@ msgid "Usage"
 msgstr "Használat"
 
 #. translators: link to translations page
-#: layout/header.php:51 includes/messages.php:197 admin-decrees.php:634
+#: layout/header.php:51 includes/messages.php:221 admin-decrees.php:645
 msgid "Translations"
 msgstr "Fordítások"
 
@@ -1306,15 +1319,18 @@ msgstr "Nézd meg a projekttárakat a GitHubon"
 msgid "Notifications"
 msgstr "Értesítések"
 
-#: layout/header.php:140 admin-permissions.php:134 admin-permissions.php:193
-#: admin-permissions.php:200 admin-permissions.php:207
-#: admin-permissions.php:214 admin-permissions.php:368
-#: admin-permissions.php:421 admin-tests.php:332 permission-requests.php:64
+#: layout/header.php:140 includes/change-request-i18n.php:19
+#: admin-permissions.php:140 admin-permissions.php:199
+#: admin-permissions.php:206 admin-permissions.php:213
+#: admin-permissions.php:220 admin-permissions.php:380
+#: admin-permissions.php:442 admin-tests.php:332 permission-requests.php:64
 #: permission-requests.php:204 admin-applications.php:136
 #: admin-applications.php:145 admin-applications.php:154
 #: admin-applications.php:163 admin-applications.php:228 admin-users.php:70
-#: admin-users.php:85 admin-users.php:151 developer-dashboard.php:68
-#: temporale.php:59 temporale.php:147
+#: admin-users.php:85 admin-users.php:151 admin-changes.php:156
+#: admin-changes.php:165 admin-changes.php:174 admin-changes.php:183
+#: change-requests.php:75 developer-dashboard.php:68 temporale.php:59
+#: temporale.php:147
 msgid "Loading..."
 msgstr "Betöltés..."
 
@@ -1341,8 +1357,8 @@ msgstr "Biztosan ki szeretne jelentkezni?"
 msgid "Logout"
 msgstr "Kijelentkezés"
 
-#: layout/header.php:188 layout/header.php:251 admin-permissions.php:457
-#: permission-requests.php:90 permission-requests.php:257 admin-users.php:144
+#: layout/header.php:188 layout/header.php:251 admin-permissions.php:478
+#: permission-requests.php:90 permission-requests.php:268 admin-users.php:144
 msgid "Developer"
 msgstr "Fejlesztő"
 
@@ -1354,17 +1370,18 @@ msgstr "Adminisztráció"
 msgid "Dashboard"
 msgstr "Irányítópult"
 
-#: layout/header.php:261 includes/admin-blocks.php:19 admin-permissions.php:398
-#: permission-requests.php:245 temporale.php:24 temporale.php:37
+#: layout/header.php:261 includes/admin-blocks.php:19 admin-permissions.php:417
+#: permission-requests.php:253 temporale.php:24 temporale.php:37
 msgid "Temporale"
 msgstr "Temporále"
 
-#: layout/header.php:265 includes/admin-blocks.php:35
+#: layout/header.php:265 includes/admin-blocks.php:37 sanctorale.php:90
+#: sanctorale.php:102
 msgid "Sanctorale"
 msgstr "Szanctorále"
 
-#: layout/header.php:269 includes/admin-blocks.php:45
-#: includes/admin-decrees-card.php:20 admin-decrees.php:42 admin-decrees.php:54
+#: layout/header.php:269 includes/admin-blocks.php:49
+#: includes/admin-decrees-card.php:22 admin-decrees.php:42 admin-decrees.php:54
 msgid "Decrees"
 msgstr "Rendeletek"
 
@@ -1373,17 +1390,17 @@ msgid "Particular Calendars"
 msgstr "Partikuláris naptárak"
 
 #. translators: label for wider region calendar name field
-#: layout/header.php:281 includes/messages.php:206 includes/admin-blocks.php:59
-#: admin-permissions.php:81 admin-permissions.php:308 admin-permissions.php:395
+#: layout/header.php:281 includes/messages.php:230 includes/admin-blocks.php:63
+#: admin-permissions.php:87 admin-permissions.php:320 admin-permissions.php:407
 #: permission-requests.php:239
 msgid "Wider Region"
 msgstr "Tágabb régió"
 
-#: layout/header.php:285 includes/admin-blocks.php:69
+#: layout/header.php:285 includes/admin-blocks.php:73
 msgid "National"
 msgstr "Nemzeti"
 
-#: layout/header.php:289 includes/admin-blocks.php:79
+#: layout/header.php:289 includes/admin-blocks.php:83
 msgid "Diocesan"
 msgstr "Egyházmegyei"
 
@@ -1424,7 +1441,7 @@ msgstr "Értesítések betöltése nem sikerült"
 msgid "Just now"
 msgstr "Épp most"
 
-#: layout/footer.php:96 admin-permissions.php:453
+#: layout/footer.php:96 admin-permissions.php:474
 msgid "Requested"
 msgstr "Kérve"
 
@@ -1451,6 +1468,27 @@ msgstr "Kérj hozzáférést a rendszer használatának megkezdéséhez"
 #: layout/footer.php:102
 msgid "Get started"
 msgstr "Kezdjük el"
+
+#: layout/footer.php:106
+msgid "Your change request was approved"
+msgstr "A módosítási kérelmed jóváhagyásra került"
+
+#: layout/footer.php:107
+msgid "Your change request was rejected"
+msgstr "A módosítási kérelmed elutasításra került"
+
+#: layout/footer.php:108
+msgid "Your change request was published"
+msgstr "A módosítási kérelmet közzétették"
+
+#: layout/footer.php:109
+msgid "Your change request was closed without merging"
+msgstr "A módosítási kérelmet egyesítés nélkül zárták le"
+
+#: layout/footer.php:110
+#, php-format
+msgid "Pull request #%1$d"
+msgstr "Pull request #%1$d"
 
 #: includes/login-modal.php:6
 msgid "Session Expiring"
@@ -1481,11 +1519,12 @@ msgid "Remember me"
 msgstr "Emlékezz rám"
 
 #. translators: button label for canceling an action
-#: includes/login-modal.php:55 includes/messages.php:132 admin-decrees.php:580
-#: admin-decrees.php:607 admin-permissions.php:325 admin-permissions.php:351
+#: includes/login-modal.php:55 includes/messages.php:156 admin-decrees.php:581
+#: admin-decrees.php:608 admin-permissions.php:337 admin-permissions.php:363
 #: admin-tests.php:259 admin-tests.php:286 admin-tests.php:313
-#: admin-applications.php:207 admin-users.php:112 developer-dashboard.php:134
-#: developer-dashboard.php:183 developer-dashboard.php:246
+#: admin-applications.php:207 admin-users.php:112 admin-changes.php:233
+#: developer-dashboard.php:134 developer-dashboard.php:183
+#: developer-dashboard.php:246 sanctorale.php:199 sanctorale.php:349
 msgid "Cancel"
 msgstr "Mégse"
 
@@ -1551,7 +1590,8 @@ msgid "Session Expired"
 msgstr "Munkamenet lejárt"
 
 #. translators: form field label for the unique identifier of a liturgical event
-#: includes/messages.php:17 admin-decrees.php:175 temporale.php:134
+#: includes/messages.php:17 admin-decrees.php:176 temporale.php:134
+#: sanctorale.php:174 sanctorale.php:353
 msgid "Event key"
 msgstr "Esemény kulcs"
 
@@ -1600,20 +1640,25 @@ msgstr "Hatálybalépés éve"
 msgid "Warning"
 msgstr "Figyelmeztetés"
 
-#. translators: notification title when translations are missing for a locale
+#. translators: notification title when a write was queued for review instead of being saved
 #: includes/messages.php:57
+msgid "Pending review"
+msgstr "Függőben lévő felülvizsgálat"
+
+#. translators: notification title when translations are missing for a locale
+#: includes/messages.php:59
 msgid "Missing Translations"
 msgstr "Hiányzó fordítások"
 
 #. translators: error message when translations are missing. %s is the locale code (e.g., "en_US")
-#: includes/messages.php:63
+#: includes/messages.php:65
 #, php-format
 msgid "Cannot proceed: translations missing for locale %s"
 msgstr "Nem lehet folytatni: fordítások hiányoznak a(z) %s helyszínhez"
 
 #. translators: detailed explanation when General Roman Calendar translations are missing.
 #. %s is the locale code. This message should mention Weblate as the translation server.
-#: includes/messages.php:66
+#: includes/messages.php:68
 #, php-format
 msgid ""
 "The General Roman Calendar has not yet been translated into the locale "
@@ -1624,184 +1669,250 @@ msgstr ""
 "környezetre. Kérjük, a Weblate fordítási szerveren fordítsa le az Általános "
 "Római Naptárt, mielőtt naptárat készít ehhez a nyelvi környezethez."
 
-#. translators: form row title for designating a Doctor of the Church
+#. translators: %s is the change request batch id. The changes were queued for review, not saved
+#: includes/messages.php:76 admin-decrees.php:638 admin-tests.php:341
+#: admin-locales.php:135
+#, php-format
+msgid ""
+"Your changes were submitted for review as batch %s. Nothing has been saved "
+"yet."
+msgstr ""
+"A módosításaidat felülvizsgálatra csoportként nyújtották be %s. Még nincs "
+"mentve."
+
+#. translators: %s is the change request batch id. The changes were approved but are not published yet
+#: includes/messages.php:78 admin-decrees.php:639 admin-tests.php:342
+#: admin-locales.php:136
+#, php-format
+msgid ""
+"Your changes were approved as batch %s and are queued for publication. They "
+"are not live yet."
+msgstr ""
+"A módosításaidat csoportként jóváhagyták, %s, és kiadásra kerülnek. Még "
+"nincsenek élőben."
+
+#. translators: %s is a comma separated list of change request batch ids folded into the current one
+#: includes/messages.php:80 admin-decrees.php:640 admin-tests.php:343
+#: admin-locales.php:137
+#, php-format
+msgid ""
+"Earlier pending submissions were folded into this one and no longer appear "
+"in your queue: %s"
+msgstr ""
+"A korábbi függőben lévő beküldéseket ebbe illesztettük be, és már nem "
+"láthatók a sorodban: %s"
+
+#. translators: %s is the unrecognized outcome value the server sent
+#: includes/messages.php:82 admin-decrees.php:642 admin-tests.php:344
+#: admin-locales.php:139
+#, php-format
+msgid ""
+"The server reported an unrecognized outcome ('%s') for these changes. Reload "
+"the page to check whether they were saved."
+msgstr ""
+"A szerver ismeretlen eredményt jelentett ('%s') ezekhez a módosításokhoz. "
+"Töltsd be újra az oldalt, hogy ellenőrizd, el lettek-e mentve."
+
+#. translators: %s is a calendar identifier such as "nation/US"
+#: includes/messages.php:84
+#, php-format
+msgid "Calendar '%s' was deleted successfully"
+msgstr "A '%s' naptár sikeresen törölve"
+
+#. translators: %s is a diocese identifier such as "rome_it"
 #: includes/messages.php:86
+#, php-format
+msgid "Diocesan Calendar '%s' was deleted successfully"
+msgstr "Egyházmegyei naptár '%s' sikeresen törölve"
+
+#. translators: confirmation shown after saving a national calendar
+#: includes/messages.php:88
+msgid "National Calendar was created or updated successfully"
+msgstr "Országos naptár sikeresen létrehozva vagy frissítve"
+
+#. translators: confirmation shown after saving a wider region calendar
+#: includes/messages.php:90
+msgid "Wider Region Calendar was created or updated successfully"
+msgstr "Szélesebb régió naptár sikeresen létrehozva vagy frissítve"
+
+#. translators: form row title for designating a Doctor of the Church
+#: includes/messages.php:110
 msgid "Designate Doctor of the Church"
 msgstr "Egyháztanító kijelölése"
 
 #. translators: form row title for creating a new liturgical event
-#: includes/messages.php:88
+#: includes/messages.php:112
 msgid "New liturgical event"
 msgstr "Új liturgikus esemény"
 
 #. translators: form row title for changing the name of a liturgical event
-#: includes/messages.php:90
+#: includes/messages.php:114
 msgid "Change name"
 msgstr "Név megváltoztatása"
 
 #. translators: form row title for changing the grade of a liturgical event
-#: includes/messages.php:92
+#: includes/messages.php:116
 msgid "Change grade"
 msgstr "Fokozat megváltoztatása"
 
 #. translators: form row title for changing name or grade
-#: includes/messages.php:94
+#: includes/messages.php:118
 msgid "Change name or grade"
 msgstr "Név vagy fokozat módosítása"
 
 #. translators: form row title for moving a liturgical event to a new date
-#: includes/messages.php:96
+#: includes/messages.php:120
 msgid "Move liturgical event"
 msgstr "Liturgikus esemény áthelyezése"
 
 #. translators: button text for adding a solemnity in diocesan calendar
-#: includes/messages.php:102
+#: includes/messages.php:126
 msgid "Other Solemnity"
 msgstr "Egyéb főünnep"
 
 #. translators: button text for adding a feast in diocesan calendar
-#: includes/messages.php:104
+#: includes/messages.php:128
 msgid "Other Feast"
 msgstr "Egyéb ünnep"
 
 #. translators: button text for adding a memorial in diocesan calendar
-#: includes/messages.php:106
+#: includes/messages.php:130
 msgid "Other Memorial"
 msgstr "Egyéb emléknap"
 
 #. translators: button text for adding an optional memorial in diocesan calendar
-#: includes/messages.php:108
+#: includes/messages.php:132
 msgid "Other Optional Memorial"
 msgstr "Egyéb fakultatív emléknap"
 
 #. translators: button description for designating patron action
-#: includes/messages.php:114
+#: includes/messages.php:138
 msgid "Designate patron"
 msgstr "Védőszent kijelölése"
 
 #. translators: button description for changing name or grade of existing event
-#: includes/messages.php:116
+#: includes/messages.php:140
 msgid "Change name or grade of existing liturgical event"
 msgstr "Meglévő liturgikus esemény neve vagy fokozata módosítása"
 
 #. translators: button description for moving event to new date
-#: includes/messages.php:118
+#: includes/messages.php:142
 msgid "Move liturgical event to new date"
 msgstr "Liturgikus esemény áthelyezése új dátumra"
 
 #. translators: button description for creating new liturgical event
-#: includes/messages.php:120
+#: includes/messages.php:144
 msgid "Create new liturgical event"
 msgstr "Új liturgikus esemény létrehozása"
 
 #. translators: button description for designating Doctor of the Church
-#: includes/messages.php:122
+#: includes/messages.php:146
 msgid "Designate Doctor of the Church from existing liturgical event"
 msgstr "Egyháztanító kijelölése meglévő liturgikus esemény alapján"
 
 #. translators: button label for deleting a calendar
-#: includes/messages.php:128
+#: includes/messages.php:152
 msgid "Delete calendar"
 msgstr "Naptár törlése"
 
 #. translators: button label for removing existing data
-#: includes/messages.php:130
+#: includes/messages.php:154
 msgid "Remove existing data"
 msgstr "Létező adatok eltávolítása"
 
 #. translators: button label for setting a property
-#: includes/messages.php:134
+#: includes/messages.php:158
 msgid "Set Property"
 msgstr "Tulajdonság beállítása"
 
 #. translators: button label for moving a liturgical event
-#: includes/messages.php:136
+#: includes/messages.php:160
 msgid "Move Liturgical Event"
 msgstr "Liturgikus Esemény Áthelyezése"
 
 #. translators: button label for creating a liturgical event
-#: includes/messages.php:138
+#: includes/messages.php:162
 msgid "Create Liturgical Event"
 msgstr "Liturgikus Esemény Létrehozása"
 
 #. translators: button label for creating event from existing
-#: includes/messages.php:140
+#: includes/messages.php:164
 msgid "New liturgical event from existing"
 msgstr "Új liturgikus esemény meglévő alapján"
 
 #. translators: button label for creating entirely new event
-#: includes/messages.php:142
+#: includes/messages.php:166
 msgid "New liturgical event ex novo"
 msgstr "Új liturgikus esemény ex novo"
 
 #. translators: button label for adding a missal
-#: includes/messages.php:144
+#: includes/messages.php:168
 msgid "Add Missal"
 msgstr "Misekönyv hozzáadása"
 
 #. translators: button label for adding language edition Roman Missal
-#: includes/messages.php:146
+#: includes/messages.php:170
 msgid "Add language edition Roman Missal"
 msgstr "Nyelvi kiadás hozzáadása Római Misekönyvhöz"
 
 #. translators: link text for reading a decree document
-#: includes/messages.php:148
+#: includes/messages.php:172
 msgid "Read the Decree"
 msgstr "Olvasd el a rendeletet"
 
 #. translators: button label for adding a column in admin table
-#: includes/messages.php:150
+#: includes/messages.php:174
 msgid "Add Column"
 msgstr "Oszlop hozzáadása"
 
 #. translators: button label for saving data in admin
-#: includes/messages.php:152
+#: includes/messages.php:176
 msgid "Save data"
 msgstr "Adat mentése"
 
 #. translators: button title for adding a decree
-#: includes/messages.php:154
+#: includes/messages.php:178
 msgid "Add Decree"
 msgstr "Rendelet hozzáadása"
 
 #. translators: page title for particular calendars
-#: includes/messages.php:160
+#: includes/messages.php:184
 msgid "General Roman Calendar - Particular Calendars"
 msgstr "Általános római naptár - Partikuláris naptárak"
 
 #. translators: page title for decrees
-#: includes/messages.php:162
+#: includes/messages.php:186
 msgid "General Roman Calendar - Decrees"
 msgstr "Általános római naptár - Rendeletek"
 
 #. translators: page title for admin tools
-#: includes/messages.php:164
+#: includes/messages.php:188
 msgid "Administration tools"
 msgstr "Adminisztrációs eszközök"
 
 #. translators: main heading for particular calendars page
-#: includes/messages.php:170
+#: includes/messages.php:194
 msgid "Define Particular Calendars based on the General Roman Calendar"
 msgstr "Állíts össze partikuláris naptárakat az általános római naptár alapján"
 
 #. translators: main heading for particular calendars page
-#: includes/messages.php:172
+#: includes/messages.php:196
 msgid "Particular Calendars - Define Wider Region events"
 msgstr ""
 "Partikuláris naptárak – A tágabb régióhoz tartozó események meghatározása"
 
 #. translators: main heading for particular calendars page
-#: includes/messages.php:174
+#: includes/messages.php:198
 msgid "Particular Calendars - Define a National Calendar"
 msgstr "Partikuláris naptárak - Határozz meg egy nemzeti naptárat"
 
 #. translators: main heading for particular calendars page
-#: includes/messages.php:176
+#: includes/messages.php:200
 msgid "Particular Calendars - Define a Diocesan Calendar"
 msgstr "Partikuláris naptárak - Határozz meg egy egyházmegyei naptárat"
 
 #. translators: main heading for decrees page
-#: includes/messages.php:178
+#: includes/messages.php:202
 msgid ""
 "Refine the General Roman Calendar with Decrees of the Dicastery for Divine "
 "Worship and the Discipline of the Sacraments"
@@ -1810,12 +1921,12 @@ msgstr ""
 "Fegyelmi Kongregáció rendeleteivel"
 
 #. translators: main heading for admin page
-#: includes/messages.php:180
+#: includes/messages.php:204
 msgid "Liturgical Calendar project Administration tools"
 msgstr "Liturgikus naptár projekt adminisztrációs eszközök"
 
 #. translators: introductory paragraph about decrees
-#: includes/messages.php:182
+#: includes/messages.php:206
 msgid ""
 "The Liturgical Calendar is based off of both published Roman Missals, and "
 "Decrees of the Dicastery for Divine Worship and the Discipline of the "
@@ -1830,7 +1941,7 @@ msgstr ""
 "arról, hogyan kezeljük a kötelező ünnepek közötti esetleges egybeeséseket."
 
 #. translators: explanation about API endpoints for missals and decrees
-#: includes/messages.php:184
+#: includes/messages.php:208
 msgid ""
 "Data for <b>Roman Missals</b> is handled by the <code>/missals</code> "
 "endpoint of the API, while data for <b>Decrees</b> is handled by the <code>/"
@@ -1841,7 +1952,7 @@ msgstr ""
 "kezeli."
 
 #. translators: explanation about hierarchy of particular calendars
-#: includes/messages.php:190
+#: includes/messages.php:214
 msgid ""
 "The <b>General Roman Calendar</b> serves as the foundation for <b>Particular "
 "Calendars</b>, which are established to meet the liturgical needs of a "
@@ -1852,7 +1963,7 @@ msgstr ""
 "hoznak létre."
 
 #. translators: explanation about hierarchy of particular calendars
-#: includes/messages.php:192
+#: includes/messages.php:216
 msgid ""
 "These calendars follow a hierarchical structure: a <b>Diocesan calendar</b> "
 "inherits and adapts the data from its respective <b>National calendar</b>. "
@@ -1864,7 +1975,7 @@ msgstr ""
 "a nemzeti naptárat meg kell határozni, mielőtt az egyházmegyei naptár "
 "létrehozható."
 
-#: includes/messages.php:195
+#: includes/messages.php:219
 #, php-format
 msgid ""
 "The first step in this process is ensuring the <b>General Roman Calendar</b> "
@@ -1882,7 +1993,7 @@ msgstr ""
 "nemzeti naptárába."
 
 #. translators: help text for diocesan group field
-#: includes/messages.php:200
+#: includes/messages.php:224
 msgid ""
 "If a group of dioceses decides to pool their Liturgical Calendar data, for "
 "example to print out one single yearly calendar with the data for all the "
@@ -1894,162 +2005,162 @@ msgstr ""
 "beállítani a csoportot."
 
 #. translators: label for national calendar name field
-#: includes/messages.php:208 admin-permissions.php:79 admin-permissions.php:306
-#: admin-permissions.php:393 admin-tests.php:147 admin-tests.php:344
+#: includes/messages.php:232 admin-permissions.php:85 admin-permissions.php:318
+#: admin-permissions.php:405 admin-tests.php:147 admin-tests.php:351
 #: permission-requests.php:237
 msgid "National Calendar"
 msgstr "Nemzeti naptár"
 
 #. translators: label for diocesan calendar dependency
-#: includes/messages.php:210
+#: includes/messages.php:234
 msgid "Depends on national calendar"
 msgstr "A nemzeti naptártól függ"
 
 #. translators: label for diocese name field
-#: includes/messages.php:212
+#: includes/messages.php:236
 msgid "Diocese"
 msgstr "Egyházmegye"
 
 #. translators: label for diocesan group field
-#: includes/messages.php:214
+#: includes/messages.php:238
 msgid "Diocesan group"
 msgstr "Egyházmegyei csoport"
 
 #. translators: label for locales selection
-#: includes/messages.php:216
+#: includes/messages.php:240
 msgid "Locales"
 msgstr "Helyi beállítások"
 
 #. translators: label for current localization selection
-#: includes/messages.php:218
+#: includes/messages.php:242
 msgid "Current localization"
 msgstr "Jelenlegi lokalizáció"
 
 #. translators: label for published Roman Missals list
-#: includes/messages.php:220
+#: includes/messages.php:244
 msgid "Published Roman Missals"
 msgstr "Megjelent Római Misékönyvek"
 
 #. translators: card heading for creating wider region calendar
-#: includes/messages.php:226
+#: includes/messages.php:250
 msgid "Define a Calendar for a Wider Region"
 msgstr "A tágabb régió számára naptár meghatározása"
 
 #. translators: card heading for creating national calendar
-#: includes/messages.php:228
+#: includes/messages.php:252
 msgid "Define a National Calendar"
 msgstr "Határozz meg egy nemzeti naptárat"
 
 #. translators: card heading for creating diocesan calendar
-#: includes/messages.php:230
+#: includes/messages.php:254
 msgid "Define a Diocesan Calendar"
 msgstr "Határozz meg egy egyházmegyei naptárat"
 
 #. translators: section heading for national calendar settings
-#: includes/messages.php:232
+#: includes/messages.php:256
 msgid "National calendar settings"
 msgstr "Nemzeti naptár beállításai"
 
 #. translators: heading for diocesan overrides section
-#: includes/messages.php:234
+#: includes/messages.php:258
 msgid "Diocesan overrides to the national calendar for …"
 msgstr "Egyházmegyei eltérési lehetőségek az országos naptárhoz képest …"
 
 #. translators: label for Epiphany setting
-#: includes/messages.php:240
+#: includes/messages.php:264
 msgid "EPIPHANY"
 msgstr "VÍZKERESZT"
 
 #. translators: option for Epiphany on January 6
-#: includes/messages.php:242
+#: includes/messages.php:266
 msgid "January 6"
 msgstr "Január 6."
 
 #. translators: option for Epiphany on Sunday
-#: includes/messages.php:244
+#: includes/messages.php:268
 msgid "Sunday between January 2 and January 8"
 msgstr "Vasárnap január 2. és január 8. között"
 
 #. translators: label for Ascension setting
-#: includes/messages.php:246
+#: includes/messages.php:270
 msgid "ASCENSION"
 msgstr "MENNYBEMENETEL"
 
 #. translators: label for Corpus Christi setting
-#: includes/messages.php:248
+#: includes/messages.php:272
 msgid "CORPUS CHRISTI"
 msgstr "ÚRNAPJA"
 
 #. translators: label for Eternal High Priest setting
-#: includes/messages.php:250
+#: includes/messages.php:274
 msgid "ETERNAL HIGH PRIEST"
 msgstr "ÖRÖK FŐPAP"
 
 #. translators: tab label for solemnities section
-#: includes/messages.php:256
+#: includes/messages.php:280
 msgid "Solemnities"
 msgstr "Főünnepek"
 
 #. translators: tab label for feasts section
-#: includes/messages.php:258
+#: includes/messages.php:282
 msgid "Feasts"
 msgstr "Ünnepek"
 
 #. translators: tab label for memorials section
-#: includes/messages.php:260
+#: includes/messages.php:284
 msgid "Memorials"
 msgstr "Emléknapok"
 
 #. translators: tab label for optional memorials section
-#: includes/messages.php:262
+#: includes/messages.php:286
 msgid "Optional memorials"
 msgstr "Választható emléknapok"
 
 #. translators: subtitle for defining solemnities
-#: includes/messages.php:268
+#: includes/messages.php:292
 msgid "Define the Solemnities"
 msgstr "Főünnepek meghatározása"
 
 #. translators: subtitle for defining feasts
-#: includes/messages.php:270
+#: includes/messages.php:294
 msgid "Define the Feasts"
 msgstr "Ünnepek meghatározása"
 
 #. translators: subtitle for defining memorials
-#: includes/messages.php:272
+#: includes/messages.php:296
 msgid "Define the Memorials"
 msgstr "Emléknapok meghatározása"
 
 #. translators: subtitle for defining optional memorials
-#: includes/messages.php:274
+#: includes/messages.php:298
 msgid "Define the Optional Memorials"
 msgstr "Választható emléknapok meghatározása"
 
 #. translators: row title for principal patron solemnity
-#: includes/messages.php:280
+#: includes/messages.php:304
 msgid ""
 "Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr "Hely, egyházmegye, régió, tartomány vagy terület fő védőszentje(i)"
 
 #. translators: row title for dedication of cathedral
-#: includes/messages.php:282
+#: includes/messages.php:306
 msgid "Dedication of the Cathedral"
 msgstr "A székesegyház felszentelése"
 
 #. translators: row title for patron feast
-#: includes/messages.php:284
+#: includes/messages.php:308
 msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr "Hely, egyházmegye, régió, tartomány vagy terület védőszentje(i)"
 
 #. translators: row title for secondary patron memorial
-#: includes/messages.php:286
+#: includes/messages.php:310
 msgid ""
 "Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
 "Hely, egyházmegye, régió, tartomány vagy terület másodlagos védőszentje(i)"
 
 #. translators: row title for local saints optional memorial
-#: includes/messages.php:288
+#: includes/messages.php:312
 msgid ""
 "Saints whose veneration is local to the Place, Diocese, Region, Province or "
 "Territory"
@@ -2058,52 +2169,52 @@ msgstr ""
 "tartomány vagy terület számára"
 
 #. translators: button to save wider region calendar data
-#: includes/messages.php:294
+#: includes/messages.php:318
 msgid "Save Wider Region Calendar Data"
 msgstr "A tágabb régió naptári adatainak mentése"
 
 #. translators: button to save national calendar data
-#: includes/messages.php:296
+#: includes/messages.php:320
 msgid "Save National Calendar Data"
 msgstr "Nemzeti naptári adatok mentése"
 
 #. translators: button to save diocesan calendar data
-#: includes/messages.php:298
+#: includes/messages.php:322
 msgid "Save Diocesan Calendar Data"
 msgstr "Egyházmegyei naptári adatok mentése"
 
 #. translators: modal title for changing name or grade
-#: includes/messages.php:304
+#: includes/messages.php:328
 msgid "Change the name or grade of an existing liturgical event"
 msgstr "Meglévő liturgikus esemény nevének vagy fokozatának módosítása"
 
 #. translators: modal title for moving event
-#: includes/messages.php:306
+#: includes/messages.php:330
 msgid "Move a liturgical event to a new date"
 msgstr "Egy liturgikus esemény áthelyezése új dátumra"
 
 #. translators: modal title for creating new event
-#: includes/messages.php:308
+#: includes/messages.php:332
 msgid "Create a new liturgical event"
 msgstr "Új liturgikus esemény létrehozása"
 
 #. translators: modal title for choosing missal
-#: includes/messages.php:310
+#: includes/messages.php:334
 msgid "Choose from known Roman Missal language editions"
 msgstr "Válasszon a Római Misekönyv ismert nyelvi kiadásai közül"
 
 #. translators: modal title for deleting a diocesan calendar
-#: includes/messages.php:312
+#: includes/messages.php:336
 msgid "Delete diocesan calendar"
 msgstr "Egyházmegyei naptár törlése"
 
 #. translators: validation error when field is empty
-#: includes/messages.php:318
+#: includes/messages.php:342
 msgid "This value cannot be empty."
 msgstr "Ez az érték nem lehet üres."
 
 #. translators: validation error for unknown missal
-#: includes/messages.php:320
+#: includes/messages.php:344
 msgid ""
 "This Missal is unknown to the Liturgical Calendar API. Please choose from a "
 "value in the list, or contact the curator of the API to have the Missal "
@@ -2114,7 +2225,7 @@ msgstr ""
 "kurátorával, hogy a Misekönyv felkerüljön a listára."
 
 #. translators: warning message when deleting a calendar
-#: includes/messages.php:326
+#: includes/messages.php:350
 msgid ""
 "If you choose to delete this calendar, the liturgical events defined for the "
 "calendar and the corresponding index entries will be removed and no longer "
@@ -2125,7 +2236,7 @@ msgstr ""
 "nem lesznek elérhetők a kliens alkalmazásokban."
 
 #. translators: tooltip explaining the first step in defining a national calendar
-#: includes/messages.php:332
+#: includes/messages.php:356
 msgid ""
 "please keep in mind that the first step to creating a national calendar, is "
 "to translate the already existing calendar data into the correct language. "
@@ -2136,14 +2247,14 @@ msgstr ""
 "LitCal fordítószerveren lehet megtenni (lásd a fenti részleteket)"
 
 #. translators: help text shown when diocese input is disabled
-#: includes/messages.php:334
+#: includes/messages.php:358
 msgid "Select a national calendar first to see available dioceses."
 msgstr ""
 "Válasszon ki először egy nemzeti naptárat, hogy lássa az elérhető "
 "egyházmegyéket."
 
 #. translators: tooltip explaining the Eternal High Priest feast
-#: includes/messages.php:336
+#: includes/messages.php:360
 msgid ""
 "In 2012, Pope Benedict XVI gave faculty to the Episcopal Conferences to "
 "insert the Feast of Jesus Christ Eternal High Priest in their own liturgical "
@@ -2154,7 +2265,7 @@ msgstr ""
 "Főpap ünnepét Pünkösd utáni csütörtökre."
 
 #. translators: tooltip explaining published Roman Missals selection
-#: includes/messages.php:338
+#: includes/messages.php:362
 msgid ""
 "if data from the Proper of Saints of a given Missal for this nation has "
 "already been incorporated into the main LitCal engine, you can choose the "
@@ -2168,7 +2279,7 @@ msgstr ""
 "került be a LitCal motorba)"
 
 #. translators: tooltip explaining wider region association
-#: includes/messages.php:340
+#: includes/messages.php:364
 msgid ""
 "if data for a Wider Region that regards this National Calendar has already "
 "been defined, you can associate the Wider Region data with the National "
@@ -2178,17 +2289,17 @@ msgstr ""
 "tágabb régióra, itt társíthatod a tágabb régió adatait a nemzeti naptárral"
 
 #. translators: screen reader text for previous button
-#: includes/messages.php:346 temporale.php:173
+#: includes/messages.php:370 temporale.php:173
 msgid "Previous"
 msgstr "Előző"
 
 #. translators: screen reader text for next button
-#: includes/messages.php:348 temporale.php:179
+#: includes/messages.php:372 temporale.php:179
 msgid "Next"
 msgstr "Következő"
 
 #. translators: aria-label for diocesan calendar definition navigation
-#: includes/messages.php:350
+#: includes/messages.php:374
 msgid "Diocesan calendar definition"
 msgstr "Egyházmegyei naptár meghatározása"
 
@@ -2196,42 +2307,43 @@ msgstr "Egyházmegyei naptár meghatározása"
 msgid "Proprium de Tempore - temporal cycle events"
 msgstr "Proprium de Tempore - időszaki ciklus eseményei"
 
-#: includes/admin-blocks.php:36
-msgid "Proprium de Sanctis - Roman Missal editions"
-msgstr "Proprium de Sanctis - Római Misekönyv kiadásai"
+#: includes/admin-blocks.php:38
+msgid "Proprium de Sanctis - Missal editions, by rite"
+msgstr "Proprium de Sanctis - Misál kiadások, rítus szerint"
 
-#: includes/admin-blocks.php:46
+#: includes/admin-blocks.php:50
 msgid "Congregation for Divine Worship decrees"
 msgstr "Istentiszteleti Kongregáció rendeletei"
 
-#: includes/admin-blocks.php:60
+#: includes/admin-blocks.php:64
 msgid "Shared events for geographical regions"
 msgstr "Megosztott események földrajzi régiók szerint"
 
-#: includes/admin-blocks.php:70
+#: includes/admin-blocks.php:74
 msgid "National calendars by Bishops Conferences"
 msgstr "Nemzeti naptárak a püspöki konferenciák által"
 
-#: includes/admin-blocks.php:80
+#: includes/admin-blocks.php:84
 msgid "Diocesan calendars by liturgical offices"
 msgstr "Egyházmegyei naptárak liturgikus hivatalok szerint"
 
-#: includes/admin-blocks.php:101
+#: includes/admin-blocks.php:105 includes/change-request-i18n.php:21
+#: admin-dashboard.php:225
 msgid "View"
 msgstr "Megtekintés"
 
-#: includes/admin-blocks.php:102 admin-decrees.php:677 admin-tests.php:340
-#: developer-dashboard.php:269
+#: includes/admin-blocks.php:106 admin-decrees.php:688 admin-tests.php:347
+#: developer-dashboard.php:269 sanctorale.php:347
 msgid "Edit"
 msgstr "Szerkesztés"
 
-#: includes/admin-decrees-card.php:22
+#: includes/admin-decrees-card.php:24
 msgid "Create, edit and delete decrees of the Dicastery for Divine Worship"
 msgstr ""
 "Hozz létre, szerkessz és törölj az Istentiszteleti Dikasztériumhoz tartozó "
 "dekrétumokat"
 
-#: includes/admin-decrees-card.php:26 includes/admin-tests-card.php:23
+#: includes/admin-decrees-card.php:28 includes/admin-tests-card.php:23
 #: admin-dashboard.php:80 admin-dashboard.php:98 admin-dashboard.php:116
 msgid "Manage"
 msgstr "Kezelés"
@@ -2240,127 +2352,316 @@ msgstr "Kezelés"
 msgid "Manage liturgical accuracy tests"
 msgstr "Irányítsd a liturgiai pontossági teszteket"
 
+#: includes/change-request-i18n.php:20 admin-decrees.php:157
+#: admin-decrees.php:600 admin-permissions.php:235 admin-permissions.php:267
+#: admin-permissions.php:289 admin-permissions.php:355 admin-tests.php:131
+#: admin-tests.php:278 admin-tests.php:305 admin-applications.php:184
+#: admin-users.php:104 admin-locales.php:93 admin-changes.php:210
+#: change-requests.php:97 change-requests.php:104 developer-dashboard.php:84
+#: developer-dashboard.php:154 developer-dashboard.php:239 temporale.php:163
+#: temporale.php:186 sanctorale.php:190
+msgid "Close"
+msgstr "Bezárás"
+
+#: includes/change-request-i18n.php:22 admin-permissions.php:402
+#: admin-permissions.php:469 admin-tests.php:113 admin-applications.php:244
+#: temporale.php:140
+msgid "Actions"
+msgstr "Műveletek"
+
+#: includes/change-request-i18n.php:23 admin-permissions.php:473
+#: permission-requests.php:221 admin-applications.php:243 admin-locales.php:77
+msgid "Status"
+msgstr "Állapot"
+
+#: includes/change-request-i18n.php:24 admin-permissions.php:398
+msgid "Unknown user"
+msgstr "Ismeretlen felhasználó"
+
+#: includes/change-request-i18n.php:27
+msgid "Resource"
+msgstr "Forrás"
+
+#: includes/change-request-i18n.php:28
+msgid "Files"
+msgstr "Fájlok"
+
+#: includes/change-request-i18n.php:29 includes/change-request-i18n.php:35
+#: permission-requests.php:224 admin-changes.php:77 admin-changes.php:121
+msgid "Submitted"
+msgstr "Beküldve"
+
+#: includes/change-request-i18n.php:30
+msgid "Publication"
+msgstr "Közzététel"
+
+#: includes/change-request-i18n.php:31
+msgid "Pull request"
+msgstr "Pull request"
+
+#: includes/change-request-i18n.php:32 change-requests.php:93
+msgid "Proposed changes"
+msgstr "Javasolt módosítások"
+
+#: includes/change-request-i18n.php:36 admin-permissions.php:173
+#: admin-permissions.php:481 permission-requests.php:275
+#: admin-applications.php:68 admin-applications.php:108
+#: admin-applications.php:251 admin-changes.php:88 admin-changes.php:128
+#: developer-dashboard.php:304
+msgid "Approved"
+msgstr "Jóváhagyott"
+
+#: includes/change-request-i18n.php:37 admin-permissions.php:180
+#: admin-permissions.php:482 permission-requests.php:276
+#: admin-applications.php:79 admin-applications.php:114
+#: admin-applications.php:252 admin-changes.php:99 admin-changes.php:134
+#: developer-dashboard.php:305
+msgid "Rejected"
+msgstr "Elutasított"
+
+#: includes/change-request-i18n.php:38 admin-changes.php:110
+#: admin-changes.php:140
+msgid "Withdrawn"
+msgstr "Visszavonva"
+
+#: includes/change-request-i18n.php:43
+msgid ""
+"Approved by a reviewer; its pull request was later closed without merging."
+msgstr ""
+"Egy értékelő jóváhagyta; a pull requestet később bezárták összeolvasztás "
+"nélkül."
+
+#: includes/change-request-i18n.php:52
+msgid "National calendar"
+msgstr "Nemzeti naptár"
+
+#: includes/change-request-i18n.php:53
+msgid "Diocesan calendar"
+msgstr "Püspöki naptár"
+
+#: includes/change-request-i18n.php:54
+msgid "Wider region"
+msgstr "Szélesebb régió"
+
+#: includes/change-request-i18n.php:55
+msgid "Rite calendar"
+msgstr "Rítus naptár"
+
+#: includes/change-request-i18n.php:57
+msgid "National calendar test"
+msgstr "Nemzeti naptár teszt"
+
+#: includes/change-request-i18n.php:58
+msgid "Diocesan calendar test"
+msgstr "Püspöki naptár teszt"
+
+#: includes/change-request-i18n.php:59
+msgid "General Roman Calendar test"
+msgstr "Általános római naptár teszt"
+
+#: includes/change-request-i18n.php:60
+msgid "Rite calendar test"
+msgstr "Rítus naptár teszt"
+
+#: includes/change-request-i18n.php:64
+msgid "Added"
+msgstr "Hozzáadva"
+
+#: includes/change-request-i18n.php:65
+msgid "Changed"
+msgstr "Módosítva"
+
+#: includes/change-request-i18n.php:66
+msgid "Removed"
+msgstr "Eltávolítva"
+
+#: includes/change-request-i18n.php:70
+msgid "Not published"
+msgstr "Nincs közzétéve"
+
+#: includes/change-request-i18n.php:71
+msgid "Queued for publication"
+msgstr "Közzétételre vár"
+
+#: includes/change-request-i18n.php:72
+msgid "Pull request open"
+msgstr "Pull request megnyitva"
+
+#: includes/change-request-i18n.php:73
+msgid "Merged"
+msgstr "Összeolvasztva"
+
+#: includes/change-request-i18n.php:74
+msgid "Closed without merging"
+msgstr "Bezárva összeolvasztás nélkül."
+
+#: includes/change-request-i18n.php:78
+msgid "Could not load what this change request proposes."
+msgstr "Nem sikerült betölteni, amit ez a módosítási kérelem javasol."
+
+#: includes/change-request-i18n.php:79
+msgid "This change request proposes no files."
+msgstr "Ez a módosítási kérelem nem javasol fájlokat."
+
+#: includes/change-request-i18n.php:80
+msgid "No content change."
+msgstr "Nincs tartalmi változás."
+
+#: includes/change-request-i18n.php:81
+#, php-format
+msgid ""
+"This file is too large to compare in the browser (%1$s proposed, %2$s "
+"currently on disk)."
+msgstr ""
+"Ez a fájl túl nagy ahhoz, hogy a böngészőben összehasonlítsa (%1$s javasolt, "
+"%2$s jelenleg a lemezen)."
+
+#: includes/change-request-i18n.php:82
+#, php-format
+msgid "@@ %1$d unchanged line(s) hidden @@"
+msgstr "@@ %1$d változatlan sorok rejtve @@"
+
+#: includes/change-request-i18n.php:83
+#, php-format
+msgid ""
+"File contents were not requested. Proposed: %1$s; currently on disk: %2$s."
+msgstr "A fájl tartalmát nem kérték. Javasolt: %1$s; jelenleg a lemezen: %2$s."
+
+#: includes/change-request-i18n.php:84
+#, php-format
+msgid "This file will be removed (%1$s currently on disk)."
+msgstr "Ez a fájl törlésre kerül (%1$s jelenleg a lemezen)."
+
+#: includes/admin-changes-card.php:23
+msgid "Change Requests to Review"
+msgstr "Változtatási kérelmek megtekintése."
+
+#: includes/admin-changes-card.php:27
+msgid ""
+"Read and decide the source data changes proposed for the calendars you "
+"administer"
+msgstr ""
+"Olvasd el, és dönts a naptárakhoz kapcsolódó forrásadat-változtatási "
+"javaslatokról, amelyeket te kezelsz."
+
+#: includes/admin-changes-card.php:33 admin-permissions.php:470
+#: admin-applications.php:245 admin-dashboard.php:136 admin-dashboard.php:194
+#: admin-changes.php:253
+msgid "Review"
+msgstr "Felülvizsgálat"
+
 #: admin-decrees.php:59
 msgid "Create, edit and delete decrees of the Dicastery for Divine Worship."
 msgstr ""
 "Hozz létre, szerkessz és törölj az Istentiszteleti Dikasztériumhoz tartozó "
 "dekrétumokat."
 
-#: admin-decrees.php:71 admin-decrees.php:636
+#: admin-decrees.php:71 admin-decrees.php:647
 msgid "New Decree"
 msgstr "Új dekrétum"
 
-#: admin-decrees.php:76
+#: admin-decrees.php:77
 msgid "Manage permissions"
 msgstr "Engedélyek kezelése"
 
-#: admin-decrees.php:86
+#: admin-decrees.php:87
 msgid "Search decrees"
 msgstr "Dekrétumok keresése"
 
-#: admin-decrees.php:93
+#: admin-decrees.php:94
 msgid "Search by name, event key, protocol or description"
 msgstr "Keresés név, eseménykulcs, jegyzőkönyv vagy leírás alapján"
 
-#: admin-decrees.php:101
+#: admin-decrees.php:102
 msgid "Filter by year"
 msgstr "Szűrés év szerint"
 
-#: admin-decrees.php:105
+#: admin-decrees.php:106
 msgid "Any year"
 msgstr "Bármely év"
 
 #. translators: "action" here is the decree's action type (create new event / make Doctor of the Church / set
 #. property), not a deed or legal action
-#: admin-decrees.php:113
+#: admin-decrees.php:114
 msgid "Filter by action"
 msgstr "Szűrés művelet szerint"
 
 #. translators: the unfiltered choice in the decree action filter; see the note on "Filter by action"
-#: admin-decrees.php:119
+#: admin-decrees.php:120
 msgid "Any action"
 msgstr "Bármely művelet"
 
-#: admin-decrees.php:122 admin-decrees.php:192
+#: admin-decrees.php:123 admin-decrees.php:193
 msgid "Create new event"
 msgstr "Hozz létre új eseményt"
 
 #. translators: declares an existing saint a Doctor of the Church - the liturgical title (Latin "Doctor Ecclesiae"),
 #. never an academic doctorate, and not "manufacture"
-#: admin-decrees.php:127 admin-decrees.php:195
+#: admin-decrees.php:128 admin-decrees.php:196
 msgid "Make Doctor of the Church"
 msgstr "Tedd egyháztanítóvá"
 
-#: admin-decrees.php:130 admin-decrees.php:198
+#: admin-decrees.php:131 admin-decrees.php:199
 msgid "Set property: name"
 msgstr "Tulajdonság beállítása: név"
 
-#: admin-decrees.php:133 admin-decrees.php:201
+#: admin-decrees.php:134 admin-decrees.php:202
 msgid "Set property: grade"
 msgstr "Tulajdonság beállítása: fokozat"
 
-#: admin-decrees.php:139
+#: admin-decrees.php:140
 msgid "Clear"
 msgstr "Töröl"
 
-#: admin-decrees.php:153
+#: admin-decrees.php:154
 msgid "Decree"
 msgstr "Dekrétum"
 
-#: admin-decrees.php:156 admin-decrees.php:599 admin-permissions.php:229
-#: admin-permissions.php:261 admin-permissions.php:283
-#: admin-permissions.php:343 admin-tests.php:131 admin-tests.php:278
-#: admin-tests.php:305 admin-applications.php:184 admin-users.php:104
-#: developer-dashboard.php:84 developer-dashboard.php:154
-#: developer-dashboard.php:239 temporale.php:163 temporale.php:186
-msgid "Close"
-msgstr "Bezárás"
-
-#: admin-decrees.php:188
+#: admin-decrees.php:189
 msgid "Action"
 msgstr "Művelet"
 
-#: admin-decrees.php:212
+#: admin-decrees.php:213
 msgid "Decree ID"
 msgstr "Dekrétumazonosító"
 
-#: admin-decrees.php:216
+#: admin-decrees.php:217
 msgid "generated automatically from the event key and action"
 msgstr "automatikusan generálva az eseménykulcs és a művelet alapján"
 
 #. translators: the date the decree was signed; label for a date field
-#: admin-decrees.php:231
+#: admin-decrees.php:232
 msgid "Decree date"
 msgstr "Döntés dátuma"
 
-#: admin-decrees.php:238
+#: admin-decrees.php:239
 msgid "Protocol"
 msgstr "Protokoll"
 
 #. translators: the year from which the decree takes effect; label for a numeric year field
-#: admin-decrees.php:247
+#: admin-decrees.php:248
 msgid "Since year"
 msgstr "Kezdő év"
 
-#: admin-decrees.php:257 admin-tests.php:204 admin-applications.php:240
+#: admin-decrees.php:258 admin-tests.php:204 admin-applications.php:240
 #: developer-dashboard.php:98
 msgid "Description"
 msgstr "Leírás"
 
 #. translators: web address of the published decree; label for a URL field
-#: admin-decrees.php:268
+#: admin-decrees.php:269
 msgid "Source URL"
 msgstr "Forrás URL"
 
-#: admin-decrees.php:278
+#: admin-decrees.php:279
 msgid "Source available in multiple languages"
 msgstr "Elérhető több nyelven"
 
-#: admin-decrees.php:289
+#: admin-decrees.php:290
 msgid "Language URL codes"
 msgstr "Nyelvi URL kódok"
 
-#: admin-decrees.php:293
+#: admin-decrees.php:294
 #, php-format
 msgid ""
 "Use %s in the URL above where the language code appears; each row maps a "
@@ -2369,15 +2670,15 @@ msgstr ""
 "Használja a %s kódot a fenti URL-ben, ahol a nyelvi kód megjelenik; minden "
 "sor egy nyelvet és a vatikáni URL kódját társítja."
 
-#: admin-decrees.php:300
+#: admin-decrees.php:301
 msgid "Add language code"
 msgstr "Nyelvi kód hozzáadása"
 
-#: admin-decrees.php:306
+#: admin-decrees.php:307
 msgid "Per-language URL overrides"
 msgstr "Nyelvspecifikus URL-átírások"
 
-#: admin-decrees.php:311
+#: admin-decrees.php:312
 msgid ""
 "For a language whose document does not follow the pattern above — a "
 "different path or filename, not just a different code. Give the full URL."
@@ -2385,155 +2686,157 @@ msgstr ""
 "Abban az esetben, ha egy nyelv dokumentuma nem követi a fenti mintát — más "
 "útvonal vagy fájlnév, nem csak másik kód. Add meg a teljes URL-t."
 
-#: admin-decrees.php:317
+#: admin-decrees.php:318
 msgid "Add URL override"
 msgstr "URL-átírás hozzáadása"
 
-#: admin-decrees.php:322
+#: admin-decrees.php:323
 msgid "Preview"
 msgstr "Előnézet"
 
-#: admin-decrees.php:362
+#: admin-decrees.php:363
 msgid "Event details"
 msgstr "Esemény részletei"
 
-#: admin-decrees.php:368
+#: admin-decrees.php:369
 msgid "Date type"
 msgstr "Dátum típusa"
 
-#: admin-decrees.php:375
+#: admin-decrees.php:376
 msgid "Fixed"
 msgstr "Fix"
 
-#: admin-decrees.php:432
+#: admin-decrees.php:433
 msgid "Relative date"
 msgstr "Relatív dátum"
 
-#: admin-decrees.php:448
+#: admin-decrees.php:449
 msgid "before"
 msgstr "előtt"
 
-#: admin-decrees.php:449
+#: admin-decrees.php:450
 msgid "after"
 msgstr "után"
 
-#: admin-decrees.php:460
+#: admin-decrees.php:461
 msgid ""
 "A day of the week relative to a liturgical event, e.g. \"Monday after "
 "Pentecost\"."
 msgstr ""
 "Egy hét napja a liturgikus eseményhez képest, pl. \"hétfő Pünkösd után\"."
 
-#: admin-decrees.php:479
+#: admin-decrees.php:480
 msgid "Color(s)"
 msgstr "Színe(i)"
 
 #. translators: the liturgical Common (Commune sanctorum) a celebration is taken from - e.g. Pastors,
 #. Martyrs, Doctors. NOT "common" meaning ordinary or generic
-#: admin-decrees.php:495
+#: admin-decrees.php:496
 msgid "Common(s)"
 msgstr "Közös(ek)"
 
-#: admin-decrees.php:516
+#: admin-decrees.php:517
 msgid "New grade"
 msgstr "Új fokozat"
 
-#: admin-decrees.php:527
+#: admin-decrees.php:528
 msgid "Translations (i18n)"
 msgstr "Fordítások (i18n)"
 
-#: admin-decrees.php:541
+#: admin-decrees.php:542
 msgid "Name in base locale"
 msgstr "Név az alapértelmezett nyelven"
 
-#: admin-decrees.php:546
+#: admin-decrees.php:547
 msgid "Base locale — cannot be removed"
 msgstr "Alapértelmezett nyelv — nem törölhető"
 
-#: admin-decrees.php:553
+#: admin-decrees.php:554
 msgid "Add translation"
 msgstr "Új fordítás hozzáadása"
 
-#: admin-decrees.php:560 admin-decrees.php:635
+#: admin-decrees.php:561 admin-decrees.php:646 sanctorale.php:227
 msgid "Lectionary readings"
 msgstr "Szentírási olvasmányok"
 
-#: admin-decrees.php:572
+#: admin-decrees.php:573
 msgid "Add readings for locale"
 msgstr "Olvasmányok hozzáadása a nyelvhez"
 
-#: admin-decrees.php:583 admin-tests.php:262 developer-dashboard.php:323
+#: admin-decrees.php:584 admin-tests.php:262 developer-dashboard.php:323
+#: sanctorale.php:202 sanctorale.php:348
 msgid "Save"
 msgstr "Mentés"
 
-#: admin-decrees.php:596
+#: admin-decrees.php:597
 msgid "Delete Decree"
 msgstr "Határozat törlése"
 
-#: admin-decrees.php:610 admin-decrees.php:678 admin-tests.php:316
-#: admin-tests.php:341 developer-dashboard.php:249 developer-dashboard.php:270
+#: admin-decrees.php:611 admin-decrees.php:689 admin-tests.php:316
+#: admin-tests.php:348 developer-dashboard.php:249 developer-dashboard.php:270
+#: sanctorale.php:196 sanctorale.php:350
 msgid "Delete"
 msgstr "Törlés"
 
-#: admin-decrees.php:626
+#: admin-decrees.php:627 admin-locales.php:112 sanctorale.php:222
 msgid "Loading…"
 msgstr "Betöltés…"
 
-#: admin-decrees.php:627
+#: admin-decrees.php:628
 msgid "You do not have permission to view decrees administration."
 msgstr "Nincs jogosultságod a határozatok adminisztrációjának megtekintéséhez."
 
-#: admin-decrees.php:628
+#: admin-decrees.php:629
 msgid "Could not load decrees from the API."
 msgstr "Nem sikerült betölteni a határozatokat az API-ból."
 
-#: admin-decrees.php:629
+#: admin-decrees.php:630
 msgid "No decrees found."
 msgstr "Nem található határozat."
 
-#: admin-decrees.php:630
+#: admin-decrees.php:631
 msgid ""
 "Are you sure you want to delete this decree? This action cannot be undone."
 msgstr ""
 "Biztosan törölni akarod ezt a határozatot? Ez a művelet nem vonható vissza."
 
-#: admin-decrees.php:631
+#: admin-decrees.php:632
 msgid "Decree created."
 msgstr "Határozat létrehozva."
 
-#: admin-decrees.php:632
+#: admin-decrees.php:633
 msgid "Decree updated."
 msgstr "Határozat frissítve."
 
-#: admin-decrees.php:633
+#: admin-decrees.php:634
 msgid "Decree deleted."
 msgstr "Határozat törölve."
 
-#: admin-decrees.php:637
+#: admin-decrees.php:648
 msgid "Edit Decree"
 msgstr "Határozat szerkesztése"
 
-#: admin-decrees.php:638
+#: admin-decrees.php:649
 msgid "Select locale"
 msgstr "Nyelv kiválasztása"
 
-#: admin-decrees.php:639 permission-requests.php:229
+#: admin-decrees.php:650 permission-requests.php:229
 msgid "Remove"
 msgstr "Eltávolítás"
 
-#: admin-decrees.php:640
+#: admin-decrees.php:651
 msgid "First reading"
 msgstr "Első olvasmány"
 
-#: admin-decrees.php:641
+#: admin-decrees.php:652
 msgid "Responsorial psalm"
 msgstr "Válaszos zsoltár"
 
-#: admin-decrees.php:642
+#: admin-decrees.php:653
 msgid "Second reading"
 msgstr "Második olvasmány"
 
-#: admin-decrees.php:645
+#: admin-decrees.php:656
 msgid ""
 "Feast and below take the ferial readings: first reading, responsorial psalm, "
 "gospel acclamation and gospel."
@@ -2541,7 +2844,7 @@ msgstr ""
 "Az ünnep és alatti szinteken a köznapos olvasmányokat kell használni: első "
 "olvasmány, válaszos zsoltár, alleluja és evangélium."
 
-#: admin-decrees.php:649
+#: admin-decrees.php:660
 msgid ""
 "Feast of the Lord and above take the festive readings, which also require a "
 "second reading."
@@ -2549,31 +2852,31 @@ msgstr ""
 "Az Úr ünnepe és a fölötti szinteken az ünnepi olvasmányokat kell használni, "
 "amelyekhez második olvasmány is szükséges."
 
-#: admin-decrees.php:652
+#: admin-decrees.php:663
 msgid "Gospel acclamation"
 msgstr "Alleluja"
 
-#: admin-decrees.php:653
+#: admin-decrees.php:664 sanctorale.php:274
 msgid "Gospel"
 msgstr "Evangélium"
 
-#: admin-decrees.php:654
+#: admin-decrees.php:665
 msgid "No readings defined for this locale yet"
 msgstr "Még nincsenek olvasmányok meghatározva ehhez a nyelvhez"
 
-#: admin-decrees.php:655
+#: admin-decrees.php:666
 msgid "Vatican URL code (e.g. ge, sp, po)"
 msgstr "Vatikán URL kód (pl. ge, sp, po)"
 
-#: admin-decrees.php:656
+#: admin-decrees.php:667
 msgid "Full URL for this language"
 msgstr "Teljes URL ehhez a nyelvhez"
 
-#: admin-decrees.php:658
+#: admin-decrees.php:669 sanctorale.php:317
 msgid "override"
 msgstr "felülírása"
 
-#: admin-decrees.php:660
+#: admin-decrees.php:671
 #, php-format
 msgid ""
 "Duplicate language code \"%s\" in the URL overrides — each language may be "
@@ -2582,7 +2885,7 @@ msgstr ""
 "Duplikált nyelvkód az URL-átírásokban \"%s\" — minden nyelvet csak egyszer "
 "lehet felülírni"
 
-#: admin-decrees.php:662
+#: admin-decrees.php:673
 #, php-format
 msgid ""
 "Duplicate language code \"%s\" in the source URL languages — each language "
@@ -2591,36 +2894,36 @@ msgstr ""
 "Ismétlődő nyelvi kód \"%s\" a forrás URL nyelvek között — minden nyelv csak "
 "egyszer szerepelhet"
 
-#: admin-decrees.php:663
+#: admin-decrees.php:674
 msgid "Please fix the following errors before saving:"
 msgstr "Kérem, javítsa a hibákat a mentés előtt:"
 
-#: admin-decrees.php:664
+#: admin-decrees.php:675
 #, php-format
 msgid "Since %s"
 msgstr "%s óta"
 
-#: admin-decrees.php:665
+#: admin-decrees.php:676
 msgid "Source"
 msgstr "Forrás"
 
-#: admin-decrees.php:666
+#: admin-decrees.php:677
 msgid "Your session has expired. Please log in again."
 msgstr "A munkamenet lejárt. Kérjük, jelentkezzen be újra."
 
-#: admin-decrees.php:667
+#: admin-decrees.php:678
 msgid "Log in"
 msgstr "Bejelentkezés"
 
-#: admin-decrees.php:668 admin-tests.php:347
+#: admin-decrees.php:679 admin-tests.php:354
 msgid "You do not have permission to perform this action."
 msgstr "Nincs jogosultsága arra, hogy ezt a műveletet végrehajtsa."
 
-#: admin-decrees.php:669
+#: admin-decrees.php:680
 msgid "Not in the General Roman Calendar — a new event will be created."
 msgstr "Nincs benne az Általános Római Naptárban — új esemény jön létre."
 
-#: admin-decrees.php:671
+#: admin-decrees.php:682
 #, php-format
 msgid ""
 "Already in the General Roman Calendar as \"%s\" — choose a different event "
@@ -2629,65 +2932,65 @@ msgstr ""
 "Már szerepel az Általános Római Naptárban, mint \"%s\" — válasszon másik "
 "esemény kulcsot."
 
-#: admin-decrees.php:672
+#: admin-decrees.php:683
 msgid ""
 "Not in the General Roman Calendar — this decree will not match any event."
 msgstr ""
 "Nincs benne az Általános Római Naptárban — ez a dekrétum nem fog egyezni "
 "egyetlen eseménnyel sem."
 
-#: admin-decrees.php:674
+#: admin-decrees.php:685
 #, php-format
 msgid "Matches \"%s\" in the General Roman Calendar."
 msgstr "Egyezik a \"%s\" nevű eseménnyel az Általános Római Naptárban."
 
-#: admin-decrees.php:676
+#: admin-decrees.php:687
 msgid "No decrees match the current search and filters."
 msgstr "A jelenlegi keresés és szűrők nem egyeznek egyetlen dekrétummal sem."
 
-#: admin-decrees.php:679
+#: admin-decrees.php:690
 msgid "(error)"
 msgstr "(hiba)"
 
 #. translators: liturgical grade 7 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:685
+#: admin-decrees.php:696
 msgid "Higher Solemnity"
 msgstr "Nagyobb főünnep"
 
 #. translators: liturgical grade 6 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:691
+#: admin-decrees.php:702 sanctorale.php:309
 msgid "Solemnity"
 msgstr "Főünnep"
 
 #. translators: liturgical grade 5 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:697
+#: admin-decrees.php:708 sanctorale.php:308
 msgid "Feast of the Lord"
 msgstr "Az Úr ünnepe"
 
 #. translators: liturgical grade 4 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:703
+#: admin-decrees.php:714 sanctorale.php:307
 msgid "Feast"
 msgstr "Ünnep"
 
 #. translators: liturgical grade 2 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:715
+#: admin-decrees.php:726
 msgid "Optional Memorial"
 msgstr "Választható emléknap"
 
 #. translators: liturgical grade 0 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:727
+#: admin-decrees.php:738 sanctorale.php:303
 msgid "Weekday"
 msgstr "Hétköznap"
 
@@ -2708,7 +3011,7 @@ msgstr ""
 msgid "Filters"
 msgstr "Szűrők"
 
-#: admin-permissions.php:67 admin-permissions.php:431
+#: admin-permissions.php:67 admin-permissions.php:452
 #: admin-applications.php:238 admin-users.php:213 admin-users.php:290
 msgid "User"
 msgstr "Felhasználó"
@@ -2717,221 +3020,219 @@ msgstr "Felhasználó"
 msgid "Filter by user ID..."
 msgstr "Szűrés felhasználói azonosító alapján..."
 
-#: admin-permissions.php:73 admin-permissions.php:387 admin-permissions.php:434
+#: admin-permissions.php:73 admin-permissions.php:399 admin-permissions.php:455
 msgid "Object Type"
 msgstr "Objektumtípus"
 
-#: admin-permissions.php:76 admin-permissions.php:96
+#: admin-permissions.php:76 admin-permissions.php:102
 msgid "All"
 msgstr "Összes"
 
-#: admin-permissions.php:78 admin-permissions.php:305 admin-permissions.php:412
-#: admin-permissions.php:443 permission-requests.php:243
+#: admin-permissions.php:81 admin-permissions.php:316 admin-permissions.php:409
+#: permission-requests.php:243
+msgid "Rite Calendar"
+msgstr "Rítus naptár"
+
+#: admin-permissions.php:82 admin-permissions.php:317 admin-permissions.php:410
+#: permission-requests.php:244
+msgid "Rite Calendar Tests"
+msgstr "Rítus naptár tesztek"
+
+#: admin-permissions.php:84 admin-permissions.php:433 admin-permissions.php:464
+#: permission-requests.php:248
 msgid "General Roman Calendar Tests"
 msgstr "Általános római naptári tesztek"
 
-#: admin-permissions.php:80 admin-permissions.php:307 admin-permissions.php:394
-#: admin-tests.php:150 admin-tests.php:345 permission-requests.php:238
+#: admin-permissions.php:86 admin-permissions.php:319 admin-permissions.php:406
+#: admin-tests.php:150 admin-tests.php:352 permission-requests.php:238
 msgid "Diocesan Calendar"
 msgstr "Egyházmegyei naptár"
 
-#: admin-permissions.php:82 admin-permissions.php:309 admin-permissions.php:410
-#: admin-permissions.php:441 permission-requests.php:241
+#: admin-permissions.php:88 admin-permissions.php:321 admin-permissions.php:431
+#: admin-permissions.php:462 permission-requests.php:241
 msgid "National Calendar Tests"
 msgstr "Nemzeti naptári tesztek"
 
-#: admin-permissions.php:83 admin-permissions.php:310 admin-permissions.php:411
-#: admin-permissions.php:442 permission-requests.php:242
+#: admin-permissions.php:89 admin-permissions.php:322 admin-permissions.php:432
+#: admin-permissions.php:463 permission-requests.php:242
 msgid "Diocesan Calendar Tests"
 msgstr "Egyházmegyei naptári tesztek"
 
-#: admin-permissions.php:87 admin-permissions.php:388 admin-permissions.php:435
+#: admin-permissions.php:93 admin-permissions.php:400 admin-permissions.php:456
 msgid "Object ID"
 msgstr "Objektumazonosító"
 
-#: admin-permissions.php:90
+#: admin-permissions.php:96
 msgid "Filter by object ID..."
 msgstr "Szűrés objektumazonosító alapján..."
 
-#: admin-permissions.php:93 admin-permissions.php:292 admin-permissions.php:389
-#: admin-permissions.php:444 permission-requests.php:227
+#: admin-permissions.php:99 admin-permissions.php:298 admin-permissions.php:401
+#: admin-permissions.php:465 permission-requests.php:227
 msgid "Relation"
 msgstr "Kapcsolat"
 
-#: admin-permissions.php:97 admin-permissions.php:295 admin-permissions.php:414
-#: permission-requests.php:259
+#: admin-permissions.php:103 admin-permissions.php:301
+#: admin-permissions.php:435 permission-requests.php:270
 msgid "Viewer"
 msgstr "Megtekintő"
 
-#: admin-permissions.php:98 admin-permissions.php:296 admin-permissions.php:415
-#: permission-requests.php:260
+#: admin-permissions.php:104 admin-permissions.php:302
+#: admin-permissions.php:436 permission-requests.php:271
 msgid "Editor"
 msgstr "Szerkesztő"
 
-#: admin-permissions.php:99 admin-permissions.php:297 admin-permissions.php:416
-#: permission-requests.php:261
+#: admin-permissions.php:105 admin-permissions.php:303
+#: admin-permissions.php:437 permission-requests.php:272
 msgctxt "permission relation"
 msgid "Admin"
 msgstr "Adminisztrátor"
 
-#: admin-permissions.php:105
+#: admin-permissions.php:111
 msgid "Apply Filters"
 msgstr "Szűrők alkalmazása"
 
-#: admin-permissions.php:108
+#: admin-permissions.php:114
 msgid "Clear Filters"
 msgstr "Szűrők törlése"
 
-#: admin-permissions.php:117 admin-permissions.php:281
-#: admin-permissions.php:328
+#: admin-permissions.php:123 admin-permissions.php:287
+#: admin-permissions.php:340
 msgid "Grant Permission"
 msgstr "Engedély megadása"
 
-#: admin-permissions.php:120 admin-permissions.php:149 admin-tests.php:79
-#: admin-applications.php:125 admin-users.php:56
+#: admin-permissions.php:126 admin-permissions.php:155 admin-tests.php:79
+#: admin-applications.php:125 admin-users.php:56 admin-locales.php:68
+#: admin-changes.php:145 change-requests.php:70
 msgid "Refresh"
 msgstr "Frissítés"
 
-#: admin-permissions.php:128
+#: admin-permissions.php:134
 msgid "Permission Tuples"
 msgstr "Engedélybejegyzések"
 
-#: admin-permissions.php:144 permission-requests.php:31
+#: admin-permissions.php:150 permission-requests.php:31
 #: permission-requests.php:44
 msgid "Access Requests"
 msgstr "Hozzáférési Kérelmek"
 
-#: admin-permissions.php:160 admin-permissions.php:459
-#: permission-requests.php:263 admin-applications.php:57
+#: admin-permissions.php:166 admin-permissions.php:480
+#: permission-requests.php:274 admin-applications.php:57
 #: admin-applications.php:101 admin-applications.php:250
 #: developer-dashboard.php:303
 msgid "Pending"
 msgstr "Függőben"
 
-#: admin-permissions.php:167 admin-permissions.php:460
-#: permission-requests.php:264 admin-applications.php:68
-#: admin-applications.php:108 admin-applications.php:251
-#: developer-dashboard.php:304
-msgid "Approved"
-msgstr "Jóváhagyott"
-
-#: admin-permissions.php:174 admin-permissions.php:461
-#: permission-requests.php:265 admin-applications.php:79
-#: admin-applications.php:114 admin-applications.php:252
-#: developer-dashboard.php:305
-msgid "Rejected"
-msgstr "Elutasított"
-
-#: admin-permissions.php:181 admin-permissions.php:462
-#: permission-requests.php:266 admin-applications.php:90
+#: admin-permissions.php:187 admin-permissions.php:483
+#: permission-requests.php:277 admin-applications.php:90
 #: admin-applications.php:120 admin-applications.php:253
 #: developer-dashboard.php:306
 msgid "Revoked"
 msgstr "Visszavonva"
 
-#: admin-permissions.php:227
+#: admin-permissions.php:233
 msgid "Review Access Request"
 msgstr "Hozzáférési Kérelmek Áttekintése"
 
-#: admin-permissions.php:238 admin-applications.php:193
+#: admin-permissions.php:244 admin-applications.php:193
 msgid "Notes"
 msgstr "Megjegyzések"
 
-#: admin-permissions.php:239 permission-requests.php:152
-#: admin-applications.php:194
+#: admin-permissions.php:245 permission-requests.php:152
+#: admin-applications.php:194 admin-changes.php:220
 msgid "optional"
 msgstr "nem kötelező"
 
-#: admin-permissions.php:244 admin-applications.php:199
+#: admin-permissions.php:250 admin-applications.php:199
 msgid "Add notes about your decision..."
 msgstr "Adjon hozzá megjegyzéseket a döntésével kapcsolatban..."
 
-#: admin-permissions.php:252 admin-applications.php:216
+#: admin-permissions.php:258 admin-applications.php:216 admin-changes.php:239
 msgid "Approve"
 msgstr "Jóváhagy"
 
-#: admin-permissions.php:255 admin-applications.php:210
+#: admin-permissions.php:261 admin-applications.php:210 admin-changes.php:236
 msgid "Reject"
 msgstr "Elutasít"
 
-#: admin-permissions.php:258 admin-permissions.php:391
+#: admin-permissions.php:264 admin-permissions.php:403
 #: admin-applications.php:213 developer-dashboard.php:271
 msgid "Revoke"
 msgstr "Visszavon"
 
-#: admin-permissions.php:270 admin-applications.php:172 admin-users.php:92
+#: admin-permissions.php:276 admin-applications.php:172 admin-users.php:92
+#: admin-changes.php:192 change-requests.php:82
 msgid "Back to Dashboard"
 msgstr "Vissza az Irányítópulthoz"
 
-#: admin-permissions.php:287 admin-users.php:215 admin-users.php:292
+#: admin-permissions.php:293 admin-users.php:215 admin-users.php:292
 #: user-profile.php:113
 msgid "User ID"
 msgstr "Felhasználói ID"
 
-#: admin-permissions.php:289
+#: admin-permissions.php:295
 msgid "Enter user ID..."
 msgstr "Adja meg a felhasználói ID-t..."
 
-#: admin-permissions.php:294 permission-requests.php:228
+#: admin-permissions.php:300 permission-requests.php:228
 msgid "Select relation..."
 msgstr "Válasszon kapcsolatot..."
 
-#: admin-permissions.php:301 admin-permissions.php:405
-#: admin-permissions.php:436 permission-requests.php:230
+#: admin-permissions.php:307 admin-permissions.php:426
+#: admin-permissions.php:457 permission-requests.php:230
 msgid "Calendar scope"
 msgstr "Naptár hatóköre"
 
-#: admin-permissions.php:303 permission-requests.php:232
+#: admin-permissions.php:309 permission-requests.php:232
 msgid "Select calendar scope..."
 msgstr "Válaszd ki a naptár hatókörét..."
 
-#: admin-permissions.php:314 admin-permissions.php:406
-#: admin-permissions.php:437 permission-requests.php:231
+#: admin-permissions.php:326 admin-permissions.php:427
+#: admin-permissions.php:458 permission-requests.php:231
 msgid "Calendar ID"
 msgstr "Naptár azonosítója"
 
-#: admin-permissions.php:317 admin-permissions.php:407
-#: admin-permissions.php:438 permission-requests.php:233
+#: admin-permissions.php:329 admin-permissions.php:428
+#: admin-permissions.php:459 permission-requests.php:233
 msgid "Select calendar ID..."
 msgstr "Válaszd ki a naptár azonosítóját..."
 
-#: admin-permissions.php:341 admin-permissions.php:354
+#: admin-permissions.php:353 admin-permissions.php:366
 msgid "Revoke Permission"
 msgstr "Engedély visszavonása"
 
-#: admin-permissions.php:369
+#: admin-permissions.php:381
 msgid "No permissions found."
 msgstr "Nem találhatók engedélyek."
 
-#: admin-permissions.php:370
+#: admin-permissions.php:382
 msgid "Failed to load permissions. Please try again later."
 msgstr "Az engedélyek betöltése sikertelen. Kérlek, próbáld újra később."
 
-#: admin-permissions.php:371
+#: admin-permissions.php:383
 msgid "Permission granted successfully."
 msgstr "Az engedély sikeresen megadva."
 
-#: admin-permissions.php:372
+#: admin-permissions.php:384
 msgid "Permission revoked successfully."
 msgstr "Az engedély sikeresen visszavonva."
 
-#: admin-permissions.php:373
+#: admin-permissions.php:385
 msgid "Failed to grant permission. Please try again."
 msgstr "Az engedély megadása sikertelen. Kérlek, próbáld újra."
 
-#: admin-permissions.php:374
+#: admin-permissions.php:386
 msgid "Failed to revoke permission. Please try again."
 msgstr "Az engedély visszavonása sikertelen. Kérlek, próbáld újra."
 
-#: admin-permissions.php:375
+#: admin-permissions.php:387
 msgid "Granting..."
 msgstr "Engedély megadása folyamatban..."
 
-#: admin-permissions.php:376 admin-users.php:353
+#: admin-permissions.php:388 admin-users.php:353
 msgid "Revoking..."
 msgstr "Visszavonás folyamatban..."
 
-#: admin-permissions.php:377
+#: admin-permissions.php:389
 msgid "Are you sure you want to revoke this permission?"
 msgstr "Biztosan vissza akarja vonni ezt az engedélyt?"
 
@@ -2939,137 +3240,135 @@ msgstr "Biztosan vissza akarja vonni ezt az engedélyt?"
 #. granted TO — an OpenFGA tuple subject, i.e. a user. Not the thing the permission
 #. applies to: that is the adjacent "Object Type" / "Object ID". Several locales have
 #. rendered this as "topic" or "email subject line", which collides with those columns.
-#: admin-permissions.php:384
+#: admin-permissions.php:396
 msgid "Subject"
 msgstr "Alany"
 
-#: admin-permissions.php:386
-msgid "Unknown user"
-msgstr "Ismeretlen felhasználó"
-
-#: admin-permissions.php:390 admin-permissions.php:448 admin-tests.php:113
-#: admin-applications.php:244 temporale.php:140
-msgid "Actions"
-msgstr "Műveletek"
-
-#: admin-permissions.php:396 admin-tests.php:128 permission-requests.php:240
+#: admin-permissions.php:408 admin-tests.php:128 permission-requests.php:240
 msgid "Test Definition"
 msgstr "Tesztdefiníció"
 
-#: admin-permissions.php:399 permission-requests.php:247
+#: admin-permissions.php:415 permission-requests.php:251
+msgid "Roman Rite"
+msgstr "Római rítus"
+
+#: admin-permissions.php:416 permission-requests.php:252 sanctorale.php:345
+msgid "Ambrosian Rite"
+msgstr ""
+
+#: admin-permissions.php:418 permission-requests.php:255
 msgid "Sanctorale — Editio Typica 1970"
 msgstr "Sanctorale — Editio Typica 1970"
 
-#: admin-permissions.php:400 permission-requests.php:249
+#: admin-permissions.php:419 permission-requests.php:257
 msgid "Sanctorale — Editio Typica 2002"
 msgstr "Sanctorale — Editio Typica 2002"
 
-#: admin-permissions.php:401 permission-requests.php:251
+#: admin-permissions.php:420 permission-requests.php:259
 msgid "Sanctorale — Editio Typica 2008"
 msgstr "Sanctorale — Editio Typica 2008"
 
-#: admin-permissions.php:402 permission-requests.php:253
+#: admin-permissions.php:421 permission-requests.php:261
+msgid "Sanctorale — Editio Typica 2024"
+msgstr "Sanctorale — Editio Typica 2024"
+
+#: admin-permissions.php:422 permission-requests.php:263
 msgid "Decrees of the Dicastery for Divine Worship"
 msgstr "Az Istentiszteleti Dikasztérium dekrétumai"
 
-#: admin-permissions.php:403
+#: admin-permissions.php:423 permission-requests.php:264
+msgid "Supported locales"
+msgstr "Támogatott nyelvek"
+
+#: admin-permissions.php:424
 msgid "Enter object ID..."
 msgstr "Adja meg az objektum ID-t..."
 
-#: admin-permissions.php:404
+#: admin-permissions.php:425
 msgid "Select object ID..."
 msgstr "Válasszon objektumazonosítót..."
 
-#: admin-permissions.php:409 admin-permissions.php:440
+#: admin-permissions.php:430 admin-permissions.php:461
 #: permission-requests.php:235
 msgid "Could not load calendars — try reloading the page"
 msgstr "Nem sikerült betölteni a naptárakat — próbáld újratölteni az oldalt"
 
-#: admin-permissions.php:418
+#: admin-permissions.php:439
 msgid "All fields are required."
 msgstr "Minden mező kitöltése kötelező."
 
-#: admin-permissions.php:422
+#: admin-permissions.php:443
 msgid "No requests found."
 msgstr "Nem találhatók kérelmek."
 
-#: admin-permissions.php:423
+#: admin-permissions.php:444
 msgid "No pending access requests. All caught up!"
 msgstr "Nincs függőben lévő hozzáférési kérelem. Minden beérkezett!"
 
-#: admin-permissions.php:424
+#: admin-permissions.php:445
 msgid "Failed to load access requests. Please try again later."
 msgstr ""
 "Nem sikerült betölteni a hozzáférési kérelmeket. Kérlek, próbáld meg később."
 
-#: admin-permissions.php:425 admin-applications.php:232
+#: admin-permissions.php:446 admin-applications.php:232 admin-changes.php:259
+#: change-requests.php:118
 msgid "Processing..."
 msgstr "Feldolgozás..."
 
-#: admin-permissions.php:426
+#: admin-permissions.php:447
 msgid "Access request approved successfully."
 msgstr "A hozzáférési kérelem sikeresen jóváhagyva."
 
-#: admin-permissions.php:427
+#: admin-permissions.php:448
 msgid "Access request rejected."
 msgstr "A hozzáférési kérelmet elutasították."
 
-#: admin-permissions.php:428
+#: admin-permissions.php:449
 msgid "Access revoked successfully."
 msgstr "A hozzáférés sikeresen visszavonva."
 
-#: admin-permissions.php:429 admin-applications.php:236
+#: admin-permissions.php:450 admin-applications.php:236
 msgid "Failed to process request. Please try again."
 msgstr "Kérelem feldolgozása sikertelen. Kérlek, próbáld meg újra."
 
-#: admin-permissions.php:432 permission-requests.php:219
+#: admin-permissions.php:453 permission-requests.php:219
 msgid "Role"
 msgstr "Szerep"
 
-#: admin-permissions.php:433 permission-requests.php:133
+#: admin-permissions.php:454 permission-requests.php:133
 #: permission-requests.php:220 admin-dashboard.php:110 user-profile.php:178
 msgid "Permissions"
 msgstr "Engedélyek"
 
-#: admin-permissions.php:445 permission-requests.php:151
+#: admin-permissions.php:466 permission-requests.php:151
 #: permission-requests.php:222
 msgid "Justification"
 msgstr "Indoklás"
 
-#: admin-permissions.php:446 permission-requests.php:166
+#: admin-permissions.php:467 permission-requests.php:166
 msgid "Credentials"
 msgstr "Hitelesítő adatok"
 
-#: admin-permissions.php:447
+#: admin-permissions.php:468 sanctorale.php:292
 msgid "Date"
 msgstr "Dátum"
 
-#: admin-permissions.php:449 admin-applications.php:245 admin-dashboard.php:135
-#: admin-dashboard.php:189
-msgid "Review"
-msgstr "Felülvizsgálat"
-
-#: admin-permissions.php:450 admin-applications.php:247
+#: admin-permissions.php:471 admin-applications.php:247
 msgid "Reviewed At"
 msgstr "Felülvizsgálat időpontja"
 
-#: admin-permissions.php:451 permission-requests.php:223
+#: admin-permissions.php:472 permission-requests.php:223
 #: admin-applications.php:248
 msgid "Review Notes"
 msgstr "Felülvizsgálati megjegyzések"
 
-#: admin-permissions.php:452 permission-requests.php:221
-#: admin-applications.php:243
-msgid "Status"
-msgstr "Állapot"
-
-#: admin-permissions.php:455 permission-requests.php:80
-#: permission-requests.php:255 admin-users.php:145
+#: admin-permissions.php:476 permission-requests.php:80
+#: permission-requests.php:266 admin-users.php:145
 msgid "Calendar Editor"
 msgstr "Naptárszerkesztő"
 
-#: admin-permissions.php:456 permission-requests.php:85
-#: permission-requests.php:256 admin-users.php:146
+#: admin-permissions.php:477 permission-requests.php:85
+#: permission-requests.php:267 admin-users.php:146
 msgid "Accuracy Test Editor"
 msgstr "Pontossági teszt szerkesztője"
 
@@ -3211,58 +3510,58 @@ msgstr "A teszt sikeresen frissítve."
 msgid "Test deleted successfully."
 msgstr "A teszt sikeresen törölve."
 
-#: admin-tests.php:338
+#: admin-tests.php:345
 msgid "Saving..."
 msgstr "Mentés..."
 
-#: admin-tests.php:339
+#: admin-tests.php:346
 msgid "Deleting..."
 msgstr "Törlés..."
 
-#: admin-tests.php:342
+#: admin-tests.php:349
 #, php-format
 msgid "Are you sure you want to delete the test \"%s\"?"
 msgstr "Biztosan törölni szeretnéd a \"%s\" nevű tesztet?"
 
-#: admin-tests.php:346
+#: admin-tests.php:353
 msgid "Please fill in all required fields."
 msgstr "Kérjük, töltsd ki az összes kötelező mezőt."
 
-#: admin-tests.php:348
+#: admin-tests.php:355
 msgid "A test with that name already exists."
 msgstr "Már létezik ilyen nevű teszt."
 
 #. translators: action label for the same boundary year; use the same term as the "pivot year" legend chip
-#: admin-tests.php:351
+#: admin-tests.php:358
 msgid "set pivot year"
 msgstr "forduló év beállítása"
 
 #. translators: an assertion is one expected-result check for a single year of the test
-#: admin-tests.php:355
+#: admin-tests.php:362
 msgid "toggle assertion"
 msgstr "állítás átkapcsolása"
 
-#: admin-tests.php:357
+#: admin-tests.php:364
 msgid "remove"
 msgstr "eltávolítás"
 
 #. translators: %1$s is a year, %2$s is the name of a liturgical event. Keep both placeholders and their order
-#: admin-tests.php:360
+#: admin-tests.php:367
 #, php-format
 msgid "In the year %1$s, %2$s falls on a Sunday"
 msgstr "%1$s évben %2$s vasárnapra esik"
 
 #. translators: %s is a year, e.g. 2015. "click" is the mouse action - it needs translating too
-#: admin-tests.php:364
+#: admin-tests.php:371
 #, php-format
 msgid "%s excluded — click to restore"
 msgstr "%s kizárva — kattints a visszaállításhoz"
 
-#: admin-tests.php:366
+#: admin-tests.php:373
 msgid "Test name:"
 msgstr "Teszt neve:"
 
-#: admin-tests.php:367
+#: admin-tests.php:374
 msgid "Select a valid liturgical event from the list."
 msgstr "Válassz ki egy érvényes liturgikus eseményt a listából."
 
@@ -3403,10 +3702,6 @@ msgstr ""
 msgid "Unknown error"
 msgstr "Ismeretlen hiba"
 
-#: permission-requests.php:224
-msgid "Submitted"
-msgstr "Beküldve"
-
 #: permission-requests.php:225
 msgid "Reviewed"
 msgstr "Felülvizsgálva"
@@ -3485,8 +3780,8 @@ msgstr ""
 "Liturgikus naptár adatok, Római Misekönyv információk és regionális naptárak "
 "kezelése."
 
-#: admin-dashboard.php:65 admin-dashboard.php:147 admin-dashboard.php:164
-#: admin-dashboard.php:174
+#: admin-dashboard.php:65 admin-dashboard.php:150 admin-dashboard.php:169
+#: admin-dashboard.php:179
 msgid "Administration"
 msgstr "Adminisztráció"
 
@@ -3510,11 +3805,11 @@ msgstr "Fejlesztői alkalmazások áttekintése és jóváhagyása"
 msgid "Manage fine-grained resource permissions"
 msgstr "Finomhangolt erőforrás-hozzáférések kezelése"
 
-#: admin-dashboard.php:129
+#: admin-dashboard.php:130 admin-locales.php:38 admin-locales.php:50
 msgid "Supported Locales"
 msgstr "Támogatott helyi beállítások"
 
-#: admin-dashboard.php:131
+#: admin-dashboard.php:132
 msgid ""
 "See which locales are officially supported, and whether a candidate has "
 "everything it needs"
@@ -3522,15 +3817,32 @@ msgstr ""
 "Nézd meg, mely helyi beállítások hivatalosan támogatottak, és hogy egy "
 "jelöltnek megvan-e minden szükséges dolog."
 
-#: admin-dashboard.php:183
+#: admin-dashboard.php:188
 msgid "Access Requests to Review"
 msgstr "Elbírálandó hozzáférési kérelmek"
 
-#: admin-dashboard.php:185
+#: admin-dashboard.php:190
 msgid "Review and approve access requests for the resources you administer"
 msgstr ""
 "Tekintsd át és hagyd jóvá az általad kezelt erőforrásokra vonatkozó "
 "hozzáférési kérelmeket"
+
+#: admin-dashboard.php:206
+msgid "Your Contributions"
+msgstr "Hozzájárulásaid"
+
+#: admin-dashboard.php:215 admin-changes.php:195 change-requests.php:37
+#: change-requests.php:50 change-requests.php:66
+msgid "Your Change Requests"
+msgstr "Módosítási kérelmeid"
+
+#: admin-dashboard.php:219
+msgid ""
+"Track the source data changes you have proposed, read what became of them, "
+"and withdraw one that is still awaiting review"
+msgstr ""
+"Kövesd az általad javasolt forrásadat-változtatásokat, olvasd el, mi történt "
+"velük, és vonj vissza egyet, amely még vár felülvizsgálatra"
 
 #: admin-users.php:33 admin-users.php:45
 msgid "Users Management"
@@ -3609,6 +3921,265 @@ msgstr "Szerep sikeresen visszavonva."
 #: admin-users.php:393
 msgid "Failed to revoke role. Please try again."
 msgstr "Nem sikerült visszavonni a szerepkört. Kérlek, próbáld újra."
+
+#: admin-locales.php:55
+msgid ""
+"An officially supported locale promises complete data. Missing data for one "
+"is treated as an error, while a locale outside the list degrades quietly. "
+"Promoting a locale therefore tightens enforcement, and may only be done once "
+"every check below passes."
+msgstr ""
+"Egy hivatalosan támogatott helyi beállítás teljes adatokat ígér. Hiányzó "
+"adatok egy esetben hibaként kerülnek kezelve, míg egy a listán kívüli helyi "
+"beállítás csendben leértékelődik. Tehát a locale előléptetése szigorítja a "
+"szabályozást, és csak akkor hajtható végre, ha az alábbi ellenőrzések mind "
+"átmennek."
+
+#: admin-locales.php:66
+msgid "Candidate locales"
+msgstr "Jelölt nyelvi beállítások"
+
+#: admin-locales.php:76
+msgid "Locale"
+msgstr "Helyi beállítás"
+
+#: admin-locales.php:78
+msgid "Readiness"
+msgstr "Készültség"
+
+#: admin-locales.php:79 sanctorale.php:176 sanctorale.php:223
+msgid "Details"
+msgstr "Részletek"
+
+#: admin-locales.php:107
+msgid "Official"
+msgstr "Hivatalos"
+
+#: admin-locales.php:108
+msgid "Candidate"
+msgstr "Jelölt"
+
+#: admin-locales.php:109
+msgid "Ready"
+msgstr "Kész"
+
+#: admin-locales.php:110
+msgid "Not ready"
+msgstr "Nem kész"
+
+#: admin-locales.php:111
+msgid "View checks"
+msgstr "Ellenőrzések megtekintése"
+
+#: admin-locales.php:113
+msgid "Working…"
+msgstr "Folyamatban…"
+
+#: admin-locales.php:114
+#, fuzzy, php-format
+#| msgid "Could not load notifications"
+msgid "Could not load locales: %s"
+msgstr "Értesítések betöltése nem sikerült"
+
+#: admin-locales.php:115
+msgid "Missing:"
+msgstr ""
+
+#: admin-locales.php:116
+msgid "Advisory — reported, but does not block promotion"
+msgstr ""
+
+#: admin-locales.php:117
+msgid "Promote"
+msgstr ""
+
+#: admin-locales.php:118
+msgid "Demote"
+msgstr ""
+
+#. translators: %s is a locale tag such as "fr_FR"
+#: admin-locales.php:120
+#, php-format
+msgid "Locale %s is now officially supported."
+msgstr ""
+
+#. translators: %s is a locale tag such as "fr_FR"
+#: admin-locales.php:122
+#, php-format
+msgid "Locale %s is no longer officially supported."
+msgstr ""
+
+#. translators: %s is the error reported by the API
+#: admin-locales.php:124
+#, php-format
+msgid "Could not change this locale: %s"
+msgstr ""
+
+#: admin-locales.php:125
+msgid ""
+"This locale is not ready to be promoted. Open “View checks” to see what is "
+"missing."
+msgstr ""
+
+#: admin-locales.php:126
+msgid ""
+"This is the only officially supported locale, and the list may not be "
+"emptied. Promote a replacement first."
+msgstr ""
+
+#: admin-locales.php:129
+msgid "Curation is unavailable."
+msgstr ""
+
+#: admin-locales.php:130
+#, fuzzy
+#| msgid "Change name or grade"
+msgid "Changes here are not durable."
+msgstr "Név vagy fokozat módosítása"
+
+#: admin-locales.php:131
+msgid "Changes here are reviewed."
+msgstr ""
+
+#: admin-changes.php:45 admin-changes.php:58
+#, fuzzy
+#| msgid "Access Requests to Review"
+msgid "Change Request Review"
+msgstr "Elbírálandó hozzáférési kérelmek"
+
+#: admin-changes.php:64
+msgid ""
+"Review the source data changes proposed for the calendars you administer. "
+"Approving a change request is the only human gate before it is published, so "
+"read what it proposes before deciding."
+msgstr ""
+
+#: admin-changes.php:206
+#, fuzzy
+#| msgid "Review Role Request"
+msgid "Review Change Request"
+msgstr "Szerepkérés átnézése"
+
+#: admin-changes.php:219
+#, fuzzy
+#| msgid "Session Information"
+msgid "Reason for rejection"
+msgstr "Munkamenet információk"
+
+#: admin-changes.php:225
+msgid "The submitter will be shown this reason."
+msgstr ""
+
+#: admin-changes.php:251
+#, fuzzy
+#| msgid "Submitted"
+msgid "Submitted by"
+msgstr "Beküldve"
+
+#: admin-changes.php:252
+msgid "Outcome"
+msgstr ""
+
+#: admin-changes.php:254
+#, fuzzy
+#| msgid "Revoke Permission"
+msgid "Reviewer decision"
+msgstr "Engedély visszavonása"
+
+#: admin-changes.php:255
+#, fuzzy
+#| msgid "Season"
+msgid "Reason"
+msgstr "Évszak"
+
+#: admin-changes.php:256
+#, fuzzy
+#| msgid "No pending role requests. All caught up!"
+msgid "No change requests are waiting for review. All caught up!"
+msgstr "Nincs függőben lévő szerepkérés. Minden naprakész!"
+
+#: admin-changes.php:257
+#, fuzzy
+#| msgid "No requests found."
+msgid "No change requests found."
+msgstr "Nem találhatók kérelmek."
+
+#: admin-changes.php:258
+#, fuzzy
+#| msgid "Failed to load access requests. Please try again later."
+msgid "Failed to load change requests. Please try again later."
+msgstr ""
+"Nem sikerült betölteni a hozzáférési kérelmeket. Kérlek, próbáld meg később."
+
+#: admin-changes.php:260
+#, fuzzy
+#| msgid "Your request was approved"
+msgid "Change request approved."
+msgstr "Kérelmed jóváhagyva"
+
+#: admin-changes.php:261
+#, fuzzy
+#| msgid "Access request rejected."
+msgid "Change request rejected."
+msgstr "A hozzáférési kérelmet elutasították."
+
+#: admin-changes.php:262
+#, fuzzy
+#| msgid "Failed to process request. Please try again."
+msgid "Failed to process this change request. Please try again."
+msgstr "Kérelem feldolgozása sikertelen. Kérlek, próbáld meg újra."
+
+#: admin-changes.php:263
+msgid ""
+"This change request was already decided by someone else. Reloading the list."
+msgstr ""
+
+#: change-requests.php:56
+msgid ""
+"Calendar edits you are not yourself an administrator of are recorded as "
+"change requests and reviewed before they are published. This is every change "
+"request you have submitted, and what became of it."
+msgstr ""
+
+#: change-requests.php:116
+#, fuzzy
+#| msgid "You have not made any access requests yet."
+msgid "You have not submitted any change requests yet."
+msgstr "Még nem nyújtottál be hozzáférési kérelmet."
+
+#: change-requests.php:117
+#, fuzzy
+#| msgid "Failed to load role requests. Please try again later."
+msgid "Failed to load your change requests. Please try again later."
+msgstr "Nem sikerült betölteni a szerepkéréseket. Kérlek, próbáld újra később."
+
+#: change-requests.php:119
+msgid "Withdraw"
+msgstr ""
+
+#: change-requests.php:120
+msgid ""
+"Withdraw this change request? The files it proposes will no longer be "
+"reviewed."
+msgstr ""
+
+#: change-requests.php:121
+#, fuzzy
+#| msgid "Your request was approved"
+msgid "Change request withdrawn."
+msgstr "Kérelmed jóváhagyva"
+
+#: change-requests.php:122
+#, fuzzy
+#| msgid "Failed to process request. Please try again."
+msgid "Failed to withdraw this change request. Please try again."
+msgstr "Kérelem feldolgozása sikertelen. Kérlek, próbáld meg újra."
+
+#: change-requests.php:125
+msgid ""
+"This change request can no longer be withdrawn — it may already have been "
+"reviewed."
+msgstr ""
 
 #: developer-dashboard.php:34 developer-dashboard.php:47 user-profile.php:257
 msgid "Developer Dashboard"
@@ -3930,7 +4501,7 @@ msgstr ""
 "a karácsonyt, a nagyböjtöt, a húsvéti szentháromnapot, a húsvétot és az "
 "évközi időt."
 
-#: temporale.php:57
+#: temporale.php:57 sanctorale.php:131
 msgid "Language"
 msgstr "Nyelv"
 
@@ -4077,6 +4648,466 @@ msgstr "Első"
 #: temporale.php:182
 msgid "Last"
 msgstr "Utolsó"
+
+#: sanctorale.php:107
+msgid ""
+"Each Roman Missal contributes only what it adds: the 2008 edition defines "
+"three celebrations, not a whole sanctorale. This page composes the editions "
+"that apply to the calendar you choose, and shows which one each celebration "
+"comes from."
+msgstr ""
+
+#: sanctorale.php:120
+msgid "Rite"
+msgstr ""
+
+#: sanctorale.php:122
+msgid "Roman"
+msgstr ""
+
+#: sanctorale.php:123
+msgid "Ambrosian"
+msgstr "Ambrosian"
+
+#: sanctorale.php:133
+msgid "Languages this calendar is published in."
+msgstr "A naptárban megjelenő nyelvek."
+
+#: sanctorale.php:139 sanctorale.php:175
+msgid "From"
+msgstr "Tól"
+
+#: sanctorale.php:141
+msgid "Show only what one edition contributes."
+msgstr "Csak azokat mutasd, amit egy kiadás ad hozzá."
+
+#: sanctorale.php:144
+msgid "Search all months"
+msgstr "Keresés az összes hónapban."
+
+#: sanctorale.php:146
+msgid "Name or event key…"
+msgstr "Név vagy eseménykulcs…"
+
+#: sanctorale.php:147
+msgid "Matches across every month, and moves you to one that has a result."
+msgstr ""
+"Találatok minden hónapban, és egy olyan hónapra visz, amelyen van találat."
+
+#: sanctorale.php:160 sanctorale.php:351
+msgid "New celebration"
+msgstr "Új ünnep"
+
+#: sanctorale.php:173 sanctorale.php:225
+msgid "Celebration"
+msgstr "Ünnep"
+
+#: sanctorale.php:226
+msgid "Names by locale"
+msgstr "Név helyi nyelv szerint"
+
+#: sanctorale.php:228
+msgid "Readings structure"
+msgstr "Olvasmányok felépítése"
+
+#: sanctorale.php:230
+msgid ""
+"No readings are curated for this celebration yet. Fill in what you know; "
+"blank citations are not saved."
+msgstr ""
+"Ezen az ünnepen még nincsenek összeállított olvasmányok. Töltsd ki, amit "
+"tudsz; a hiányos idézetek nincsenek mentve."
+
+#: sanctorale.php:238
+msgid "Ferial Readings"
+msgstr "Hétköznapi olvasmányok"
+
+#: sanctorale.php:239
+msgid "Festive Readings"
+msgstr "Ünnepi olvasmányok"
+
+#: sanctorale.php:240
+msgid "Palm Sunday Readings"
+msgstr "Pálmavasárnapi olvasmányok"
+
+#: sanctorale.php:241
+msgid "Easter Vigil Readings"
+msgstr "Húsvéti vigíliás olvasmányok"
+
+#: sanctorale.php:242
+msgid "Christmas Readings"
+msgstr "Karácsonyi olvasmányok"
+
+#: sanctorale.php:243
+msgid "Readings with Evening Mass"
+msgstr "Este mise olvasmányai"
+
+#: sanctorale.php:244
+msgid "Readings with Multiple Schemas"
+msgstr "Több sémával ellátott olvasmányok"
+
+#: sanctorale.php:245
+msgid "Readings from liturgical Commons"
+msgstr "A liturgikus Commons olvasmányai"
+
+#: sanctorale.php:246
+msgid "Seasonal Readings"
+msgstr "Szezonális olvasmányok"
+
+#: sanctorale.php:247
+msgid "Readings with a Vigil Mass"
+msgstr "Vigília mise olvasmányai"
+
+#: sanctorale.php:248
+msgid "Christmas Readings with a Vigil Mass"
+msgstr "Karácsonyi olvasmányok vigília mise"
+
+#: sanctorale.php:256
+msgid "Gospel at the Procession"
+msgstr "Evangélium a körmenet során"
+
+#: sanctorale.php:257
+msgid "First Reading"
+msgstr "Első olvasmány"
+
+#: sanctorale.php:258 sanctorale.php:260 sanctorale.php:262 sanctorale.php:264
+#: sanctorale.php:266 sanctorale.php:268 sanctorale.php:270 sanctorale.php:272
+msgid "Responsorial Psalm"
+msgstr "Válaszoló zsoltár"
+
+#: sanctorale.php:259
+msgid "Second Reading"
+msgstr "Második olvasmány"
+
+#: sanctorale.php:261
+msgid "Third Reading"
+msgstr "Harmadik olvasmány"
+
+#: sanctorale.php:263
+msgid "Fourth Reading"
+msgstr "Negyedik olvasmány"
+
+#: sanctorale.php:265
+msgid "Fifth Reading"
+msgstr "Ötödik olvasmány"
+
+#: sanctorale.php:267
+msgid "Sixth Reading"
+msgstr "Hatodik olvasmány"
+
+#: sanctorale.php:269
+msgid "Seventh Reading"
+msgstr "Hetedik olvasmány"
+
+#: sanctorale.php:271
+msgid "Epistle"
+msgstr "Levél"
+
+#: sanctorale.php:273
+msgid "Gospel Acclamation"
+msgstr "Evangélium-himnusz"
+
+#: sanctorale.php:281
+msgid "Vigil Mass"
+msgstr "Vigília mise"
+
+#: sanctorale.php:282
+msgid "Mass during the Night"
+msgstr "Éjszakai mise"
+
+#: sanctorale.php:283
+msgid "Mass at Dawn"
+msgstr "Reggeli mise"
+
+#: sanctorale.php:284
+msgid "Mass during the Day"
+msgstr "Nappali mise"
+
+#: sanctorale.php:285
+msgid "Evening Mass"
+msgstr "Esti mise"
+
+#: sanctorale.php:286
+msgid "Schema I"
+msgstr "Schema I"
+
+#: sanctorale.php:287
+msgid "Schema II"
+msgstr "Schema II"
+
+#: sanctorale.php:288
+msgid "Schema III"
+msgstr "Schema III"
+
+#: sanctorale.php:289
+msgid "Easter Season"
+msgstr "Húsvéti időszak"
+
+#: sanctorale.php:290
+msgid "Outside Easter Season"
+msgstr "A húsvéti időszakon kívül"
+
+#: sanctorale.php:296
+msgid "Displays as"
+msgstr ""
+
+#: sanctorale.php:299
+msgid "no rank shown"
+msgstr ""
+
+#: sanctorale.php:310
+#, fuzzy
+#| msgid "Higher Solemnity"
+msgid "Higher solemnity"
+msgstr "Nagyobb főünnep"
+
+#: sanctorale.php:313
+#, fuzzy
+#| msgid "Color"
+msgid "Colour"
+msgstr "Szín"
+
+#: sanctorale.php:314
+#, fuzzy
+#| msgid "Common(s)"
+msgid "Common"
+msgstr "Közös(ek)"
+
+#: sanctorale.php:315
+msgid "From this Missal"
+msgstr ""
+
+#: sanctorale.php:316
+#, fuzzy
+#| msgid "All Seasons"
+msgid "All editions"
+msgstr "Minden időszak"
+
+#: sanctorale.php:318
+msgid "This Missal redefines a celebration an earlier one already had."
+msgstr ""
+
+#: sanctorale.php:323
+msgid "Redeclared by"
+msgstr "Újra közölve"
+
+#: sanctorale.php:325
+msgid ""
+"Takes the celebration universal at the same rank; the earlier particular "
+"entry is now redundant."
+msgstr ""
+"Az ünneplést ugyanazon rangban egyetemesnek tekinti; a korábbi külön "
+"bejegyzés most redundáns."
+
+#: sanctorale.php:328
+msgid "Redeclares the celebration without changing anything."
+msgstr "Újra kihirdeti az ünnepet anélkül, hogy semmit sem változtatna."
+
+#: sanctorale.php:331
+msgid "no override"
+msgstr "Nincs felülírás"
+
+#: sanctorale.php:334
+#, fuzzy
+#| msgid "Add translation"
+msgid "translated"
+msgstr "Új fordítás hozzáadása"
+
+#: sanctorale.php:335
+msgid "blank"
+msgstr ""
+
+#: sanctorale.php:336
+#, fuzzy
+#| msgid "Permissions"
+msgid "missing"
+msgstr "Engedélyek"
+
+#: sanctorale.php:337
+msgid "Nothing here."
+msgstr ""
+
+#: sanctorale.php:338
+msgid "No celebration in this month matches your search."
+msgstr ""
+
+#: sanctorale.php:339
+#, fuzzy
+#| msgid "No readings defined for this locale yet"
+msgid "No sanctorale lectionary is defined for this rite."
+msgstr "Még nincsenek olvasmányok meghatározva ehhez a nyelvhez"
+
+#: sanctorale.php:342
+#, fuzzy
+#| msgid "No readings defined for this locale yet"
+msgid "No readings are curated for this celebration yet."
+msgstr "Még nincsenek olvasmányok meghatározva ehhez a nyelvhez"
+
+#: sanctorale.php:343
+#, fuzzy
+#| msgid "Could not load notifications"
+msgid "Could not load the names for this celebration."
+msgstr "Értesítések betöltése nem sikerült"
+
+#: sanctorale.php:344
+#, fuzzy
+#| msgid "Could not load notifications"
+msgid "Could not load the readings for this celebration."
+msgstr "Értesítések betöltése nem sikerült"
+
+#: sanctorale.php:346
+msgid "No Missal is published for this combination of rite and calendar."
+msgstr ""
+
+#: sanctorale.php:352
+#, fuzzy
+#| msgid "Add Missal"
+msgid "Add to Missal"
+msgstr "Misekönyv hozzáadása"
+
+#: sanctorale.php:361
+msgid ""
+"Begins with a capital, then letters and digits (StIsidoreFarmer). A trailing "
+"number (StPaul_2) or _vigil is allowed, as is a lowercase two-word prefix. "
+"Cannot be renamed."
+msgstr ""
+"Nagybetűvel kezdődik, majd betűk és számok (StIsidoreFarmer). Megengedett "
+"egy végző szám (StPaul_2) vagy a _vigília, és egy kisbetűs, két szóból álló "
+"előtag is. Nem nevezhető át."
+
+#: sanctorale.php:363
+msgid "Enter a day between 1 and 31."
+msgstr "Írjon be egy napot 1 és 31 között."
+
+#: sanctorale.php:368
+msgid "Choose…"
+msgstr "Válasszon…"
+
+#: sanctorale.php:369
+msgid "Choose a month."
+msgstr "Válasszon egy hónapot."
+
+#: sanctorale.php:370
+msgid "Choose a grade."
+msgstr "Válasszon egy fokozatot."
+
+#. translators: %1$s is the event key, %2$s is the Missal id
+#: sanctorale.php:372
+#, php-format
+msgid ""
+"Delete %1$s from %2$s? Its name and readings go with it, and any earlier "
+"edition that already defined it takes over."
+msgstr ""
+"Törölje %1$s a(z) %2$s-ból? A neve és olvasmányai hozzá tartoznak, és "
+"bármely korábbi kiadás, amely már meghatározta, felülírja."
+
+#: sanctorale.php:375
+msgid ""
+"These readings live in the rite-wide lectionary, shared by every Missal of "
+"this rite."
+msgstr ""
+"Ezek az olvasmányok a rítus egészére kiterjedő lectionáriumban találhatók, "
+"amelyet minden ehhez a rítushoz tartozó mise használ."
+
+#: sanctorale.php:376
+msgid "This rite has no lectionary, so readings cannot be edited here."
+msgstr ""
+"Ennek a rítusnak nincs lectionáriuma, így itt nem lehet szerkeszteni az "
+"olvasmányokat."
+
+#: sanctorale.php:384
+msgid ""
+"Inherited from a different lectionary source; edit it there, not from this "
+"Missal."
+msgstr "Más lectionárium-forrásból származik; ott szerkessze, ne ebből a mise."
+
+#: sanctorale.php:387
+msgid "The readings were kept: another Missal still declares this celebration."
+msgstr ""
+"Az olvasmányokat megőrizték: egy másik mise még mindig kijelenti ezt az "
+"ünnepet."
+
+#: sanctorale.php:388
+msgid "Default (from grade)"
+msgstr "Alapértelmezett (a fokozatból)."
+
+#: sanctorale.php:389
+msgid "Show no rank"
+msgstr "Nincs rang megjelenítve."
+
+#: sanctorale.php:390
+msgid "Custom text…"
+msgstr "Egyedi szöveg…"
+
+#: sanctorale.php:391
+msgid "Nothing has changed."
+msgstr "Semmi sem változott."
+
+#: sanctorale.php:392
+msgid "Saved."
+msgstr "Mentve."
+
+#: sanctorale.php:393
+msgid "Celebration created."
+msgstr "Ünnep létrehozva."
+
+#: sanctorale.php:394
+msgid "Celebration deleted."
+msgstr "Ünnep törölve."
+
+#. translators: %s is the error reported by the API
+#: sanctorale.php:396
+#, php-format
+msgid "Could not save: %s"
+msgstr "Nem sikerült menteni: %s"
+
+#: sanctorale.php:397
+msgid "You do not have permission to change this Missal."
+msgstr "Nincs jogod ennek a mise megváltoztatásához."
+
+#: sanctorale.php:398
+msgid "This clashes with another Missal"
+msgstr "Ez ütközik egy másik mise-vel."
+
+#. translators: %s is the change request batch id
+#: sanctorale.php:404
+#, php-format
+msgid "Queued for review as batch %s. Nothing has been written yet."
+msgstr "Csomagként vár ellenőrzésre %s. Még semmi sincs leírva."
+
+#. translators: %s is the change request batch id
+#: sanctorale.php:406
+#, php-format
+msgid "Approved as batch %s, awaiting publication."
+msgstr "Csomagként jóváhagyva %s, publikálásra vár."
+
+#. translators: %s is a comma-separated list of batch ids
+#: sanctorale.php:408
+#, php-format
+msgid "Earlier batches folded in: %s."
+msgstr "Korábbi kötegek beépültek: %s."
+
+#. translators: %s is the unrecognized disposition value
+#: sanctorale.php:410
+#, php-format
+msgid ""
+"The server reported an unrecognized outcome (%s); nothing local was changed."
+msgstr ""
+"A szerver ismeretlen kimenetet jelentett (%s); helyben semmi sem változott."
+
+#. translators: %s is the error reported by the API
+#: sanctorale.php:412
+#, php-format
+msgid "Could not load the sanctorale: %s"
+msgstr "A sanctorale betöltése nem sikerült: %s"
+
+#. translators: %s is the event_key a #event= link named
+#. Reported rather than left silent: the link may be stale, mistyped, or
+#. for a rite/calendar this page has since moved away from.
+#: sanctorale.php:416
+#, php-format
+msgid "%s is not in the current selection."
+msgstr "%s nem szerepel a jelenlegi kiválasztásban."
 
 #: user-profile.php:23 user-profile.php:35
 msgid "User Profile"
@@ -4278,16 +5309,6 @@ msgstr "A munkamenet lejárt"
 
 #~ msgid "Role Requests Management"
 #~ msgstr "Szerepkérések kezelése"
-
-#~ msgid "Review Role Request"
-#~ msgstr "Szerepkérés átnézése"
-
-#~ msgid "No pending role requests. All caught up!"
-#~ msgstr "Nincs függőben lévő szerepkérés. Minden naprakész!"
-
-#~ msgid "Failed to load role requests. Please try again later."
-#~ msgstr ""
-#~ "Nem sikerült betölteni a szerepkéréseket. Kérlek, próbáld újra később."
 
 #~ msgid "Request approved successfully."
 #~ msgstr "Kérelem sikeresen jóváhagyva."
