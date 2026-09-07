@@ -58,24 +58,34 @@ function asApiResponse(response: PageResponse): APIResponse {
  *   - `E2ETestSaint` — a key that exists nowhere, for the create case, then
  *     deleted (plainly — nothing else declares it, so the row disappears).
  *
- * CLEANUP — two layers, because one alone is not enough:
+ * CLEANUP — two layers, because WHERE the write landed depends on the stack:
  *   1. `gitRestoreApiData()` (git restore + git clean -fd on
- *      jsondata/sourcedata/ in the bind-mounted API repo) undoes the file
- *      writes themselves.
- *   2. That is NOT sufficient on its own: the API caches `/missals` reads
- *      in-process (APCu; a prior task in this plan described it as "Redis"
- *      colloquially, but `src/ApcuCache.php` is what actually backs it), and
- *      a `git restore` does not invalidate that cache. A prior task in this
- *      plan observed the API serving a stale `/missals` body after a `git
- *      checkout` until `docker compose restart litcal-api` ran. So this
- *      spec's `afterAll` restarts the `litcal-api` container after the git
- *      restore and polls `/calendars` until the API answers again, and then
- *      logs whether that restart succeeded. In an environment without a
- *      `litcal-api` docker service (e.g. a bare `php -S` webServer with no
- *      docker stack), that restart attempt fails and is caught — the git
- *      restore still ran, but the in-process cache would then only clear
- *      itself when that PHP process cycles on its own. Said here plainly
- *      rather than left silent, per this task's own instructions.
+ *      jsondata/sourcedata/) undoes the write when the API reads the repo off
+ *      disk — a local stack whose `docker-compose.override.yml` bind-mounts
+ *      ../LiturgicalCalendarAPI, or a bare `php -S` API run from a checkout.
+ *   2. `resetApiContainer()` undoes it when the API does NOT. In CI it does
+ *      not: `litcal-api` declares no volume and is built from `#development`
+ *      into its image (see docker-compose.yml, and docker-compose.ci.yml,
+ *      which deliberately rebuilds only the frontend). Its `jsondata/` lives
+ *      in the container's writable layer, so the checkout `gitRestoreApiData()`
+ *      repairs — `${{ github.workspace }}/api-repo`, which only the host
+ *      playwright process reads — has nothing to do with what the browser just
+ *      wrote through the API.
+ *
+ *      `docker compose restart` does NOT undo it either: a restart keeps the
+ *      writable layer, so it published the written value rather than reverting
+ *      it. `up -d --force-recreate` discards that layer, which restores the
+ *      image's pristine data AND drops the API's in-process `/missals` cache
+ *      (APCu, `src/ApcuCache.php`) in the same step — that cache is the reason
+ *      a bare restore was never enough even on a bind-mounted stack.
+ *
+ * Getting this wrong is invisible in the project that runs FIRST and fatal in
+ * every project after it: the edit case below moves StIsidoreFarmer from day 15
+ * to day 20, so on a second run the day is already 20, the editor correctly
+ * reports "Nothing has changed", and no PATCH is issued. That is what made this
+ * spec look firefox/webkit-specific — chromium-ci-auth simply got there first.
+ * The delete cases have the same shape: they remove keys that only a real
+ * restore puts back.
  */
 
 const REPO_ROOT = path.resolve(__dirname, '..');
@@ -111,20 +121,27 @@ async function waitForApi(timeoutMs = 30000): Promise<boolean> {
  * stack at all — this is a best-effort second cleanup layer, not a
  * requirement for `gitRestoreApiData()` itself to have worked.
  */
-async function bustMissalsCache(): Promise<void> {
+async function resetApiContainer(): Promise<void> {
     try {
-        await run('docker', ['compose', 'restart', 'litcal-api'], { cwd: REPO_ROOT, timeout: 60000 });
+        // --force-recreate, not `restart`: a restart keeps the container's
+        // writable layer, so the writes this spec just made through the API
+        // survive it. Recreating from the image is what actually puts the
+        // source data back — and it drops the APCu /missals cache with it.
+        await run('docker', ['compose', 'up', '-d', '--force-recreate', 'litcal-api'], {
+            cwd: REPO_ROOT,
+            timeout: 120000
+        });
         const healthy = await waitForApi();
         console.log(
             healthy
-                ? 'CLEANUP: litcal-api restarted and answering again — /missals cache cleared.'
-                : 'CLEANUP WARNING: litcal-api restart issued but the API did not answer within 30s.'
+                ? 'CLEANUP: litcal-api recreated and answering again — source data and /missals cache reset.'
+                : 'CLEANUP WARNING: litcal-api recreate issued but the API did not answer within 30s.'
         );
     } catch (e) {
         console.warn(
-            'CLEANUP WARNING: could not restart litcal-api (no docker stack, or docker not reachable). '
-            + 'The git restore above still ran, but the API\'s in-process /missals cache may still serve '
-            + `a stale body until that process cycles on its own. Error: ${String(e)}`
+            'CLEANUP WARNING: could not recreate litcal-api (no docker stack, or docker not reachable). '
+            + 'The git restore above still ran, which is the whole cleanup on a bind-mounted or bare '
+            + `php -S stack; on a containerised one the writes are still in place. Error: ${String(e)}`
         );
     }
 }
@@ -173,7 +190,7 @@ async function reopenMonth(page: import('@playwright/test').Page, eventKey: stri
 test.describe.serial('sanctorale editor write path', () => {
     test.afterAll(async () => {
         await gitRestoreApiData();
-        await bustMissalsCache();
+        await resetApiContainer();
     });
 
     test('a no-op save reports it inline and issues no request', async ({ page }) => {
