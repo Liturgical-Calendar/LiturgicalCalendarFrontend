@@ -100,6 +100,37 @@ function run(cmd: string, args: string[], opts: { cwd?: string; timeout?: number
     });
 }
 
+/** As `run()`, but resolves with the command's stdout. */
+function runCapture(cmd: string, args: string[], opts: { cwd?: string; timeout?: number } = {}): Promise<string> {
+    return new Promise((resolve, reject) => {
+        execFile(cmd, args, { cwd: opts.cwd, timeout: opts.timeout ?? 60000 }, (err, stdout) => {
+            if (err) reject(err);
+            else resolve(stdout);
+        });
+    });
+}
+
+/**
+ * Whether the API under test is a `litcal-api` container this spec can recreate.
+ *
+ * Decides how a failed cleanup is reported, so it has to fail SAFE: anything
+ * that is not a running container id — no docker, no compose, no such service —
+ * reads as "not containerised", which is the tolerant branch. The worst a wrong
+ * answer here can do is warn where it should have thrown, which is exactly the
+ * behaviour this replaces.
+ */
+async function apiIsContainerised(): Promise<boolean> {
+    try {
+        const out = await runCapture('docker', ['compose', 'ps', '-q', 'litcal-api'], {
+            cwd: REPO_ROOT,
+            timeout: 30000
+        });
+        return out.trim() !== '';
+    } catch {
+        return false;
+    }
+}
+
 async function waitForApi(timeoutMs = 30000): Promise<boolean> {
     const deadline = Date.now() + timeoutMs;
     while (Date.now() < deadline) {
@@ -115,13 +146,26 @@ async function waitForApi(timeoutMs = 30000): Promise<boolean> {
 }
 
 /**
- * Restart the `litcal-api` docker service so its in-process `/missals` cache
- * (APCu) drops the stale bodies `gitRestoreApiData()` cannot invalidate on
- * its own (see the file doc comment). Tolerant of there being no docker
- * stack at all — this is a best-effort second cleanup layer, not a
- * requirement for `gitRestoreApiData()` itself to have worked.
+ * Put the API's source data back by recreating the `litcal-api` container.
+ *
+ * NOT best-effort where it matters. On a containerised stack this is the ONLY
+ * layer that undoes what the browser wrote — `gitRestoreApiData()` repairs a
+ * checkout that container never reads — so a failure here leaves day 20 on
+ * StIsidoreFarmer and a deleted StPeterClaver for every project that runs
+ * next, which then fail for reasons that have nothing to do with them. That is
+ * precisely the misdiagnosis this spec's history is made of, so it THROWS,
+ * the way `gitRestoreApiData()` already does and for the same reason.
+ *
+ * Tolerant only where tolerance is correct: with no `litcal-api` container to
+ * recreate, the API under test is a bind-mounted or bare `php -S` one, the git
+ * restore above was the whole cleanup, and there is nothing to fail about.
+ *
+ * @throws when the stack runs the API as a container and it could not be
+ *         recreated, or did not answer afterwards
  */
 async function resetApiContainer(): Promise<void> {
+    const containerised = await apiIsContainerised();
+
     try {
         // --force-recreate, not `restart`: a restart keeps the container's
         // writable layer, so the writes this spec just made through the API
@@ -131,19 +175,29 @@ async function resetApiContainer(): Promise<void> {
             cwd: REPO_ROOT,
             timeout: 120000
         });
-        const healthy = await waitForApi();
-        console.log(
-            healthy
-                ? 'CLEANUP: litcal-api recreated and answering again — source data and /missals cache reset.'
-                : 'CLEANUP WARNING: litcal-api recreate issued but the API did not answer within 30s.'
-        );
     } catch (e) {
+        if (containerised) {
+            throw new Error(
+                'CLEANUP FAILED: litcal-api is running as a container but could not be recreated, so '
+                + 'the source data this spec wrote through the API is still in place. Every later '
+                + `project will read it. Error: ${String(e)}`
+            );
+        }
         console.warn(
-            'CLEANUP WARNING: could not recreate litcal-api (no docker stack, or docker not reachable). '
-            + 'The git restore above still ran, which is the whole cleanup on a bind-mounted or bare '
-            + `php -S stack; on a containerised one the writes are still in place. Error: ${String(e)}`
+            'CLEANUP: no litcal-api container to recreate, so the git restore above was the whole '
+            + `cleanup — correct for a bind-mounted or bare php -S API. (${String(e)})`
+        );
+        return;
+    }
+
+    if (false === await waitForApi()) {
+        throw new Error(
+            'CLEANUP FAILED: litcal-api was recreated but did not answer /calendars within 30s. '
+            + 'Whether the source data was restored is unknown, and the stack the remaining projects '
+            + 'need is down.'
         );
     }
+    console.log('CLEANUP: litcal-api recreated and answering again — source data and /missals cache reset.');
 }
 
 /** The month each fixture key lives on, per `GET /missals/roman/{missal}` (verified live). */
