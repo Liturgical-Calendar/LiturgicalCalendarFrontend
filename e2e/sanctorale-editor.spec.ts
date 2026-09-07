@@ -1,8 +1,12 @@
-import { test, expect, APIResponse, Response as PageResponse } from '@playwright/test';
+import { APIResponse, Response as PageResponse } from '@playwright/test';
 import { execFile } from 'child_process';
 import * as path from 'path';
 import { expectWriteApplied } from './support/writeMode';
-import { gitRestoreApiData } from './fixtures';
+// `test` comes from ./fixtures, not from @playwright/test, for the
+// browserDiagnostics auto fixture: on a failure it prints what the page was
+// doing into the job log, which is the only place a nightly-only,
+// firefox/webkit-only failure can be read without downloading the report.
+import { test, expect, gitRestoreApiData, setNumberInput } from './fixtures';
 
 /**
  * `expectWriteApplied()` is typed against Playwright's `APIResponse` (the type
@@ -194,7 +198,12 @@ test.describe.serial('sanctorale editor write path', () => {
 
         const write = page.waitForResponse((r) =>
             r.url().includes('/missals/roman/US_2011/StIsidoreFarmer') && r.request().method() === 'PATCH');
-        await page.fill('#entryDay', '20');
+        // setNumberInput, not fill(): StIsidoreFarmer already reads 15 here, and
+        // fill() cannot replace a number input's existing value in firefox or
+        // webkit — see the helper. It left 1520 in the field, the editor refused
+        // the out-of-range day inline, and the spec sat waiting for a PATCH that
+        // was never going to be sent.
+        await setNumberInput(page, '#entryDay', '20');
         await page.click('#saveEntryBtn');
         await expectWriteApplied(asApiResponse(await write), 'PATCH StIsidoreFarmer');
 
@@ -212,7 +221,9 @@ test.describe.serial('sanctorale editor write path', () => {
 
         await page.fill('#entryEventKey', 'E2ETestSaint');
         await page.selectOption('#entryMonth', '5');
-        await page.fill('#entryDay', '20');
+        // Empty here, so fill() would happen to work — but only by luck, and the
+        // create form is one default away from carrying a day.
+        await setNumberInput(page, '#entryDay', '20');
         await page.selectOption('#entryGrade', '3');
         await page.selectOption('#entryCommon', ['Pastors']);
         await page.selectOption('#entryColor', ['white']);

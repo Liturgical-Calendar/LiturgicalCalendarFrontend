@@ -70,6 +70,42 @@ export async function gitRestoreApiData(): Promise<void> {
 }
 
 /**
+ * Replace the value of an `<input type="number">`, and prove it took.
+ *
+ * `fill()` is not safe here. For a number input Playwright takes its "type
+ * into" path: `injected.fill()` calls `input.select()` to select what is
+ * already there and then types the new text over the selection. But the text
+ * selection API does not apply to `type=number`, so `select()` selects nothing
+ * in Firefox and WebKit and the typed digits are INSERTED beside the old value
+ * rather than replacing it — filling '20' over a day of 15 yields 1520, not 20.
+ * Chromium selects anyway, so the same call is correct there.
+ *
+ * That asymmetry is invisible on a pull request, which runs chromium only: it
+ * surfaces a day later, in the nightly's firefox and webkit projects, as an
+ * edit that the page rejects for a reason the spec never mentions.
+ *
+ * Setting `.value` and firing `input` + `change` is exactly what Playwright
+ * itself does for the input types it declines to type into (date, time, month,
+ * range, ...), so this is that same treatment extended to number. The
+ * `toHaveValue()` check is not ceremony: without it this helper could go back
+ * to silently doing nothing and the failure would again land somewhere else.
+ *
+ * @param page - the page under test
+ * @param selector - selector for the `<input type="number">`
+ * @param value - the value to set, as it should read afterwards
+ */
+export async function setNumberInput(page: Page, selector: string, value: string): Promise<void> {
+    await page.locator(selector).evaluate((node, newValue) => {
+        const input = node as HTMLInputElement;
+        input.focus();
+        input.value = newValue;
+        input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+    }, value);
+    await expect(page.locator(selector)).toHaveValue(value);
+}
+
+/**
  * Captured request data from interceptDataRequests
  */
 export interface CapturedRequest {
@@ -145,6 +181,15 @@ export class ExtendingPageHelper {
         const input = this.page.locator(inputSelector);
         await input.fill(calendarName);
         await input.press('Enter');
+        // Commit the edit before the wait below, and before anything else on the
+        // page is touched. `fill()` TYPES into a text input — it does not fire
+        // `change`; the browser does, when the field loses focus. Leave the field
+        // focused and that `change` lands on whatever the test clicks next, so the
+        // app starts loading the calendar in the middle of a later interaction.
+        // WebKit is where this bites: opening the locales multiselect blurred this
+        // input, and the calendar load it kicked off rebuilt the multiselect out
+        // from under the dropdown that click had just opened.
+        await input.blur();
         // Wait for calendar data to load
         await this.page.waitForLoadState('networkidle');
     }
