@@ -80,6 +80,12 @@ export interface CapturedRequest {
 
 export interface ExtendingPageFixtures {
     extendingPage: ExtendingPageHelper;
+    /**
+     * Auto fixture: see browserDiagnostics in the `test` extension below. Declared
+     * because a Playwright fixture must be typed to be registered, never requested
+     * by a spec.
+     */
+    browserDiagnostics: void;
 }
 
 /**
@@ -871,6 +877,16 @@ export class ExtendingPageHelper {
 }
 
 /**
+ * How many captured browser-side lines a single failing test reports.
+ *
+ * The chatty pages here log per keystroke, so an unbounded dump would bury the
+ * Playwright error itself. The tail is what matters — the last thing the page did
+ * before the assertion gave up — so the cap drops from the FRONT and says how many
+ * it dropped.
+ */
+const MAX_DIAGNOSTIC_LINES = 200;
+
+/**
  * Extended test fixture with ExtendingPageHelper
  */
 export const test = base.extend<ExtendingPageFixtures>({
@@ -878,6 +894,56 @@ export const test = base.extend<ExtendingPageFixtures>({
         const helper = new ExtendingPageHelper(page);
         await use(helper);
     },
+
+    /**
+     * Browser-side console output, uncaught page errors and failed requests,
+     * buffered for the whole test and printed ONLY when the test fails.
+     *
+     * A Playwright failure says what the harness was waiting for; it never says
+     * what the page was doing instead. For a browser-specific failure that is the
+     * whole question, and the nightly's firefox/webkit runs are the one place
+     * these specs meet those browsers — so the evidence has to travel in the job
+     * log, which is what everyone can read. The trace and the HTML report carry
+     * it too, but only for whoever can download a 50 MB artifact.
+     *
+     * Buffered rather than streamed because two specs already attached their own
+     * `page.on('console')` for exactly this reason and drowned their passing runs
+     * in per-keystroke logging. On a pass this prints nothing at all.
+     *
+     * `auto: true`: no spec asks for it, every spec gets it.
+     */
+    browserDiagnostics: [async ({ page }, use, testInfo) => {
+        const lines: string[] = [];
+        let dropped = 0;
+        const record = (line: string) => {
+            lines.push(line);
+            if (lines.length > MAX_DIAGNOSTIC_LINES) {
+                lines.shift();
+                dropped++;
+            }
+        };
+
+        page.on('console', (msg) => record(`console[${msg.type()}] ${msg.text()}`));
+        page.on('pageerror', (err) => record(`pageerror ${err.message}`));
+        page.on('requestfailed', (req) =>
+            record(`requestfailed ${req.method()} ${req.url()} — ${req.failure()?.errorText ?? 'unknown'}`));
+        page.on('response', (res) => {
+            if (res.status() >= 400) record(`response ${res.status()} ${res.request().method()} ${res.url()}`);
+        });
+
+        await use();
+
+        if (testInfo.status === testInfo.expectedStatus || lines.length === 0) return;
+
+        const header = dropped > 0
+            ? `--- browser diagnostics (last ${lines.length} of ${lines.length + dropped} lines) ---`
+            : `--- browser diagnostics (${lines.length} lines) ---`;
+        const body = [header, ...lines, '--- end browser diagnostics ---'].join('\n');
+        // Both: stdout so it lands in the CI job log beside the failure, and an
+        // attachment so the HTML report carries it for anyone reading that instead.
+        console.log(body);
+        await testInfo.attach('browser-diagnostics', { body, contentType: 'text/plain' });
+    }, { auto: true }],
 });
 
 export { expect };

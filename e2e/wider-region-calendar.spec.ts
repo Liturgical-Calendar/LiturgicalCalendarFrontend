@@ -247,11 +247,6 @@ test.describe('Wider Region Calendar Form', () => {
         // This test creates a NEW wider region calendar using PUT for a region that exists
         // in the datalist but doesn't have calendar data yet. Then it DELETEs to clean up.
 
-        // Capture console logs and errors early for debugging
-        // Note: Listeners are automatically cleaned up when page closes at test end
-        page.on('console', msg => console.log(`Browser console [${msg.type()}]: ${msg.text()}`));
-        page.on('pageerror', err => console.log(`Browser error: ${err.message}`));
-
         // Query the /calendars API to get existing wider region IDs
         const apiBaseUrl = await page.evaluate(() => {
             // @ts-ignore - BaseUrl is a global variable set by the frontend

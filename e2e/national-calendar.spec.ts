@@ -230,11 +230,6 @@ test.describe('National Calendar Form', () => {
         let createResponseStatus: number | null = null;
         let createResponseBody: any = null;
 
-        // Capture console logs and errors for debugging
-        // Note: Listeners are automatically cleaned up when page closes at test end
-        page.on('console', msg => console.log(`Browser console [${msg.type()}]: ${msg.text()}`));
-        page.on('pageerror', err => console.log(`Browser error: ${err.message}`));
-
         // Fill in the national calendar input with the ISO code from the found nation
         const calendarNameInput = page.locator('#nationalCalendarName');
         await calendarNameInput.fill(nationToCreate.key);
