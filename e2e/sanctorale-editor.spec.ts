@@ -198,13 +198,19 @@ test.describe.serial('sanctorale editor write path', () => {
 
         const write = page.waitForResponse((r) =>
             r.url().includes('/missals/roman/US_2011/StIsidoreFarmer') && r.request().method() === 'PATCH');
-        // setNumberInput, not fill(): StIsidoreFarmer already reads 15 here, and
-        // fill() cannot replace a number input's existing value in firefox or
-        // webkit — see the helper. It left 1520 in the field, the editor refused
-        // the out-of-range day inline, and the spec sat waiting for a PATCH that
-        // was never going to be sent.
+        // setNumberInput rather than fill(): StIsidoreFarmer already reads 15
+        // here, and fill() cannot be trusted to REPLACE a number input's value —
+        // see the helper. Its own toHaveValue() check is what makes the edit a
+        // stated precondition instead of an assumption.
         await setNumberInput(page, '#entryDay', '20');
         await page.click('#saveEntryBtn');
+        // The editor refuses an edit by writing the reason into #entryFormError
+        // and issuing no request — exactly what the no-op test above asserts. So
+        // a bare `await write` turns every refusal into the same opaque
+        // waitForResponse timeout, which says nothing about WHY. Read the page's
+        // own message first: on a save that goes through this is empty and costs
+        // nothing.
+        await expect(page.locator('#entryFormError')).toBeEmpty();
         await expectWriteApplied(asApiResponse(await write), 'PATCH StIsidoreFarmer');
 
         await reopenMonth(page, 'StIsidoreFarmer');

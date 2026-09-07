@@ -81,8 +81,14 @@ export async function gitRestoreApiData(): Promise<void> {
  * Chromium selects anyway, so the same call is correct there.
  *
  * That asymmetry is invisible on a pull request, which runs chromium only: it
- * surfaces a day later, in the nightly's firefox and webkit projects, as an
- * edit that the page rejects for a reason the spec never mentions.
+ * would surface a day later, in the nightly's firefox and webkit projects, as an
+ * edit the page rejects for a reason the spec never mentions.
+ *
+ * NB: this was written as the suspected cause of the sanctorale editor's
+ * cross-browser failure and it was NOT — the toHaveValue() below passes there,
+ * so fill() had in fact set the day correctly and the refusal is something else.
+ * Keep it anyway: it makes the precondition stated rather than assumed, which is
+ * what ruled that cause out.
  *
  * Setting `.value` and firing `input` + `change` is exactly what Playwright
  * itself does for the input types it declines to type into (date, time, month,
