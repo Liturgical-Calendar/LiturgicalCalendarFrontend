@@ -70,6 +70,48 @@ export async function gitRestoreApiData(): Promise<void> {
 }
 
 /**
+ * Replace the value of an `<input type="number">`, and prove it took.
+ *
+ * `fill()` is not safe here. For a number input Playwright takes its "type
+ * into" path: `injected.fill()` calls `input.select()` to select what is
+ * already there and then types the new text over the selection. But the text
+ * selection API does not apply to `type=number`, so `select()` selects nothing
+ * in Firefox and WebKit and the typed digits are INSERTED beside the old value
+ * rather than replacing it — filling '20' over a day of 15 yields 1520, not 20.
+ * Chromium selects anyway, so the same call is correct there.
+ *
+ * That asymmetry is invisible on a pull request, which runs chromium only: it
+ * would surface a day later, in the nightly's firefox and webkit projects, as an
+ * edit the page rejects for a reason the spec never mentions.
+ *
+ * NB: this was written as the suspected cause of the sanctorale editor's
+ * cross-browser failure and it was NOT — the toHaveValue() below passes there,
+ * so fill() had in fact set the day correctly and the refusal is something else.
+ * Keep it anyway: it makes the precondition stated rather than assumed, which is
+ * what ruled that cause out.
+ *
+ * Setting `.value` and firing `input` + `change` is exactly what Playwright
+ * itself does for the input types it declines to type into (date, time, month,
+ * range, ...), so this is that same treatment extended to number. The
+ * `toHaveValue()` check is not ceremony: without it this helper could go back
+ * to silently doing nothing and the failure would again land somewhere else.
+ *
+ * @param page - the page under test
+ * @param selector - selector for the `<input type="number">`
+ * @param value - the value to set, as it should read afterwards
+ */
+export async function setNumberInput(page: Page, selector: string, value: string): Promise<void> {
+    await page.locator(selector).evaluate((node, newValue) => {
+        const input = node as HTMLInputElement;
+        input.focus();
+        input.value = newValue;
+        input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+    }, value);
+    await expect(page.locator(selector)).toHaveValue(value);
+}
+
+/**
  * Captured request data from interceptDataRequests
  */
 export interface CapturedRequest {
@@ -80,6 +122,12 @@ export interface CapturedRequest {
 
 export interface ExtendingPageFixtures {
     extendingPage: ExtendingPageHelper;
+    /**
+     * Auto fixture: see browserDiagnostics in the `test` extension below. Declared
+     * because a Playwright fixture must be typed to be registered, never requested
+     * by a spec.
+     */
+    browserDiagnostics: void;
 }
 
 /**
@@ -139,6 +187,15 @@ export class ExtendingPageHelper {
         const input = this.page.locator(inputSelector);
         await input.fill(calendarName);
         await input.press('Enter');
+        // Commit the edit before the wait below, and before anything else on the
+        // page is touched. `fill()` TYPES into a text input — it does not fire
+        // `change`; the browser does, when the field loses focus. Leave the field
+        // focused and that `change` lands on whatever the test clicks next, so the
+        // app starts loading the calendar in the middle of a later interaction.
+        // WebKit is where this bites: opening the locales multiselect blurred this
+        // input, and the calendar load it kicked off rebuilt the multiselect out
+        // from under the dropdown that click had just opened.
+        await input.blur();
         // Wait for calendar data to load
         await this.page.waitForLoadState('networkidle');
     }
@@ -871,6 +928,16 @@ export class ExtendingPageHelper {
 }
 
 /**
+ * How many captured browser-side lines a single failing test reports.
+ *
+ * The chatty pages here log per keystroke, so an unbounded dump would bury the
+ * Playwright error itself. The tail is what matters — the last thing the page did
+ * before the assertion gave up — so the cap drops from the FRONT and says how many
+ * it dropped.
+ */
+const MAX_DIAGNOSTIC_LINES = 200;
+
+/**
  * Extended test fixture with ExtendingPageHelper
  */
 export const test = base.extend<ExtendingPageFixtures>({
@@ -878,6 +945,56 @@ export const test = base.extend<ExtendingPageFixtures>({
         const helper = new ExtendingPageHelper(page);
         await use(helper);
     },
+
+    /**
+     * Browser-side console output, uncaught page errors and failed requests,
+     * buffered for the whole test and printed ONLY when the test fails.
+     *
+     * A Playwright failure says what the harness was waiting for; it never says
+     * what the page was doing instead. For a browser-specific failure that is the
+     * whole question, and the nightly's firefox/webkit runs are the one place
+     * these specs meet those browsers — so the evidence has to travel in the job
+     * log, which is what everyone can read. The trace and the HTML report carry
+     * it too, but only for whoever can download a 50 MB artifact.
+     *
+     * Buffered rather than streamed because two specs already attached their own
+     * `page.on('console')` for exactly this reason and drowned their passing runs
+     * in per-keystroke logging. On a pass this prints nothing at all.
+     *
+     * `auto: true`: no spec asks for it, every spec gets it.
+     */
+    browserDiagnostics: [async ({ page }, use, testInfo) => {
+        const lines: string[] = [];
+        let dropped = 0;
+        const record = (line: string) => {
+            lines.push(line);
+            if (lines.length > MAX_DIAGNOSTIC_LINES) {
+                lines.shift();
+                dropped++;
+            }
+        };
+
+        page.on('console', (msg) => record(`console[${msg.type()}] ${msg.text()}`));
+        page.on('pageerror', (err) => record(`pageerror ${err.message}`));
+        page.on('requestfailed', (req) =>
+            record(`requestfailed ${req.method()} ${req.url()} — ${req.failure()?.errorText ?? 'unknown'}`));
+        page.on('response', (res) => {
+            if (res.status() >= 400) record(`response ${res.status()} ${res.request().method()} ${res.url()}`);
+        });
+
+        await use();
+
+        if (testInfo.status === testInfo.expectedStatus || lines.length === 0) return;
+
+        const header = dropped > 0
+            ? `--- browser diagnostics (last ${lines.length} of ${lines.length + dropped} lines) ---`
+            : `--- browser diagnostics (${lines.length} lines) ---`;
+        const body = [header, ...lines, '--- end browser diagnostics ---'].join('\n');
+        // Both: stdout so it lands in the CI job log beside the failure, and an
+        // attachment so the HTML report carries it for anyone reading that instead.
+        console.log(body);
+        await testInfo.attach('browser-diagnostics', { body, contentType: 'text/plain' });
+    }, { auto: true }],
 });
 
 export { expect };

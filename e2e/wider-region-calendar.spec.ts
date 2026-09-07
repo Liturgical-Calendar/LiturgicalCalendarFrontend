@@ -247,11 +247,6 @@ test.describe('Wider Region Calendar Form', () => {
         // This test creates a NEW wider region calendar using PUT for a region that exists
         // in the datalist but doesn't have calendar data yet. Then it DELETEs to clean up.
 
-        // Capture console logs and errors early for debugging
-        // Note: Listeners are automatically cleaned up when page closes at test end
-        page.on('console', msg => console.log(`Browser console [${msg.type()}]: ${msg.text()}`));
-        page.on('pageerror', err => console.log(`Browser error: ${err.message}`));
-
         // Query the /calendars API to get existing wider region IDs
         const apiBaseUrl = await page.evaluate(() => {
             // @ts-ignore - BaseUrl is a global variable set by the frontend
@@ -282,7 +277,13 @@ test.describe('Wider Region Calendar Form', () => {
         // Fill in the wider region name with the found region that doesn't have data
         const regionNameInput = page.locator('#widerRegionCalendarName');
         await regionNameInput.fill(regionToCreate);
-        await regionNameInput.dispatchEvent('change');
+        // blur(), not dispatchEvent('change'): the browser fires the real `change`
+        // when this field loses focus, and a hand-dispatched one does not stop it.
+        // Left focused, it fired on the first later click instead — the one that
+        // opens the locales multiselect below — and the second calendar load it
+        // started rebuilt that multiselect while its dropdown was opening. Same
+        // reasoning as selectCalendar() in fixtures.ts.
+        await regionNameInput.blur();
 
         // Wait for the async form processing to complete
         await page.waitForLoadState('networkidle');

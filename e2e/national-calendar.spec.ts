@@ -230,11 +230,6 @@ test.describe('National Calendar Form', () => {
         let createResponseStatus: number | null = null;
         let createResponseBody: any = null;
 
-        // Capture console logs and errors for debugging
-        // Note: Listeners are automatically cleaned up when page closes at test end
-        page.on('console', msg => console.log(`Browser console [${msg.type()}]: ${msg.text()}`));
-        page.on('pageerror', err => console.log(`Browser error: ${err.message}`));
-
         // Fill in the national calendar input with the ISO code from the found nation
         const calendarNameInput = page.locator('#nationalCalendarName');
         await calendarNameInput.fill(nationToCreate.key);
@@ -656,8 +651,22 @@ test.describe('National Calendar Form - Action Buttons', () => {
         // Dismiss any toasts
         await extendingPage.dismissToasts();
 
-        // Use a unique patron name to avoid conflicts across test runs
-        const patronName = `TestPatron_${Date.now()}`;
+        // An EXISTING event key, the way the setProperty and moveEvent tests above
+        // already do it. Designating a patron means designating one of the
+        // calendar's liturgical events, so `retrieveExistingLiturgicalEvent()`
+        // throws for a key the events catalog does not carry, and no row is added.
+        //
+        // This used to invent `TestPatron_${Date.now()}`, and passed only while
+        // the events catalog had not finished loading: the lookup is skipped
+        // entirely while `EventsLoader.lastRequestPath` is still ''. That race is
+        // what made the test green — it never exercised the makePatron path with
+        // a loaded catalog, which is the only state a user is ever in.
+        const patronName = await extendingPage.getRandomExistingEventName();
+        if (!patronName) {
+            test.skip(true, 'No existing events in datalist');
+            return;
+        }
+        console.log(`Using existing event: ${patronName}`);
 
         // Count existing makePatron rows before
         const existingCount = await page.locator('.regionalNationalDataForm .row[data-action="makePatron"]').count();
