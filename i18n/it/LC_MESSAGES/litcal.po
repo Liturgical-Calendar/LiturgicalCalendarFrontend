@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-03 00:52+0000\n"
-"PO-Revision-Date: 2026-09-03 00:52+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2026-09-15 20:55+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Italian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/it/>\n"
 "Language: it\n"
@@ -2523,18 +2523,16 @@ msgid "Closed without merging"
 msgstr "Chiuso senza fusione"
 
 #: includes/change-request-i18n.php:78
-#, fuzzy
-#| msgid "Could not load your existing requests."
 msgid "Could not load what this change request proposes."
-msgstr "Impossibile caricare le tue richieste esistenti."
+msgstr "Impossibile caricare ciò che propone questa richiesta di modifica."
 
 #: includes/change-request-i18n.php:79
 msgid "This change request proposes no files."
-msgstr ""
+msgstr "Questa richiesta di modifica non propone alcun file."
 
 #: includes/change-request-i18n.php:80
 msgid "No content change."
-msgstr ""
+msgstr "Nessuna modifica al contenuto."
 
 #: includes/change-request-i18n.php:81
 #, php-format
@@ -2542,34 +2540,38 @@ msgid ""
 "This file is too large to compare in the browser (%1$s proposed, %2$s "
 "currently on disk)."
 msgstr ""
+"Questo file è troppo grande da confrontarlo nel browser (%1$s proposto, %2$s "
+"attualmente sul disco)."
 
 #: includes/change-request-i18n.php:82
 #, php-format
 msgid "@@ %1$d unchanged line(s) hidden @@"
-msgstr ""
+msgstr "@@ %1$d righe non modificate nascoste @@"
 
 #: includes/change-request-i18n.php:83
 #, php-format
 msgid ""
 "File contents were not requested. Proposed: %1$s; currently on disk: %2$s."
 msgstr ""
+"I contenuti del file non sono stati richiesti. Proposto: %1$s; attualmente "
+"su disco: %2$s."
 
 #: includes/change-request-i18n.php:84
 #, php-format
 msgid "This file will be removed (%1$s currently on disk)."
-msgstr ""
+msgstr "Questo file verrà rimosso (%1$s attualmente su disco)."
 
 #: includes/admin-changes-card.php:23
-#, fuzzy
-#| msgid "Access Requests to Review"
 msgid "Change Requests to Review"
-msgstr "Richieste di accesso da esaminare"
+msgstr "Richieste di modifica da revisionare"
 
 #: includes/admin-changes-card.php:27
 msgid ""
 "Read and decide the source data changes proposed for the calendars you "
 "administer"
 msgstr ""
+"Leggi e decidi le modifiche ai dati sorgente proposte per i calendari che "
+"gestisci"
 
 #: includes/admin-changes-card.php:33 admin-permissions.php:470
 #: admin-applications.php:245 admin-dashboard.php:136 admin-dashboard.php:194
@@ -3954,62 +3956,51 @@ msgid ""
 "Promoting a locale therefore tightens enforcement, and may only be done once "
 "every check below passes."
 msgstr ""
+"Una localizzazione ufficialmente supportata garantisce dati completi. La "
+"mancanza di dati per una localizzazione viene trattata come errore, mentre "
+"una localizzazione fuori dall'elenco degrada silenziosamente. Promuovere una "
+"localizzazione, quindi, rafforza l'applicazione delle regole e può essere "
+"fatto solo una volta che tutti i controlli qui sotto siano superati."
 
 #: admin-locales.php:66
-#, fuzzy
-#| msgid "Name in base locale"
 msgid "Candidate locales"
-msgstr "Nome nella localizzazione di base"
+msgstr "Localizzazioni candidate"
 
 #: admin-locales.php:76
-#, fuzzy
-#| msgid "Locales"
 msgid "Locale"
-msgstr "Lingue"
+msgstr "Localizzazione"
 
 #: admin-locales.php:78
-#, fuzzy
-#| msgid "Read"
 msgid "Readiness"
-msgstr "Leggi"
+msgstr "Prontezza"
 
 #: admin-locales.php:79 sanctorale.php:176 sanctorale.php:223
-#, fuzzy
-#| msgid "Event Details"
 msgid "Details"
-msgstr "Dettagli dell'Evento"
+msgstr "Dettagli"
 
 #: admin-locales.php:107
 msgid "Official"
-msgstr ""
+msgstr "Ufficiale"
 
 #: admin-locales.php:108
 msgid "Candidate"
-msgstr ""
+msgstr "Candidato"
 
 #: admin-locales.php:109
-#, fuzzy
-#| msgid "Read"
 msgid "Ready"
-msgstr "Leggi"
+msgstr "Pronto"
 
 #: admin-locales.php:110
-#, fuzzy
-#| msgid "Not Verified"
 msgid "Not ready"
-msgstr "Non verificato"
+msgstr "Non pronto"
 
 #: admin-locales.php:111
-#, fuzzy
-#| msgid "View Keys"
 msgid "View checks"
-msgstr "Visualizza Chiavi"
+msgstr "Visualizza controlli"
 
 #: admin-locales.php:113
-#, fuzzy
-#| msgid "Loading…"
 msgid "Working…"
-msgstr "Caricamento in corso…"
+msgstr "In corso…"
 
 #: admin-locales.php:114
 #, php-format
