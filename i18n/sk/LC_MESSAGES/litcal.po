@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-03 00:52+0000\n"
-"PO-Revision-Date: 2026-09-03 00:52+0000\n"
+"PO-Revision-Date: 2026-09-15 20:55+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
@@ -3951,76 +3951,75 @@ msgid "Working…"
 msgstr "Beží…"
 
 #: admin-locales.php:114
-#, fuzzy, php-format
-#| msgid "Could not load notifications"
+#, php-format
 msgid "Could not load locales: %s"
-msgstr "Nepodarilo sa načítať notifikácie"
+msgstr "Nepodarilo sa načítať lokality: %s"
 
 #: admin-locales.php:115
 msgid "Missing:"
-msgstr ""
+msgstr "Chýba:"
 
 #: admin-locales.php:116
 msgid "Advisory — reported, but does not block promotion"
-msgstr ""
+msgstr "Upozornenie — hlásené, ale nebráni propagácii"
 
 #: admin-locales.php:117
 msgid "Promote"
-msgstr ""
+msgstr "Propagovať"
 
 #: admin-locales.php:118
 msgid "Demote"
-msgstr ""
+msgstr "Znížiť"
 
 #. translators: %s is a locale tag such as "fr_FR"
 #: admin-locales.php:120
 #, php-format
 msgid "Locale %s is now officially supported."
-msgstr ""
+msgstr "Lokalita %s je teraz oficiálne podporovaná."
 
 #. translators: %s is a locale tag such as "fr_FR"
 #: admin-locales.php:122
 #, php-format
 msgid "Locale %s is no longer officially supported."
-msgstr ""
+msgstr "Lokalita %s už nie je oficiálne podporovaná."
 
 #. translators: %s is the error reported by the API
 #: admin-locales.php:124
 #, php-format
 msgid "Could not change this locale: %s"
-msgstr ""
+msgstr "Nepodarilo sa zmeniť lokalitu: %s"
 
 #: admin-locales.php:125
 msgid ""
 "This locale is not ready to be promoted. Open “View checks” to see what is "
 "missing."
 msgstr ""
+"Táto lokalita nie je pripravená na propagáciu. Otvorte „Zobraziť kontroly“, "
+"aby ste zistili, čo chýba."
 
 #: admin-locales.php:126
 msgid ""
 "This is the only officially supported locale, and the list may not be "
 "emptied. Promote a replacement first."
 msgstr ""
+"Toto je jediná oficiálne podporovaná lokalita a zoznam nemôže byť "
+"vyprázdnený. Najprv propagujte náhradnú lokalitu."
 
 #: admin-locales.php:129
 msgid "Curation is unavailable."
-msgstr ""
+msgstr "Kuratívne spracovanie nie je k dispozícii."
 
 #: admin-locales.php:130
-#, fuzzy
-#| msgid "Change name or grade"
 msgid "Changes here are not durable."
-msgstr "Zmeniť meno alebo stupeň"
+msgstr "Zmeny tu nie sú trvalé."
 
 #: admin-locales.php:131
 msgid "Changes here are reviewed."
-msgstr ""
+msgstr "Zmeny tu sú preskúmané."
 
 #: admin-changes.php:45 admin-changes.php:58
-#, fuzzy
-#| msgid "Access Requests to Review"
 msgid "Change Request Review"
-msgstr "Žiadosti o prístup na posúdenie"
+msgstr "Prehľad žiadosti o zmenu."
 
 #: admin-changes.php:64
 msgid ""
@@ -4028,32 +4027,29 @@ msgid ""
 "Approving a change request is the only human gate before it is published, so "
 "read what it proposes before deciding."
 msgstr ""
+"Preverte navrhované zmeny zdrojových údajov pre kalendáre, ktoré spravujete. "
+"Schválenie zmeny je jedinou ľudskou bránou pred zverejnením, takže si "
+"prečítajte, čo navrhuje, ešte pred rozhodnutím."
 
 #: admin-changes.php:206
-#, fuzzy
-#| msgid "Review Role Request"
 msgid "Review Change Request"
-msgstr "Preskúmať požiadavku na úlohu"
+msgstr "Prehľad žiadosti o zmenu."
 
 #: admin-changes.php:219
-#, fuzzy
-#| msgid "Session Information"
 msgid "Reason for rejection"
-msgstr "Informácie o relácii"
+msgstr "Dôvod zamietnutia"
 
 #: admin-changes.php:225
 msgid "The submitter will be shown this reason."
-msgstr ""
+msgstr "Odosielateľovi bude zobrazený tento dôvod."
 
 #: admin-changes.php:251
-#, fuzzy
-#| msgid "Submitted"
 msgid "Submitted by"
-msgstr "Odoslané"
+msgstr "Odoslal(a)"
 
 #: admin-changes.php:252
 msgid "Outcome"
-msgstr ""
+msgstr "Výsledok"
 
 #: admin-changes.php:254
 msgid "Reviewer decision"
@@ -4907,24 +4903,25 @@ msgid ""
 "number (StPaul_2) or _vigil is allowed, as is a lowercase two-word prefix. "
 "Cannot be renamed."
 msgstr ""
+"Začína sa veľkým písmenom, potom nasledujú písmená a číslice "
+"(StIsidoreFarmer). Na konci môže nasledovať číslo (StPaul_2) alebo _vigil, "
+"platí aj malý dvojslovný prefix. Nie je možné ho premenovať."
 
 #: sanctorale.php:363
 msgid "Enter a day between 1 and 31."
-msgstr ""
+msgstr "Zadaj deň medzi 1 a 31."
 
 #: sanctorale.php:368
 msgid "Choose…"
-msgstr ""
+msgstr "Vyber…"
 
 #: sanctorale.php:369
 msgid "Choose a month."
-msgstr ""
+msgstr "Vyber mesiac."
 
 #: sanctorale.php:370
-#, fuzzy
-#| msgid "Change grade"
 msgid "Choose a grade."
-msgstr "Zmeniť stupeň"
+msgstr "Vyber si stupeň."
 
 #. translators: %1$s is the event key, %2$s is the Missal id
 #: sanctorale.php:372
@@ -4933,76 +4930,72 @@ msgid ""
 "Delete %1$s from %2$s? Its name and readings go with it, and any earlier "
 "edition that already defined it takes over."
 msgstr ""
+"Vymazať %1$s z %2$s? Jeho názov a čítania idú s ním a akékoľvek staršie "
+"vydanie, ktoré ho už definovalo, preberie."
 
 #: sanctorale.php:375
 msgid ""
 "These readings live in the rite-wide lectionary, shared by every Missal of "
 "this rite."
 msgstr ""
+"Tieto čítania sú v lectionáriu celého rítu, ktorý zdieľa každý misál tohto "
+"rítu."
 
 #: sanctorale.php:376
 msgid "This rite has no lectionary, so readings cannot be edited here."
-msgstr ""
+msgstr "Tento rítus nemá lectionár, čítania sa teda tu nedajú upravovať."
 
 #: sanctorale.php:384
 msgid ""
 "Inherited from a different lectionary source; edit it there, not from this "
 "Missal."
-msgstr ""
+msgstr "Zdedené zo zdroja lectionára; uprav ho tam, nie z tohto misálu."
 
 #: sanctorale.php:387
 msgid "The readings were kept: another Missal still declares this celebration."
-msgstr ""
+msgstr "Čítania zostali zachované: iný misál túto slávnosť ešte oznamuje."
 
 #: sanctorale.php:388
 msgid "Default (from grade)"
-msgstr ""
+msgstr "Predvolený (podľa stupňa)"
 
 #: sanctorale.php:389
 msgid "Show no rank"
-msgstr ""
+msgstr "Zobraziť žiadnu hodnosť."
 
 #: sanctorale.php:390
 msgid "Custom text…"
-msgstr ""
+msgstr "Vlastný text…"
 
 #: sanctorale.php:391
 msgid "Nothing has changed."
-msgstr ""
+msgstr "Nič sa nezmenilo."
 
 #: sanctorale.php:392
-#, fuzzy
-#| msgid "Save"
 msgid "Saved."
-msgstr "Uložiť"
+msgstr "Uložené."
 
 #: sanctorale.php:393
-#, fuzzy
-#| msgid "Application rejected."
 msgid "Celebration created."
-msgstr "Aplikácia zamietnutá."
+msgstr "Slávnosť vytvorená."
 
 #: sanctorale.php:394
-#, fuzzy
-#| msgid "Application rejected."
 msgid "Celebration deleted."
-msgstr "Aplikácia zamietnutá."
+msgstr "Slávnosť odstránená."
 
 #. translators: %s is the error reported by the API
 #: sanctorale.php:396
 #, php-format
 msgid "Could not save: %s"
-msgstr ""
+msgstr "Nepodarilo sa uložiť: %s"
 
 #: sanctorale.php:397
-#, fuzzy
-#| msgid "You do not have permission to perform this action."
 msgid "You do not have permission to change this Missal."
-msgstr "Nemáš oprávnenie vykonať túto akciu."
+msgstr "Nemáš oprávnenie meniť tento misál."
 
 #: sanctorale.php:398
 msgid "This clashes with another Missal"
-msgstr ""
+msgstr "Koliduje s iným misálom."
 
 #. translators: %s is the change request batch id
 #: sanctorale.php:404

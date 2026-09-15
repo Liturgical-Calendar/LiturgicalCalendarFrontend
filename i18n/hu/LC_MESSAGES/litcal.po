@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-03 00:52+0000\n"
-"PO-Revision-Date: 2026-09-03 00:53+0000\n"
+"PO-Revision-Date: 2026-09-15 20:55+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hu/>\n"
@@ -3254,7 +3254,7 @@ msgstr "Római rítus"
 
 #: admin-permissions.php:416 permission-requests.php:252 sanctorale.php:345
 msgid "Ambrosian Rite"
-msgstr ""
+msgstr "Ambrosian Rítus."
 
 #: admin-permissions.php:418 permission-requests.php:255
 msgid "Sanctorale — Editio Typica 1970"
@@ -4849,43 +4849,35 @@ msgstr "A húsvéti időszakon kívül"
 
 #: sanctorale.php:296
 msgid "Displays as"
-msgstr ""
+msgstr "Megjelenik mint"
 
 #: sanctorale.php:299
 msgid "no rank shown"
-msgstr ""
+msgstr "Nincs megjelenített rang."
 
 #: sanctorale.php:310
-#, fuzzy
-#| msgid "Higher Solemnity"
 msgid "Higher solemnity"
-msgstr "Nagyobb főünnep"
+msgstr "Magasabb ünnep."
 
 #: sanctorale.php:313
-#, fuzzy
-#| msgid "Color"
 msgid "Colour"
 msgstr "Szín"
 
 #: sanctorale.php:314
-#, fuzzy
-#| msgid "Common(s)"
 msgid "Common"
-msgstr "Közös(ek)"
+msgstr "Közös"
 
 #: sanctorale.php:315
 msgid "From this Missal"
-msgstr ""
+msgstr "Ebből a misekönyvből."
 
 #: sanctorale.php:316
-#, fuzzy
-#| msgid "All Seasons"
 msgid "All editions"
-msgstr "Minden időszak"
+msgstr "Minden kiadás."
 
 #: sanctorale.php:318
 msgid "This Missal redefines a celebration an earlier one already had."
-msgstr ""
+msgstr "Ez a misekönyv egy korábban már létező ünnepet újradefiniálja."
 
 #: sanctorale.php:323
 msgid "Redeclared by"
@@ -4908,62 +4900,48 @@ msgid "no override"
 msgstr "Nincs felülírás"
 
 #: sanctorale.php:334
-#, fuzzy
-#| msgid "Add translation"
 msgid "translated"
-msgstr "Új fordítás hozzáadása"
+msgstr "fordított"
 
 #: sanctorale.php:335
 msgid "blank"
-msgstr ""
+msgstr "üres"
 
 #: sanctorale.php:336
-#, fuzzy
-#| msgid "Permissions"
 msgid "missing"
-msgstr "Engedélyek"
+msgstr "hiányzó"
 
 #: sanctorale.php:337
 msgid "Nothing here."
-msgstr ""
+msgstr "Itt nincs semmi."
 
 #: sanctorale.php:338
 msgid "No celebration in this month matches your search."
-msgstr ""
+msgstr "Ebben a hónapban nincs olyan ünnep, amely megfelel a keresésének."
 
 #: sanctorale.php:339
-#, fuzzy
-#| msgid "No readings defined for this locale yet"
 msgid "No sanctorale lectionary is defined for this rite."
-msgstr "Még nincsenek olvasmányok meghatározva ehhez a nyelvhez"
+msgstr "Ehhez a rítushoz nincs megadva sanctorale lectionary."
 
 #: sanctorale.php:342
-#, fuzzy
-#| msgid "No readings defined for this locale yet"
 msgid "No readings are curated for this celebration yet."
-msgstr "Még nincsenek olvasmányok meghatározva ehhez a nyelvhez"
+msgstr "Még nincsenek kiválasztott olvasmányok ehhez az ünnephez."
 
 #: sanctorale.php:343
-#, fuzzy
-#| msgid "Could not load notifications"
 msgid "Could not load the names for this celebration."
-msgstr "Értesítések betöltése nem sikerült"
+msgstr "Nem sikerült betölteni ennek az ünnepnek a neveit."
 
 #: sanctorale.php:344
-#, fuzzy
-#| msgid "Could not load notifications"
 msgid "Could not load the readings for this celebration."
-msgstr "Értesítések betöltése nem sikerült"
+msgstr "Nem sikerült betölteni ennek az ünnepnek az olvasmányait."
 
 #: sanctorale.php:346
 msgid "No Missal is published for this combination of rite and calendar."
-msgstr ""
+msgstr "Ezen rítus és naptár kombinációjához nincs kiadva mise."
 
 #: sanctorale.php:352
-#, fuzzy
-#| msgid "Add Missal"
 msgid "Add to Missal"
-msgstr "Misekönyv hozzáadása"
+msgstr "Mise-hez hozzáadás."
 
 #: sanctorale.php:361
 msgid ""
