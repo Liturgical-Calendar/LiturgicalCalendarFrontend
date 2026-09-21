@@ -18,7 +18,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import { ReadingsRenderer as Stub } from './stubs/components-js.js';
-// Aliased by vitest.config.js to a real build when a development checkout has the
+// Aliased by vitest.config.mjs to a real build when a development checkout has the
 // gitignored `assets/components-js` symlink, and to a null-exporting stand-in
 // otherwise — so this suite SKIPS in CI instead of failing to resolve. The choice
 // has to be made in the config: Vite resolves import specifiers at transform time,

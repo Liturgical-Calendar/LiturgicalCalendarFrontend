@@ -35,7 +35,7 @@ vi.hoisted(() => {
 
 // admin-tests.js imports CalendarSelect/RiteSelect/ApiClient/CalendarSelectFilter
 // from an import-map-resolved package that only exists at runtime in the
-// browser (see layout/footer.php), not as an npm dependency. vitest.config.js
+// browser (see layout/footer.php), not as an npm dependency. vitest.config.mjs
 // aliases the bare specifier to a local inert stub (see
 // assets/js/__tests__/stubs/components-js.js) so the module can be loaded
 // here at all. None of the tests below exercise a code path that calls into
