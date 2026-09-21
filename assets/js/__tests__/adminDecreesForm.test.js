@@ -2,7 +2,7 @@
  * Unit tests for the form-collection and action-visibility helpers exported
  * from admin-decrees.js.
  *
- * The vitest environment is jsdom (see vitest.config.js), so DOM APIs are
+ * The vitest environment is jsdom (see vitest.config.mjs), so DOM APIs are
  * available without a browser.
  *
  * window.AdminDecreesConfig must be in place BEFORE the module is imported,

@@ -4,7 +4,7 @@
  * In the browser this package resolves via the import map footer.php emits
  * (`./assets/components-js/index.js`, a build artifact not present in this
  * checkout — see layout/footer.php). Under vitest there is nothing on disk
- * for Vite to resolve, so vitest.config.js aliases the bare specifier to
+ * for Vite to resolve, so vitest.config.mjs aliases the bare specifier to
  * this file for every test. It exists purely so modules that import the
  * package (admin-tests.js, admin-permissions.js, permission-requests.js)
  * can be loaded in jsdom; none of the exports here need real behavior
