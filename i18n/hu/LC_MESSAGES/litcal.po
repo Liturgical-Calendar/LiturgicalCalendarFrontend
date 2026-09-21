@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-03 00:52+0000\n"
-"PO-Revision-Date: 2026-09-15 20:55+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"PO-Revision-Date: 2026-09-21 11:46+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hu/>\n"
 "Language: hu\n"
@@ -3254,7 +3254,7 @@ msgstr "Római rítus"
 
 #: admin-permissions.php:416 permission-requests.php:252 sanctorale.php:345
 msgid "Ambrosian Rite"
-msgstr "Ambrosian Rítus."
+msgstr "Ambrozián rítus"
 
 #: admin-permissions.php:418 permission-requests.php:255
 msgid "Sanctorale — Editio Typica 1970"
@@ -4857,7 +4857,7 @@ msgstr "Nincs megjelenített rang."
 
 #: sanctorale.php:310
 msgid "Higher solemnity"
-msgstr "Magasabb ünnep."
+msgstr "Nagyobb főünnep"
 
 #: sanctorale.php:313
 msgid "Colour"
@@ -4917,11 +4917,11 @@ msgstr "Itt nincs semmi."
 
 #: sanctorale.php:338
 msgid "No celebration in this month matches your search."
-msgstr "Ebben a hónapban nincs olyan ünnep, amely megfelel a keresésének."
+msgstr "Ebben a hónapban nincs olyan ünnep, amely megfelel a keresésednek."
 
 #: sanctorale.php:339
 msgid "No sanctorale lectionary is defined for this rite."
-msgstr "Ehhez a rítushoz nincs megadva sanctorale lectionary."
+msgstr "Ehhez a rítushoz nincs megadva szanctorále lectionárium."
 
 #: sanctorale.php:342
 msgid "No readings are curated for this celebration yet."
@@ -4937,7 +4937,7 @@ msgstr "Nem sikerült betölteni ennek az ünnepnek az olvasmányait."
 
 #: sanctorale.php:346
 msgid "No Missal is published for this combination of rite and calendar."
-msgstr "Ezen rítus és naptár kombinációjához nincs kiadva mise."
+msgstr "Ezen rítus és naptár kombinációjához nincs kiadva misekönyv."
 
 #: sanctorale.php:352
 msgid "Add to Missal"
@@ -4997,7 +4997,8 @@ msgstr ""
 msgid ""
 "Inherited from a different lectionary source; edit it there, not from this "
 "Missal."
-msgstr "Más lectionárium-forrásból származik; ott szerkessze, ne ebből a mise."
+msgstr ""
+"Más lectionárium-forrásból származik; ott szerkeszd, ne ebből a misekönyvből."
 
 #: sanctorale.php:387
 msgid "The readings were kept: another Missal still declares this celebration."
@@ -5041,11 +5042,11 @@ msgstr "Nem sikerült menteni: %s"
 
 #: sanctorale.php:397
 msgid "You do not have permission to change this Missal."
-msgstr "Nincs jogod ennek a mise megváltoztatásához."
+msgstr "Nincs jogod ennek a misekönyvnek a megváltoztatásához."
 
 #: sanctorale.php:398
 msgid "This clashes with another Missal"
-msgstr "Ez ütközik egy másik mise-vel."
+msgstr "Ez ütközik egy másik misekönyvvel"
 
 #. translators: %s is the change request batch id
 #: sanctorale.php:404
