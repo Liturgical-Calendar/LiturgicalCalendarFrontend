@@ -8,7 +8,7 @@
  * `admin-tests.js` imports `@liturgical-calendar/components-js`, which is not
  * an npm dependency of this project (it's wired in at runtime via the
  * browser importmap in layout/footer.php — see CLAUDE.md's "Component
- * Library Methods" section). vitest.config.js aliases that bare specifier to
+ * Library Methods" section). vitest.config.mjs aliases that bare specifier to
  * a minimal test stub (`stubs/components-js.js`) so this file can be imported
  * directly; the stub's `Rite` enum mirrors the real package's
  * `Rite.ROMAN = 'roman'` / `Rite.AMBROSIAN = 'ambrosian'`

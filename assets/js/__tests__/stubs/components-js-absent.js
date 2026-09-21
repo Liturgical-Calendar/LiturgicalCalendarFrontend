@@ -1,7 +1,7 @@
 /**
  * Stands in for a real `liturgy-components-js` build when none is on disk.
  *
- * `vitest.config.js` aliases `@components-js-real` here whenever the gitignored
+ * `vitest.config.mjs` aliases `@components-js-real` here whenever the gitignored
  * `assets/components-js` symlink does not resolve — which is every CI run, since
  * that symlink points at a sibling checkout CI does not have. Exporting `null`
  * lets `readings-renderer-stub.test.js` SKIP its drift comparison rather than
