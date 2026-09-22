@@ -320,7 +320,10 @@ document.addEventListener('DOMContentLoaded', async function() {
             !row.isConnected ||
             row.querySelector('.perm-object-type').value !== NATIONAL_CALENDAR_TYPE
         ) return;
-        mount.appendChild(buildNationObjectIdSelectFromConfig(config, client, {
+        // Replace, not append: overlapping calls (national -> another scope ->
+        // national before the client resolves) each pass the guard above, and
+        // appending would leave two `.perm-object-id` controls in the mount.
+        mount.replaceChildren(buildNationObjectIdSelectFromConfig(config, client, {
             locale:    LITCAL_LOCALE,
             className: 'form-select form-select-sm perm-object-id'
         }));
