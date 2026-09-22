@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-22 21:29+0000\n"
-"PO-Revision-Date: 2026-09-15 20:55+0000\n"
+"PO-Revision-Date: 2026-09-23 21:55+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pl/>\n"
@@ -1057,7 +1057,7 @@ msgstr "Dla świętych kobiet"
 #. translators: context = Masses and Prayers for Various Needs and Occasions
 #: src/LitCommon.php:156
 msgid "For Giving Thanks to God for the Gift of Human Life [USA]"
-msgstr ""
+msgstr "Dla dziękczynienia Bogu za dar ludzkiego życia [USA]"
 
 #. translators: context = Masses and Prayers for Various Needs and Occasions
 #: src/LitCommon.php:158
@@ -2452,10 +2452,8 @@ msgid "Wider region"
 msgstr "Region szeroki"
 
 #: includes/change-request-i18n.php:55
-#, fuzzy
-#| msgid "Diocesan Calendar Tests"
 msgid "Rite calendar"
-msgstr "Testy Kalendarza Diecezjalnego"
+msgstr "Kalendarz liturgiczny"
 
 #: includes/change-request-i18n.php:57
 msgid "National calendar test"
@@ -3305,16 +3303,12 @@ msgid "Could not load calendars — try reloading the page"
 msgstr "Nie można załadować kalendarzy — spróbuj odświeżyć stronę"
 
 #: admin-permissions.php:435 permission-requests.php:240
-#, fuzzy
-#| msgid "Depends on national calendar"
 msgid "Existing national calendars"
-msgstr "Zależy od kalendarza narodowego"
+msgstr "Istniejące kalendarze narodowe"
 
 #: admin-permissions.php:437 permission-requests.php:242
-#, fuzzy
-#| msgid "National calendar test"
 msgid "New national calendars (not yet created)"
-msgstr "Test kalendarza narodowego"
+msgstr "Nowe kalendarze narodowe (jeszcze nie utworzone)"
 
 #: admin-permissions.php:446
 msgid "All fields are required."
@@ -5002,89 +4996,81 @@ msgstr ""
 
 #: sanctorale.php:387
 msgid "The readings were kept: another Missal still declares this celebration."
-msgstr ""
+msgstr "Czytania zostały zachowane: inny Mszał wciąż ogłasza tę uroczystość."
 
 #: sanctorale.php:388
 msgid "Default (from grade)"
-msgstr ""
+msgstr "Domyślne (z ocen)"
 
 #: sanctorale.php:389
 msgid "Show no rank"
-msgstr ""
+msgstr "Pokaż brak rangi"
 
 #: sanctorale.php:390
 msgid "Custom text…"
-msgstr ""
+msgstr "Niestandardowy tekst…"
 
 #: sanctorale.php:391
 msgid "Nothing has changed."
-msgstr ""
+msgstr "Nic się nie zmieniło."
 
 #: sanctorale.php:392
-#, fuzzy
-#| msgid "Save"
 msgid "Saved."
-msgstr "Zapisz"
+msgstr "Zapisano."
 
 #: sanctorale.php:393
-#, fuzzy
-#| msgid "Application rejected."
 msgid "Celebration created."
-msgstr "Aplikacja odrzucona."
+msgstr "Utworzono uroczystość."
 
 #: sanctorale.php:394
-#, fuzzy
-#| msgid "Application rejected."
 msgid "Celebration deleted."
-msgstr "Aplikacja odrzucona."
+msgstr "Uroczystość została usunięta."
 
 #. translators: %s is the error reported by the API
 #: sanctorale.php:396
 #, php-format
 msgid "Could not save: %s"
-msgstr ""
+msgstr "Nie można zapisać: %s"
 
 #: sanctorale.php:397
-#, fuzzy
-#| msgid "You do not have permission to perform this action."
 msgid "You do not have permission to change this Missal."
-msgstr "Nie masz uprawnień do wykonania tej akcji."
+msgstr "Nie masz uprawnień do zmiany tego Mszału."
 
 #: sanctorale.php:398
 msgid "This clashes with another Missal"
-msgstr ""
+msgstr "To koliduje z innym Mszałem."
 
 #. translators: %s is the change request batch id
 #: sanctorale.php:404
 #, php-format
 msgid "Queued for review as batch %s. Nothing has been written yet."
 msgstr ""
+"Zakolejkowano do przeglądu jako partię %s. Nic jeszcze nie zostało zapisane."
 
 #. translators: %s is the change request batch id
 #: sanctorale.php:406
 #, php-format
 msgid "Approved as batch %s, awaiting publication."
-msgstr ""
+msgstr "Zatwierdzono jako partię %s, oczekuje na publikację."
 
 #. translators: %s is a comma-separated list of batch ids
 #: sanctorale.php:408
 #, php-format
 msgid "Earlier batches folded in: %s."
-msgstr ""
+msgstr "Wcześniejsze partie połączono: %s."
 
 #. translators: %s is the unrecognized disposition value
 #: sanctorale.php:410
 #, php-format
 msgid ""
 "The server reported an unrecognized outcome (%s); nothing local was changed."
-msgstr ""
+msgstr "Serwer zgłosił nieznany wynik (%s); nic lokalnie nie zostało zmienione."
 
 #. translators: %s is the error reported by the API
 #: sanctorale.php:412
-#, fuzzy, php-format
-#| msgid "Could not load notifications"
+#, php-format
 msgid "Could not load the sanctorale: %s"
-msgstr "Nie można załadować powiadomień"
+msgstr "Nie można załadować sanctorale: %s"
 
 #. translators: %s is the event_key a #event= link named
 #. Reported rather than left silent: the link may be stale, mistyped, or
@@ -5092,7 +5078,7 @@ msgstr "Nie można załadować powiadomień"
 #: sanctorale.php:416
 #, php-format
 msgid "%s is not in the current selection."
-msgstr ""
+msgstr "%s nie ma w bieżącym wyborze."
 
 #: user-profile.php:23 user-profile.php:35
 msgid "User Profile"
