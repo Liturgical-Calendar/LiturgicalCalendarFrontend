@@ -17,7 +17,7 @@ import {
     RITE_CALENDAR_TYPE,
     ROMAN_RITE,
 } from './riteScopedObjectId.js';
-import { buildNationObjectIdSelect } from './nationObjectIdSelect.js';
+import { buildNationObjectIdSelectFromConfig, NATIONAL_CALENDAR_TYPE } from './nationObjectIdSelect.js';
 
 // Initialize the API client once; CalendarSelect requires this to have resolved.
 // Since components-js 2.0.0 init() rejects on failure rather than resolving to
@@ -158,6 +158,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
+     * Mount the nation picker for the `national_calendar` scope.
+     *
+     * See permission-requests.js: a CalendarSelect lists only nations whose
+     * calendar already exists, so it could never grant the `admin` that
+     * creating a new national calendar needs (API #669).
+     * @param {HTMLElement} mount - #grantObjectIdMount
+     */
+    async function mountNationObjectIdSelect(mount) {
+        const client = await apiClientReady;
+        if (grantObjectType.value !== NATIONAL_CALENDAR_TYPE) return; // scope changed again meanwhile
+        mount.appendChild(buildNationObjectIdSelectFromConfig(config, client, {
+            locale:    LITCAL_LOCALE,
+            className: 'form-select',
+            id:        'grantObjectId'
+        }));
+    }
+
+    /**
      * Swap the contents of #grantObjectIdMount.
      * Calendar-backed scopes mount a CalendarSelect; the rest use a native select.
      * @param {string} objectType - The currently selected object type
@@ -166,24 +184,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const mount = document.getElementById('grantObjectIdMount');
         if (!mount) return;
         mount.innerHTML = '';
-        if (objectType === 'national_calendar') {
-            // See permission-requests.js: a CalendarSelect lists only nations
-            // whose calendar already exists, so it could never grant the
-            // `admin` that creating a new national calendar needs (API #669).
-            const client = await apiClientReady;
-            if (grantObjectType.value !== objectType) return; // scope changed again meanwhile
-            mount.appendChild(buildNationObjectIdSelect({
-                nations:     config.nations || {},
-                existingIds: client?._metadata?.national_calendars_keys ?? null,
-                locale:      LITCAL_LOCALE,
-                className:   'form-select',
-                id:          'grantObjectId',
-                i18n:        {
-                    placeholder:   config.i18n.selectCalendarId || 'Select calendar ID...',
-                    existingGroup: config.i18n.existingNationalCalendars || 'Existing national calendars',
-                    newGroup:      config.i18n.newNationalCalendars || 'New national calendars (not yet created)'
-                }
-            }));
+        if (objectType === NATIONAL_CALENDAR_TYPE) {
+            await mountNationObjectIdSelect(mount);
             return;
         }
         if (

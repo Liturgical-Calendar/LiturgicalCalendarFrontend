@@ -6,7 +6,7 @@
  * so nobody could request the `admin` access needed to create a new one.
  */
 import { describe, it, expect } from 'vitest';
-import { buildNationObjectIdSelect } from '../nationObjectIdSelect.js';
+import { buildNationObjectIdSelect, buildNationObjectIdSelectFromConfig } from '../nationObjectIdSelect.js';
 
 const i18n = {
     placeholder:   'Select calendar ID...',
@@ -79,5 +79,36 @@ describe('buildNationObjectIdSelect', () => {
         const select = build([], { id: 'grantObjectId', className: 'form-select' });
         expect(select.id).toBe('grantObjectId');
         expect(select.className).toBe('form-select');
+    });
+});
+
+describe('buildNationObjectIdSelectFromConfig', () => {
+    const config = {
+        nations,
+        i18n: {
+            selectCalendarId:          'Choisir...',
+            existingNationalCalendars: 'Existants',
+            newNationalCalendars:      'Nouveaux'
+        }
+    };
+
+    it('groups by the resolved client\'s metadata and uses the config labels', () => {
+        const client = { _metadata: { national_calendars_keys: ['US'] } };
+        const select = buildNationObjectIdSelectFromConfig(config, client, { locale: 'fr', className: 'form-select' });
+        expect(select.options[0].textContent).toBe('Choisir...');
+        expect(groupValues(select, 'Existants')).toEqual(['US']);
+        expect(groupValues(select, 'Nouveaux')).toEqual(['BR', 'FR', 'IT']);
+    });
+
+    it('offers the full list ungrouped when the client failed to initialize', () => {
+        const select = buildNationObjectIdSelectFromConfig(config, false, { locale: 'fr', className: 'form-select' });
+        expect(select.querySelectorAll('optgroup')).toHaveLength(0);
+        expect(select.options).toHaveLength(5);
+    });
+
+    it('falls back to English labels and an empty list when the config lacks them', () => {
+        const select = buildNationObjectIdSelectFromConfig({}, false, { locale: 'en', className: 'form-select' });
+        expect(select.options).toHaveLength(1);
+        expect(select.options[0].textContent).toBe('Select calendar ID...');
     });
 });

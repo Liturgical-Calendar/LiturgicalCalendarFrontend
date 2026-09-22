@@ -18,7 +18,7 @@ import {
     ROMAN_RITE,
     splitObjectId,
 } from './riteScopedObjectId.js';
-import { buildNationObjectIdSelect } from './nationObjectIdSelect.js';
+import { buildNationObjectIdSelectFromConfig, NATIONAL_CALENDAR_TYPE } from './nationObjectIdSelect.js';
 
 // Initialize the API client once; CalendarSelect requires this to have resolved.
 // Since components-js 2.0.0 init() rejects on failure rather than resolving to
@@ -301,6 +301,32 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     /**
+     * Mount the nation picker for the `national_calendar` scope.
+     *
+     * Not a CalendarSelect: that lists only the nations whose calendar already
+     * exists, and requesting `admin` on a nation that has none yet is how a new
+     * national calendar gets created (API #669). The test tier keeps the
+     * CalendarSelect — there is nothing to test until the calendar exists.
+     *
+     * Metadata only sorts the list into existing / to-be-created; if it failed
+     * to load, the full list is still offered, just ungrouped.
+     * @param {HTMLElement} row - The permission row (.card element)
+     * @param {HTMLElement} mount - The row's `.perm-objid-mount`
+     */
+    async function mountNationObjectIdSelect(row, mount) {
+        const client = await apiClientReady;
+        // Guard against a rapid scope change that already replaced the mount.
+        if (
+            !row.isConnected ||
+            row.querySelector('.perm-object-type').value !== NATIONAL_CALENDAR_TYPE
+        ) return;
+        mount.appendChild(buildNationObjectIdSelectFromConfig(config, client, {
+            locale:    LITCAL_LOCALE,
+            className: 'form-select form-select-sm perm-object-id'
+        }));
+    }
+
+    /**
      * Rebuild the Calendar ID control for a row based on the chosen scope.
      * Calendar-backed scopes mount a CalendarSelect; the rest use a native select.
      * @param {HTMLElement} row - The permission row (.card element)
@@ -311,31 +337,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (!mount) return;
         mount.innerHTML = '';
 
-        if (objectType === 'national_calendar') {
-            // Not a CalendarSelect: that lists only the nations whose calendar
-            // already exists, and requesting `admin` on a nation that has none
-            // yet is how a new national calendar gets created (API #669). The
-            // test tier below keeps the CalendarSelect — there is nothing to
-            // test until the calendar exists.
-            //
-            // Metadata only sorts the list into existing / to-be-created; if it
-            // failed to load, the full list is still offered, just ungrouped.
-            const client = await apiClientReady;
-            if (
-                !row.isConnected ||
-                row.querySelector('.perm-object-type').value !== objectType
-            ) return;
-            mount.appendChild(buildNationObjectIdSelect({
-                nations:     config.nations || {},
-                existingIds: client?._metadata?.national_calendars_keys ?? null,
-                locale:      LITCAL_LOCALE,
-                className:   'form-select form-select-sm perm-object-id',
-                i18n:        {
-                    placeholder:   config.i18n.selectCalendarId || 'Select calendar ID...',
-                    existingGroup: config.i18n.existingNationalCalendars || 'Existing national calendars',
-                    newGroup:      config.i18n.newNationalCalendars || 'New national calendars (not yet created)'
-                }
-            }));
+        if (objectType === NATIONAL_CALENDAR_TYPE) {
+            await mountNationObjectIdSelect(row, mount);
             return;
         }
 

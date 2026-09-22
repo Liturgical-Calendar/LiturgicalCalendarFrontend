@@ -15,6 +15,9 @@
  * Used by permission-requests.js and admin-permissions.js.
  */
 
+/** The permission scope this picker serves. */
+export const NATIONAL_CALENDAR_TYPE = 'national_calendar';
+
 /**
  * @typedef {object} NationSelectOptions
  * @property {Object<string, string>} nations - Nation code => display name, in display order
@@ -113,4 +116,32 @@ export function buildNationObjectIdSelect({ nations, existingIds, locale, classN
     }
 
     return select;
+}
+
+/**
+ * Build the nation <select> from a page config and the resolved ApiClient.
+ *
+ * Holds the defaulting both permission pages share: the nation list and labels
+ * come from the page config (`config.nations`, `config.i18n`), and the existing
+ * calendars from the client's metadata — `null` when the client failed to
+ * initialize, which leaves the list ungrouped rather than empty.
+ * @param {object} config - The page config (AccessRequestsConfig / AdminPermissionsConfig)
+ * @param {object|false} client - The resolved ApiClient, or false if init failed
+ * @param {{locale: string, className: string, id?: string}} opts - Locale and attributes
+ * @returns {HTMLSelectElement} The built select
+ */
+export function buildNationObjectIdSelectFromConfig(config, client, { locale, className, id }) {
+    const i18n = config.i18n || {};
+    return buildNationObjectIdSelect({
+        nations:     config.nations || {},
+        existingIds: client?._metadata?.national_calendars_keys ?? null,
+        locale,
+        className,
+        id,
+        i18n:        {
+            placeholder:   i18n.selectCalendarId || 'Select calendar ID...',
+            existingGroup: i18n.existingNationalCalendars || 'Existing national calendars',
+            newGroup:      i18n.newNationalCalendars || 'New national calendars (not yet created)'
+        }
+    });
 }
