@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-22 21:29+0000\n"
-"PO-Revision-Date: 2026-09-03 01:31+0000\n"
+"PO-Revision-Date: 2026-09-23 21:55+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pt/>\n"
@@ -3305,16 +3305,12 @@ msgid "Could not load calendars — try reloading the page"
 msgstr "Não foi possível carregar os calendários — tente recarregar a página"
 
 #: admin-permissions.php:435 permission-requests.php:240
-#, fuzzy
-#| msgid "Depends on national calendar"
 msgid "Existing national calendars"
-msgstr "Depende do calendário nacional"
+msgstr "Calendários nacionais existentes"
 
 #: admin-permissions.php:437 permission-requests.php:242
-#, fuzzy
-#| msgid "National calendar test"
 msgid "New national calendars (not yet created)"
-msgstr "Teste do calendário nacional"
+msgstr "Novos calendários nacionais (ainda não criados)"
 
 #: admin-permissions.php:446
 msgid "All fields are required."
