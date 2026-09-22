@@ -7,6 +7,8 @@
  * Administrators can grant new permissions and revoke existing ones.
  */
 
+use LiturgicalCalendar\Frontend\CatholicNations;
+
 include_once 'includes/common.php';
 include_once 'includes/messages.php';
 
@@ -376,6 +378,8 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
         window.AdminPermissionsConfig = {
             apiUrl: <?php echo json_encode($apiBaseUrl); ?>,
             isGlobalAdmin: <?php echo json_encode($isGlobalAdmin); ?>,
+            <?php // Every nation that can have a national calendar, not only those that already do (API #669). ?>
+            nations: <?php echo json_encode((object) CatholicNations::localized($i18n->LOCALE), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>,
             i18n: {
                 loading: <?php echo json_encode(_('Loading...')); ?>,
                 noPermissions: <?php echo json_encode(_('No permissions found.')); ?>,
@@ -428,6 +432,9 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
                 selectCalendarId: <?php echo json_encode(_('Select calendar ID...')); ?>,
                 /** translators: shown in place of the calendar dropdown when the calendar list could not be loaded */
                 calendarIdLoadFailed: <?php echo json_encode(_('Could not load calendars — try reloading the page')); ?>,
+                existingNationalCalendars: <?php echo json_encode(_('Existing national calendars')); ?>,
+                /** translators: group of nations whose national calendar has not been created yet; requesting admin access on one is how it gets created */
+                newNationalCalendars: <?php echo json_encode(_('New national calendars (not yet created)')); ?>,
                 testsNational: <?php echo json_encode(_('National Calendar Tests')); ?>,
                 testsDiocesan: <?php echo json_encode(_('Diocesan Calendar Tests')); ?>,
                 testsGeneralRoman: <?php echo json_encode(_('General Roman Calendar Tests')); ?>,

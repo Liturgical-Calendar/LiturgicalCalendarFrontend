@@ -18,6 +18,7 @@ import {
     ROMAN_RITE,
     splitObjectId,
 } from './riteScopedObjectId.js';
+import { buildNationObjectIdSelectFromConfig, NATIONAL_CALENDAR_TYPE } from './nationObjectIdSelect.js';
 
 // Initialize the API client once; CalendarSelect requires this to have resolved.
 // Since components-js 2.0.0 init() rejects on failure rather than resolving to
@@ -300,6 +301,35 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     /**
+     * Mount the nation picker for the `national_calendar` scope.
+     *
+     * Not a CalendarSelect: that lists only the nations whose calendar already
+     * exists, and requesting `admin` on a nation that has none yet is how a new
+     * national calendar gets created (API #669). The test tier keeps the
+     * CalendarSelect — there is nothing to test until the calendar exists.
+     *
+     * Metadata only sorts the list into existing / to-be-created; if it failed
+     * to load, the full list is still offered, just ungrouped.
+     * @param {HTMLElement} row - The permission row (.card element)
+     * @param {HTMLElement} mount - The row's `.perm-objid-mount`
+     */
+    async function mountNationObjectIdSelect(row, mount) {
+        const client = await apiClientReady;
+        // Guard against a rapid scope change that already replaced the mount.
+        if (
+            !row.isConnected ||
+            row.querySelector('.perm-object-type').value !== NATIONAL_CALENDAR_TYPE
+        ) return;
+        // Replace, not append: overlapping calls (national -> another scope ->
+        // national before the client resolves) each pass the guard above, and
+        // appending would leave two `.perm-object-id` controls in the mount.
+        mount.replaceChildren(buildNationObjectIdSelectFromConfig(config, client, {
+            locale:    LITCAL_LOCALE,
+            className: 'form-select form-select-sm perm-object-id'
+        }));
+    }
+
+    /**
      * Rebuild the Calendar ID control for a row based on the chosen scope.
      * Calendar-backed scopes mount a CalendarSelect; the rest use a native select.
      * @param {HTMLElement} row - The permission row (.card element)
@@ -309,6 +339,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         const mount = row.querySelector('.perm-objid-mount');
         if (!mount) return;
         mount.innerHTML = '';
+
+        if (objectType === NATIONAL_CALENDAR_TYPE) {
+            await mountNationObjectIdSelect(row, mount);
+            return;
+        }
 
         if (
             NATIONAL_FILTER_TYPES.includes(objectType) ||

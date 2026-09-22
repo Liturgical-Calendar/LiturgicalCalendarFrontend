@@ -17,6 +17,7 @@ import {
     RITE_CALENDAR_TYPE,
     ROMAN_RITE,
 } from './riteScopedObjectId.js';
+import { buildNationObjectIdSelectFromConfig, NATIONAL_CALENDAR_TYPE } from './nationObjectIdSelect.js';
 
 // Initialize the API client once; CalendarSelect requires this to have resolved.
 // Since components-js 2.0.0 init() rejects on failure rather than resolving to
@@ -157,6 +158,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
+     * Mount the nation picker for the `national_calendar` scope.
+     *
+     * See permission-requests.js: a CalendarSelect lists only nations whose
+     * calendar already exists, so it could never grant the `admin` that
+     * creating a new national calendar needs (API #669).
+     * @param {HTMLElement} mount - #grantObjectIdMount
+     */
+    async function mountNationObjectIdSelect(mount) {
+        const client = await apiClientReady;
+        if (grantObjectType.value !== NATIONAL_CALENDAR_TYPE) return; // scope changed again meanwhile
+        // Replace, not append: overlapping calls (national -> another scope ->
+        // national before the client resolves) each pass the guard above, and
+        // appending would leave two #grantObjectId controls in the mount.
+        mount.replaceChildren(buildNationObjectIdSelectFromConfig(config, client, {
+            locale:    LITCAL_LOCALE,
+            className: 'form-select',
+            id:        'grantObjectId'
+        }));
+    }
+
+    /**
      * Swap the contents of #grantObjectIdMount.
      * Calendar-backed scopes mount a CalendarSelect; the rest use a native select.
      * @param {string} objectType - The currently selected object type
@@ -165,6 +187,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const mount = document.getElementById('grantObjectIdMount');
         if (!mount) return;
         mount.innerHTML = '';
+        if (objectType === NATIONAL_CALENDAR_TYPE) {
+            await mountNationObjectIdSelect(mount);
+            return;
+        }
         if (
             NATIONAL_FILTER_TYPES.includes(objectType) ||
             DIOCESAN_FILTER_TYPES.includes(objectType)
