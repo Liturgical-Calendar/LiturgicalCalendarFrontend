@@ -258,6 +258,12 @@ converted, just not yet. Treat their current hand-wiring as debt, not as a patte
 The first two are RBAC-critical and covered only by the `rbac` e2e project, which is why they were
 deferred to their own PR rather than bundled with the `DayViewer` conversion.
 
+In both permission pickers the `national_calendar` scope is deliberately **not** a `CalendarSelect`: it
+uses `assets/js/nationObjectIdSelect.js`, which also offers nations whose calendar does not exist yet,
+because requesting `admin` on one is how a new national calendar gets created (API #669). The nation
+list comes from `src/CatholicNations.php`, the same list `extending.php` offers for creation. Keep it
+that way when migrating these files — `CalendarResourcePicker` only lists existing calendars.
+
 **Theme bag notes:** The theme bag's keys are HTML roles (`select`, `label`, `input`, `wrapper`) with
 per-child overrides named for the public getters. Two sharp edges: `label()` is **one-shot**, so once the
 theme bag has themed a child, custom label text must go through the per-child `labelText` key rather than

@@ -18,6 +18,7 @@ import {
     ROMAN_RITE,
     splitObjectId,
 } from './riteScopedObjectId.js';
+import { buildNationObjectIdSelect } from './nationObjectIdSelect.js';
 
 // Initialize the API client once; CalendarSelect requires this to have resolved.
 // Since components-js 2.0.0 init() rejects on failure rather than resolving to
@@ -309,6 +310,34 @@ document.addEventListener('DOMContentLoaded', async function() {
         const mount = row.querySelector('.perm-objid-mount');
         if (!mount) return;
         mount.innerHTML = '';
+
+        if (objectType === 'national_calendar') {
+            // Not a CalendarSelect: that lists only the nations whose calendar
+            // already exists, and requesting `admin` on a nation that has none
+            // yet is how a new national calendar gets created (API #669). The
+            // test tier below keeps the CalendarSelect — there is nothing to
+            // test until the calendar exists.
+            //
+            // Metadata only sorts the list into existing / to-be-created; if it
+            // failed to load, the full list is still offered, just ungrouped.
+            const client = await apiClientReady;
+            if (
+                !row.isConnected ||
+                row.querySelector('.perm-object-type').value !== objectType
+            ) return;
+            mount.appendChild(buildNationObjectIdSelect({
+                nations:     config.nations || {},
+                existingIds: client?._metadata?.national_calendars_keys ?? null,
+                locale:      LITCAL_LOCALE,
+                className:   'form-select form-select-sm perm-object-id',
+                i18n:        {
+                    placeholder:   config.i18n.selectCalendarId || 'Select calendar ID...',
+                    existingGroup: config.i18n.existingNationalCalendars || 'Existing national calendars',
+                    newGroup:      config.i18n.newNationalCalendars || 'New national calendars (not yet created)'
+                }
+            }));
+            return;
+        }
 
         if (
             NATIONAL_FILTER_TYPES.includes(objectType) ||

@@ -8,6 +8,8 @@
  * their request status.
  */
 
+use LiturgicalCalendar\Frontend\CatholicNations;
+
 include_once 'includes/common.php';
 include_once 'includes/messages.php';
 
@@ -200,6 +202,8 @@ if (!$authHelper->emailVerified) {
             apiUrl: <?php echo json_encode($apiBaseUrl, $jsonFlags); ?>,
             userEmail: <?php echo json_encode($authHelper->email ?? '', $jsonFlags); ?>,
             userName: <?php echo json_encode($authHelper->name ?? $authHelper->username ?? '', $jsonFlags); ?>,
+            <?php // Every nation that can have a national calendar, not only those that already do (API #669). ?>
+            nations: <?php echo json_encode((object) CatholicNations::localized($i18n->LOCALE), $jsonFlags); ?>,
             i18n: {
                 loading: <?php echo json_encode(_('Loading...'), $jsonFlags); ?>,
                 noRequests: <?php echo json_encode(_('You have not made any access requests yet.'), $jsonFlags); ?>,
@@ -233,6 +237,9 @@ if (!$authHelper->emailVerified) {
                 selectCalendarId: <?php echo json_encode(_('Select calendar ID...'), $jsonFlags); ?>,
                 /** translators: shown in place of the calendar dropdown when the calendar list could not be loaded */
                 calendarIdLoadFailed: <?php echo json_encode(_('Could not load calendars — try reloading the page'), $jsonFlags); ?>,
+                existingNationalCalendars: <?php echo json_encode(_('Existing national calendars'), $jsonFlags); ?>,
+                /** translators: group of nations whose national calendar has not been created yet; requesting admin access on one is how it gets created */
+                newNationalCalendars: <?php echo json_encode(_('New national calendars (not yet created)'), $jsonFlags); ?>,
                 // Object type display names
                 nationalCalendar: <?php echo json_encode(_('National Calendar'), $jsonFlags); ?>,
                 diocesanCalendar: <?php echo json_encode(_('Diocesan Calendar'), $jsonFlags); ?>,
