@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-22 21:29+0000\n"
-"PO-Revision-Date: 2026-09-03 01:04+0000\n"
+"PO-Revision-Date: 2026-09-23 21:55+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
@@ -3283,16 +3283,12 @@ msgid "Could not load calendars — try reloading the page"
 msgstr "Nije uspjelo učitavanje kalendara — pokušajte ponovno učitati stranicu"
 
 #: admin-permissions.php:435 permission-requests.php:240
-#, fuzzy
-#| msgid "Depends on national calendar"
 msgid "Existing national calendars"
-msgstr "Ovisi o nacionalnom kalendaru"
+msgstr "Postojeći nacionalni kalendari"
 
 #: admin-permissions.php:437 permission-requests.php:242
-#, fuzzy
-#| msgid "National calendar test"
 msgid "New national calendars (not yet created)"
-msgstr "Test nacionalnog kalendara"
+msgstr "Novi nacionalni kalendari (još nisu izrađeni)"
 
 #: admin-permissions.php:446
 msgid "All fields are required."
