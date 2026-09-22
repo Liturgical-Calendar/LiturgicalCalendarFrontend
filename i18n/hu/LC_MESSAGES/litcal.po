@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-22 21:29+0000\n"
-"PO-Revision-Date: 2026-09-21 11:46+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"PO-Revision-Date: 2026-09-23 21:55+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hu/>\n"
 "Language: hu\n"
@@ -3295,16 +3295,12 @@ msgid "Could not load calendars — try reloading the page"
 msgstr "Nem sikerült betölteni a naptárakat — próbáld újratölteni az oldalt"
 
 #: admin-permissions.php:435 permission-requests.php:240
-#, fuzzy
-#| msgid "Depends on national calendar"
 msgid "Existing national calendars"
-msgstr "A nemzeti naptártól függ"
+msgstr "Meglévő nemzeti naptárak"
 
 #: admin-permissions.php:437 permission-requests.php:242
-#, fuzzy
-#| msgid "National calendar test"
 msgid "New national calendars (not yet created)"
-msgstr "Nemzeti naptár teszt"
+msgstr "Új nemzeti naptárak (még nem készültek el)"
 
 #: admin-permissions.php:446
 msgid "All fields are required."
@@ -4094,58 +4090,45 @@ msgid "Outcome"
 msgstr ""
 
 #: admin-changes.php:254
-#, fuzzy
-#| msgid "Revoke Permission"
 msgid "Reviewer decision"
-msgstr "Engedély visszavonása"
+msgstr "Értékelő döntése"
 
 #: admin-changes.php:255
-#, fuzzy
-#| msgid "Season"
 msgid "Reason"
-msgstr "Évszak"
+msgstr "Indoklás"
 
 #: admin-changes.php:256
-#, fuzzy
-#| msgid "No pending role requests. All caught up!"
 msgid "No change requests are waiting for review. All caught up!"
-msgstr "Nincs függőben lévő szerepkérés. Minden naprakész!"
+msgstr "Nincs átnézésre váró változtatási kérelem. Minden naprakész."
 
 #: admin-changes.php:257
-#, fuzzy
-#| msgid "No requests found."
 msgid "No change requests found."
-msgstr "Nem találhatók kérelmek."
+msgstr "Nincs található változtatási kérelem."
 
 #: admin-changes.php:258
-#, fuzzy
-#| msgid "Failed to load access requests. Please try again later."
 msgid "Failed to load change requests. Please try again later."
 msgstr ""
-"Nem sikerült betölteni a hozzáférési kérelmeket. Kérlek, próbáld meg később."
+"Nem sikerült betölteni a változtatási kérelmeket. Kérlek, próbáld meg később."
 
 #: admin-changes.php:260
-#, fuzzy
-#| msgid "Your request was approved"
 msgid "Change request approved."
-msgstr "Kérelmed jóváhagyva"
+msgstr "A változtatási kérelem jóváhagyva."
 
 #: admin-changes.php:261
-#, fuzzy
-#| msgid "Access request rejected."
 msgid "Change request rejected."
-msgstr "A hozzáférési kérelmet elutasították."
+msgstr "A változtatási kérelem elutasítva."
 
 #: admin-changes.php:262
-#, fuzzy
-#| msgid "Failed to process request. Please try again."
 msgid "Failed to process this change request. Please try again."
-msgstr "Kérelem feldolgozása sikertelen. Kérlek, próbáld meg újra."
+msgstr ""
+"Nem sikerült feldolgozni ezt a változtatási kérelmet. Kérlek, próbáld meg "
+"később."
 
 #: admin-changes.php:263
 msgid ""
 "This change request was already decided by someone else. Reloading the list."
 msgstr ""
+"Ezt a változtatási kérelmet már valaki más eldöntötte. A lista újratöltése."
 
 #: change-requests.php:56
 msgid ""
@@ -4153,46 +4136,49 @@ msgid ""
 "change requests and reviewed before they are published. This is every change "
 "request you have submitted, and what became of it."
 msgstr ""
+"A naptár módosításait, amelyekhez te magad sem vagy rendszergazda, "
+"változtatási kérelmeként rögzítik és kiértékelik őket, mielőtt közzéteszik "
+"őket. Ez minden olyan változtatási kérelem, amit benyújtottál, és hogy mi "
+"történt velük."
 
 #: change-requests.php:116
-#, fuzzy
-#| msgid "You have not made any access requests yet."
 msgid "You have not submitted any change requests yet."
-msgstr "Még nem nyújtottál be hozzáférési kérelmet."
+msgstr "Még nem nyújtottál be semmilyen változtatási kérelmet."
 
 #: change-requests.php:117
-#, fuzzy
-#| msgid "Failed to load role requests. Please try again later."
 msgid "Failed to load your change requests. Please try again later."
-msgstr "Nem sikerült betölteni a szerepkéréseket. Kérlek, próbáld újra később."
+msgstr ""
+"Nem sikerült betölteni a változtatási kérelmeidet. Kérlek, próbáld meg "
+"később."
 
 #: change-requests.php:119
 msgid "Withdraw"
-msgstr ""
+msgstr "Visszavonás."
 
 #: change-requests.php:120
 msgid ""
 "Withdraw this change request? The files it proposes will no longer be "
 "reviewed."
 msgstr ""
+"Ezt a változtatási kérelmet visszavonod? A javasolt fájlokat már nem fogják "
+"átnézni."
 
 #: change-requests.php:121
-#, fuzzy
-#| msgid "Your request was approved"
 msgid "Change request withdrawn."
-msgstr "Kérelmed jóváhagyva"
+msgstr "A változtatási kérelem visszavonva."
 
 #: change-requests.php:122
-#, fuzzy
-#| msgid "Failed to process request. Please try again."
 msgid "Failed to withdraw this change request. Please try again."
-msgstr "Kérelem feldolgozása sikertelen. Kérlek, próbáld meg újra."
+msgstr ""
+"Nem sikerült visszavonni ezt a változtatási kérelmet. Kérlek, próbáld meg "
+"később."
 
 #: change-requests.php:125
 msgid ""
 "This change request can no longer be withdrawn — it may already have been "
 "reviewed."
 msgstr ""
+"Ez a változtatási kérelem már nem vonható vissza — lehet, hogy már átnézték."
 
 #: developer-dashboard.php:34 developer-dashboard.php:47 user-profile.php:257
 msgid "Developer Dashboard"
@@ -4669,14 +4655,18 @@ msgid ""
 "that apply to the calendar you choose, and shows which one each celebration "
 "comes from."
 msgstr ""
+"A Római misál csak annyit ad hozzá: a 2008-as kiadás három ünnepet határoz "
+"meg, nem az egész sanctorale-t (szentek naptárát). Ez az oldal az általad "
+"választott naptárhoz alkalmazható kiadásokat állítja össze, és megmutatja, "
+"melyik ünnep honnan származik."
 
 #: sanctorale.php:120
 msgid "Rite"
-msgstr ""
+msgstr "Rítus"
 
 #: sanctorale.php:122
 msgid "Roman"
-msgstr ""
+msgstr "Római"
 
 #: sanctorale.php:123
 msgid "Ambrosian"
