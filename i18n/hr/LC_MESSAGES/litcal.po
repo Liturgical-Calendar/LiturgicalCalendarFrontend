@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-03 00:52+0000\n"
+"POT-Creation-Date: 2026-09-22 21:29+0000\n"
 "PO-Revision-Date: 2026-09-03 01:04+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
@@ -124,13 +124,13 @@ msgstr "Parametri zahtjeva dostupni na svim stazama %1$s"
 #. translators: part of page title - refers to the Catholic liturgical calendar
 #: index.php:65 usage.php:35 examples.php:106 liturgyOfAnyDay.php:23
 #: layout/header.php:257 includes/change-request-i18n.php:56
-#: admin-permissions.php:83 admin-permissions.php:413 admin-tests.php:144
-#: admin-tests.php:350 permission-requests.php:249 sanctorale.php:224
+#: admin-permissions.php:85 admin-permissions.php:417 admin-tests.php:144
+#: admin-tests.php:350 permission-requests.php:256 sanctorale.php:224
 msgid "General Roman Calendar"
 msgstr "Opći rimski kalendar"
 
 #: index.php:74 layout/header.php:19 layout/header.php:229 admin-decrees.php:43
-#: admin-permissions.php:37 admin-tests.php:38 permission-requests.php:32
+#: admin-permissions.php:39 admin-tests.php:38 permission-requests.php:34
 #: admin-applications.php:34 admin-dashboard.php:40 admin-users.php:34
 #: admin-locales.php:39 admin-changes.php:46 change-requests.php:38
 #: developer-dashboard.php:35 temporale.php:25 sanctorale.php:91
@@ -1311,11 +1311,11 @@ msgid "Notifications"
 msgstr "Obavijesti"
 
 #: layout/header.php:140 includes/change-request-i18n.php:19
-#: admin-permissions.php:140 admin-permissions.php:199
-#: admin-permissions.php:206 admin-permissions.php:213
-#: admin-permissions.php:220 admin-permissions.php:380
-#: admin-permissions.php:442 admin-tests.php:332 permission-requests.php:64
-#: permission-requests.php:204 admin-applications.php:136
+#: admin-permissions.php:142 admin-permissions.php:201
+#: admin-permissions.php:208 admin-permissions.php:215
+#: admin-permissions.php:222 admin-permissions.php:384
+#: admin-permissions.php:449 admin-tests.php:332 permission-requests.php:66
+#: permission-requests.php:208 admin-applications.php:136
 #: admin-applications.php:145 admin-applications.php:154
 #: admin-applications.php:163 admin-applications.php:228 admin-users.php:70
 #: admin-users.php:85 admin-users.php:151 admin-changes.php:156
@@ -1348,8 +1348,8 @@ msgstr "Jesi li siguran da se želiš odjaviti?"
 msgid "Logout"
 msgstr "Odjava"
 
-#: layout/header.php:188 layout/header.php:251 admin-permissions.php:478
-#: permission-requests.php:90 permission-requests.php:268 admin-users.php:144
+#: layout/header.php:188 layout/header.php:251 admin-permissions.php:485
+#: permission-requests.php:92 permission-requests.php:275 admin-users.php:144
 msgid "Developer"
 msgstr "Programer"
 
@@ -1361,8 +1361,8 @@ msgstr "Administracija"
 msgid "Dashboard"
 msgstr "Nadzorna ploča"
 
-#: layout/header.php:261 includes/admin-blocks.php:19 admin-permissions.php:417
-#: permission-requests.php:253 temporale.php:24 temporale.php:37
+#: layout/header.php:261 includes/admin-blocks.php:19 admin-permissions.php:421
+#: permission-requests.php:260 temporale.php:24 temporale.php:37
 msgid "Temporale"
 msgstr "Prolazni dio"
 
@@ -1382,8 +1382,8 @@ msgstr "Posebni kalendari"
 
 #. translators: label for wider region calendar name field
 #: layout/header.php:281 includes/messages.php:230 includes/admin-blocks.php:63
-#: admin-permissions.php:87 admin-permissions.php:320 admin-permissions.php:407
-#: permission-requests.php:239
+#: admin-permissions.php:89 admin-permissions.php:322 admin-permissions.php:411
+#: permission-requests.php:246
 msgid "Wider Region"
 msgstr "Šira regija"
 
@@ -1432,7 +1432,7 @@ msgstr "Nije moguće učitati obavijesti"
 msgid "Just now"
 msgstr "Upravo sada"
 
-#: layout/footer.php:96 admin-permissions.php:474
+#: layout/footer.php:96 admin-permissions.php:481
 msgid "Requested"
 msgstr "Zahtjev poslano"
 
@@ -1511,7 +1511,7 @@ msgstr "Zapamti me"
 
 #. translators: button label for canceling an action
 #: includes/login-modal.php:55 includes/messages.php:156 admin-decrees.php:581
-#: admin-decrees.php:608 admin-permissions.php:337 admin-permissions.php:363
+#: admin-decrees.php:608 admin-permissions.php:339 admin-permissions.php:365
 #: admin-tests.php:259 admin-tests.php:286 admin-tests.php:313
 #: admin-applications.php:207 admin-users.php:112 admin-changes.php:233
 #: developer-dashboard.php:134 developer-dashboard.php:183
@@ -1994,9 +1994,9 @@ msgstr ""
 "za sve biskupije u grupi, grupa se ovdje može definirati ili postaviti."
 
 #. translators: label for national calendar name field
-#: includes/messages.php:232 admin-permissions.php:85 admin-permissions.php:318
-#: admin-permissions.php:405 admin-tests.php:147 admin-tests.php:351
-#: permission-requests.php:237
+#: includes/messages.php:232 admin-permissions.php:87 admin-permissions.php:320
+#: admin-permissions.php:409 admin-tests.php:147 admin-tests.php:351
+#: permission-requests.php:244
 msgid "National Calendar"
 msgstr "Nacionalni kalendar"
 
@@ -2342,8 +2342,8 @@ msgid "Manage liturgical accuracy tests"
 msgstr "Upravljaj testovima liturgijske preciznosti"
 
 #: includes/change-request-i18n.php:20 admin-decrees.php:157
-#: admin-decrees.php:600 admin-permissions.php:235 admin-permissions.php:267
-#: admin-permissions.php:289 admin-permissions.php:355 admin-tests.php:131
+#: admin-decrees.php:600 admin-permissions.php:237 admin-permissions.php:269
+#: admin-permissions.php:291 admin-permissions.php:357 admin-tests.php:131
 #: admin-tests.php:278 admin-tests.php:305 admin-applications.php:184
 #: admin-users.php:104 admin-locales.php:93 admin-changes.php:210
 #: change-requests.php:97 change-requests.php:104 developer-dashboard.php:84
@@ -2352,18 +2352,18 @@ msgstr "Upravljaj testovima liturgijske preciznosti"
 msgid "Close"
 msgstr "Zatvori"
 
-#: includes/change-request-i18n.php:22 admin-permissions.php:402
-#: admin-permissions.php:469 admin-tests.php:113 admin-applications.php:244
+#: includes/change-request-i18n.php:22 admin-permissions.php:406
+#: admin-permissions.php:476 admin-tests.php:113 admin-applications.php:244
 #: temporale.php:140
 msgid "Actions"
 msgstr "Radnje"
 
-#: includes/change-request-i18n.php:23 admin-permissions.php:473
-#: permission-requests.php:221 admin-applications.php:243 admin-locales.php:77
+#: includes/change-request-i18n.php:23 admin-permissions.php:480
+#: permission-requests.php:225 admin-applications.php:243 admin-locales.php:77
 msgid "Status"
 msgstr "Status"
 
-#: includes/change-request-i18n.php:24 admin-permissions.php:398
+#: includes/change-request-i18n.php:24 admin-permissions.php:402
 msgid "Unknown user"
 msgstr "Nepoznat korisnik"
 
@@ -2376,7 +2376,7 @@ msgid "Files"
 msgstr "Datoteke"
 
 #: includes/change-request-i18n.php:29 includes/change-request-i18n.php:35
-#: permission-requests.php:224 admin-changes.php:77 admin-changes.php:121
+#: permission-requests.php:228 admin-changes.php:77 admin-changes.php:121
 msgid "Submitted"
 msgstr "Poslano"
 
@@ -2392,16 +2392,16 @@ msgstr "Zahtjev za spajanje"
 msgid "Proposed changes"
 msgstr "Predložene promjene"
 
-#: includes/change-request-i18n.php:36 admin-permissions.php:173
-#: admin-permissions.php:481 permission-requests.php:275
+#: includes/change-request-i18n.php:36 admin-permissions.php:175
+#: admin-permissions.php:488 permission-requests.php:282
 #: admin-applications.php:68 admin-applications.php:108
 #: admin-applications.php:251 admin-changes.php:88 admin-changes.php:128
 #: developer-dashboard.php:304
 msgid "Approved"
 msgstr "Odobreno"
 
-#: includes/change-request-i18n.php:37 admin-permissions.php:180
-#: admin-permissions.php:482 permission-requests.php:276
+#: includes/change-request-i18n.php:37 admin-permissions.php:182
+#: admin-permissions.php:489 permission-requests.php:283
 #: admin-applications.php:79 admin-applications.php:114
 #: admin-applications.php:252 admin-changes.php:99 admin-changes.php:134
 #: developer-dashboard.php:305
@@ -2534,7 +2534,7 @@ msgstr ""
 "Pročitajte i odlučite o predloženim promjenama podataka izvora za kalendare "
 "koje upravljate"
 
-#: includes/admin-changes-card.php:33 admin-permissions.php:470
+#: includes/admin-changes-card.php:33 admin-permissions.php:477
 #: admin-applications.php:245 admin-dashboard.php:136 admin-dashboard.php:194
 #: admin-changes.php:253
 msgid "Review"
@@ -2810,7 +2810,7 @@ msgstr "Uredi dekret"
 msgid "Select locale"
 msgstr "Odaberi jezik"
 
-#: admin-decrees.php:650 permission-requests.php:229
+#: admin-decrees.php:650 permission-requests.php:233
 msgid "Remove"
 msgstr "Ukloni"
 
@@ -2983,11 +2983,11 @@ msgstr "Neobvezni spomendan"
 msgid "Weekday"
 msgstr "Običan dan"
 
-#: admin-permissions.php:36 admin-permissions.php:48
+#: admin-permissions.php:38 admin-permissions.php:50
 msgid "Permissions Management"
 msgstr "Upravljanje dozvolama"
 
-#: admin-permissions.php:52
+#: admin-permissions.php:54
 msgid ""
 "Manage fine-grained permissions for calendar resources. Grant or revoke user "
 "access to specific calendars and test definitions."
@@ -2995,232 +2995,233 @@ msgstr ""
 "Upravljanje detaljnim dozvolama za kalendarske resurse. Dodjeljivanje ili "
 "oduzimanje pristupa korisnicima određenim kalendarima i definicijama testova."
 
-#: admin-permissions.php:61 temporale.php:51
+#: admin-permissions.php:63 temporale.php:51
 msgid "Filters"
 msgstr "Filteri"
 
-#: admin-permissions.php:67 admin-permissions.php:452
+#: admin-permissions.php:69 admin-permissions.php:459
 #: admin-applications.php:238 admin-users.php:213 admin-users.php:290
 msgid "User"
 msgstr "Korisnik"
 
-#: admin-permissions.php:70
+#: admin-permissions.php:72
 msgid "Filter by user ID..."
 msgstr "Filtriraj prema korisničkom ID-u..."
 
-#: admin-permissions.php:73 admin-permissions.php:399 admin-permissions.php:455
+#: admin-permissions.php:75 admin-permissions.php:403 admin-permissions.php:462
 msgid "Object Type"
 msgstr "Tip objekta"
 
-#: admin-permissions.php:76 admin-permissions.php:102
+#: admin-permissions.php:78 admin-permissions.php:104
 msgid "All"
 msgstr "Sve"
 
-#: admin-permissions.php:81 admin-permissions.php:316 admin-permissions.php:409
-#: permission-requests.php:243
+#: admin-permissions.php:83 admin-permissions.php:318 admin-permissions.php:413
+#: permission-requests.php:250
 msgid "Rite Calendar"
 msgstr "Kalendar obreda"
 
-#: admin-permissions.php:82 admin-permissions.php:317 admin-permissions.php:410
-#: permission-requests.php:244
+#: admin-permissions.php:84 admin-permissions.php:319 admin-permissions.php:414
+#: permission-requests.php:251
 msgid "Rite Calendar Tests"
 msgstr "Testovi kalendara obreda"
 
-#: admin-permissions.php:84 admin-permissions.php:433 admin-permissions.php:464
-#: permission-requests.php:248
+#: admin-permissions.php:86 admin-permissions.php:440 admin-permissions.php:471
+#: permission-requests.php:255
 msgid "General Roman Calendar Tests"
 msgstr "Testovi općeg rimskog kalendara"
 
-#: admin-permissions.php:86 admin-permissions.php:319 admin-permissions.php:406
-#: admin-tests.php:150 admin-tests.php:352 permission-requests.php:238
+#: admin-permissions.php:88 admin-permissions.php:321 admin-permissions.php:410
+#: admin-tests.php:150 admin-tests.php:352 permission-requests.php:245
 msgid "Diocesan Calendar"
 msgstr "Biskupijski kalendar"
 
-#: admin-permissions.php:88 admin-permissions.php:321 admin-permissions.php:431
-#: admin-permissions.php:462 permission-requests.php:241
+#: admin-permissions.php:90 admin-permissions.php:323 admin-permissions.php:438
+#: admin-permissions.php:469 permission-requests.php:248
 msgid "National Calendar Tests"
 msgstr "Testovi nacionalnog kalendara"
 
-#: admin-permissions.php:89 admin-permissions.php:322 admin-permissions.php:432
-#: admin-permissions.php:463 permission-requests.php:242
+#: admin-permissions.php:91 admin-permissions.php:324 admin-permissions.php:439
+#: admin-permissions.php:470 permission-requests.php:249
 msgid "Diocesan Calendar Tests"
 msgstr "Testovi biskupijskog kalendara"
 
-#: admin-permissions.php:93 admin-permissions.php:400 admin-permissions.php:456
+#: admin-permissions.php:95 admin-permissions.php:404 admin-permissions.php:463
 msgid "Object ID"
 msgstr "ID objekta"
 
-#: admin-permissions.php:96
+#: admin-permissions.php:98
 msgid "Filter by object ID..."
 msgstr "Filtriraj prema ID-u objekta..."
 
-#: admin-permissions.php:99 admin-permissions.php:298 admin-permissions.php:401
-#: admin-permissions.php:465 permission-requests.php:227
+#: admin-permissions.php:101 admin-permissions.php:300
+#: admin-permissions.php:405 admin-permissions.php:472
+#: permission-requests.php:231
 msgid "Relation"
 msgstr "Veza"
 
-#: admin-permissions.php:103 admin-permissions.php:301
-#: admin-permissions.php:435 permission-requests.php:270
+#: admin-permissions.php:105 admin-permissions.php:303
+#: admin-permissions.php:442 permission-requests.php:277
 msgid "Viewer"
 msgstr "Promatrač"
 
-#: admin-permissions.php:104 admin-permissions.php:302
-#: admin-permissions.php:436 permission-requests.php:271
+#: admin-permissions.php:106 admin-permissions.php:304
+#: admin-permissions.php:443 permission-requests.php:278
 msgid "Editor"
 msgstr "Uređivač"
 
-#: admin-permissions.php:105 admin-permissions.php:303
-#: admin-permissions.php:437 permission-requests.php:272
+#: admin-permissions.php:107 admin-permissions.php:305
+#: admin-permissions.php:444 permission-requests.php:279
 msgctxt "permission relation"
 msgid "Admin"
 msgstr "Administrator"
 
-#: admin-permissions.php:111
+#: admin-permissions.php:113
 msgid "Apply Filters"
 msgstr "Primijeni filtere"
 
-#: admin-permissions.php:114
+#: admin-permissions.php:116
 msgid "Clear Filters"
 msgstr "Očisti filtere"
 
-#: admin-permissions.php:123 admin-permissions.php:287
-#: admin-permissions.php:340
+#: admin-permissions.php:125 admin-permissions.php:289
+#: admin-permissions.php:342
 msgid "Grant Permission"
 msgstr "Dodijeli dozvolu"
 
-#: admin-permissions.php:126 admin-permissions.php:155 admin-tests.php:79
+#: admin-permissions.php:128 admin-permissions.php:157 admin-tests.php:79
 #: admin-applications.php:125 admin-users.php:56 admin-locales.php:68
 #: admin-changes.php:145 change-requests.php:70
 msgid "Refresh"
 msgstr "Osvježi"
 
-#: admin-permissions.php:134
+#: admin-permissions.php:136
 msgid "Permission Tuples"
 msgstr "N-torke dozvola"
 
-#: admin-permissions.php:150 permission-requests.php:31
-#: permission-requests.php:44
+#: admin-permissions.php:152 permission-requests.php:33
+#: permission-requests.php:46
 msgid "Access Requests"
 msgstr "Zahtjevi za pristup"
 
-#: admin-permissions.php:166 admin-permissions.php:480
-#: permission-requests.php:274 admin-applications.php:57
+#: admin-permissions.php:168 admin-permissions.php:487
+#: permission-requests.php:281 admin-applications.php:57
 #: admin-applications.php:101 admin-applications.php:250
 #: developer-dashboard.php:303
 msgid "Pending"
 msgstr "Na čekanju"
 
-#: admin-permissions.php:187 admin-permissions.php:483
-#: permission-requests.php:277 admin-applications.php:90
+#: admin-permissions.php:189 admin-permissions.php:490
+#: permission-requests.php:284 admin-applications.php:90
 #: admin-applications.php:120 admin-applications.php:253
 #: developer-dashboard.php:306
 msgid "Revoked"
 msgstr "Povučeno"
 
-#: admin-permissions.php:233
+#: admin-permissions.php:235
 msgid "Review Access Request"
 msgstr "Pregled zahtjeva za pristup"
 
-#: admin-permissions.php:244 admin-applications.php:193
+#: admin-permissions.php:246 admin-applications.php:193
 msgid "Notes"
 msgstr "Bilješke"
 
-#: admin-permissions.php:245 permission-requests.php:152
+#: admin-permissions.php:247 permission-requests.php:154
 #: admin-applications.php:194 admin-changes.php:220
 msgid "optional"
 msgstr "opcionalno"
 
-#: admin-permissions.php:250 admin-applications.php:199
+#: admin-permissions.php:252 admin-applications.php:199
 msgid "Add notes about your decision..."
 msgstr "Dodaj bilješke o svojoj odluci..."
 
-#: admin-permissions.php:258 admin-applications.php:216 admin-changes.php:239
+#: admin-permissions.php:260 admin-applications.php:216 admin-changes.php:239
 msgid "Approve"
 msgstr "Odobri"
 
-#: admin-permissions.php:261 admin-applications.php:210 admin-changes.php:236
+#: admin-permissions.php:263 admin-applications.php:210 admin-changes.php:236
 msgid "Reject"
 msgstr "Odbij"
 
-#: admin-permissions.php:264 admin-permissions.php:403
+#: admin-permissions.php:266 admin-permissions.php:407
 #: admin-applications.php:213 developer-dashboard.php:271
 msgid "Revoke"
 msgstr "Povuci"
 
-#: admin-permissions.php:276 admin-applications.php:172 admin-users.php:92
+#: admin-permissions.php:278 admin-applications.php:172 admin-users.php:92
 #: admin-changes.php:192 change-requests.php:82
 msgid "Back to Dashboard"
 msgstr "Natrag na nadzornu ploču"
 
-#: admin-permissions.php:293 admin-users.php:215 admin-users.php:292
+#: admin-permissions.php:295 admin-users.php:215 admin-users.php:292
 #: user-profile.php:113
 msgid "User ID"
 msgstr "Korisnički ID"
 
-#: admin-permissions.php:295
+#: admin-permissions.php:297
 msgid "Enter user ID..."
 msgstr "Unesi korisnički ID..."
 
-#: admin-permissions.php:300 permission-requests.php:228
+#: admin-permissions.php:302 permission-requests.php:232
 msgid "Select relation..."
 msgstr "Odaberi odnos..."
 
-#: admin-permissions.php:307 admin-permissions.php:426
-#: admin-permissions.php:457 permission-requests.php:230
+#: admin-permissions.php:309 admin-permissions.php:430
+#: admin-permissions.php:464 permission-requests.php:234
 msgid "Calendar scope"
 msgstr "Opseg kalendara"
 
-#: admin-permissions.php:309 permission-requests.php:232
+#: admin-permissions.php:311 permission-requests.php:236
 msgid "Select calendar scope..."
 msgstr "Odaberi opseg kalendara..."
 
-#: admin-permissions.php:326 admin-permissions.php:427
-#: admin-permissions.php:458 permission-requests.php:231
+#: admin-permissions.php:328 admin-permissions.php:431
+#: admin-permissions.php:465 permission-requests.php:235
 msgid "Calendar ID"
 msgstr "ID kalendara"
 
-#: admin-permissions.php:329 admin-permissions.php:428
-#: admin-permissions.php:459 permission-requests.php:233
+#: admin-permissions.php:331 admin-permissions.php:432
+#: admin-permissions.php:466 permission-requests.php:237
 msgid "Select calendar ID..."
 msgstr "Odaberi ID kalendara..."
 
-#: admin-permissions.php:353 admin-permissions.php:366
+#: admin-permissions.php:355 admin-permissions.php:368
 msgid "Revoke Permission"
 msgstr "Povuci dozvolu"
 
-#: admin-permissions.php:381
+#: admin-permissions.php:385
 msgid "No permissions found."
 msgstr "Nema pronađenih dozvola."
 
-#: admin-permissions.php:382
+#: admin-permissions.php:386
 msgid "Failed to load permissions. Please try again later."
 msgstr "Neuspješno učitavanje dozvola. Pokušajte ponovo kasnije."
 
-#: admin-permissions.php:383
+#: admin-permissions.php:387
 msgid "Permission granted successfully."
 msgstr "Dozvola uspješno odobrena."
 
-#: admin-permissions.php:384
+#: admin-permissions.php:388
 msgid "Permission revoked successfully."
 msgstr "Dozvola uspješno povučena."
 
-#: admin-permissions.php:385
+#: admin-permissions.php:389
 msgid "Failed to grant permission. Please try again."
 msgstr "Neuspješno odobravanje dozvole. Pokušajte ponovo."
 
-#: admin-permissions.php:386
+#: admin-permissions.php:390
 msgid "Failed to revoke permission. Please try again."
 msgstr "Neuspješno povlačenje dozvole. Pokušajte ponovo."
 
-#: admin-permissions.php:387
+#: admin-permissions.php:391
 msgid "Granting..."
 msgstr "Odobravanje..."
 
-#: admin-permissions.php:388 admin-users.php:353
+#: admin-permissions.php:392 admin-users.php:353
 msgid "Revoking..."
 msgstr "Povlačenje..."
 
-#: admin-permissions.php:389
+#: admin-permissions.php:393
 msgid "Are you sure you want to revoke this permission?"
 msgstr "Jesi li siguran da želiš povući ovu dozvolu?"
 
@@ -3228,136 +3229,148 @@ msgstr "Jesi li siguran da želiš povući ovu dozvolu?"
 #. granted TO — an OpenFGA tuple subject, i.e. a user. Not the thing the permission
 #. applies to: that is the adjacent "Object Type" / "Object ID". Several locales have
 #. rendered this as "topic" or "email subject line", which collides with those columns.
-#: admin-permissions.php:396
+#: admin-permissions.php:400
 msgid "Subject"
 msgstr "Subjekt"
 
-#: admin-permissions.php:408 admin-tests.php:128 permission-requests.php:240
+#: admin-permissions.php:412 admin-tests.php:128 permission-requests.php:247
 msgid "Test Definition"
 msgstr "Definicija testa"
 
-#: admin-permissions.php:415 permission-requests.php:251
+#: admin-permissions.php:419 permission-requests.php:258
 msgid "Roman Rite"
 msgstr "Rimski obred"
 
-#: admin-permissions.php:416 permission-requests.php:252 sanctorale.php:345
+#: admin-permissions.php:420 permission-requests.php:259 sanctorale.php:345
 msgid "Ambrosian Rite"
 msgstr "Ambrozinski obred"
 
-#: admin-permissions.php:418 permission-requests.php:255
+#: admin-permissions.php:422 permission-requests.php:262
 msgid "Sanctorale — Editio Typica 1970"
 msgstr "Sanctorale — Editio Typica 1970"
 
-#: admin-permissions.php:419 permission-requests.php:257
+#: admin-permissions.php:423 permission-requests.php:264
 msgid "Sanctorale — Editio Typica 2002"
 msgstr "Sanctorale — Editio Typica 2002"
 
-#: admin-permissions.php:420 permission-requests.php:259
+#: admin-permissions.php:424 permission-requests.php:266
 msgid "Sanctorale — Editio Typica 2008"
 msgstr "Sanctorale — Editio Typica 2008"
 
-#: admin-permissions.php:421 permission-requests.php:261
+#: admin-permissions.php:425 permission-requests.php:268
 msgid "Sanctorale — Editio Typica 2024"
 msgstr "Sanctorale — Editio Typica 2024"
 
-#: admin-permissions.php:422 permission-requests.php:263
+#: admin-permissions.php:426 permission-requests.php:270
 msgid "Decrees of the Dicastery for Divine Worship"
 msgstr "Dekreti Dikasterija za božansko bogoštovlje"
 
-#: admin-permissions.php:423 permission-requests.php:264
+#: admin-permissions.php:427 permission-requests.php:271
 msgid "Supported locales"
 msgstr "Podržane lokalne postavke"
 
-#: admin-permissions.php:424
+#: admin-permissions.php:428
 msgid "Enter object ID..."
 msgstr "Unesi ID objekta..."
 
-#: admin-permissions.php:425
+#: admin-permissions.php:429
 msgid "Select object ID..."
 msgstr "Odaberi ID objekta..."
 
-#: admin-permissions.php:430 admin-permissions.php:461
-#: permission-requests.php:235
+#: admin-permissions.php:434 admin-permissions.php:468
+#: permission-requests.php:239
 msgid "Could not load calendars — try reloading the page"
 msgstr "Nije uspjelo učitavanje kalendara — pokušajte ponovno učitati stranicu"
 
-#: admin-permissions.php:439
+#: admin-permissions.php:435 permission-requests.php:240
+#, fuzzy
+#| msgid "Depends on national calendar"
+msgid "Existing national calendars"
+msgstr "Ovisi o nacionalnom kalendaru"
+
+#: admin-permissions.php:437 permission-requests.php:242
+#, fuzzy
+#| msgid "National calendar test"
+msgid "New national calendars (not yet created)"
+msgstr "Test nacionalnog kalendara"
+
+#: admin-permissions.php:446
 msgid "All fields are required."
 msgstr "Sva polja su obavezna."
 
-#: admin-permissions.php:443
+#: admin-permissions.php:450
 msgid "No requests found."
 msgstr "Nema pronađenih zahtjeva."
 
-#: admin-permissions.php:444
+#: admin-permissions.php:451
 msgid "No pending access requests. All caught up!"
 msgstr "Nema zahtjeva za pristup na čekanju. Sve je riješeno!"
 
-#: admin-permissions.php:445
+#: admin-permissions.php:452
 msgid "Failed to load access requests. Please try again later."
 msgstr ""
 "Nije uspjelo učitavanje zahtjeva za pristup. Molimo pokušajte ponovno "
 "kasnije."
 
-#: admin-permissions.php:446 admin-applications.php:232 admin-changes.php:259
+#: admin-permissions.php:453 admin-applications.php:232 admin-changes.php:259
 #: change-requests.php:118
 msgid "Processing..."
 msgstr "Obrada..."
 
-#: admin-permissions.php:447
+#: admin-permissions.php:454
 msgid "Access request approved successfully."
 msgstr "Zahtjev za pristup uspješno odobren."
 
-#: admin-permissions.php:448
+#: admin-permissions.php:455
 msgid "Access request rejected."
 msgstr "Zahtjev za pristup odbijen."
 
-#: admin-permissions.php:449
+#: admin-permissions.php:456
 msgid "Access revoked successfully."
 msgstr "Pristup uspješno opozvan."
 
-#: admin-permissions.php:450 admin-applications.php:236
+#: admin-permissions.php:457 admin-applications.php:236
 msgid "Failed to process request. Please try again."
 msgstr "Nije moguće obraditi zahtjev. Molimo pokušajte ponovno."
 
-#: admin-permissions.php:453 permission-requests.php:219
+#: admin-permissions.php:460 permission-requests.php:223
 msgid "Role"
 msgstr "Uloga"
 
-#: admin-permissions.php:454 permission-requests.php:133
-#: permission-requests.php:220 admin-dashboard.php:110 user-profile.php:178
+#: admin-permissions.php:461 permission-requests.php:135
+#: permission-requests.php:224 admin-dashboard.php:110 user-profile.php:178
 msgid "Permissions"
 msgstr "Dozvole"
 
-#: admin-permissions.php:466 permission-requests.php:151
-#: permission-requests.php:222
+#: admin-permissions.php:473 permission-requests.php:153
+#: permission-requests.php:226
 msgid "Justification"
 msgstr "Obrazloženje"
 
-#: admin-permissions.php:467 permission-requests.php:166
+#: admin-permissions.php:474 permission-requests.php:168
 msgid "Credentials"
 msgstr "Povjerljive informacije"
 
-#: admin-permissions.php:468 sanctorale.php:292
+#: admin-permissions.php:475 sanctorale.php:292
 msgid "Date"
 msgstr "Datum"
 
-#: admin-permissions.php:471 admin-applications.php:247
+#: admin-permissions.php:478 admin-applications.php:247
 msgid "Reviewed At"
 msgstr "Pregledano"
 
-#: admin-permissions.php:472 permission-requests.php:223
+#: admin-permissions.php:479 permission-requests.php:227
 #: admin-applications.php:248
 msgid "Review Notes"
 msgstr "Bilješke pregleda"
 
-#: admin-permissions.php:476 permission-requests.php:80
-#: permission-requests.php:266 admin-users.php:145
+#: admin-permissions.php:483 permission-requests.php:82
+#: permission-requests.php:273 admin-users.php:145
 msgid "Calendar Editor"
 msgstr "Urednik kalendara"
 
-#: admin-permissions.php:477 permission-requests.php:85
-#: permission-requests.php:267 admin-users.php:146
+#: admin-permissions.php:484 permission-requests.php:87
+#: permission-requests.php:274 admin-users.php:146
 msgid "Accuracy Test Editor"
 msgstr "Urednik točnostnog testa"
 
@@ -3554,7 +3567,7 @@ msgstr "Naziv testa:"
 msgid "Select a valid liturgical event from the list."
 msgstr "Odaberite važeći liturgijski događaj s popisa."
 
-#: permission-requests.php:49
+#: permission-requests.php:51
 msgid ""
 "Request access to the Liturgical Calendar system. Select a role and specify "
 "the resource permissions you need. Your request will be reviewed by an "
@@ -3563,23 +3576,23 @@ msgstr ""
 "Zatraži pristup Liturgijskom kalendaru. Odaberi ulogu i naznači koje dozvole "
 "za resurse trebaš. Tvoj zahtjev će pregledati administrator."
 
-#: permission-requests.php:59
+#: permission-requests.php:61
 msgid "Your Access Requests"
 msgstr "Tvoji zahtjevi za pristup"
 
-#: permission-requests.php:73
+#: permission-requests.php:75
 msgid "Request Access"
 msgstr "Zahtjev za pristup"
 
-#: permission-requests.php:81
+#: permission-requests.php:83
 msgid "Edit national and diocesan calendar data."
 msgstr "Uredi podatke o nacionalnim i dijecezanskim kalendarima."
 
-#: permission-requests.php:86
+#: permission-requests.php:88
 msgid "Create and manage accuracy tests."
 msgstr "Kreiraj i upravljaj testovima točnosti."
 
-#: permission-requests.php:92
+#: permission-requests.php:94
 msgid ""
 "API consumer. Request access to all resources you may need — individual API "
 "keys can be scoped further at generation time."
@@ -3587,84 +3600,84 @@ msgstr ""
 "API korisnik. Zatraži pristup svim resursima koji ti mogu trebati — "
 "pojedinačni API ključevi mogu se dodatno specificirati prilikom generiranja."
 
-#: permission-requests.php:99
+#: permission-requests.php:101
 msgid "Select a Role"
 msgstr "Odaberi ulogu"
 
-#: permission-requests.php:136
+#: permission-requests.php:138
 msgid ""
 "Specify the resources you need access to. Add one or more permission rows."
 msgstr ""
 "Odredi resurse kojima trebaš pristup. Dodaj jedan ili više redaka s "
 "dozvolama."
 
-#: permission-requests.php:145
+#: permission-requests.php:147
 msgid "Add Permission"
 msgstr "Dodaj dozvolu"
 
-#: permission-requests.php:153
+#: permission-requests.php:155
 msgid ""
 "Providing a justification helps administrators review your request faster."
 msgstr ""
 "Navođenje razloga pomaže administratorima da brže pregledaju tvoj zahtjev."
 
-#: permission-requests.php:160
+#: permission-requests.php:162
 msgid "Please describe why you need this access..."
 msgstr "Molimo, opiši zašto ti je potreban ovaj pristup..."
 
-#: permission-requests.php:167
+#: permission-requests.php:169
 msgid ""
 "Optionally provide any credentials or references that support your request."
 msgstr ""
 "Opcionalno priloži sve vjerodajnice ili reference koje podržavaju tvoj "
 "zahtjev."
 
-#: permission-requests.php:174
+#: permission-requests.php:176
 msgid "Any relevant credentials or references..."
 msgstr "Sve relevantne vjerodajnice ili reference..."
 
-#: permission-requests.php:181 permission-requests.php:210
+#: permission-requests.php:183 permission-requests.php:214
 #: developer-dashboard.php:138 developer-dashboard.php:322
 msgid "Submit Request"
 msgstr "Pošalji zahtjev"
 
-#: permission-requests.php:190
+#: permission-requests.php:192
 msgid "Back to Profile"
 msgstr "Natrag na profil"
 
-#: permission-requests.php:205
+#: permission-requests.php:209
 msgid "You have not made any access requests yet."
 msgstr "Još nisi podnio nijedan zahtjev za pristup."
 
-#: permission-requests.php:206
+#: permission-requests.php:210
 msgid "Could not load your existing requests."
 msgstr "Nije moguće učitati tvoje postojeće zahtjeve."
 
-#: permission-requests.php:207
+#: permission-requests.php:211
 msgid "Your access request has been submitted successfully."
 msgstr "Tvoj zahtjev za pristup je uspješno podnesen."
 
-#: permission-requests.php:208
+#: permission-requests.php:212
 msgid "Failed to submit request. Please try again."
 msgstr "Neuspjelo podnošenje zahtjeva. Molimo pokušaj ponovo."
 
-#: permission-requests.php:209
+#: permission-requests.php:213
 msgid "Submitting..."
 msgstr "U podnošenju..."
 
-#: permission-requests.php:211
+#: permission-requests.php:215
 msgid "Resubmit"
 msgstr "Ponovo pošalji"
 
-#: permission-requests.php:212
+#: permission-requests.php:216
 msgid "Rejection reason"
 msgstr "Razlog odbijanja"
 
-#: permission-requests.php:213
+#: permission-requests.php:217
 msgid "Please select a role."
 msgstr "Molimo, odaberi ulogu."
 
-#: permission-requests.php:214
+#: permission-requests.php:218
 msgid ""
 "Each permission row must have a calendar scope, calendar ID, and relation "
 "filled in."
@@ -3672,23 +3685,23 @@ msgstr ""
 "U svakom retku s dozvolama moraju biti ispunjeni opseg kalendara, ID "
 "kalendara i veza."
 
-#: permission-requests.php:215
+#: permission-requests.php:219
 #, php-format
 msgid "You have reached the maximum of %1$d permissions per request."
 msgstr "Dosegnut je maksimalan broj od %1$d dozvola po zahtjevu."
 
-#: permission-requests.php:216
+#: permission-requests.php:220
 #, php-format
 msgid ""
 "This request had more than %1$d permissions; only the first %2$d are shown."
 msgstr ""
 "Ovaj zahtjev je imao više od %1$d dozvola; prikazane su samo prve %2$d."
 
-#: permission-requests.php:217
+#: permission-requests.php:221
 msgid "Unknown error"
 msgstr "Nepoznata pogreška"
 
-#: permission-requests.php:225
+#: permission-requests.php:229
 msgid "Reviewed"
 msgstr "Pregledano"
 
