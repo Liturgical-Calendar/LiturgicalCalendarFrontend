@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-22 21:29+0000\n"
-"PO-Revision-Date: 2026-09-03 01:04+0000\n"
+"PO-Revision-Date: 2026-09-23 21:55+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -3337,16 +3337,12 @@ msgstr ""
 "Kalender konnten nicht geladen werden — versuche, die Seite neu zu laden"
 
 #: admin-permissions.php:435 permission-requests.php:240
-#, fuzzy
-#| msgid "Depends on national calendar"
 msgid "Existing national calendars"
-msgstr "Abhängig vom nationalen Kalender"
+msgstr "Bestehende nationale Kalender"
 
 #: admin-permissions.php:437 permission-requests.php:242
-#, fuzzy
-#| msgid "National calendar test"
 msgid "New national calendars (not yet created)"
-msgstr "Nationalkalender-Test"
+msgstr "Neue nationale Kalender (noch nicht erstellt)"
 
 #: admin-permissions.php:446
 msgid "All fields are required."
@@ -4032,76 +4028,75 @@ msgid "Working…"
 msgstr "In Bearbeitung…"
 
 #: admin-locales.php:114
-#, fuzzy, php-format
-#| msgid "Could not load notifications"
+#, php-format
 msgid "Could not load locales: %s"
-msgstr "Konnte Benachrichtigungen nicht laden"
+msgstr "Locales konnten nicht geladen werden: %s"
 
 #: admin-locales.php:115
 msgid "Missing:"
-msgstr ""
+msgstr "Fehlt:"
 
 #: admin-locales.php:116
 msgid "Advisory — reported, but does not block promotion"
-msgstr ""
+msgstr "Hinweis — gemeldet, blockiert die Freigabe nicht."
 
 #: admin-locales.php:117
 msgid "Promote"
-msgstr ""
+msgstr "Veröffentlichen"
 
 #: admin-locales.php:118
 msgid "Demote"
-msgstr ""
+msgstr "Zurückstufen"
 
 #. translators: %s is a locale tag such as "fr_FR"
 #: admin-locales.php:120
 #, php-format
 msgid "Locale %s is now officially supported."
-msgstr ""
+msgstr "Locale %s ist jetzt offiziell unterstützt."
 
 #. translators: %s is a locale tag such as "fr_FR"
 #: admin-locales.php:122
 #, php-format
 msgid "Locale %s is no longer officially supported."
-msgstr ""
+msgstr "Locale %s ist nicht mehr offiziell unterstützt."
 
 #. translators: %s is the error reported by the API
 #: admin-locales.php:124
 #, php-format
 msgid "Could not change this locale: %s"
-msgstr ""
+msgstr "Diese Locale konnte nicht geändert werden: %s"
 
 #: admin-locales.php:125
 msgid ""
 "This locale is not ready to be promoted. Open “View checks” to see what is "
 "missing."
 msgstr ""
+"Diese Locale ist noch nicht zur Freigabe bereit. Öffnen Sie „Prüfungen "
+"ansehen“, um zu sehen, was fehlt."
 
 #: admin-locales.php:126
 msgid ""
 "This is the only officially supported locale, and the list may not be "
 "emptied. Promote a replacement first."
 msgstr ""
+"Dies ist die einzige offiziell unterstützte Locale, und die Liste darf nicht "
+"geleert werden. Veröffentlichen Sie zuerst eine Ersatzlocale."
 
 #: admin-locales.php:129
 msgid "Curation is unavailable."
-msgstr ""
+msgstr "Kuration ist nicht verfügbar."
 
 #: admin-locales.php:130
-#, fuzzy
-#| msgid "Change name or grade"
 msgid "Changes here are not durable."
-msgstr "Name oder Rang ändern"
+msgstr "Änderungen hier sind nicht dauerhaft."
 
 #: admin-locales.php:131
 msgid "Changes here are reviewed."
-msgstr ""
+msgstr "Änderungen hier werden geprüft."
 
 #: admin-changes.php:45 admin-changes.php:58
-#, fuzzy
-#| msgid "Access Requests to Review"
 msgid "Change Request Review"
-msgstr "Zu prüfende Zugriffsanfragen"
+msgstr "Überprüfung des Änderungsantrags"
 
 #: admin-changes.php:64
 msgid ""
@@ -4109,32 +4104,30 @@ msgid ""
 "Approving a change request is the only human gate before it is published, so "
 "read what it proposes before deciding."
 msgstr ""
+"Überprüfen Sie die vorgeschlagenen Änderungen der Quelldaten für die "
+"Kalender, die Sie verwalten. Die Freigabe eines Änderungsantrags ist das "
+"einzige menschliche Tor, bevor er veröffentlicht wird, also lesen Sie, was "
+"er vorschlägt, bevor Sie entscheiden."
 
 #: admin-changes.php:206
-#, fuzzy
-#| msgid "Review Role Request"
 msgid "Review Change Request"
-msgstr "Rollenanforderung überprüfen"
+msgstr "Änderungsantrag prüfen"
 
 #: admin-changes.php:219
-#, fuzzy
-#| msgid "Session Information"
 msgid "Reason for rejection"
-msgstr "Sitzungsinformationen"
+msgstr "Ablehnungsgrund"
 
 #: admin-changes.php:225
 msgid "The submitter will be shown this reason."
-msgstr ""
+msgstr "Dem Einreicher wird dieser Grund angezeigt."
 
 #: admin-changes.php:251
-#, fuzzy
-#| msgid "Submitted"
 msgid "Submitted by"
-msgstr "Eingereicht"
+msgstr "Eingereicht von"
 
 #: admin-changes.php:252
 msgid "Outcome"
-msgstr ""
+msgstr "Ergebnis"
 
 #: admin-changes.php:254
 msgid "Reviewer decision"
