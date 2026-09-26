@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 21:58+0000\n"
+"POT-Creation-Date: 2026-09-26 23:05+0000\n"
 "PO-Revision-Date: 2026-09-26 22:55+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
@@ -126,7 +126,7 @@ msgstr "Aanvraagparameters beschikbaar op alle paden %1$s"
 #: index.php:65 usage.php:35 examples.php:106 liturgyOfAnyDay.php:23
 #: layout/header.php:257 includes/change-request-i18n.php:56
 #: admin-permissions.php:85 admin-permissions.php:417 admin-tests.php:144
-#: admin-tests.php:350 permission-requests.php:256 sanctorale.php:224
+#: admin-tests.php:350 permission-requests.php:256 sanctorale.php:195
 msgid "General Roman Calendar"
 msgstr "Algemene Romeinse kalender"
 
@@ -134,7 +134,7 @@ msgstr "Algemene Romeinse kalender"
 #: admin-permissions.php:39 admin-tests.php:38 permission-requests.php:34
 #: admin-applications.php:34 admin-dashboard.php:40 admin-users.php:34
 #: admin-locales.php:39 admin-changes.php:46 change-requests.php:38
-#: developer-dashboard.php:35 temporale.php:25 sanctorale.php:91
+#: developer-dashboard.php:35 temporale.php:25 sanctorale.php:61
 #: user-profile.php:24
 msgid "Catholic Liturgical Calendar"
 msgstr "Katholieke Liturgische Kalender"
@@ -340,7 +340,7 @@ msgid "View JavaScript Example"
 msgstr "Bekijk JavaScript-voorbeeld"
 
 #. translators: card header for FullCalendar example
-#: usage.php:103 sanctorale.php:127 sanctorale.php:312
+#: usage.php:103 sanctorale.php:97 sanctorale.php:283
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -865,33 +865,43 @@ msgstr ""
 
 #. translators: context = liturgical color
 #. translators: liturgical color - green
-#: src/LitColor.php:33 includes/messages.php:100
+#: src/LitColor.php:36 includes/messages.php:100
 msgid "green"
 msgstr "groen"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - purple/violet
-#: src/LitColor.php:36 includes/messages.php:102
+#: src/LitColor.php:39 includes/messages.php:102
 msgid "purple"
 msgstr "paars"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - white
-#: src/LitColor.php:39 includes/messages.php:96
+#: src/LitColor.php:42 includes/messages.php:96
 msgid "white"
 msgstr "wit"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - red
-#: src/LitColor.php:42 includes/messages.php:98
+#: src/LitColor.php:45 includes/messages.php:98
 msgid "red"
 msgstr "rood"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - rose/pink
-#: src/LitColor.php:45 includes/messages.php:104
+#: src/LitColor.php:48 includes/messages.php:104
 msgid "rose"
 msgstr "roze"
+
+#. translators: context = liturgical color (Ambrosian rite)
+#: src/LitColor.php:51
+msgid "morello"
+msgstr ""
+
+#. translators: context = liturgical color (Ambrosian rite)
+#: src/LitColor.php:54
+msgid "black"
+msgstr ""
 
 #: src/LitCommon.php:86
 msgid "Proper"
@@ -1096,7 +1106,7 @@ msgctxt "(SING_MASC)"
 msgid "of the"
 msgstr "voor de"
 
-#: src/LitCommon.php:322 sanctorale.php:229
+#: src/LitCommon.php:322 sanctorale.php:200
 msgid "From the Common"
 msgstr "Gemeenschappelijke"
 
@@ -1114,12 +1124,12 @@ msgstr "weekdag"
 #. translators: liturgical grade 1 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: src/LitGrade.php:105 admin-decrees.php:732 sanctorale.php:304
+#: src/LitGrade.php:105 admin-decrees.php:732 sanctorale.php:275
 msgid "Commemoration"
 msgstr "Herdenking"
 
 #. translators: liturgical rank. Keep Capitalized
-#: src/LitGrade.php:108 sanctorale.php:305
+#: src/LitGrade.php:108 sanctorale.php:276
 msgid "Optional memorial"
 msgstr "Vrije gedachtenis"
 
@@ -1127,7 +1137,7 @@ msgstr "Vrije gedachtenis"
 #. translators: liturgical grade 3 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: src/LitGrade.php:111 admin-decrees.php:720 sanctorale.php:306
+#: src/LitGrade.php:111 admin-decrees.php:720 sanctorale.php:277
 msgid "Memorial"
 msgstr "Gedachtenis"
 
@@ -1249,51 +1259,51 @@ msgid "Property to change"
 msgstr "Eigenschap wijzigen"
 
 #. translators: form field label for the name of a liturgical event
-#: src/Utilities.php:301 src/FormControls.php:139 includes/messages.php:19
+#: src/Utilities.php:301 src/FormControls.php:156 includes/messages.php:19
 #: admin-tests.php:108 temporale.php:135
 msgid "Name"
 msgstr "Naam"
 
-#: src/Utilities.php:302 src/FormControls.php:303 admin-decrees.php:472
-#: admin-decrees.php:513 temporale.php:75 temporale.php:136 sanctorale.php:293
+#: src/Utilities.php:302 src/FormControls.php:320 admin-decrees.php:472
+#: admin-decrees.php:513 temporale.php:75 temporale.php:136 sanctorale.php:264
 msgid "Grade"
 msgstr "Graad"
 
 #. translators: form field label for the day of the month
-#: src/FormControls.php:146 includes/messages.php:21 admin-decrees.php:393
-#: sanctorale.php:172
+#: src/FormControls.php:163 includes/messages.php:21 admin-decrees.php:393
+#: sanctorale.php:142
 msgid "Day"
 msgstr "Dag"
 
-#: src/FormControls.php:151
+#: src/FormControls.php:168
 msgid "switch on for mobile celebration as opposed to fixed date"
 msgstr "inschakelen voor mobiele viering in plaats van vaste datum"
 
 #. translators: form field label for the month of the year
-#: src/FormControls.php:156 includes/messages.php:23 admin-decrees.php:401
+#: src/FormControls.php:173 includes/messages.php:23 admin-decrees.php:401
 msgid "Month"
 msgstr "Maand"
 
-#: src/FormControls.php:158 admin-decrees.php:383
+#: src/FormControls.php:175 admin-decrees.php:383
 msgid "Mobile"
 msgstr "Mobiel"
 
 #. translators: form field label for liturgical color selection
-#: src/FormControls.php:177 includes/messages.php:25
+#: src/FormControls.php:194 includes/messages.php:25
 msgid "Liturgical color"
 msgstr "Liturgische kleur"
 
 #. translators: form field label - first year a liturgical event takes effect
-#: src/FormControls.php:186 includes/messages.php:27
+#: src/FormControls.php:203 includes/messages.php:27
 msgid "Since"
 msgstr "Vanaf"
 
 #. translators: form field label - last year a liturgical event is observed
-#: src/FormControls.php:193 includes/messages.php:29
+#: src/FormControls.php:210 includes/messages.php:29
 msgid "Until"
 msgstr "Tot"
 
-#: src/FormControls.php:293 admin-decrees.php:501
+#: src/FormControls.php:310 admin-decrees.php:501
 msgid "Common (or Proper)"
 msgstr "Gemeenschappelijke (of Eigen)"
 
@@ -1386,8 +1396,8 @@ msgstr "Dashboard"
 msgid "Temporale"
 msgstr "Tijdelijk"
 
-#: layout/header.php:265 includes/admin-blocks.php:37 sanctorale.php:90
-#: sanctorale.php:102
+#: layout/header.php:265 includes/admin-blocks.php:37 sanctorale.php:60
+#: sanctorale.php:72
 msgid "Sanctorale"
 msgstr "Heiligenkalender"
 
@@ -1535,7 +1545,7 @@ msgstr "Onthoud mij"
 #: admin-tests.php:259 admin-tests.php:286 admin-tests.php:313
 #: admin-applications.php:207 admin-users.php:112 admin-changes.php:233
 #: developer-dashboard.php:134 developer-dashboard.php:183
-#: developer-dashboard.php:246 sanctorale.php:199 sanctorale.php:351
+#: developer-dashboard.php:246 sanctorale.php:169 sanctorale.php:322
 msgid "Cancel"
 msgstr "Annuleren"
 
@@ -1602,7 +1612,7 @@ msgstr "Sessie verlopen"
 
 #. translators: form field label for the unique identifier of a liturgical event
 #: includes/messages.php:17 admin-decrees.php:176 temporale.php:134
-#: sanctorale.php:174 sanctorale.php:355
+#: sanctorale.php:144 sanctorale.php:326
 msgid "Event key"
 msgstr "Evenementsleutel"
 
@@ -2352,7 +2362,7 @@ msgid "View"
 msgstr "Bekijk"
 
 #: includes/admin-blocks.php:106 admin-decrees.php:688 admin-tests.php:347
-#: developer-dashboard.php:269 sanctorale.php:349
+#: developer-dashboard.php:269 sanctorale.php:320
 msgid "Edit"
 msgstr "Bewerk"
 
@@ -2378,7 +2388,7 @@ msgstr "Beheer liturgische nauwkeurigheidstesten"
 #: admin-users.php:104 admin-locales.php:93 admin-changes.php:210
 #: change-requests.php:97 change-requests.php:104 developer-dashboard.php:84
 #: developer-dashboard.php:154 developer-dashboard.php:239 temporale.php:163
-#: temporale.php:186 sanctorale.php:190
+#: temporale.php:186 sanctorale.php:160
 msgid "Close"
 msgstr "Sluiten"
 
@@ -2778,7 +2788,7 @@ msgstr "Basistaal — kan niet worden verwijderd"
 msgid "Add translation"
 msgstr "Vertaling toevoegen"
 
-#: admin-decrees.php:561 admin-decrees.php:646 sanctorale.php:227
+#: admin-decrees.php:561 admin-decrees.php:646 sanctorale.php:198
 msgid "Lectionary readings"
 msgstr "Lectionarium lezingen"
 
@@ -2787,7 +2797,7 @@ msgid "Add readings for locale"
 msgstr "Lezingen toevoegen voor taal"
 
 #: admin-decrees.php:584 admin-tests.php:262 developer-dashboard.php:323
-#: sanctorale.php:202 sanctorale.php:350
+#: sanctorale.php:172 sanctorale.php:321
 msgid "Save"
 msgstr "Opslaan"
 
@@ -2797,11 +2807,11 @@ msgstr "Decreet verwijderen"
 
 #: admin-decrees.php:611 admin-decrees.php:689 admin-tests.php:316
 #: admin-tests.php:348 developer-dashboard.php:249 developer-dashboard.php:270
-#: sanctorale.php:196 sanctorale.php:352
+#: sanctorale.php:166 sanctorale.php:323
 msgid "Delete"
 msgstr "Verwijderen"
 
-#: admin-decrees.php:627 admin-locales.php:112 sanctorale.php:222
+#: admin-decrees.php:627 admin-locales.php:112 sanctorale.php:193
 msgid "Loading…"
 msgstr "Laden…"
 
@@ -2880,7 +2890,7 @@ msgstr ""
 msgid "Gospel acclamation"
 msgstr "Evangelievers"
 
-#: admin-decrees.php:664 sanctorale.php:274
+#: admin-decrees.php:664 sanctorale.php:245
 msgid "Gospel"
 msgstr "Evangelie"
 
@@ -2896,7 +2906,7 @@ msgstr "Vaticaan URL-code (bijv. ge, sp, po)"
 msgid "Full URL for this language"
 msgstr "Volledige URL voor deze taal"
 
-#: admin-decrees.php:669 sanctorale.php:317
+#: admin-decrees.php:669 sanctorale.php:288
 msgid "override"
 msgstr "overschrijving"
 
@@ -2988,21 +2998,21 @@ msgstr "Hogere Plechtigheid"
 #. translators: liturgical grade 6 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:702 sanctorale.php:309
+#: admin-decrees.php:702 sanctorale.php:280
 msgid "Solemnity"
 msgstr "Plechtigheid"
 
 #. translators: liturgical grade 5 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:708 sanctorale.php:308
+#: admin-decrees.php:708 sanctorale.php:279
 msgid "Feast of the Lord"
 msgstr "Feest van de Heer"
 
 #. translators: liturgical grade 4 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:714 sanctorale.php:307
+#: admin-decrees.php:714 sanctorale.php:278
 msgid "Feast"
 msgstr "Feest"
 
@@ -3016,7 +3026,7 @@ msgstr "Optionele Gedachtenis"
 #. translators: liturgical grade 0 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:738 sanctorale.php:303
+#: admin-decrees.php:738 sanctorale.php:274
 msgid "Weekday"
 msgstr "Weekdag"
 
@@ -3278,7 +3288,7 @@ msgstr "Testdefinitie"
 msgid "Roman Rite"
 msgstr "Romeins Ritus"
 
-#: admin-permissions.php:420 permission-requests.php:259 sanctorale.php:347
+#: admin-permissions.php:420 permission-requests.php:259 sanctorale.php:318
 msgid "Ambrosian Rite"
 msgstr "Ambrosian Rite"
 
@@ -3382,7 +3392,7 @@ msgstr "Motivering"
 msgid "Credentials"
 msgstr "Referenties"
 
-#: admin-permissions.php:475 sanctorale.php:292
+#: admin-permissions.php:475 sanctorale.php:263
 msgid "Date"
 msgstr "Datum"
 
@@ -3978,7 +3988,7 @@ msgstr "Locale"
 msgid "Readiness"
 msgstr "Gereedheid"
 
-#: admin-locales.php:79 sanctorale.php:176 sanctorale.php:223
+#: admin-locales.php:79 sanctorale.php:146 sanctorale.php:194
 msgid "Details"
 msgstr "Details"
 
@@ -4515,7 +4525,7 @@ msgstr ""
 "Proprium de Tempore - De tijdscyclus van het liturgische jaar inclusief "
 "Advent, Kerstmis, de Vastentijd, Paastriduüm, Pasen en Gewone Tijd."
 
-#: temporale.php:57 sanctorale.php:131
+#: temporale.php:57 sanctorale.php:101
 msgid "Language"
 msgstr "Taal"
 
@@ -4663,7 +4673,7 @@ msgstr "Eerste"
 msgid "Last"
 msgstr "Laatste"
 
-#: sanctorale.php:107
+#: sanctorale.php:77
 msgid ""
 "Each Roman Missal contributes only what it adds: the 2008 edition defines "
 "three celebrations, not a whole sanctorale. This page composes the editions "
@@ -4675,61 +4685,61 @@ msgstr ""
 "edities samen die van toepassing zijn op de kalender die je kiest, en laat "
 "zien uit welke editie elke viering afkomstig is."
 
-#: sanctorale.php:120
+#: sanctorale.php:90
 msgid "Rite"
 msgstr "Ritus"
 
-#: sanctorale.php:122
+#: sanctorale.php:92
 msgid "Roman"
 msgstr "Romeins"
 
-#: sanctorale.php:123
+#: sanctorale.php:93
 msgid "Ambrosian"
 msgstr "Ambrosiaanse"
 
-#: sanctorale.php:133
+#: sanctorale.php:103
 msgid "Languages this calendar is published in."
 msgstr "Talen waarin deze kalender is gepubliceerd."
 
-#: sanctorale.php:139 sanctorale.php:175
+#: sanctorale.php:109 sanctorale.php:145
 msgid "From"
 msgstr "Vanaf"
 
-#: sanctorale.php:141
+#: sanctorale.php:111
 msgid "Show only what one edition contributes."
 msgstr "Toon alleen wat één editie bijdraagt."
 
-#: sanctorale.php:144
+#: sanctorale.php:114
 msgid "Search all months"
 msgstr "Zoek alle maanden"
 
-#: sanctorale.php:146
+#: sanctorale.php:116
 msgid "Name or event key…"
 msgstr "Naam of evenement-sleutel…"
 
-#: sanctorale.php:147
+#: sanctorale.php:117
 msgid "Matches across every month, and moves you to one that has a result."
 msgstr ""
 "Koppelt aan alle maanden, en brengt je naar een maand die een resultaat "
 "heeft."
 
-#: sanctorale.php:160 sanctorale.php:353
+#: sanctorale.php:130 sanctorale.php:324
 msgid "New celebration"
 msgstr "Nieuwe viering"
 
-#: sanctorale.php:173 sanctorale.php:225
+#: sanctorale.php:143 sanctorale.php:196
 msgid "Celebration"
 msgstr "Viering"
 
-#: sanctorale.php:226
+#: sanctorale.php:197
 msgid "Names by locale"
 msgstr "Namen per locale"
 
-#: sanctorale.php:228
+#: sanctorale.php:199
 msgid "Readings structure"
 msgstr "Lezingenstructuur"
 
-#: sanctorale.php:230
+#: sanctorale.php:201
 msgid ""
 "No readings are curated for this celebration yet. Fill in what you know; "
 "blank citations are not saved."
@@ -4737,173 +4747,173 @@ msgstr ""
 "Er zijn nog geen lezingen geselecteerd voor deze viering. Vul in wat je "
 "weet; lege verwijzingen worden niet opgeslagen."
 
-#: sanctorale.php:238
+#: sanctorale.php:209
 msgid "Ferial Readings"
 msgstr "Feria-lezingen"
 
-#: sanctorale.php:239
+#: sanctorale.php:210
 msgid "Festive Readings"
 msgstr "Feestlezingen"
 
-#: sanctorale.php:240
+#: sanctorale.php:211
 msgid "Palm Sunday Readings"
 msgstr "Palmpasenlezingen"
 
-#: sanctorale.php:241
+#: sanctorale.php:212
 msgid "Easter Vigil Readings"
 msgstr "Paaswakelezingen"
 
-#: sanctorale.php:242
+#: sanctorale.php:213
 msgid "Christmas Readings"
 msgstr "Kerstlezingen"
 
-#: sanctorale.php:243
+#: sanctorale.php:214
 msgid "Readings with Evening Mass"
 msgstr "Lezingen bij de avondmis"
 
-#: sanctorale.php:244
+#: sanctorale.php:215
 msgid "Readings with Multiple Schemas"
 msgstr "Lezingen met meerdere schema's"
 
-#: sanctorale.php:245
+#: sanctorale.php:216
 msgid "Readings from liturgical Commons"
 msgstr "Lezingen uit liturgische Commons"
 
-#: sanctorale.php:246
+#: sanctorale.php:217
 msgid "Seasonal Readings"
 msgstr "Seizoenslezingen"
 
-#: sanctorale.php:247
+#: sanctorale.php:218
 msgid "Readings with a Vigil Mass"
 msgstr "Lezingen bij de vooravondmis"
 
-#: sanctorale.php:248
+#: sanctorale.php:219
 msgid "Christmas Readings with a Vigil Mass"
 msgstr "Kerstlezingen bij de vooravondmis"
 
-#: sanctorale.php:256
+#: sanctorale.php:227
 msgid "Gospel at the Procession"
 msgstr "Evangelie bij de processie"
 
-#: sanctorale.php:257
+#: sanctorale.php:228
 msgid "First Reading"
 msgstr "Eerste Lezing"
 
-#: sanctorale.php:258 sanctorale.php:260 sanctorale.php:262 sanctorale.php:264
-#: sanctorale.php:266 sanctorale.php:268 sanctorale.php:270 sanctorale.php:272
+#: sanctorale.php:229 sanctorale.php:231 sanctorale.php:233 sanctorale.php:235
+#: sanctorale.php:237 sanctorale.php:239 sanctorale.php:241 sanctorale.php:243
 msgid "Responsorial Psalm"
 msgstr "Antwoordpsalm"
 
-#: sanctorale.php:259
+#: sanctorale.php:230
 msgid "Second Reading"
 msgstr "Tweede Lezing"
 
-#: sanctorale.php:261
+#: sanctorale.php:232
 msgid "Third Reading"
 msgstr "Derde Lezing"
 
-#: sanctorale.php:263
+#: sanctorale.php:234
 msgid "Fourth Reading"
 msgstr "Vierde Lezing"
 
-#: sanctorale.php:265
+#: sanctorale.php:236
 msgid "Fifth Reading"
 msgstr "Vijfde Lezing"
 
-#: sanctorale.php:267
+#: sanctorale.php:238
 msgid "Sixth Reading"
 msgstr "Zesde Lezing"
 
-#: sanctorale.php:269
+#: sanctorale.php:240
 msgid "Seventh Reading"
 msgstr "Zevende Lezing"
 
-#: sanctorale.php:271
+#: sanctorale.php:242
 msgid "Epistle"
 msgstr "Epistel"
 
-#: sanctorale.php:273
+#: sanctorale.php:244
 msgid "Gospel Acclamation"
 msgstr "Gospelacclamatie"
 
-#: sanctorale.php:281
+#: sanctorale.php:252
 msgid "Vigil Mass"
 msgstr "Vigilie-Mis"
 
-#: sanctorale.php:282
+#: sanctorale.php:253
 msgid "Mass during the Night"
 msgstr "Nachtmis"
 
-#: sanctorale.php:283
+#: sanctorale.php:254
 msgid "Mass at Dawn"
 msgstr "Ochtendmis"
 
-#: sanctorale.php:284
+#: sanctorale.php:255
 msgid "Mass during the Day"
 msgstr "Dagmis"
 
-#: sanctorale.php:285
+#: sanctorale.php:256
 msgid "Evening Mass"
 msgstr "Avondmis"
 
-#: sanctorale.php:286
+#: sanctorale.php:257
 msgid "Schema I"
 msgstr "Schema I"
 
-#: sanctorale.php:287
+#: sanctorale.php:258
 msgid "Schema II"
 msgstr "Schema II"
 
-#: sanctorale.php:288
+#: sanctorale.php:259
 msgid "Schema III"
 msgstr "Schema III"
 
-#: sanctorale.php:289
+#: sanctorale.php:260
 msgid "Easter Season"
 msgstr "Paastijd"
 
-#: sanctorale.php:290
+#: sanctorale.php:261
 msgid "Outside Easter Season"
 msgstr "Buiten Paastijd"
 
-#: sanctorale.php:296
+#: sanctorale.php:267
 msgid "Displays as"
 msgstr "Weergegegeven als"
 
-#: sanctorale.php:299
+#: sanctorale.php:270
 msgid "no rank shown"
 msgstr "geen rang weergegeven"
 
-#: sanctorale.php:310
+#: sanctorale.php:281
 msgid "Higher solemnity"
 msgstr "Hogere solemniteit"
 
-#: sanctorale.php:313
+#: sanctorale.php:284
 msgid "Colour"
 msgstr "Kleur"
 
-#: sanctorale.php:314
+#: sanctorale.php:285
 msgid "Common"
 msgstr "Algemeen"
 
-#: sanctorale.php:315
+#: sanctorale.php:286
 msgid "From this Missal"
 msgstr "Uit dit Missaal"
 
-#: sanctorale.php:316
+#: sanctorale.php:287
 msgid "All editions"
 msgstr "Alle edities"
 
-#: sanctorale.php:318
+#: sanctorale.php:289
 msgid "This Missal redefines a celebration an earlier one already had."
 msgstr "Dit Missaal herdefinieert een viering die eerder al had."
 
-#: sanctorale.php:319
+#: sanctorale.php:290
 #, php-format
 msgid "superseded by %s"
 msgstr "vervangen door %s"
 
-#: sanctorale.php:320
+#: sanctorale.php:291
 msgid ""
 "A later edition redeclares this celebration; the calendar uses that entry, "
 "not this one."
@@ -4911,11 +4921,11 @@ msgstr ""
 "Een latere editie verklaart deze viering opnieuw; de kalender gebruikt die "
 "vermelding, niet deze."
 
-#: sanctorale.php:325
+#: sanctorale.php:296
 msgid "Redeclared by"
 msgstr "Opnieuw verklaard door"
 
-#: sanctorale.php:327
+#: sanctorale.php:298
 msgid ""
 "Takes the celebration universal at the same rank; the earlier particular "
 "entry is now redundant."
@@ -4923,60 +4933,60 @@ msgstr ""
 "Neemt de viering op hetzelfde rangniveau universeel over; de eerdere "
 "specifieke vermelding is nu overbodig."
 
-#: sanctorale.php:330
+#: sanctorale.php:301
 msgid "Redeclares the celebration without changing anything."
 msgstr "Herkondigt de viering opnieuw zonder iets te veranderen."
 
-#: sanctorale.php:333
+#: sanctorale.php:304
 msgid "no override"
 msgstr "geen override"
 
-#: sanctorale.php:336
+#: sanctorale.php:307
 msgid "translated"
 msgstr "vertaald"
 
-#: sanctorale.php:337
+#: sanctorale.php:308
 msgid "blank"
 msgstr "leeg"
 
-#: sanctorale.php:338
+#: sanctorale.php:309
 msgid "missing"
 msgstr "ontbrekend"
 
-#: sanctorale.php:339
+#: sanctorale.php:310
 msgid "Nothing here."
 msgstr "Niets hier."
 
-#: sanctorale.php:340
+#: sanctorale.php:311
 msgid "No celebration in this month matches your search."
 msgstr "Geen viering in deze maand komt overeen met uw zoekopdracht."
 
-#: sanctorale.php:341
+#: sanctorale.php:312
 msgid "No sanctorale lectionary is defined for this rite."
 msgstr "Er is geen sanctorale lectionarium gedefinieerd voor dit rite."
 
-#: sanctorale.php:344
+#: sanctorale.php:315
 msgid "No readings are curated for this celebration yet."
 msgstr "Nog geen lezingen zijn geselecteerd voor deze viering."
 
-#: sanctorale.php:345
+#: sanctorale.php:316
 msgid "Could not load the names for this celebration."
 msgstr "Kon de namen voor deze viering niet laden."
 
-#: sanctorale.php:346
+#: sanctorale.php:317
 msgid "Could not load the readings for this celebration."
 msgstr "Kon de lezingen voor deze viering niet laden."
 
-#: sanctorale.php:348
+#: sanctorale.php:319
 msgid "No Missal is published for this combination of rite and calendar."
 msgstr ""
 "Er is geen Missaal gepubliceerd voor deze combinatie van rite en kalender."
 
-#: sanctorale.php:354
+#: sanctorale.php:325
 msgid "Add to Missal"
 msgstr "Aan Missaal toevoegen"
 
-#: sanctorale.php:363
+#: sanctorale.php:334
 msgid ""
 "Begins with a capital, then letters and digits (StIsidoreFarmer). A trailing "
 "number (StPaul_2) or _vigil is allowed, as is a lowercase two-word prefix. "
@@ -4986,24 +4996,24 @@ msgstr ""
 "achteraan toegevoegd nummer (StPaul_2) of _vigil is toegestaan, evenals een "
 "twee-woordige prefix met kleine letters. Kan niet worden hernoemd."
 
-#: sanctorale.php:365
+#: sanctorale.php:336
 msgid "Enter a day between 1 and 31."
 msgstr "Voer een dag in tussen 1 en 31."
 
-#: sanctorale.php:370
+#: sanctorale.php:341
 msgid "Choose…"
 msgstr "Kies…"
 
-#: sanctorale.php:371
+#: sanctorale.php:342
 msgid "Choose a month."
 msgstr "Kies een maand."
 
-#: sanctorale.php:372
+#: sanctorale.php:343
 msgid "Choose a grade."
 msgstr "Kies een graad."
 
 #. translators: %1$s is the event key, %2$s is the Missal id
-#: sanctorale.php:374
+#: sanctorale.php:345
 #, php-format
 msgid ""
 "Delete %1$s from %2$s? Its name and readings go with it, and any earlier "
@@ -5012,7 +5022,7 @@ msgstr ""
 "Verwijder %1$s uit %2$s? De naam en lezingen gaan hiermee mee, en elke "
 "eerdere editie die het al heeft gedefinieerd neemt het over."
 
-#: sanctorale.php:377
+#: sanctorale.php:348
 msgid ""
 "These readings live in the rite-wide lectionary, shared by every Missal of "
 "this rite."
@@ -5020,13 +5030,13 @@ msgstr ""
 "Deze lezingen staan in het ritusbrede lectionarium, gedeeld door elk Missaal "
 "van dit ritus."
 
-#: sanctorale.php:378
+#: sanctorale.php:349
 msgid "This rite has no lectionary, so readings cannot be edited here."
 msgstr ""
 "Dit ritus heeft geen lectionarium, dus lezingen kunnen hier niet worden "
 "bewerkt."
 
-#: sanctorale.php:386
+#: sanctorale.php:357
 msgid ""
 "Inherited from a different lectionary source; edit it there, not from this "
 "Missal."
@@ -5034,75 +5044,75 @@ msgstr ""
 "Overgenomen uit een andere lectionariumbron; wijzig het daar, niet vanuit "
 "dit Missaal."
 
-#: sanctorale.php:389
+#: sanctorale.php:360
 msgid "The readings were kept: another Missal still declares this celebration."
 msgstr ""
 "De lezingen zijn bewaard: een ander Missaal verklaart deze viering nog "
 "steeds."
 
-#: sanctorale.php:390
+#: sanctorale.php:361
 msgid "Default (from grade)"
 msgstr "Standaard (van graad)"
 
-#: sanctorale.php:391
+#: sanctorale.php:362
 msgid "Show no rank"
 msgstr "Geen rang weergeven."
 
-#: sanctorale.php:392
+#: sanctorale.php:363
 msgid "Custom text…"
 msgstr "Aangepaste tekst…"
 
-#: sanctorale.php:393
+#: sanctorale.php:364
 msgid "Nothing has changed."
 msgstr "Niets is veranderd."
 
-#: sanctorale.php:394
+#: sanctorale.php:365
 msgid "Saved."
 msgstr "Opgeslagen."
 
-#: sanctorale.php:395
+#: sanctorale.php:366
 msgid "Celebration created."
 msgstr "Viering aangemaakt."
 
-#: sanctorale.php:396
+#: sanctorale.php:367
 msgid "Celebration deleted."
 msgstr "Viering verwijderd."
 
 #. translators: %s is the error reported by the API
-#: sanctorale.php:398
+#: sanctorale.php:369
 #, php-format
 msgid "Could not save: %s"
 msgstr "Kon niet opslaan: %s"
 
-#: sanctorale.php:399
+#: sanctorale.php:370
 msgid "You do not have permission to change this Missal."
 msgstr "Je hebt geen toestemming om dit Missaal te wijzigen."
 
-#: sanctorale.php:400
+#: sanctorale.php:371
 msgid "This clashes with another Missal"
 msgstr "Dit botst met een ander Missaal."
 
 #. translators: %s is the change request batch id
-#: sanctorale.php:406
+#: sanctorale.php:377
 #, php-format
 msgid "Queued for review as batch %s. Nothing has been written yet."
 msgstr ""
 "In de wachtrij voor beoordeling als batch %s. Er is nog niets geschreven."
 
 #. translators: %s is the change request batch id
-#: sanctorale.php:408
+#: sanctorale.php:379
 #, php-format
 msgid "Approved as batch %s, awaiting publication."
 msgstr "Goedgekeurd als batch %s, in afwachting van publicatie."
 
 #. translators: %s is a comma-separated list of batch ids
-#: sanctorale.php:410
+#: sanctorale.php:381
 #, php-format
 msgid "Earlier batches folded in: %s."
 msgstr "Eerdere batches ingevoegd: %s."
 
 #. translators: %s is the unrecognized disposition value
-#: sanctorale.php:412
+#: sanctorale.php:383
 #, php-format
 msgid ""
 "The server reported an unrecognized outcome (%s); nothing local was changed."
@@ -5111,7 +5121,7 @@ msgstr ""
 "gewijzigd."
 
 #. translators: %s is the error reported by the API
-#: sanctorale.php:414
+#: sanctorale.php:385
 #, php-format
 msgid "Could not load the sanctorale: %s"
 msgstr "Kon het sanctorale niet laden: %s"
@@ -5119,7 +5129,7 @@ msgstr "Kon het sanctorale niet laden: %s"
 #. translators: %s is the event_key a #event= link named
 #. Reported rather than left silent: the link may be stale, mistyped, or
 #. for a rite/calendar this page has since moved away from.
-#: sanctorale.php:418
+#: sanctorale.php:389
 #, php-format
 msgid "%s is not in the current selection."
 msgstr "%s staat niet in de huidige selectie."

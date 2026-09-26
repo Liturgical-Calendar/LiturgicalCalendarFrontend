@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 21:58+0000\n"
+"POT-Creation-Date: 2026-09-26 23:05+0000\n"
 "PO-Revision-Date: 2026-09-26 22:55+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -125,7 +125,7 @@ msgstr "Parametre požiadaviek dostupné na všetkých cestách %1$s"
 #: index.php:65 usage.php:35 examples.php:106 liturgyOfAnyDay.php:23
 #: layout/header.php:257 includes/change-request-i18n.php:56
 #: admin-permissions.php:85 admin-permissions.php:417 admin-tests.php:144
-#: admin-tests.php:350 permission-requests.php:256 sanctorale.php:224
+#: admin-tests.php:350 permission-requests.php:256 sanctorale.php:195
 msgid "General Roman Calendar"
 msgstr "Všeobecný rímsky kalendár"
 
@@ -133,7 +133,7 @@ msgstr "Všeobecný rímsky kalendár"
 #: admin-permissions.php:39 admin-tests.php:38 permission-requests.php:34
 #: admin-applications.php:34 admin-dashboard.php:40 admin-users.php:34
 #: admin-locales.php:39 admin-changes.php:46 change-requests.php:38
-#: developer-dashboard.php:35 temporale.php:25 sanctorale.php:91
+#: developer-dashboard.php:35 temporale.php:25 sanctorale.php:61
 #: user-profile.php:24
 msgid "Catholic Liturgical Calendar"
 msgstr "Katolícky liturgický kalendár"
@@ -336,7 +336,7 @@ msgid "View JavaScript Example"
 msgstr "Zobraziť príklad JavaScriptu"
 
 #. translators: card header for FullCalendar example
-#: usage.php:103 sanctorale.php:127 sanctorale.php:312
+#: usage.php:103 sanctorale.php:97 sanctorale.php:283
 msgid "Calendar"
 msgstr "Kalendár"
 
@@ -846,33 +846,43 @@ msgstr "Ovládacie prvky liturgie sa nepodarilo načítať. Skús to znova nesk�
 
 #. translators: context = liturgical color
 #. translators: liturgical color - green
-#: src/LitColor.php:33 includes/messages.php:100
+#: src/LitColor.php:36 includes/messages.php:100
 msgid "green"
 msgstr "zelená"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - purple/violet
-#: src/LitColor.php:36 includes/messages.php:102
+#: src/LitColor.php:39 includes/messages.php:102
 msgid "purple"
 msgstr "fialová"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - white
-#: src/LitColor.php:39 includes/messages.php:96
+#: src/LitColor.php:42 includes/messages.php:96
 msgid "white"
 msgstr "biela"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - red
-#: src/LitColor.php:42 includes/messages.php:98
+#: src/LitColor.php:45 includes/messages.php:98
 msgid "red"
 msgstr "červená"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - rose/pink
-#: src/LitColor.php:45 includes/messages.php:104
+#: src/LitColor.php:48 includes/messages.php:104
 msgid "rose"
 msgstr "ružová"
+
+#. translators: context = liturgical color (Ambrosian rite)
+#: src/LitColor.php:51
+msgid "morello"
+msgstr ""
+
+#. translators: context = liturgical color (Ambrosian rite)
+#: src/LitColor.php:54
+msgid "black"
+msgstr ""
 
 #: src/LitCommon.php:86
 msgid "Proper"
@@ -1077,7 +1087,7 @@ msgctxt "(SING_MASC)"
 msgid "of the"
 msgstr "z"
 
-#: src/LitCommon.php:322 sanctorale.php:229
+#: src/LitCommon.php:322 sanctorale.php:200
 msgid "From the Common"
 msgstr "Z bežného"
 
@@ -1095,12 +1105,12 @@ msgstr "pracovný deň"
 #. translators: liturgical grade 1 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: src/LitGrade.php:105 admin-decrees.php:732 sanctorale.php:304
+#: src/LitGrade.php:105 admin-decrees.php:732 sanctorale.php:275
 msgid "Commemoration"
 msgstr "Spomienka"
 
 #. translators: liturgical rank. Keep Capitalized
-#: src/LitGrade.php:108 sanctorale.php:305
+#: src/LitGrade.php:108 sanctorale.php:276
 msgid "Optional memorial"
 msgstr "Ľubovoľná spomienka"
 
@@ -1108,7 +1118,7 @@ msgstr "Ľubovoľná spomienka"
 #. translators: liturgical grade 3 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: src/LitGrade.php:111 admin-decrees.php:720 sanctorale.php:306
+#: src/LitGrade.php:111 admin-decrees.php:720 sanctorale.php:277
 msgid "Memorial"
 msgstr "Pamiatka"
 
@@ -1230,51 +1240,51 @@ msgid "Property to change"
 msgstr "Vlastnosť na zmenu"
 
 #. translators: form field label for the name of a liturgical event
-#: src/Utilities.php:301 src/FormControls.php:139 includes/messages.php:19
+#: src/Utilities.php:301 src/FormControls.php:156 includes/messages.php:19
 #: admin-tests.php:108 temporale.php:135
 msgid "Name"
 msgstr "Meno"
 
-#: src/Utilities.php:302 src/FormControls.php:303 admin-decrees.php:472
-#: admin-decrees.php:513 temporale.php:75 temporale.php:136 sanctorale.php:293
+#: src/Utilities.php:302 src/FormControls.php:320 admin-decrees.php:472
+#: admin-decrees.php:513 temporale.php:75 temporale.php:136 sanctorale.php:264
 msgid "Grade"
 msgstr "Stupeň"
 
 #. translators: form field label for the day of the month
-#: src/FormControls.php:146 includes/messages.php:21 admin-decrees.php:393
-#: sanctorale.php:172
+#: src/FormControls.php:163 includes/messages.php:21 admin-decrees.php:393
+#: sanctorale.php:142
 msgid "Day"
 msgstr "Deň"
 
-#: src/FormControls.php:151
+#: src/FormControls.php:168
 msgid "switch on for mobile celebration as opposed to fixed date"
 msgstr "zapnúť mobilnú oslavu namiesto pevného dátumu"
 
 #. translators: form field label for the month of the year
-#: src/FormControls.php:156 includes/messages.php:23 admin-decrees.php:401
+#: src/FormControls.php:173 includes/messages.php:23 admin-decrees.php:401
 msgid "Month"
 msgstr "Mesiac"
 
-#: src/FormControls.php:158 admin-decrees.php:383
+#: src/FormControls.php:175 admin-decrees.php:383
 msgid "Mobile"
 msgstr "Mobilné"
 
 #. translators: form field label for liturgical color selection
-#: src/FormControls.php:177 includes/messages.php:25
+#: src/FormControls.php:194 includes/messages.php:25
 msgid "Liturgical color"
 msgstr "Liturgická farba"
 
 #. translators: form field label - first year a liturgical event takes effect
-#: src/FormControls.php:186 includes/messages.php:27
+#: src/FormControls.php:203 includes/messages.php:27
 msgid "Since"
 msgstr "Od"
 
 #. translators: form field label - last year a liturgical event is observed
-#: src/FormControls.php:193 includes/messages.php:29
+#: src/FormControls.php:210 includes/messages.php:29
 msgid "Until"
 msgstr "Až do"
 
-#: src/FormControls.php:293 admin-decrees.php:501
+#: src/FormControls.php:310 admin-decrees.php:501
 msgid "Common (or Proper)"
 msgstr "Bežné (alebo Vlastné)"
 
@@ -1367,8 +1377,8 @@ msgstr "Panel"
 msgid "Temporale"
 msgstr "Časové obdobie"
 
-#: layout/header.php:265 includes/admin-blocks.php:37 sanctorale.php:90
-#: sanctorale.php:102
+#: layout/header.php:265 includes/admin-blocks.php:37 sanctorale.php:60
+#: sanctorale.php:72
 msgid "Sanctorale"
 msgstr "Sviatky svätých"
 
@@ -1516,7 +1526,7 @@ msgstr "Zapamätať si ma"
 #: admin-tests.php:259 admin-tests.php:286 admin-tests.php:313
 #: admin-applications.php:207 admin-users.php:112 admin-changes.php:233
 #: developer-dashboard.php:134 developer-dashboard.php:183
-#: developer-dashboard.php:246 sanctorale.php:199 sanctorale.php:351
+#: developer-dashboard.php:246 sanctorale.php:169 sanctorale.php:322
 msgid "Cancel"
 msgstr "Zrušiť"
 
@@ -1582,7 +1592,7 @@ msgstr "Relácia vypršala"
 
 #. translators: form field label for the unique identifier of a liturgical event
 #: includes/messages.php:17 admin-decrees.php:176 temporale.php:134
-#: sanctorale.php:174 sanctorale.php:355
+#: sanctorale.php:144 sanctorale.php:326
 msgid "Event key"
 msgstr "Kľúč udalosti"
 
@@ -2320,7 +2330,7 @@ msgid "View"
 msgstr "Zobraziť"
 
 #: includes/admin-blocks.php:106 admin-decrees.php:688 admin-tests.php:347
-#: developer-dashboard.php:269 sanctorale.php:349
+#: developer-dashboard.php:269 sanctorale.php:320
 msgid "Edit"
 msgstr "Upraviť"
 
@@ -2344,7 +2354,7 @@ msgstr "Spravovať testy liturgickej presnosti"
 #: admin-users.php:104 admin-locales.php:93 admin-changes.php:210
 #: change-requests.php:97 change-requests.php:104 developer-dashboard.php:84
 #: developer-dashboard.php:154 developer-dashboard.php:239 temporale.php:163
-#: temporale.php:186 sanctorale.php:190
+#: temporale.php:186 sanctorale.php:160
 msgid "Close"
 msgstr "Zatvoriť"
 
@@ -2740,7 +2750,7 @@ msgstr "Základný jazyk — nemožno odstrániť"
 msgid "Add translation"
 msgstr "Pridať preklad"
 
-#: admin-decrees.php:561 admin-decrees.php:646 sanctorale.php:227
+#: admin-decrees.php:561 admin-decrees.php:646 sanctorale.php:198
 msgid "Lectionary readings"
 msgstr "Čítania lekcionára"
 
@@ -2749,7 +2759,7 @@ msgid "Add readings for locale"
 msgstr "Pridať čítania pre jazyk"
 
 #: admin-decrees.php:584 admin-tests.php:262 developer-dashboard.php:323
-#: sanctorale.php:202 sanctorale.php:350
+#: sanctorale.php:172 sanctorale.php:321
 msgid "Save"
 msgstr "Uložiť"
 
@@ -2759,11 +2769,11 @@ msgstr "Zmazať dekrét"
 
 #: admin-decrees.php:611 admin-decrees.php:689 admin-tests.php:316
 #: admin-tests.php:348 developer-dashboard.php:249 developer-dashboard.php:270
-#: sanctorale.php:196 sanctorale.php:352
+#: sanctorale.php:166 sanctorale.php:323
 msgid "Delete"
 msgstr "Zmazať"
 
-#: admin-decrees.php:627 admin-locales.php:112 sanctorale.php:222
+#: admin-decrees.php:627 admin-locales.php:112 sanctorale.php:193
 msgid "Loading…"
 msgstr "Načítavam…"
 
@@ -2841,7 +2851,7 @@ msgstr ""
 msgid "Gospel acclamation"
 msgstr "Aleluja"
 
-#: admin-decrees.php:664 sanctorale.php:274
+#: admin-decrees.php:664 sanctorale.php:245
 msgid "Gospel"
 msgstr "Evanjelium"
 
@@ -2857,7 +2867,7 @@ msgstr "Kód URL Vatikánu (napr. ge, sp, po)"
 msgid "Full URL for this language"
 msgstr "Celá URL pre tento jazyk"
 
-#: admin-decrees.php:669 sanctorale.php:317
+#: admin-decrees.php:669 sanctorale.php:288
 msgid "override"
 msgstr "prekrytie"
 
@@ -2946,21 +2956,21 @@ msgstr "Vyššia slávnosť"
 #. translators: liturgical grade 6 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:702 sanctorale.php:309
+#: admin-decrees.php:702 sanctorale.php:280
 msgid "Solemnity"
 msgstr "Slávnosť"
 
 #. translators: liturgical grade 5 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:708 sanctorale.php:308
+#: admin-decrees.php:708 sanctorale.php:279
 msgid "Feast of the Lord"
 msgstr "Sviatok Pána"
 
 #. translators: liturgical grade 4 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:714 sanctorale.php:307
+#: admin-decrees.php:714 sanctorale.php:278
 msgid "Feast"
 msgstr "Sviatok"
 
@@ -2974,7 +2984,7 @@ msgstr "Ľubovoľná spomienka"
 #. translators: liturgical grade 0 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:738 sanctorale.php:303
+#: admin-decrees.php:738 sanctorale.php:274
 msgid "Weekday"
 msgstr "Féria"
 
@@ -3236,7 +3246,7 @@ msgstr "Test definície"
 msgid "Roman Rite"
 msgstr "Rímsky rítus"
 
-#: admin-permissions.php:420 permission-requests.php:259 sanctorale.php:347
+#: admin-permissions.php:420 permission-requests.php:259 sanctorale.php:318
 msgid "Ambrosian Rite"
 msgstr "Ambroziánsky rítus"
 
@@ -3340,7 +3350,7 @@ msgstr "Odôvodnenie"
 msgid "Credentials"
 msgstr "Prihlasovacie údaje"
 
-#: admin-permissions.php:475 sanctorale.php:292
+#: admin-permissions.php:475 sanctorale.php:263
 msgid "Date"
 msgstr "Dátum"
 
@@ -3931,7 +3941,7 @@ msgstr "Lokalita"
 msgid "Readiness"
 msgstr "Pripravenosť"
 
-#: admin-locales.php:79 sanctorale.php:176 sanctorale.php:223
+#: admin-locales.php:79 sanctorale.php:146 sanctorale.php:194
 msgid "Details"
 msgstr "Podrobnosti"
 
@@ -4460,7 +4470,7 @@ msgstr ""
 "Vianoc, Pôstneho obdobia, Veľkonočného trojdnia, Veľkej noci a Cezročného "
 "obdobia."
 
-#: temporale.php:57 sanctorale.php:131
+#: temporale.php:57 sanctorale.php:101
 msgid "Language"
 msgstr "Jazyk"
 
@@ -4608,7 +4618,7 @@ msgstr "Prvá"
 msgid "Last"
 msgstr "Posledná"
 
-#: sanctorale.php:107
+#: sanctorale.php:77
 msgid ""
 "Each Roman Missal contributes only what it adds: the 2008 edition defines "
 "three celebrations, not a whole sanctorale. This page composes the editions "
@@ -4620,60 +4630,60 @@ msgstr ""
 "ktoré platia pre kalendár, ktorý si vyberiete, a ukazuje, z ktorej z nich "
 "vychádza každá slávnosť."
 
-#: sanctorale.php:120
+#: sanctorale.php:90
 msgid "Rite"
 msgstr "Rítus"
 
-#: sanctorale.php:122
+#: sanctorale.php:92
 msgid "Roman"
 msgstr "Rímsky"
 
-#: sanctorale.php:123
+#: sanctorale.php:93
 msgid "Ambrosian"
 msgstr "Ambrozijský"
 
-#: sanctorale.php:133
+#: sanctorale.php:103
 msgid "Languages this calendar is published in."
 msgstr "Jazyky, v ktorých je tento kalendár publikovaný."
 
-#: sanctorale.php:139 sanctorale.php:175
+#: sanctorale.php:109 sanctorale.php:145
 msgid "From"
 msgstr "Z"
 
-#: sanctorale.php:141
+#: sanctorale.php:111
 msgid "Show only what one edition contributes."
 msgstr "Zobraziť iba to, čo prispieva jedno vydanie."
 
-#: sanctorale.php:144
+#: sanctorale.php:114
 msgid "Search all months"
 msgstr "Hľadať všetky mesiace."
 
-#: sanctorale.php:146
+#: sanctorale.php:116
 msgid "Name or event key…"
 msgstr "Názov alebo kľúč udalosti…"
 
-#: sanctorale.php:147
+#: sanctorale.php:117
 msgid "Matches across every month, and moves you to one that has a result."
 msgstr ""
 "Zodpovedá naprieč všetkými mesiacmi a presunie ťa na ten, ktorý má výsledok."
 
-#: sanctorale.php:160 sanctorale.php:353
+#: sanctorale.php:130 sanctorale.php:324
 msgid "New celebration"
 msgstr "Nová slávnosť"
 
-#: sanctorale.php:173 sanctorale.php:225
+#: sanctorale.php:143 sanctorale.php:196
 msgid "Celebration"
 msgstr "Slávnosť"
 
-#: sanctorale.php:226
+#: sanctorale.php:197
 msgid "Names by locale"
 msgstr "Názvy podľa lokality"
 
-#: sanctorale.php:228
+#: sanctorale.php:199
 msgid "Readings structure"
 msgstr "Štruktúra čítaní"
 
-#: sanctorale.php:230
+#: sanctorale.php:201
 msgid ""
 "No readings are curated for this celebration yet. Fill in what you know; "
 "blank citations are not saved."
@@ -4681,173 +4691,173 @@ msgstr ""
 "Pre toto slávenie ešte nie sú čítania zostavené. Zadajte, čo viete; prázdne "
 "citácie nie sú uložené."
 
-#: sanctorale.php:238
+#: sanctorale.php:209
 msgid "Ferial Readings"
 msgstr "Ferialné čítania"
 
-#: sanctorale.php:239
+#: sanctorale.php:210
 msgid "Festive Readings"
 msgstr "Slávnostné čítania"
 
-#: sanctorale.php:240
+#: sanctorale.php:211
 msgid "Palm Sunday Readings"
 msgstr "Čítania na Kvetnú nedeľu"
 
-#: sanctorale.php:241
+#: sanctorale.php:212
 msgid "Easter Vigil Readings"
 msgstr "Čítania na Veľkonočnú vigíliu"
 
-#: sanctorale.php:242
+#: sanctorale.php:213
 msgid "Christmas Readings"
 msgstr "Vianočné čítania"
 
-#: sanctorale.php:243
+#: sanctorale.php:214
 msgid "Readings with Evening Mass"
 msgstr "Čítania pri večernej omši"
 
-#: sanctorale.php:244
+#: sanctorale.php:215
 msgid "Readings with Multiple Schemas"
 msgstr "Čítania s viacerými schémami"
 
-#: sanctorale.php:245
+#: sanctorale.php:216
 msgid "Readings from liturgical Commons"
 msgstr "Čítania z liturgického Commons"
 
-#: sanctorale.php:246
+#: sanctorale.php:217
 msgid "Seasonal Readings"
 msgstr "Sezónne čítania"
 
-#: sanctorale.php:247
+#: sanctorale.php:218
 msgid "Readings with a Vigil Mass"
 msgstr "Čítania pri vigílii omše"
 
-#: sanctorale.php:248
+#: sanctorale.php:219
 msgid "Christmas Readings with a Vigil Mass"
 msgstr "Vianočné čítania s vigíliou omše"
 
-#: sanctorale.php:256
+#: sanctorale.php:227
 msgid "Gospel at the Procession"
 msgstr "Evanjelium pri procesii"
 
-#: sanctorale.php:257
+#: sanctorale.php:228
 msgid "First Reading"
 msgstr "Prvé čítanie"
 
-#: sanctorale.php:258 sanctorale.php:260 sanctorale.php:262 sanctorale.php:264
-#: sanctorale.php:266 sanctorale.php:268 sanctorale.php:270 sanctorale.php:272
+#: sanctorale.php:229 sanctorale.php:231 sanctorale.php:233 sanctorale.php:235
+#: sanctorale.php:237 sanctorale.php:239 sanctorale.php:241 sanctorale.php:243
 msgid "Responsorial Psalm"
 msgstr "Odpoveďový žalm"
 
-#: sanctorale.php:259
+#: sanctorale.php:230
 msgid "Second Reading"
 msgstr "Druhé čítanie"
 
-#: sanctorale.php:261
+#: sanctorale.php:232
 msgid "Third Reading"
 msgstr "Tretie čítanie"
 
-#: sanctorale.php:263
+#: sanctorale.php:234
 msgid "Fourth Reading"
 msgstr "Štvrté čítanie"
 
-#: sanctorale.php:265
+#: sanctorale.php:236
 msgid "Fifth Reading"
 msgstr "Piate čítanie"
 
-#: sanctorale.php:267
+#: sanctorale.php:238
 msgid "Sixth Reading"
 msgstr "Šiesté čítanie"
 
-#: sanctorale.php:269
+#: sanctorale.php:240
 msgid "Seventh Reading"
 msgstr "Siedme čítanie"
 
-#: sanctorale.php:271
+#: sanctorale.php:242
 msgid "Epistle"
 msgstr "List"
 
-#: sanctorale.php:273
+#: sanctorale.php:244
 msgid "Gospel Acclamation"
 msgstr "Aleluja"
 
-#: sanctorale.php:281
+#: sanctorale.php:252
 msgid "Vigil Mass"
 msgstr "Vigília omše"
 
-#: sanctorale.php:282
+#: sanctorale.php:253
 msgid "Mass during the Night"
 msgstr "Nočná omša"
 
-#: sanctorale.php:283
+#: sanctorale.php:254
 msgid "Mass at Dawn"
 msgstr "Ranná omša"
 
-#: sanctorale.php:284
+#: sanctorale.php:255
 msgid "Mass during the Day"
 msgstr "Omša počas dňa"
 
-#: sanctorale.php:285
+#: sanctorale.php:256
 msgid "Evening Mass"
 msgstr "Večerná omša"
 
-#: sanctorale.php:286
+#: sanctorale.php:257
 msgid "Schema I"
 msgstr "Schéma I"
 
-#: sanctorale.php:287
+#: sanctorale.php:258
 msgid "Schema II"
 msgstr "Schéma II"
 
-#: sanctorale.php:288
+#: sanctorale.php:259
 msgid "Schema III"
 msgstr "Schéma III"
 
-#: sanctorale.php:289
+#: sanctorale.php:260
 msgid "Easter Season"
 msgstr "Veľkonočné obdobie"
 
-#: sanctorale.php:290
+#: sanctorale.php:261
 msgid "Outside Easter Season"
 msgstr "Mimo Veľkonočného obdobia"
 
-#: sanctorale.php:296
+#: sanctorale.php:267
 msgid "Displays as"
 msgstr "Zobrazuje sa"
 
-#: sanctorale.php:299
+#: sanctorale.php:270
 msgid "no rank shown"
 msgstr "Žiadne poradie sa nezobrazuje"
 
-#: sanctorale.php:310
+#: sanctorale.php:281
 msgid "Higher solemnity"
 msgstr "Vyššia slávnosť"
 
-#: sanctorale.php:313
+#: sanctorale.php:284
 msgid "Colour"
 msgstr "Farba"
 
-#: sanctorale.php:314
+#: sanctorale.php:285
 msgid "Common"
 msgstr "Spoločné"
 
-#: sanctorale.php:315
+#: sanctorale.php:286
 msgid "From this Missal"
 msgstr "Z tohto misálu"
 
-#: sanctorale.php:316
+#: sanctorale.php:287
 msgid "All editions"
 msgstr "Všetky vydania"
 
-#: sanctorale.php:318
+#: sanctorale.php:289
 msgid "This Missal redefines a celebration an earlier one already had."
 msgstr "Tento misál redefinuje slávnosť, ktorú už mal predtým."
 
-#: sanctorale.php:319
+#: sanctorale.php:290
 #, php-format
 msgid "superseded by %s"
 msgstr "nahradené %s"
 
-#: sanctorale.php:320
+#: sanctorale.php:291
 msgid ""
 "A later edition redeclares this celebration; the calendar uses that entry, "
 "not this one."
@@ -4855,11 +4865,11 @@ msgstr ""
 "Neskoršie vydanie opäť vyhlasuje túto slávnosť; kalendár používa ten zápis, "
 "nie tento."
 
-#: sanctorale.php:325
+#: sanctorale.php:296
 msgid "Redeclared by"
 msgstr "Znovu vyhlásené"
 
-#: sanctorale.php:327
+#: sanctorale.php:298
 msgid ""
 "Takes the celebration universal at the same rank; the earlier particular "
 "entry is now redundant."
@@ -4867,59 +4877,59 @@ msgstr ""
 "Berie slávenie na rovnakú úroveň; predchádzajúci konkrétny zápis je teraz "
 "zbytočný."
 
-#: sanctorale.php:330
+#: sanctorale.php:301
 msgid "Redeclares the celebration without changing anything."
 msgstr "Znovu vyhlasuje slávenie bez akejkoľvek zmeny."
 
-#: sanctorale.php:333
+#: sanctorale.php:304
 msgid "no override"
 msgstr "bez prepísania"
 
-#: sanctorale.php:336
+#: sanctorale.php:307
 msgid "translated"
 msgstr "Preložené"
 
-#: sanctorale.php:337
+#: sanctorale.php:308
 msgid "blank"
 msgstr "Prázdne"
 
-#: sanctorale.php:338
+#: sanctorale.php:309
 msgid "missing"
 msgstr "Chýba"
 
-#: sanctorale.php:339
+#: sanctorale.php:310
 msgid "Nothing here."
 msgstr "Tu nič nie je."
 
-#: sanctorale.php:340
+#: sanctorale.php:311
 msgid "No celebration in this month matches your search."
 msgstr "Žiadna slávnosť v tomto mesiaci nevyhovuje vašemu vyhľadávaniu."
 
-#: sanctorale.php:341
+#: sanctorale.php:312
 msgid "No sanctorale lectionary is defined for this rite."
 msgstr "Nie je definovaný sanctorálny lectionár pre tento rítus."
 
-#: sanctorale.php:344
+#: sanctorale.php:315
 msgid "No readings are curated for this celebration yet."
 msgstr "Žiadne čítania nie sú pre túto slávnosť ešte vybrané."
 
-#: sanctorale.php:345
+#: sanctorale.php:316
 msgid "Could not load the names for this celebration."
 msgstr "Nepodarilo sa načítať mená tejto slávnosti."
 
-#: sanctorale.php:346
+#: sanctorale.php:317
 msgid "Could not load the readings for this celebration."
 msgstr "Nepodarilo sa načítať čítania pre túto slávnosť."
 
-#: sanctorale.php:348
+#: sanctorale.php:319
 msgid "No Missal is published for this combination of rite and calendar."
 msgstr "Nie je publikovaný misál pre túto kombináciu rítu a kalendára."
 
-#: sanctorale.php:354
+#: sanctorale.php:325
 msgid "Add to Missal"
 msgstr "Pridať do misálu"
 
-#: sanctorale.php:363
+#: sanctorale.php:334
 msgid ""
 "Begins with a capital, then letters and digits (StIsidoreFarmer). A trailing "
 "number (StPaul_2) or _vigil is allowed, as is a lowercase two-word prefix. "
@@ -4929,24 +4939,24 @@ msgstr ""
 "(StIsidoreFarmer). Na konci môže nasledovať číslo (StPaul_2) alebo _vigil, "
 "platí aj dvojslovný prefix malými písmenami. Nie je možné ho premenovať."
 
-#: sanctorale.php:365
+#: sanctorale.php:336
 msgid "Enter a day between 1 and 31."
 msgstr "Zadaj deň medzi 1 a 31."
 
-#: sanctorale.php:370
+#: sanctorale.php:341
 msgid "Choose…"
 msgstr "Vyber…"
 
-#: sanctorale.php:371
+#: sanctorale.php:342
 msgid "Choose a month."
 msgstr "Vyber mesiac."
 
-#: sanctorale.php:372
+#: sanctorale.php:343
 msgid "Choose a grade."
 msgstr "Vyber si stupeň."
 
 #. translators: %1$s is the event key, %2$s is the Missal id
-#: sanctorale.php:374
+#: sanctorale.php:345
 #, php-format
 msgid ""
 "Delete %1$s from %2$s? Its name and readings go with it, and any earlier "
@@ -4955,7 +4965,7 @@ msgstr ""
 "Vymazať %1$s z %2$s? Jeho názov a čítania idú s ním a akékoľvek staršie "
 "vydanie, ktoré ho už definovalo, preberie."
 
-#: sanctorale.php:377
+#: sanctorale.php:348
 msgid ""
 "These readings live in the rite-wide lectionary, shared by every Missal of "
 "this rite."
@@ -4963,89 +4973,89 @@ msgstr ""
 "Tieto čítania sú v lectionáriu celého rítu, ktorý zdieľa každý misál tohto "
 "rítu."
 
-#: sanctorale.php:378
+#: sanctorale.php:349
 msgid "This rite has no lectionary, so readings cannot be edited here."
 msgstr "Tento rítus nemá lectionár, čítania sa teda tu nedajú upravovať."
 
-#: sanctorale.php:386
+#: sanctorale.php:357
 msgid ""
 "Inherited from a different lectionary source; edit it there, not from this "
 "Missal."
 msgstr "Zdedené zo zdroja lectionára; uprav ho tam, nie z tohto misálu."
 
-#: sanctorale.php:389
+#: sanctorale.php:360
 msgid "The readings were kept: another Missal still declares this celebration."
 msgstr "Čítania zostali zachované: iný misál túto slávnosť ešte oznamuje."
 
-#: sanctorale.php:390
+#: sanctorale.php:361
 msgid "Default (from grade)"
 msgstr "Predvolený (podľa stupňa)"
 
-#: sanctorale.php:391
+#: sanctorale.php:362
 msgid "Show no rank"
 msgstr "Nezobrazovať stupeň"
 
-#: sanctorale.php:392
+#: sanctorale.php:363
 msgid "Custom text…"
 msgstr "Vlastný text…"
 
-#: sanctorale.php:393
+#: sanctorale.php:364
 msgid "Nothing has changed."
 msgstr "Nič sa nezmenilo."
 
-#: sanctorale.php:394
+#: sanctorale.php:365
 msgid "Saved."
 msgstr "Uložené."
 
-#: sanctorale.php:395
+#: sanctorale.php:366
 msgid "Celebration created."
 msgstr "Slávnosť vytvorená."
 
-#: sanctorale.php:396
+#: sanctorale.php:367
 msgid "Celebration deleted."
 msgstr "Slávnosť odstránená."
 
 #. translators: %s is the error reported by the API
-#: sanctorale.php:398
+#: sanctorale.php:369
 #, php-format
 msgid "Could not save: %s"
 msgstr "Nepodarilo sa uložiť: %s"
 
-#: sanctorale.php:399
+#: sanctorale.php:370
 msgid "You do not have permission to change this Missal."
 msgstr "Nemáš oprávnenie meniť tento misál."
 
-#: sanctorale.php:400
+#: sanctorale.php:371
 msgid "This clashes with another Missal"
 msgstr "Koliduje s iným misálom."
 
 #. translators: %s is the change request batch id
-#: sanctorale.php:406
+#: sanctorale.php:377
 #, php-format
 msgid "Queued for review as batch %s. Nothing has been written yet."
 msgstr "Čaká na schválenie ako dávka %s. Ešte nič nebolo napísané."
 
 #. translators: %s is the change request batch id
-#: sanctorale.php:408
+#: sanctorale.php:379
 #, php-format
 msgid "Approved as batch %s, awaiting publication."
 msgstr "Schválené ako dávka %s, čaká na publikáciu."
 
 #. translators: %s is a comma-separated list of batch ids
-#: sanctorale.php:410
+#: sanctorale.php:381
 #, php-format
 msgid "Earlier batches folded in: %s."
 msgstr "Predchádzajúce dávky zahrnuté: %s."
 
 #. translators: %s is the unrecognized disposition value
-#: sanctorale.php:412
+#: sanctorale.php:383
 #, php-format
 msgid ""
 "The server reported an unrecognized outcome (%s); nothing local was changed."
 msgstr "Server hlásil neuznaný výsledok (%s); nič lokálne nebolo zmenené."
 
 #. translators: %s is the error reported by the API
-#: sanctorale.php:414
+#: sanctorale.php:385
 #, php-format
 msgid "Could not load the sanctorale: %s"
 msgstr "Nepodarilo sa načítať sanctorale: %s"
@@ -5053,7 +5063,7 @@ msgstr "Nepodarilo sa načítať sanctorale: %s"
 #. translators: %s is the event_key a #event= link named
 #. Reported rather than left silent: the link may be stale, mistyped, or
 #. for a rite/calendar this page has since moved away from.
-#: sanctorale.php:418
+#: sanctorale.php:389
 #, php-format
 msgid "%s is not in the current selection."
 msgstr "%s nie je v aktuálnom výbere."
