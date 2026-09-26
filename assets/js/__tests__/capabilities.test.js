@@ -61,6 +61,37 @@ describe('detectMissalCapabilities', () => {
         expect(caps.get('US_2011')).toEqual({ canEdit: true, canCreate: true, canDelete: true });
     });
 
+    it('makes a typical edition read-only under a national calendar, even for a global admin', async () => {
+        // The typica is the inherited layer there: an edit from the Italian view
+        // would change the General Roman Calendar for every nation.
+        const caps = await detectMissalCapabilities({
+            missals: [VA_1970, US_2011], rite: 'roman', baseRegion: 'VA', calendar: 'US',
+            userSub: 'u', isGlobalAdmin: true, checkAllowed: vi.fn()
+        });
+        expect(caps.get('EDITIO_TYPICA_1970')).toEqual({ canEdit: false, canCreate: false, canDelete: false });
+        expect(caps.get('US_2011')).toEqual({ canEdit: true, canCreate: true, canDelete: true });
+    });
+
+    it('spends no check on a typical edition under a national calendar', async () => {
+        const seen = [];
+        const caps = await detectMissalCapabilities({
+            missals: [VA_1970, US_2011], rite: 'roman', baseRegion: 'VA', calendar: 'US',
+            userSub: 'u', isGlobalAdmin: false,
+            checkAllowed: async (path) => { seen.push(path); return true; }
+        });
+        expect(seen.some((p) => p.includes('object_type=rite_calendar'))).toBe(false);
+        expect(caps.get('EDITIO_TYPICA_1970')).toEqual({ canEdit: false, canCreate: false, canDelete: false });
+        expect(caps.get('US_2011')).toEqual({ canEdit: true, canCreate: true, canDelete: true });
+    });
+
+    it('keeps a typical edition editable from the rite-level view', async () => {
+        const caps = await detectMissalCapabilities({
+            missals: [VA_1970], rite: 'roman', baseRegion: 'VA', calendar: '',
+            userSub: 'u', isGlobalAdmin: false, checkAllowed: async () => true
+        });
+        expect(caps.get('EDITIO_TYPICA_1970')).toEqual({ canEdit: true, canCreate: true, canDelete: true });
+    });
+
     it('denies everything when there is no subject to check', async () => {
         const checkAllowed = vi.fn();
         const caps = await detectMissalCapabilities({

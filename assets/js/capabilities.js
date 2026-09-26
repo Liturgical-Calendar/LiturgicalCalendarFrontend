@@ -89,10 +89,18 @@ export function capabilityCheckPath({ userSub, objectType, objectId, relation })
  * succeeded, and hiding a control the user has is recoverable while offering one
  * they do not have is a 403 in their face.
  *
+ * Authorization is not the only gate. A rite's typical editions are edited from
+ * the rite-level view (no `calendar` selected) and nowhere else: under a
+ * national calendar they are the inherited layer the nation builds on, so they
+ * are read-only there for everyone, a global admin included, and no check is
+ * spent on them. An edit made from the Italian view would change the General
+ * Roman Calendar for every nation while looking like an Italian change.
+ *
  * @param {object} args
  * @param {Array<{missal_id: string, region: string}>} args.missals
  * @param {string} args.rite
  * @param {?string} args.baseRegion
+ * @param {string} [args.calendar] The selected national calendar, or '' for the rite-level view.
  * @param {string} args.userSub
  * @param {boolean} args.isGlobalAdmin
  * @param {(path: string) => Promise<boolean>} args.checkAllowed
@@ -100,9 +108,15 @@ export function capabilityCheckPath({ userSub, objectType, objectId, relation })
  *          `canEdit` is `PATCH`, `canCreate` is `PUT`, `canDelete` is `DELETE`.
  */
 export async function detectMissalCapabilities({
-    missals, rite, baseRegion, userSub, isGlobalAdmin, checkAllowed
+    missals: inScope, rite, baseRegion, calendar = '', userSub, isGlobalAdmin, checkAllowed
 }) {
     const capabilities = new Map();
+
+    const inheritedOnly = (missal) => calendar !== '' && missal.region === baseRegion;
+    for (const missal of inScope.filter(inheritedOnly)) {
+        capabilities.set(missal.missal_id, { canEdit: false, canCreate: false, canDelete: false });
+    }
+    const missals = inScope.filter((missal) => !inheritedOnly(missal));
 
     if (isGlobalAdmin) {
         for (const missal of missals) {

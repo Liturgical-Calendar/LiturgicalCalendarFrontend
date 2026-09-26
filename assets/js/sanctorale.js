@@ -1420,6 +1420,8 @@ async function saveEntry() {
 async function performSave() {
     dom.formError.textContent = '';
 
+    if (!mayStillWrite(editState.creating ? 'canCreate' : 'canEdit')) return;
+
     // Read before validation, because the event_key rule below is stated over
     // `editState.eventKey` rather than over the input.
     if (editState.creating) {
@@ -1626,6 +1628,8 @@ async function deleteEntry() {
 
 /** Delete the open entry, assuming the write controls are already locked. */
 async function performDelete() {
+    if (!mayStillWrite('canDelete')) return;
+
     const confirmed = window.confirm(
         i18n.confirmDelete.replace('%1$s', editState.eventKey).replace('%2$s', editState.missalId)
     );
@@ -2780,6 +2784,7 @@ async function refreshCapabilities(seq) {
         missals: applicableMissals(state.missals, state.calendar, state.baseRegion),
         rite: state.rite,
         baseRegion: state.baseRegion,
+        calendar: state.calendar,
         userSub: config?.userSub ?? '',
         isGlobalAdmin: config?.isGlobalAdmin === true,
         checkAllowed: async (path) => {
@@ -2790,6 +2795,37 @@ async function refreshCapabilities(seq) {
     if (seq !== selectionSeq) return;
     state.capabilities = capabilities;
     revealCreateButton();
+}
+
+/**
+ * Forget every capability and re-render, so no control outlives the selection
+ * that granted it.
+ *
+ * Called on a rite or calendar change BEFORE the refresh is awaited: a typical
+ * edition editable on the rite-level view is read-only under a national
+ * calendar, and the old table would otherwise keep its Edit buttons for as long
+ * as the permission checks take.
+ */
+function dropCapabilities() {
+    state.capabilities = new Map();
+    revealCreateButton();
+    render();
+}
+
+/**
+ * Re-check the open entry's capability at the moment of writing.
+ *
+ * The modal's backdrop blocks the calendar select, but a hash change can still
+ * switch the calendar underneath an open editor. Refused in place rather than by
+ * closing the modal, so the user does not lose what they typed.
+ *
+ * @param {'canEdit'|'canCreate'|'canDelete'} capability
+ * @returns {boolean}
+ */
+function mayStillWrite(capability) {
+    if (capabilityFor(editState.missalId)[capability]) return true;
+    dom.formError.textContent = i18n.permissionDenied;
+    return false;
 }
 
 /**
@@ -3034,6 +3070,7 @@ async function init() {
     dom.rite.addEventListener('change', () => {
         state.rite = dom.rite.value;
         syncHash();
+        dropCapabilities();
         // Each rite has its own catalogue, so this is a reload, not a recompose.
         reload();
     });
@@ -3041,6 +3078,7 @@ async function init() {
         state.calendar = dom.calendar.value;
         renderLocaleOptions();
         syncHash();
+        dropCapabilities();
         recompose();
     });
     dom.locale.addEventListener('change', () => {
@@ -3084,6 +3122,7 @@ async function init() {
         dom.rite.value     = state.rite;
         dom.calendar.value = state.calendar;
         if (`${state.rite}|${state.calendar}|${state.nameLocale}` !== before) {
+            if (!before.startsWith(`${state.rite}|${state.calendar}|`)) dropCapabilities();
             reload();
         } else {
             dom.from.value = state.fromMissal;

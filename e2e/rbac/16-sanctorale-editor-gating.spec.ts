@@ -11,10 +11,20 @@ import { USERS } from './support/users';
  * (`assets/js/sanctorale.js`'s `compose()`), and a curator's Edit button is
  * gated per ROW, not per page: `capabilityFor(row._missalId)` decides
  * whether that row's `data-edit-key` button renders at all
- * (`renderTable()`). A curator scoped to `editor@national_calendar:roman/US`
- * must see Edit on the `US_2011` rows and NOT on the `EDITIO_TYPICA_1970`
- * rows sitting beside them in the SAME rendered table. No unit test can
- * assert this — it is a DOM-rendering decision driven by a live
+ * (`renderTable()`). Two rules decide it, and this spec pins both, each where
+ * the other cannot be what makes it pass:
+ *
+ *   1. Authorization, per Missal. On the General Roman view a curator holding
+ *      `editor@rite_calendar:roman/EDITIO_TYPICA_1970` must see Edit on the
+ *      1970 rows and NOT on the `EDITIO_TYPICA_2002` rows beside them — same
+ *      tier, same table, only the FGA object differs.
+ *   2. View scope. Under a national calendar the typical editions are the
+ *      inherited layer and read-only for everyone. The same curator, holding
+ *      that very grant, must see NO Edit on a 1970 row under `calendar=US`,
+ *      while still seeing it on the `US_2011` rows their
+ *      `editor@national_calendar:roman/US` grant covers.
+ *
+ * No unit test can assert this — it is a DOM-rendering decision driven by a live
  * `/admin/permissions/check` round trip per Missal
  * (`assets/js/capabilities.js`'s `detectMissalCapabilities()`).
  *
@@ -50,12 +60,17 @@ import { USERS } from './support/users';
  * `afterAll`. Mirrors the pattern `e2e/rbac/14-admin-decrees-capability-matrix.spec.ts`
  * already established for the same reason.
  *
+ * The typica grant is written at runtime alongside the US one, and torn down
+ * with it. Without it rule 2 would pass on a plain FGA denial and prove nothing.
+ *
  * Fixtures (verified against the live API, `GET /missals/roman/{missal}` —
  * see `e2e/sanctorale-editor.spec.ts`'s doc comment for the full correction):
  *   - `StIsidoreFarmer` (May 15) — declared only by `US_2011`.
  *   - `StJosephWorker` (May 1) — declared only by `EDITIO_TYPICA_1970`, and not
  *     overridden by any later edition. Composing the US calendar for May pulls
  *     in both rows in the SAME table view, which is what this scenario needs.
+ *   - `OurLadyOfFatima` (May 13) — declared only by `EDITIO_TYPICA_2002`, so it
+ *     sits beside `StJosephWorker` on the General Roman view for May.
  *
  * Preconditions (seeded by rbac-setup): `cei-editor` — Zitadel `calendar_editor`
  * role; `.auth/cei-editor.json` pre-written.
@@ -64,10 +79,12 @@ import { USERS } from './support/users';
  * ZITADEL_MACHINE_TOKEN / ZITADEL_ORG_ID / ZITADEL_PROJECT_ID.
  *
  * Read-only: this spec issues no write against `/missals`, so it needs no
- * `gitRestoreApiData()` — only the runtime FGA tuple needs teardown.
+ * `gitRestoreApiData()` — only the runtime FGA tuples need teardown.
  */
 
 const GRANT_OBJECT = 'national_calendar:roman/US';
+const TYPICA_GRANT_OBJECT = 'rite_calendar:roman/EDITIO_TYPICA_1970';
+const GRANT_OBJECTS = [GRANT_OBJECT, TYPICA_GRANT_OBJECT];
 const GRANT_USER_KEY = 'cei-editor';
 
 async function subOf(email: string): Promise<string> {
@@ -83,23 +100,48 @@ test.describe('sanctorale editor gating', () => {
         test.setTimeout(60_000);
         const f = new Fga();
         grantedSub = await subOf(USERS[GRANT_USER_KEY].email);
-        await f.write(`user:${grantedSub}`, 'editor', GRANT_OBJECT);
+        for (const object of GRANT_OBJECTS) {
+            await f.write(`user:${grantedSub}`, 'editor', object);
+        }
     });
 
     test.afterAll(async () => {
         if (!grantedSub) return;
         const f = new Fga();
-        await f.delete(`user:${grantedSub}`, 'editor', GRANT_OBJECT)
-            .catch((e) => console.warn(`cleanup: failed to delete runtime grant for ${GRANT_USER_KEY}:`, String(e)));
-        const stillGranted = await f.check(`user:${grantedSub}`, 'editor', GRANT_OBJECT).catch(() => null);
-        console.log(
-            stillGranted === false
-                ? `CLEANUP: runtime grant editor@${GRANT_OBJECT} for ${GRANT_USER_KEY} revoked and verified gone.`
-                : `CLEANUP WARNING: post-teardown check for editor@${GRANT_OBJECT} on ${GRANT_USER_KEY} returned ${String(stillGranted)}, expected false.`
-        );
+        for (const object of GRANT_OBJECTS) {
+            await f.delete(`user:${grantedSub}`, 'editor', object)
+                .catch((e) => console.warn(`cleanup: failed to delete runtime grant editor@${object} for ${GRANT_USER_KEY}:`, String(e)));
+            const stillGranted = await f.check(`user:${grantedSub}`, 'editor', object).catch(() => null);
+            console.log(
+                stillGranted === false
+                    ? `CLEANUP: runtime grant editor@${object} for ${GRANT_USER_KEY} revoked and verified gone.`
+                    : `CLEANUP WARNING: post-teardown check for editor@${object} on ${GRANT_USER_KEY} returned ${String(stillGranted)}, expected false.`
+            );
+        }
     });
 
-    test('a scoped editor sees Edit on their own edition only, in the same table', async ({ browser }) => {
+    test('a typica grant shows Edit on that edition only, on the General Roman view', async ({ browser }) => {
+        const session = await actingAs(browser, GRANT_USER_KEY);
+        try {
+            await session.page.goto('/sanctorale.php#rite=roman&month=5');
+
+            const grantedRow = session.page.locator('#sanctoraleTableBody tr', { hasText: 'StJosephWorker' });
+            await expect(grantedRow).toBeVisible();
+            await expect(grantedRow).toContainText('EDITIO_TYPICA_1970');
+            await expect(grantedRow.locator('button[data-edit-key]')).toBeVisible();
+
+            // Awaiting the Edit button above means capabilities have resolved, so a
+            // missing one here is the FGA denial on EDITIO_TYPICA_2002, not a race.
+            const ungrantedRow = session.page.locator('#sanctoraleTableBody tr', { hasText: 'OurLadyOfFatima' });
+            await expect(ungrantedRow).toBeVisible();
+            await expect(ungrantedRow).toContainText('EDITIO_TYPICA_2002');
+            await expect(ungrantedRow.locator('button[data-edit-key]')).toHaveCount(0);
+        } finally {
+            await session.context.close();
+        }
+    });
+
+    test('under a national calendar the typica is read-only despite the grant', async ({ browser }) => {
         const session = await actingAs(browser, GRANT_USER_KEY);
         try {
             await session.page.goto('/sanctorale.php#rite=roman&calendar=US&month=5');
