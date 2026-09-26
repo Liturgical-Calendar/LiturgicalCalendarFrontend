@@ -316,6 +316,8 @@ $litCommons = [
                 allMissals:         <?php echo json_encode(_('All editions'), JSON_HEX_TAG); ?>,
                 overrides:          <?php echo json_encode(_('override'), JSON_HEX_TAG); ?>,
                 overridesTitle:     <?php echo json_encode(_('This Missal redefines a celebration an earlier one already had.'), JSON_HEX_TAG); ?>,
+                supersededBy:       <?php echo json_encode(_('superseded by %s'), JSON_HEX_TAG); ?>,
+                supersededTitle:    <?php echo json_encode(_('A later edition redeclares this celebration; the calendar uses that entry, not this one.'), JSON_HEX_TAG); ?>,
                 <?php // The redeclaration panel. Naming the relationship, not just the
                       // fact of it: a later edition that CHANGES a property and one that
                       // merely takes a particular celebration universal are different

@@ -357,4 +357,32 @@ test.describe.serial('sanctorale editor write path', () => {
         await expect(after).not.toContainText('US_2011');
         await expect(after.locator('.badge', { hasText: 'override' })).toHaveCount(0);
     });
+
+    test('a superseded national entry is curated in its own edition', async ({ page }) => {
+        // IT_1983 declared StPeterClaver before the 2002 typica took him up, so
+        // the composed row is the typica's — read-only under a national calendar.
+        // Filtering by IT_1983 must still reach IT_1983's own declaration, and
+        // an edit there must land in IT_1983, never in the typica.
+        await page.goto('/sanctorale.php#rite=roman&calendar=IT&from=IT_1983&month=9');
+        const row = rowFor(page, 'StPeterClaver');
+        await expect(row).toBeVisible();
+        await expect(row).toContainText('IT_1983');
+        await expect(row.locator('.badge', { hasText: 'superseded by EDITIO_TYPICA_2002' })).toBeVisible();
+
+        await row.locator('button[data-edit-key]').click();
+        await page.waitForSelector('#entryGrade');
+        await expect(page.locator('#entryCalendarLabel')).toHaveText('IT');
+        await expect(page.locator('#entryGrade')).toHaveValue('2');
+
+        const write = page.waitForResponse((r) =>
+            r.url().includes('/missals/roman/IT_1983/StPeterClaver') && r.request().method() === 'PATCH');
+        await page.selectOption('#entryGrade', '3');
+        await page.click('#saveEntryBtn');
+        await expect(page.locator('#entryFormError')).toBeEmpty();
+        await expectWriteApplied(asApiResponse(await write), 'PATCH IT_1983 StPeterClaver');
+
+        const stored = await page.request.get(`${API_BASE}/missals/roman/IT_1983`);
+        const entries = await stored.json() as Array<{ event_key: string; grade: number }>;
+        expect(entries.find((e) => e.event_key === 'StPeterClaver')?.grade).toBe(3);
+    });
 });

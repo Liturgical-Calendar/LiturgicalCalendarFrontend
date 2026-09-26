@@ -834,15 +834,51 @@ export function redeclarationSteps(row, baseRegion = null) {
 }
 
 /**
- * Narrow to the celebrations a single missal contributes, or all of them.
+ * A composed row as one edition in its chain declared it.
  *
- * The count this yields for a missal is what it contributes to the COMPOSED
- * sanctorale, which is not always its own row count: where a later edition
- * overrides an earlier one, the row belongs to the later. That is the honest
- * number for "what comes from this edition", and it is the point of the filter.
+ * The composed row is the LAST declaration's, so an edition a later one
+ * redeclared — `IT_1983`'s `StPeterClaver`, which the 2002 typica took up — is
+ * otherwise reachable only as history in the detail panel, and cannot be
+ * curated at all. This rebuilds that edition's own row, annotated like a
+ * composed one, plus `_supersededBy` naming the edition the calendar uses.
+ * `_declaredBy` stays the whole chain: it is the key's history, not the row's.
+ *
+ * @param {object|undefined} row a composed row
+ * @param {string} missalId
+ * @returns {object|undefined} the row as `missalId` declared it, or undefined
+ *          when that edition does not declare this key
+ */
+export function declarationRow(row, missalId) {
+    if (!row || row._missalId === missalId) return row;
+    const chain = row._declaredBy ?? [];
+    const at = chain.findIndex((d) => d.missalId === missalId);
+    if (at === -1) return undefined;
+    const declaration = chain[at];
+    return {
+        ...declaration.row,
+        _missalId: declaration.missalId,
+        _missalYear: declaration.missalYear,
+        _overrides: at > 0 ? chain[at - 1].missalId : null,
+        _declaredBy: chain,
+        _supersededBy: row._missalId
+    };
+}
+
+/**
+ * Narrow to the celebrations a single missal declares, or all of them.
+ *
+ * Everything the edition declares, as it declares it — including what a later
+ * edition has since redeclared, marked `_supersededBy`. Filtering by an edition
+ * is how a curator works on that edition, and an entry that vanished from its
+ * own edition's view the moment a later typica took it up could never be
+ * reviewed or corrected again.
  */
 export function filterByMissal(composed, missalId) {
-    return missalId ? composed.filter((r) => r._missalId === missalId) : composed;
+    if (!missalId) return composed;
+    return composed
+        .map((r) => declarationRow(r, missalId))
+        .filter(Boolean)
+        .sort((a, b) => (a.month - b.month) || (a.day - b.day));
 }
 
 /** Rows for one month, day-ordered, narrowed by the search term. */
@@ -913,6 +949,7 @@ function renderTable(visible) {
             <td>
                 <span class="badge bg-light text-dark border" title="${escapeHtml(i18n.fromMissal)}">${escapeHtml(row._missalId)}</span>
                 ${row._overrides ? `<span class="badge bg-warning text-dark ms-1" title="${escapeHtml(i18n.overridesTitle)}">${escapeHtml(i18n.overrides)}</span>` : ''}
+                ${row._supersededBy ? `<span class="badge bg-secondary ms-1" title="${escapeHtml(i18n.supersededTitle)}">${escapeHtml(i18n.supersededBy.replace('%s', row._supersededBy))}</span>` : ''}
             </td>
             <td class="text-end">
                 <button type="button" class="btn btn-sm btn-outline-dark"
@@ -948,13 +985,15 @@ function render() {
 }
 
 /**
- * Offer each contributing missal, oldest first, with how many celebrations it
- * contributes. Selecting one is how a reader sees an edition's delta at a glance.
+ * Offer each declaring missal, oldest first, with how many celebrations it
+ * declares — the count filterByMissal() will show, superseded entries included.
  */
 function renderFromOptions() {
     const counts = new Map();
     for (const row of state.composed) {
-        counts.set(row._missalId, (counts.get(row._missalId) ?? 0) + 1);
+        for (const { missalId } of row._declaredBy ?? [{ missalId: row._missalId }]) {
+            counts.set(missalId, (counts.get(missalId) ?? 0) + 1);
+        }
     }
     const ordered = applicableMissals(state.missals, state.calendar, state.baseRegion)
         .filter((m) => counts.has(m.missal_id));
@@ -1053,7 +1092,10 @@ function openDetailShell(eventKey) {
  * @returns {object|undefined} the composed row, for the renderers
  */
 function resetEditStateForEntry(eventKey, missalId, editing) {
-    const row = state.composed.find((r) => r.event_key === eventKey);
+    // The entry as THIS edition declared it: editing a superseded IT_1983 row
+    // must diff against and PATCH IT_1983's structure, not the typica's.
+    const composed = state.composed.find((r) => r.event_key === eventKey);
+    const row = declarationRow(composed, missalId) ?? composed;
 
     editState.eventKey = eventKey;
     editState.missalId = missalId;
@@ -1208,14 +1250,20 @@ function wireGradeDisplayToggle() {
 /**
  * The calendar label a Missal's rows carry.
  *
- * `buildRow()` refuses a payload whose `calendar` is not the Missal's own, and
- * every applicable Missal has at least one composed row to read it off.
+ * `buildRow()` refuses a payload whose `calendar` is not the Missal's own.
+ * Read off the declaration chains rather than the composed winners: an edition
+ * every one of whose entries a later typica took up wins no composed row, and
+ * creating in it would otherwise send `''` and be refused.
  *
  * @param {string} missalId
  * @returns {string}
  */
 function calendarLabelFor(missalId) {
-    return state.composed.find((r) => r._missalId === missalId)?.calendar ?? '';
+    for (const row of state.composed) {
+        const declaration = (row._declaredBy ?? []).find((d) => d.missalId === missalId);
+        if (declaration) return declaration.row.calendar ?? '';
+    }
+    return '';
 }
 
 /**
@@ -1578,7 +1626,7 @@ function closeEntryModal() {
  */
 async function reloadAndFollow(eventKey) {
     await reload();
-    const month = monthOf(state.composed, eventKey);
+    const month = monthOf(state.composed, eventKey, state.fromMissal);
     if (month !== null && month !== state.month) {
         state.month = month;
         syncHash();
@@ -2952,12 +3000,19 @@ function readHash() {
  * left on the tab they started from — see the `monthOf()` call after `reload()`
  * in saveEntry() and deleteEntry().
  *
+ * Under a From filter the table places a row by THAT edition's declaration
+ * (filterByMissal()), so the month is read off the same one; without it, or
+ * for an edition that does not declare the key, the composed row's.
+ *
  * @param {Array<object>} composed
  * @param {string} eventKey
+ * @param {string} [missalId] the From filter's edition, or ''
  * @returns {number|null}
  */
-export function monthOf(composed, eventKey) {
-    return composed.find((r) => r.event_key === eventKey)?.month ?? null;
+export function monthOf(composed, eventKey, missalId = '') {
+    const row = composed.find((r) => r.event_key === eventKey);
+    const own = missalId ? declarationRow(row, missalId) : undefined;
+    return (own ?? row)?.month ?? null;
 }
 
 /**
@@ -2979,11 +3034,15 @@ function openDeepLinkedEvent() {
         syncHash();
         return;
     }
-    if (state.month !== row.month) {
-        state.month = row.month;
+    // Under a From filter the table shows that edition's own declaration, so the
+    // link lands on that declaration's month and opens it, as clicking its row would.
+    const own = state.fromMissal ? declarationRow(row, state.fromMissal) : undefined;
+    const month = (own ?? row).month;
+    if (state.month !== month) {
+        state.month = month;
         render();
     }
-    showDetail(row.event_key, row._missalId, false);
+    showDetail(row.event_key, own?._missalId ?? row._missalId, false);
 }
 
 /**
