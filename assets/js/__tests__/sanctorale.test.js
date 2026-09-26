@@ -5,9 +5,9 @@
  * functions in their own right and pinned here: a missal file is a delta, later
  * editions win, and every row must remember which layer supplied it.
  */
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach } from 'vitest';
 
-let applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits, renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47, filterByMissal, formatGrade, gradeDisplayOf, hasNestedSchemas, schemaKeysOf, applicableTiers, monthOf, nameCoverageBadge;
+let applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits, renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47, filterByMissal, declarationRow, formatGrade, gradeDisplayOf, hasNestedSchemas, schemaKeysOf, applicableTiers, monthOf, nameCoverageBadge;
 
 const VA_1970 = { missal_id: 'EDITIO_TYPICA_1970', region: 'VA', year_published: 1970 };
 const VA_2002 = { missal_id: 'EDITIO_TYPICA_2002', region: 'VA', year_published: 2002 };
@@ -23,7 +23,7 @@ beforeAll(async () => {
     const mod = await import('../sanctorale.js');
     ({ applicableMissals, baseRegionFor, compose, rowsFor, monthsWithHits,
        renderReadingsOutcome, HttpError, localesFor, preferredLocale, toBcp47,
-       filterByMissal, formatGrade, gradeDisplayOf, hasNestedSchemas, schemaKeysOf,
+       filterByMissal, declarationRow, formatGrade, gradeDisplayOf, hasNestedSchemas, schemaKeysOf,
        applicableTiers, monthOf, nameCoverageBadge } = mod);
 });
 
@@ -268,20 +268,62 @@ describe('filterByMissal', () => {
         expect(filterByMissal(composed, '')).toHaveLength(3);
     });
 
-    it('counts an overridden celebration against the edition that won', () => {
-        // US_2011 redefines StIsidore, so it belongs to US_2011 in the composed set,
-        // not to the 1970 edition that first defined it.
+    it('keeps a superseded entry in its own edition, as that edition declared it', () => {
+        // US_2011 redefines StIsidore. Under the US_2011 filter it is the winner;
+        // under the 1970 filter it is still there, with 1970's own date, marked
+        // superseded — otherwise 1970's entry could never be reached to curate.
         const out = compose([
             { missal: VA_1970, rows: [{ event_key: 'StIsidore', month: 4, day: 4 }] },
             { missal: US_2011, rows: [{ event_key: 'StIsidore', month: 5, day: 15 }] }
         ]);
-        expect(filterByMissal(out, 'US_2011')).toHaveLength(1);
-        expect(filterByMissal(out, 'EDITIO_TYPICA_1970')).toHaveLength(0);
+        const us = filterByMissal(out, 'US_2011');
+        expect(us).toHaveLength(1);
+        expect(us[0]._supersededBy).toBeUndefined();
+
+        const typica = filterByMissal(out, 'EDITIO_TYPICA_1970');
+        expect(typica).toHaveLength(1);
+        expect(typica[0]).toMatchObject({ month: 4, day: 4, _missalId: 'EDITIO_TYPICA_1970', _supersededBy: 'US_2011' });
+    });
+
+    it('orders by the edition\'s own dates, not the winner\'s', () => {
+        const out = compose([
+            { missal: VA_1970, rows: [
+                { event_key: 'Moved', month: 3, day: 1 },
+                { event_key: 'Stays', month: 2, day: 1 }
+            ] },
+            { missal: US_2011, rows: [{ event_key: 'Moved', month: 1, day: 1 }] }
+        ]);
+        expect(filterByMissal(out, 'EDITIO_TYPICA_1970').map((r) => r.event_key)).toEqual(['Stays', 'Moved']);
     });
 
     it('leaves month grouping intact, so the tab counts follow the filter', () => {
         const jan = filterByMissal(composed, 'EDITIO_TYPICA_2002').filter((r) => r.month === 1);
         expect(jan).toHaveLength(1);
+    });
+});
+
+describe('declarationRow', () => {
+    let row;
+    beforeEach(() => {
+        [row] = compose([
+            { missal: VA_1970, rows: [{ event_key: 'X', month: 9, day: 9, grade: 2, name: 'old' }] },
+            { missal: US_2011, rows: [{ event_key: 'X', month: 9, day: 9, grade: 3, name: 'new' }] }
+        ]);
+    });
+
+    it('returns the composed row itself for the winning edition', () => {
+        expect(declarationRow(row, 'US_2011')).toBe(row);
+    });
+
+    it('rebuilds an earlier edition\'s own row, keeping the whole chain', () => {
+        const own = declarationRow(row, 'EDITIO_TYPICA_1970');
+        expect(own).toMatchObject({ grade: 2, name: 'old', _missalId: 'EDITIO_TYPICA_1970', _overrides: null, _supersededBy: 'US_2011' });
+        expect(own._declaredBy).toBe(row._declaredBy);
+    });
+
+    it('is undefined for an edition that does not declare the key', () => {
+        expect(declarationRow(row, 'IT_1983')).toBeUndefined();
+        expect(declarationRow(undefined, 'US_2011')).toBeUndefined();
     });
 });
 
