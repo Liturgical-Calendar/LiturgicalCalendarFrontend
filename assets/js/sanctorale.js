@@ -22,6 +22,7 @@
 import { ReadingsRenderer } from '@liturgical-calendar/components-js';
 import { detectMissalCapabilities } from './capabilities.js';
 import { describeWriteOutcome } from './writeDisposition.js';
+import { setCommonMultiselect, setColorMultiselect, colorsForCommons } from './FormControls.js';
 import {
     gradeDisplayMode,
     gradeDisplayValue,
@@ -1064,6 +1065,7 @@ async function showDetail(eventKey, missalId, editing = false) {
     // the value it had rather than cleared: switching away and back must not
     // silently drop text the user has already typed.
     wireGradeDisplayToggle();
+    if (editState.editing) wireStructureMultiselects(row);
 }
 
 /**
@@ -1431,6 +1433,7 @@ async function showCreate() {
         <div id="entryReadingsBlock"></div>`;
 
     wireGradeDisplayToggle();
+    wireStructureMultiselects(null);
     refreshCreateReadings(seq);
 
     el('entryTargetMissal')?.addEventListener('change', (event) => {
@@ -1934,8 +1937,63 @@ function renderRedeclarations(row) {
 
 const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-/** `LitColor` in CommonDef.json, in the schema's own order. */
-const COLORS = ['white', 'red', 'green', 'purple', 'rose', 'morello', 'black'];
+/**
+ * Whether this rite's rows carry `is_dominical` and `is_bvm`. Only the Ambrosian
+ * sanctorale uses them, so a Roman editor neither shows nor submits them.
+ */
+function riteUsesAmbrosianFlags() {
+    return state.rite === 'ambrosian';
+}
+
+/**
+ * Add an `<option>` for any stored value the list does not offer.
+ *
+ * A browser submits only options the control has, so a value missing from the
+ * list — a color outside this rite's palette in data that predates the palettes —
+ * would be dropped silently the next time anyone saved the row (issue #526).
+ * Offered under its raw value instead, so the curator can see it and decide.
+ *
+ * @param {HTMLSelectElement} select
+ * @param {string[]} [values]
+ */
+function ensureOptions(select, values) {
+    for (const value of values ?? []) {
+        if (![...select.options].some((o) => o.value === value)) {
+            select.add(new Option(value, value));
+        }
+    }
+}
+
+/**
+ * Turn the Common and Color selects into localized bootstrap-multiselects, with
+ * the same wiring as the extending page: `Proper` is exclusive of the commons
+ * (setCommonMultiselect()), and choosing commons picks the colors they imply —
+ * red for a Martyrs common, white for any other (colorsForCommons()).
+ *
+ * The colors follow only a USER change: setCommonMultiselect() dispatches
+ * `change` from the plugin's onChange, which the initial selection does not
+ * fire, so opening a stored entry never rewrites its colors. A choice implying
+ * no color (`Proper` alone) leaves the colors as they are.
+ *
+ * @param {object|null} row the entry being edited, or null when creating
+ */
+function wireStructureMultiselects(row) {
+    const common = el('entryCommon');
+    const color = el('entryColor');
+    if (!common || !color || typeof window.jQuery?.fn?.multiselect !== 'function') return;
+
+    ensureOptions(common, row?.common);
+    ensureOptions(color, row?.color);
+    setCommonMultiselect(common.parentElement, row?.common ?? []);
+    setColorMultiselect(color, row?.color ?? []);
+
+    common.addEventListener('change', () => {
+        const colors = colorsForCommons(Array.from(common.selectedOptions, (o) => o.value));
+        if (colors.length > 0) {
+            $(color).multiselect('deselectAll', false).multiselect('select', colors);
+        }
+    });
+}
 
 /**
  * The row as the Structure form can express it.
@@ -2040,16 +2098,16 @@ function renderStructureForm(row) {
             </div>
             <div class="col-12 col-md-6">
                 <label class="form-label small" for="entryCommon">${escapeHtml(i18n.common)}</label>
-                <select class="form-select" id="entryCommon" multiple size="6">
-                    ${(config.commons ?? []).map((c) =>
-                        option(c, c, (row?.common ?? []).includes(c))).join('')}
+                <select class="form-select litEventCommon" id="entryCommon" multiple="multiple" size="1">
+                    ${config.commonsOptionsHtml ?? ''}
                 </select>
             </div>
             <div class="col-12 col-md-6">
                 <label class="form-label small" for="entryColor">${escapeHtml(i18n.color)}</label>
-                <select class="form-select" id="entryColor" multiple size="6">
-                    ${COLORS.map((c) => option(c, c, (row?.color ?? []).includes(c))).join('')}
+                <select class="form-select litEventColor" id="entryColor" multiple="multiple" size="1">
+                    ${config.colorOptionsHtml?.[state.rite] ?? config.colorOptionsHtml?.roman ?? ''}
                 </select>
+                ${riteUsesAmbrosianFlags() ? `
                 <div class="form-check mt-2">
                     <input class="form-check-input" type="checkbox" id="entryIsDominical"
                            ${row?.is_dominical ? 'checked' : ''}>
@@ -2059,7 +2117,7 @@ function renderStructureForm(row) {
                     <input class="form-check-input" type="checkbox" id="entryIsBvm"
                            ${row?.is_bvm ? 'checked' : ''}>
                     <label class="form-check-label small" for="entryIsBvm">is_bvm</label>
-                </div>
+                </div>` : ''}
             </div>
             <div class="col-12">
                 <div class="small text-muted">${escapeHtml(i18n.calendarField)}</div>
@@ -2082,9 +2140,23 @@ function readStructureForm() {
         common: orderedSelection('entryCommon', editState.original.structure.common),
         color: orderedSelection('entryColor', editState.original.structure.color),
         calendar: editState.original.structure.calendar ?? editState.calendarLabel ?? '',
-        is_dominical: el('entryIsDominical')?.checked === true,
-        is_bvm: el('entryIsBvm')?.checked === true
+        // Absent in a Roman editor: read back as stored, so an edit diffs to no
+        // change and a create (whose original is {}) omits them entirely.
+        is_dominical: flagValue('entryIsDominical', 'is_dominical'),
+        is_bvm: flagValue('entryIsBvm', 'is_bvm')
     };
+}
+
+/**
+ * A flag checkbox's value, or the stored one when this rite does not show it.
+ *
+ * @param {string} id
+ * @param {'is_dominical'|'is_bvm'} field
+ * @returns {boolean|undefined}
+ */
+function flagValue(id, field) {
+    const box = el(id);
+    return box ? box.checked === true : editState.original.structure[field];
 }
 
 /** The Names panel's current values. An empty input is '', which is a value. */

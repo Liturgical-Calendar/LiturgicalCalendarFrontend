@@ -19,6 +19,8 @@
 include_once 'includes/common.php';
 include_once 'includes/messages.php';
 
+use LiturgicalCalendar\Frontend\FormControls;
+
 // Require authentication - redirect to home if not logged in.
 // Same gate as temporale.php: the underlying /missals data is public, but this
 // page sits in the calendar-role section of the admin sidebar alongside it, and
@@ -34,52 +36,20 @@ if (!$authHelper->isAuthenticated) {
 $isAdmin = $authHelper->hasRole('admin');
 
 /**
- * The whole `LitCommon` enum from the API's CommonDef.json, in the schema's own order.
+ * Localized `<option>` lists for the editor's Common and Color multi-selects.
  *
- * Every value has to be here. The editor's Common control is a multi-select whose options
- * ARE this list, so a value the list omits cannot render as selected — and would then be
- * dropped from the row the next time anyone saved it. Nothing in the corpus uses the last
- * two today; they are still valid, so they are still offered.
- *
- * @var string[] $litCommons
+ * The same renderers the extending page uses, so both editors offer the same
+ * labels in the same order. FormControls::COMMON_ORDER holds the whole `LitCommon`
+ * enum (CommonOrderSchemaTest guards it): a value the list omitted could not
+ * render as selected, and would be dropped from the row the next time anyone
+ * saved it. The colors come as one palette per rite, because `morello` and
+ * `black` are illicit in the Roman rite and `purple` and `rose` in the Ambrosian.
  */
-$litCommons = [
-    'Proper',
-    'Dedication of a Church',
-    'Blessed Virgin Mary',
-    'Martyrs',
-    'Pastors',
-    'Doctors',
-    'Virgins',
-    'Holy Men and Women',
-    'Martyrs:For One Martyr',
-    'Martyrs:For Several Martyrs',
-    'Martyrs:For Missionary Martyrs',
-    'Martyrs:For One Missionary Martyr',
-    'Martyrs:For Several Missionary Martyrs',
-    'Martyrs:For a Virgin Martyr',
-    'Martyrs:For a Holy Woman Martyr',
-    'Pastors:For a Pope',
-    'Pastors:For a Bishop',
-    'Pastors:For One Pastor',
-    'Pastors:For Several Pastors',
-    'Pastors:For Founders of a Church',
-    'Pastors:For One Founder',
-    'Pastors:For Several Founders',
-    'Pastors:For Missionaries',
-    'Virgins:For One Virgin',
-    'Virgins:For Several Virgins',
-    'Holy Men and Women:For Several Saints',
-    'Holy Men and Women:For One Saint',
-    'Holy Men and Women:For an Abbot',
-    'Holy Men and Women:For a Monk',
-    'Holy Men and Women:For a Nun',
-    'Holy Men and Women:For Religious',
-    'Holy Men and Women:For Those Who Practiced Works of Mercy',
-    'Holy Men and Women:For Educators',
-    'Holy Men and Women:For Holy Women',
-    'For Giving Thanks to God for the Gift of Human Life [USA]',
-    'For the Preservation of Peace and Justice'
+$formControls       = new FormControls($i18n);
+$commonsOptionsHtml = $formControls->getCommonsOptionsHtml();
+$colorOptionsHtml   = [
+    'roman'     => $formControls->getColorOptionsHtml([], FormControls::COLOR_ORDER),
+    'ambrosian' => $formControls->getColorOptionsHtml([], FormControls::AMBROSIAN_COLOR_ORDER)
 ];
 
 ?>
@@ -216,8 +186,9 @@ $litCommons = [
             locale: <?php echo json_encode(str_replace('_', '-', $i18n->LOCALE), JSON_HEX_TAG); ?>,
             isGlobalAdmin: <?php echo json_encode($isAdmin, JSON_HEX_TAG); ?>,
             userSub:       <?php echo json_encode($authHelper->sub ?? '', JSON_HEX_TAG); ?>,
-            <?php // The whole `LitCommon` enum — see $litCommons above for why it must be whole. ?>
-            commons: <?php echo json_encode($litCommons, JSON_HEX_TAG); ?>,
+            <?php // Localized option lists — see $commonsOptionsHtml above. ?>
+            commonsOptionsHtml: <?php echo json_encode($commonsOptionsHtml, JSON_HEX_TAG); ?>,
+            colorOptionsHtml:   <?php echo json_encode($colorOptionsHtml, JSON_HEX_TAG); ?>,
             i18n: {
                 loading:            <?php echo json_encode(_('Loading…'), JSON_HEX_TAG); ?>,
                 view:               <?php echo json_encode(_('Details'), JSON_HEX_TAG); ?>,

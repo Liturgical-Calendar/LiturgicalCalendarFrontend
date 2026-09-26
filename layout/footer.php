@@ -140,7 +140,7 @@ SCRIPT;
 //some assets are only needed on certain pages
 $pageName = basename($_SERVER['SCRIPT_FILENAME'], '.php');
 
-if (in_array($pageName, [ 'index', 'extending', 'usage', 'admin-dashboard', 'admin-decrees', 'examples' ])) {
+if (in_array($pageName, [ 'index', 'extending', 'usage', 'admin-dashboard', 'admin-decrees', 'examples', 'sanctorale' ])) {
     echo '<script src="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@2.0.0/dist/js/bootstrap-multiselect.min.js"></script>';
 }
 

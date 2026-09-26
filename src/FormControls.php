@@ -25,6 +25,23 @@ class FormControls
     ];
 
     /**
+     * The Ambrosian palette, in the same most-frequent-first spirit as COLOR_ORDER.
+     *
+     * `AmbrosianLitColor` in the API's CommonDef.json: `purple` and `rose` are
+     * Roman and illicit here, `morello` and `black` are Ambrosian and illicit in
+     * the Roman rite — which is why a rite-aware editor needs two palettes.
+     *
+     * @var array<int, string>
+     */
+    public const AMBROSIAN_COLOR_ORDER = [
+        LitColor::WHITE,
+        LitColor::RED,
+        LitColor::GREEN,
+        LitColor::MORELLO,
+        LitColor::BLACK
+    ];
+
+    /**
      * Common (or Proper) values in the order they are offered in the UI.
      *
      * Unlike LitCommon::$values (a flat validation list), this keeps the

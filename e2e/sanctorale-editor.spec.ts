@@ -386,3 +386,73 @@ test.describe.serial('sanctorale editor write path', () => {
         expect(entries.find((e) => e.event_key === 'StPeterClaver')?.grade).toBe(3);
     });
 });
+
+/**
+ * The structure form's Common and Color controls: localized bootstrap-multiselects,
+ * a palette that follows the rite, and colors that follow the commons chosen —
+ * the same wiring the extending page uses (`setCommonMultiselect()` and
+ * `colorsForCommons()` from `assets/js/FormControls.js`). Read-only: nothing
+ * here is saved.
+ */
+test.describe('sanctorale editor structure controls', () => {
+    /** The selected values of a (plugin-hidden) `<select multiple>`. */
+    async function selectedValues(page: import('@playwright/test').Page, selector: string) {
+        return page.locator(selector).evaluate((el: HTMLSelectElement) => Array.from(el.selectedOptions, (o) => o.value));
+    }
+
+    test('a Roman entry offers localized commons, the Roman palette only, and no Ambrosian flags', async ({ page }) => {
+        await openMonth(page, 'StIsidoreFarmer');
+        await rowFor(page, 'StIsidoreFarmer').locator('button[data-edit-key]').click();
+        await page.waitForSelector('#entryCommon');
+
+        const commonButton = page.locator('#entryCommon ~ .btn-group button.multiselect');
+        await expect(commonButton).toBeVisible();
+        await expect(page.locator('#entryColor ~ .btn-group button.multiselect')).toBeVisible();
+        await expect(page.locator('#entryCommon option[value="Martyrs:For One Martyr"]'))
+            .toHaveText('From the Common of Martyrs: For One Martyr');
+
+        for (const color of ['white', 'red', 'green', 'purple', 'rose']) {
+            await expect(page.locator(`#entryColor option[value="${color}"]`)).toHaveCount(1);
+        }
+        for (const color of ['morello', 'black']) {
+            await expect(page.locator(`#entryColor option[value="${color}"]`)).toHaveCount(0);
+        }
+        await expect(page.locator('#entryIsDominical')).toHaveCount(0);
+        await expect(page.locator('#entryIsBvm')).toHaveCount(0);
+
+        // Opening a stored entry must not rewrite its colors; only a user change does.
+        const storedColors = await selectedValues(page, '#entryColor');
+        expect(storedColors.length).toBeGreaterThan(0);
+
+        // Clear the commons, then choose one Martyrs common: red alone.
+        const commons = await selectedValues(page, '#entryCommon');
+        await commonButton.click();
+        const menu = page.locator('#entryCommon ~ .btn-group .multiselect-container');
+        for (const value of commons) {
+            await menu.locator(`input[value="${value}"]`).click();
+        }
+        await menu.locator('input[value="Martyrs:For One Martyr"]').click();
+        await expect.poll(() => selectedValues(page, '#entryColor')).toEqual(['red']);
+
+        // Add a non-Martyrs common beside it: red and white.
+        await menu.locator('input[value="Pastors:For One Pastor"]').click();
+        await expect.poll(() => selectedValues(page, '#entryColor')).toEqual(['white', 'red']);
+    });
+
+    test('an Ambrosian entry offers the Ambrosian palette and the Ambrosian flags', async ({ page }) => {
+        await page.goto('/sanctorale.php#rite=ambrosian&month=1');
+        const edit = page.locator('#sanctoraleTableBody button[data-edit-key]').first();
+        await expect(edit).toBeVisible();
+        await edit.click();
+        await page.waitForSelector('#entryColor');
+
+        for (const color of ['white', 'red', 'green', 'morello', 'black']) {
+            await expect(page.locator(`#entryColor option[value="${color}"]`)).toHaveCount(1);
+        }
+        for (const color of ['purple', 'rose']) {
+            await expect(page.locator(`#entryColor option[value="${color}"]`)).toHaveCount(0);
+        }
+        await expect(page.locator('#entryIsDominical')).toHaveCount(1);
+        await expect(page.locator('#entryIsBvm')).toHaveCount(1);
+    });
+});

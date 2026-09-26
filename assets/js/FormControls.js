@@ -1314,6 +1314,58 @@ const setCommonMultiselect = (row=null, common=null) => {
 }
 
 /**
+ * General commons whose celebrations are kept in white. `Martyrs` is red; the
+ * two Masses for Various Needs and `Proper` imply no color at all.
+ * @readonly
+ */
+const WHITE_COMMONS = Object.freeze([
+    'Blessed Virgin Mary', 'Pastors', 'Doctors', 'Virgins', 'Holy Men and Women', 'Dedication of a Church'
+]);
+
+/**
+ * The liturgical colors a set of commons implies: red for any common whose
+ * general category is `Martyrs`, white for any other common, both when both
+ * kinds are chosen. Empty when nothing chosen implies a color (`Proper` alone).
+ *
+ * Shared by the extending page and the sanctorale editor so the two agree.
+ *
+ * @param {string[]} commons `General` or `General:Specific` values
+ * @returns {string[]}
+ */
+const colorsForCommons = (commons) => {
+    const generals = (commons ?? []).map((common) => common.split(':')[0]);
+    const colors = [];
+    if (generals.includes('Martyrs')) {
+        colors.push('red');
+    }
+    if (generals.some((general) => WHITE_COMMONS.includes(general))) {
+        colors.push('white');
+    }
+    return colors;
+};
+
+/**
+ * Turns a liturgical color `<select multiple>` into a bootstrap-multiselect
+ * styled like the other form selects, then selects `colors`.
+ *
+ * @param {HTMLSelectElement} select
+ * @param {?Array<string>} colors the values to select, or null for none
+ */
+const setColorMultiselect = (select, colors = null) => {
+    $(select).multiselect({
+        buttonWidth: '100%',
+        buttonClass: 'form-select',
+        templates: {
+            button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+        }
+    }).multiselect('deselectAll', false);
+
+    if (colors !== null && colors.length > 0) {
+        $(select).multiselect('select', colors);
+    }
+}
+
+/**
  * Returns a new object with the same values as the passed in object, but with
  * all property names converted to lowercase.
  * @param {Object} obj - The object to convert
@@ -1343,5 +1395,7 @@ export {
     setFormSettings,
     setFormSettingsForProperty,
     setCommonMultiselect,
+    setColorMultiselect,
+    colorsForCommons,
     lowercaseKeys
 };
