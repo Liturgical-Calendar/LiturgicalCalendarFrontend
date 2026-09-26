@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-26 23:05+0000\n"
-"PO-Revision-Date: 2026-09-26 22:55+0000\n"
+"PO-Revision-Date: 2026-09-27 01:00+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
@@ -908,12 +908,12 @@ msgstr "rose"
 #. translators: context = liturgical color (Ambrosian rite)
 #: src/LitColor.php:51
 msgid "morello"
-msgstr ""
+msgstr "Morello"
 
 #. translators: context = liturgical color (Ambrosian rite)
 #: src/LitColor.php:54
 msgid "black"
-msgstr ""
+msgstr "noir"
 
 #: src/LitCommon.php:86
 msgid "Proper"
@@ -4137,55 +4137,47 @@ msgid "Outcome"
 msgstr "Résultat"
 
 #: admin-changes.php:254
-#, fuzzy
-#| msgid "Revoke Permission"
 msgid "Reviewer decision"
-msgstr "Révoquer la permission"
+msgstr "Décision du réviseur"
 
 #: admin-changes.php:255
 msgid "Reason"
 msgstr "Motif"
 
 #: admin-changes.php:256
-#, fuzzy
-#| msgid "No pending role requests. All caught up!"
 msgid "No change requests are waiting for review. All caught up!"
-msgstr "Aucune demande de rôle en attente. Tout est à jour !"
+msgstr ""
+"Aucune demande de modification n'attend d'être examinée. Tout est à jour !"
 
 #: admin-changes.php:257
-#, fuzzy
-#| msgid "No requests found."
 msgid "No change requests found."
-msgstr "Aucune demande trouvée."
+msgstr "Aucune demande de modification trouvée."
 
 #: admin-changes.php:258
-#, fuzzy
-#| msgid "Failed to load access requests. Please try again later."
 msgid "Failed to load change requests. Please try again later."
-msgstr "Échec du chargement des demandes d'accès. Réessaie plus tard."
+msgstr ""
+"Échec du chargement des demandes de modification. Veuillez réessayer plus "
+"tard."
 
 #: admin-changes.php:260
-#, fuzzy
-#| msgid "Your request was approved"
 msgid "Change request approved."
-msgstr "Ta demande a été approuvée"
+msgstr "Demande de modification approuvée."
 
 #: admin-changes.php:261
-#, fuzzy
-#| msgid "Access request rejected."
 msgid "Change request rejected."
-msgstr "Demande d'accès rejetée."
+msgstr "Demande de modification rejetée."
 
 #: admin-changes.php:262
-#, fuzzy
-#| msgid "Failed to process request. Please try again."
 msgid "Failed to process this change request. Please try again."
-msgstr "Échec du traitement de la demande. Réessaie."
+msgstr ""
+"Échec du traitement de cette demande de modification. Veuillez réessayer."
 
 #: admin-changes.php:263
 msgid ""
 "This change request was already decided by someone else. Reloading the list."
 msgstr ""
+"Cette demande de modification a déjà été décidée par quelqu'un d'autre. "
+"Actualisation de la liste."
 
 #: change-requests.php:56
 msgid ""
@@ -4193,46 +4185,48 @@ msgid ""
 "change requests and reviewed before they are published. This is every change "
 "request you have submitted, and what became of it."
 msgstr ""
+"Les modifications du calendrier pour lesquelles vous n'êtes pas vous-même "
+"administrateur sont enregistrées comme demandes de modification et examinées "
+"avant leur publication. Voici chacune des demandes que vous avez soumises, "
+"et ce qu'elles sont devenues."
 
 #: change-requests.php:116
-#, fuzzy
-#| msgid "You have not made any access requests yet."
 msgid "You have not submitted any change requests yet."
-msgstr "Tu n'as pas encore fait de demandes d'accès."
+msgstr "Vous n'avez encore soumis aucune demande de modification."
 
 #: change-requests.php:117
-#, fuzzy
-#| msgid "Failed to load role requests. Please try again later."
 msgid "Failed to load your change requests. Please try again later."
-msgstr "Échec du chargement des demandes de rôle. Réessaie plus tard."
+msgstr ""
+"Échec du chargement de vos demandes de modification. Veuillez réessayer plus "
+"tard."
 
 #: change-requests.php:119
 msgid "Withdraw"
-msgstr ""
+msgstr "Retirer"
 
 #: change-requests.php:120
 msgid ""
 "Withdraw this change request? The files it proposes will no longer be "
 "reviewed."
 msgstr ""
+"Souhaitez-vous retirer cette demande de modification ? Les fichiers proposés "
+"ne seront plus examinés."
 
 #: change-requests.php:121
-#, fuzzy
-#| msgid "Your request was approved"
 msgid "Change request withdrawn."
-msgstr "Ta demande a été approuvée"
+msgstr "Demande de modification retirée."
 
 #: change-requests.php:122
-#, fuzzy
-#| msgid "Failed to process request. Please try again."
 msgid "Failed to withdraw this change request. Please try again."
-msgstr "Échec du traitement de la demande. Réessaie."
+msgstr "Échec du retrait de cette demande de modification. Veuillez réessayer."
 
 #: change-requests.php:125
 msgid ""
 "This change request can no longer be withdrawn — it may already have been "
 "reviewed."
 msgstr ""
+"Cette demande de modification ne peut plus être retirée — elle a peut-être "
+"déjà été examinée."
 
 #: developer-dashboard.php:34 developer-dashboard.php:47 user-profile.php:257
 msgid "Developer Dashboard"
@@ -4708,14 +4702,18 @@ msgid ""
 "that apply to the calendar you choose, and shows which one each celebration "
 "comes from."
 msgstr ""
+"Chaque Missel romain apporte uniquement ce qu'il ajoute : l'édition de 2008 "
+"définit trois célébrations, et non tout le sanctorale. Cette page assemble "
+"les éditions qui s'appliquent au calendrier que vous choisissez, et indique "
+"de quelle édition chaque célébration provient."
 
 #: sanctorale.php:90
 msgid "Rite"
-msgstr ""
+msgstr "Rite"
 
 #: sanctorale.php:92
 msgid "Roman"
-msgstr ""
+msgstr "Romain"
 
 #: sanctorale.php:93
 msgid "Ambrosian"
@@ -4933,7 +4931,7 @@ msgstr "Ce missel redéfinit une célébration qu'un missel antérieur avait dé
 #: sanctorale.php:290
 #, php-format
 msgid "superseded by %s"
-msgstr ""
+msgstr "remplacé par %s"
 
 #: sanctorale.php:291
 msgid ""
