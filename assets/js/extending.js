@@ -7,6 +7,7 @@ import {
     setFormSettings,
     setFormSettingsForProperty,
     setCommonMultiselect,
+    colorsForCommons,
     integerProperties,
     payloadProperties,
     metadataProperties
@@ -1126,13 +1127,7 @@ const litEventCommonChangeHandler = (ev) => {
             const selectedOptions = Array.from(ev.target.selectedOptions);
             litEvent.liturgical_event.common = selectedOptions.map(({ value }) => value);
             console.log('litEventChanged: litEventCommon has changed, new value is: ', CalendarData.litcal.find(item => item.liturgical_event.event_key === eventKey).liturgical_event.common);
-            let eventColors = [];
-            if (litEvent.liturgical_event.common.some( m => /Martyrs/.test(m) )) {
-                eventColors.push('red');
-            }
-            if (litEvent.liturgical_event.common.some( m => /(Blessed Virgin Mary|Pastors|Doctors|Virgins|Holy Men and Women|Dedication of a Church)/.test(m) ) ) {
-                eventColors.push('white');
-            }
+            const eventColors = colorsForCommons(litEvent.liturgical_event.common);
             $(row.querySelector('.litEventColor')).multiselect('deselectAll', false).multiselect('select', eventColors);
             litEvent.liturgical_event.color = eventColors;
         }

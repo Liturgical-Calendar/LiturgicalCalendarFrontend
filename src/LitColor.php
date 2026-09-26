@@ -9,7 +9,10 @@ class LitColor
     public const WHITE  = 'white';
     public const RED    = 'red';
     public const ROSE   = 'rose';
-    /** @var array<int, string> */
+    // Ambrosian only: never licit in Roman source data, so not in $values.
+    public const MORELLO = 'morello';
+    public const BLACK   = 'black';
+    /** @var array<int, string> The Roman palette, which is what $values validates against. */
     public static array $values = [ 'green', 'purple', 'white', 'red', 'rose' ];
 
     public static function isValid(string $value): bool
@@ -43,6 +46,12 @@ class LitColor
             case self::ROSE:
                 /**translators: context = liturgical color */
                 return $locale === 'LA' ? 'rosea'       : _('rose');
+            case self::MORELLO:
+                /**translators: context = liturgical color (Ambrosian rite) */
+                return $locale === 'LA' ? 'morellus'    : _('morello');
+            case self::BLACK:
+                /**translators: context = liturgical color (Ambrosian rite) */
+                return $locale === 'LA' ? 'niger'       : _('black');
             default:
                 throw new \InvalidArgumentException("Invalid liturgical color: {$value}");
         }

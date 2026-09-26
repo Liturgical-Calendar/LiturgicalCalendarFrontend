@@ -48,6 +48,14 @@ final class ColorOrderSchemaTest extends TestCase
         'rose'
     ];
 
+    private const SCHEMA_AMBROSIAN_LIT_COLOR = [
+        'white',
+        'red',
+        'green',
+        'morello',
+        'black'
+    ];
+
     public function testColorOrderHoldsExactlyTheRomanPalette(): void
     {
         $schema = self::SCHEMA_ROMAN_LIT_COLOR;
@@ -125,6 +133,42 @@ final class ColorOrderSchemaTest extends TestCase
             "The copy of the RomanLitColor enum in this test no longer matches {$schemaPath}. "
                 . 'Update SCHEMA_ROMAN_LIT_COLOR, FormControls::COLOR_ORDER, LitColor and the '
                 . 'LITURGICAL_COLORS list in assets/js/FormControls.js together.'
+        );
+    }
+
+    public function testAmbrosianColorOrderHoldsExactlyTheAmbrosianPalette(): void
+    {
+        $schema = self::SCHEMA_AMBROSIAN_LIT_COLOR;
+        $ui     = FormControls::AMBROSIAN_COLOR_ORDER;
+        sort($schema);
+        sort($ui);
+
+        $this->assertSame($schema, $ui, 'FormControls::AMBROSIAN_COLOR_ORDER has drifted from the schema\'s AmbrosianLitColor.');
+    }
+
+    public function testEveryAmbrosianColorIsLocalized(): void
+    {
+        $formControls = new FormControls(new I18n());
+        $html         = $formControls->getColorOptionsHtml([], FormControls::AMBROSIAN_COLOR_ORDER);
+
+        foreach (self::SCHEMA_AMBROSIAN_LIT_COLOR as $color) {
+            $this->assertStringContainsString('<option value="' . $color . '"', $html);
+        }
+    }
+
+    public function testAmbrosianGoldenListMatchesLiveSchema(): void
+    {
+        $schemaPath = self::locateCommonDef();
+
+        if (null === $schemaPath) {
+            $this->markTestSkipped(self::schemaUnavailableMessage());
+        }
+
+        $this->assertSame(
+            self::SCHEMA_AMBROSIAN_LIT_COLOR,
+            self::schemaEnum($schemaPath, 'AmbrosianLitColor'),
+            "The copy of the AmbrosianLitColor enum in this test no longer matches {$schemaPath}. "
+                . 'Update SCHEMA_AMBROSIAN_LIT_COLOR, FormControls::AMBROSIAN_COLOR_ORDER and LitColor together.'
         );
     }
 }

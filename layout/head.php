@@ -31,7 +31,7 @@ if (file_exists("assets/css/{$pageName}.css")) {
 if ($pageName === 'index') {
     echo '<link href="assets/css/homepage.css" rel="stylesheet">';
 }
-if (in_array($pageName, [ 'index', 'extending', 'usage', 'admin', 'admin-decrees', 'examples' ])) {
+if (in_array($pageName, [ 'index', 'extending', 'usage', 'admin', 'admin-decrees', 'examples', 'sanctorale' ])) {
     echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@2.0.0/dist/css/bootstrap-multiselect.min.css" rel="stylesheet">';
 }
 
