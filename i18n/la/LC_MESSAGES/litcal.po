@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-22 21:29+0000\n"
+"POT-Creation-Date: 2026-09-26 21:58+0000\n"
 "PO-Revision-Date: 2026-09-23 21:55+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
@@ -1517,7 +1517,7 @@ msgstr "Memento mei"
 #: admin-tests.php:259 admin-tests.php:286 admin-tests.php:313
 #: admin-applications.php:207 admin-users.php:112 admin-changes.php:233
 #: developer-dashboard.php:134 developer-dashboard.php:183
-#: developer-dashboard.php:246 sanctorale.php:199 sanctorale.php:349
+#: developer-dashboard.php:246 sanctorale.php:199 sanctorale.php:351
 msgid "Cancel"
 msgstr "Cancella"
 
@@ -1583,7 +1583,7 @@ msgstr "Sessio Exspiravit"
 
 #. translators: form field label for the unique identifier of a liturgical event
 #: includes/messages.php:17 admin-decrees.php:176 temporale.php:134
-#: sanctorale.php:174 sanctorale.php:353
+#: sanctorale.php:174 sanctorale.php:355
 msgid "Event key"
 msgstr "Clavis eventus"
 
@@ -2323,7 +2323,7 @@ msgid "View"
 msgstr "Visum"
 
 #: includes/admin-blocks.php:106 admin-decrees.php:688 admin-tests.php:347
-#: developer-dashboard.php:269 sanctorale.php:347
+#: developer-dashboard.php:269 sanctorale.php:349
 msgid "Edit"
 msgstr "Recensere"
 
@@ -2752,7 +2752,7 @@ msgid "Add readings for locale"
 msgstr "Addere lectiones pro localitate"
 
 #: admin-decrees.php:584 admin-tests.php:262 developer-dashboard.php:323
-#: sanctorale.php:202 sanctorale.php:348
+#: sanctorale.php:202 sanctorale.php:350
 msgid "Save"
 msgstr "Salva"
 
@@ -2762,7 +2762,7 @@ msgstr "Decretum delere"
 
 #: admin-decrees.php:611 admin-decrees.php:689 admin-tests.php:316
 #: admin-tests.php:348 developer-dashboard.php:249 developer-dashboard.php:270
-#: sanctorale.php:196 sanctorale.php:350
+#: sanctorale.php:196 sanctorale.php:352
 msgid "Delete"
 msgstr "Delere"
 
@@ -3237,7 +3237,7 @@ msgstr "Definitio Probationis"
 msgid "Roman Rite"
 msgstr "Ritus Romanus"
 
-#: admin-permissions.php:420 permission-requests.php:259 sanctorale.php:345
+#: admin-permissions.php:420 permission-requests.php:259 sanctorale.php:347
 msgid "Ambrosian Rite"
 msgstr "Ritus Ambrosianus"
 
@@ -4659,7 +4659,7 @@ msgstr "Nomen vel clavis eventus…"
 msgid "Matches across every month, and moves you to one that has a result."
 msgstr "Convenit per omnes menses, et te ad unum moveat qui exitum habet."
 
-#: sanctorale.php:160 sanctorale.php:351
+#: sanctorale.php:160 sanctorale.php:353
 msgid "New celebration"
 msgstr "Nova celebratio"
 
@@ -4844,11 +4844,22 @@ msgstr "Omnes editiones"
 msgid "This Missal redefines a celebration an earlier one already had."
 msgstr "Hoc Missale celebrationem, quam prius alius habuit, redefinit."
 
-#: sanctorale.php:323
+#: sanctorale.php:319
+#, php-format
+msgid "superseded by %s"
+msgstr ""
+
+#: sanctorale.php:320
+msgid ""
+"A later edition redeclares this celebration; the calendar uses that entry, "
+"not this one."
+msgstr ""
+
+#: sanctorale.php:325
 msgid "Redeclared by"
 msgstr "Redeclaratus a"
 
-#: sanctorale.php:325
+#: sanctorale.php:327
 msgid ""
 "Takes the celebration universal at the same rank; the earlier particular "
 "entry is now redundant."
@@ -4856,59 +4867,59 @@ msgstr ""
 "Celebratio universalis eodem gradu sumitur; prior notitia particularis nunc "
 "inutilis est."
 
-#: sanctorale.php:328
+#: sanctorale.php:330
 msgid "Redeclares the celebration without changing anything."
 msgstr "Celebrationem iterum declarans nihil mutans."
 
-#: sanctorale.php:331
+#: sanctorale.php:333
 msgid "no override"
 msgstr "Nulla superpositio"
 
-#: sanctorale.php:334
+#: sanctorale.php:336
 msgid "translated"
 msgstr "translatum"
 
-#: sanctorale.php:335
+#: sanctorale.php:337
 msgid "blank"
 msgstr "inanis"
 
-#: sanctorale.php:336
+#: sanctorale.php:338
 msgid "missing"
 msgstr "deest"
 
-#: sanctorale.php:337
+#: sanctorale.php:339
 msgid "Nothing here."
 msgstr "Nihil hic est."
 
-#: sanctorale.php:338
+#: sanctorale.php:340
 msgid "No celebration in this month matches your search."
 msgstr "Nulla celebratio in hoc mense convenit cum quaerendo."
 
-#: sanctorale.php:339
+#: sanctorale.php:341
 msgid "No sanctorale lectionary is defined for this rite."
 msgstr "Lectio sanctoralis huius ritus definita non est."
 
-#: sanctorale.php:342
+#: sanctorale.php:344
 msgid "No readings are curated for this celebration yet."
 msgstr "Lectiones ad hanc celebrationem adhuc non selectae sunt."
 
-#: sanctorale.php:343
+#: sanctorale.php:345
 msgid "Could not load the names for this celebration."
 msgstr "Nomina celebrationis huius non possunt imponi."
 
-#: sanctorale.php:344
+#: sanctorale.php:346
 msgid "Could not load the readings for this celebration."
 msgstr "Lectiones huius celebrationis non possunt imponi."
 
-#: sanctorale.php:346
+#: sanctorale.php:348
 msgid "No Missal is published for this combination of rite and calendar."
 msgstr "Missale nullum publicatur pro hac coniunctione ritūs et calendarii."
 
-#: sanctorale.php:352
+#: sanctorale.php:354
 msgid "Add to Missal"
 msgstr "Missale addi"
 
-#: sanctorale.php:361
+#: sanctorale.php:363
 msgid ""
 "Begins with a capital, then letters and digits (StIsidoreFarmer). A trailing "
 "number (StPaul_2) or _vigil is allowed, as is a lowercase two-word prefix. "
@@ -4918,24 +4929,24 @@ msgstr ""
 "Licetur suffixus numerus (StPaul_2) aut _vigil, ut et prefixum duorum "
 "verborum in litteris minusculis. Nomen non mutari potest."
 
-#: sanctorale.php:363
+#: sanctorale.php:365
 msgid "Enter a day between 1 and 31."
 msgstr "Inscribe diem inter 1 et 31."
 
-#: sanctorale.php:368
+#: sanctorale.php:370
 msgid "Choose…"
 msgstr "Elige…"
 
-#: sanctorale.php:369
+#: sanctorale.php:371
 msgid "Choose a month."
 msgstr "Elige mensem."
 
-#: sanctorale.php:370
+#: sanctorale.php:372
 msgid "Choose a grade."
 msgstr "Elige gradum."
 
 #. translators: %1$s is the event key, %2$s is the Missal id
-#: sanctorale.php:372
+#: sanctorale.php:374
 #, php-format
 msgid ""
 "Delete %1$s from %2$s? Its name and readings go with it, and any earlier "
@@ -4944,7 +4955,7 @@ msgstr ""
 "Delere %1$s ex %2$s? Nomen eius et lectiones cum eo sociantur, et quaelibet "
 "prior editio, quae id iam definivit, eo praeferetur."
 
-#: sanctorale.php:375
+#: sanctorale.php:377
 msgid ""
 "These readings live in the rite-wide lectionary, shared by every Missal of "
 "this rite."
@@ -4952,84 +4963,84 @@ msgstr ""
 "Haec lectiones in lectionario totius ritus sunt, et ab omni Missali huius "
 "ritus communicantur."
 
-#: sanctorale.php:376
+#: sanctorale.php:378
 msgid "This rite has no lectionary, so readings cannot be edited here."
 msgstr "Hic ritus lectionarium non habet, ideo lectiones hic non eduntur."
 
-#: sanctorale.php:384
+#: sanctorale.php:386
 msgid ""
 "Inherited from a different lectionary source; edit it there, not from this "
 "Missal."
 msgstr ""
 "Ex alio fonte lectionario derivatum; ibi id emenda, non ex hoc Missali."
 
-#: sanctorale.php:387
+#: sanctorale.php:389
 msgid "The readings were kept: another Missal still declares this celebration."
 msgstr ""
 "Lectiones conservatae sunt: alius Missale hanc celebrationem adhuc declarat."
 
-#: sanctorale.php:388
+#: sanctorale.php:390
 msgid "Default (from grade)"
 msgstr "Praefinitum (ex gradu)"
 
-#: sanctorale.php:389
+#: sanctorale.php:391
 msgid "Show no rank"
 msgstr "Nullo gradu ostende."
 
-#: sanctorale.php:390
+#: sanctorale.php:392
 msgid "Custom text…"
 msgstr "Textus proprius…"
 
-#: sanctorale.php:391
+#: sanctorale.php:393
 msgid "Nothing has changed."
 msgstr "Nihil mutatum est."
 
-#: sanctorale.php:392
+#: sanctorale.php:394
 msgid "Saved."
 msgstr "Conservatum."
 
-#: sanctorale.php:393
+#: sanctorale.php:395
 msgid "Celebration created."
 msgstr "Celebratio creata."
 
-#: sanctorale.php:394
+#: sanctorale.php:396
 msgid "Celebration deleted."
 msgstr "Celebratio deleta est."
 
 #. translators: %s is the error reported by the API
-#: sanctorale.php:396
+#: sanctorale.php:398
 #, php-format
 msgid "Could not save: %s"
 msgstr "Non potuit servari: %s"
 
-#: sanctorale.php:397
+#: sanctorale.php:399
 msgid "You do not have permission to change this Missal."
 msgstr "Tibi non licet hoc Missale mutare."
 
-#: sanctorale.php:398
+#: sanctorale.php:400
 msgid "This clashes with another Missal"
 msgstr "Hoc cum alio Missale concurrit."
 
 #. translators: %s is the change request batch id
-#: sanctorale.php:404
+#: sanctorale.php:406
 #, php-format
 msgid "Queued for review as batch %s. Nothing has been written yet."
 msgstr "In ordine recognendi ut manipulus %s. Nihil adhuc scriptum est."
 
 #. translators: %s is the change request batch id
-#: sanctorale.php:406
+#: sanctorale.php:408
 #, php-format
 msgid "Approved as batch %s, awaiting publication."
 msgstr "Probatus est ut manipulus %s, publicationi exspectatur."
 
 #. translators: %s is a comma-separated list of batch ids
-#: sanctorale.php:408
+#: sanctorale.php:410
 #, php-format
 msgid "Earlier batches folded in: %s."
 msgstr "Prioribus manipulationibus incorporatis: %s."
 
 #. translators: %s is the unrecognized disposition value
-#: sanctorale.php:410
+#: sanctorale.php:412
 #, php-format
 msgid ""
 "The server reported an unrecognized outcome (%s); nothing local was changed."
@@ -5037,7 +5048,7 @@ msgstr ""
 "Server indicavit exitus non recognitus (%s); nihil localiter mutatum est."
 
 #. translators: %s is the error reported by the API
-#: sanctorale.php:412
+#: sanctorale.php:414
 #, php-format
 msgid "Could not load the sanctorale: %s"
 msgstr "Sanctorale non potuit onerari: %s"
@@ -5045,7 +5056,7 @@ msgstr "Sanctorale non potuit onerari: %s"
 #. translators: %s is the event_key a #event= link named
 #. Reported rather than left silent: the link may be stale, mistyped, or
 #. for a rite/calendar this page has since moved away from.
-#: sanctorale.php:416
+#: sanctorale.php:418
 #, php-format
 msgid "%s is not in the current selection."
 msgstr "%s non est in collectione hodierna."

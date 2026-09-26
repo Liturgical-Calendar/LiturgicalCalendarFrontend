@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-22 21:29+0000\n"
+"POT-Creation-Date: 2026-09-26 21:58+0000\n"
 "PO-Revision-Date: 2026-09-23 21:55+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
@@ -1546,7 +1546,7 @@ msgstr "Angemeldet bleiben"
 #: admin-tests.php:259 admin-tests.php:286 admin-tests.php:313
 #: admin-applications.php:207 admin-users.php:112 admin-changes.php:233
 #: developer-dashboard.php:134 developer-dashboard.php:183
-#: developer-dashboard.php:246 sanctorale.php:199 sanctorale.php:349
+#: developer-dashboard.php:246 sanctorale.php:199 sanctorale.php:351
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -1613,7 +1613,7 @@ msgstr "Sitzung abgelaufen"
 
 #. translators: form field label for the unique identifier of a liturgical event
 #: includes/messages.php:17 admin-decrees.php:176 temporale.php:134
-#: sanctorale.php:174 sanctorale.php:353
+#: sanctorale.php:174 sanctorale.php:355
 msgid "Event key"
 msgstr "Ereignisschlüssel"
 
@@ -2367,7 +2367,7 @@ msgid "View"
 msgstr "Ansicht"
 
 #: includes/admin-blocks.php:106 admin-decrees.php:688 admin-tests.php:347
-#: developer-dashboard.php:269 sanctorale.php:347
+#: developer-dashboard.php:269 sanctorale.php:349
 msgid "Edit"
 msgstr "Bearbeiten"
 
@@ -2802,7 +2802,7 @@ msgid "Add readings for locale"
 msgstr "Lesungen für Gebietsschema hinzufügen"
 
 #: admin-decrees.php:584 admin-tests.php:262 developer-dashboard.php:323
-#: sanctorale.php:202 sanctorale.php:348
+#: sanctorale.php:202 sanctorale.php:350
 msgid "Save"
 msgstr "Speichern"
 
@@ -2812,7 +2812,7 @@ msgstr "Dekret löschen"
 
 #: admin-decrees.php:611 admin-decrees.php:689 admin-tests.php:316
 #: admin-tests.php:348 developer-dashboard.php:249 developer-dashboard.php:270
-#: sanctorale.php:196 sanctorale.php:350
+#: sanctorale.php:196 sanctorale.php:352
 msgid "Delete"
 msgstr "Löschen"
 
@@ -3294,7 +3294,7 @@ msgstr "Testdefinition"
 msgid "Roman Rite"
 msgstr "Römischer Ritus"
 
-#: admin-permissions.php:420 permission-requests.php:259 sanctorale.php:345
+#: admin-permissions.php:420 permission-requests.php:259 sanctorale.php:347
 msgid "Ambrosian Rite"
 msgstr "Ambrosianischer Ritus"
 
@@ -4740,7 +4740,7 @@ msgid "Matches across every month, and moves you to one that has a result."
 msgstr ""
 "Passt zu allen Monaten und führt Sie zu einem Monat, der ein Ergebnis hat."
 
-#: sanctorale.php:160 sanctorale.php:351
+#: sanctorale.php:160 sanctorale.php:353
 msgid "New celebration"
 msgstr "Neue Feier"
 
@@ -4926,11 +4926,22 @@ msgid "This Missal redefines a celebration an earlier one already had."
 msgstr ""
 "Dieses Missale definiert eine Feier neu, die eine frühere bereits hatte."
 
-#: sanctorale.php:323
+#: sanctorale.php:319
+#, php-format
+msgid "superseded by %s"
+msgstr ""
+
+#: sanctorale.php:320
+msgid ""
+"A later edition redeclares this celebration; the calendar uses that entry, "
+"not this one."
+msgstr ""
+
+#: sanctorale.php:325
 msgid "Redeclared by"
 msgstr "Neu erklärt von"
 
-#: sanctorale.php:325
+#: sanctorale.php:327
 msgid ""
 "Takes the celebration universal at the same rank; the earlier particular "
 "entry is now redundant."
@@ -4938,61 +4949,61 @@ msgstr ""
 "Setzt die Feier weltweit auf denselben Rang; der frühere konkrete Eintrag "
 "ist nun redundant."
 
-#: sanctorale.php:328
+#: sanctorale.php:330
 msgid "Redeclares the celebration without changing anything."
 msgstr "Erklärt die Feier erneut, ohne irgendetwas zu ändern."
 
-#: sanctorale.php:331
+#: sanctorale.php:333
 msgid "no override"
 msgstr "kein Override"
 
-#: sanctorale.php:334
+#: sanctorale.php:336
 msgid "translated"
 msgstr "übersetzt"
 
-#: sanctorale.php:335
+#: sanctorale.php:337
 msgid "blank"
 msgstr "leer"
 
-#: sanctorale.php:336
+#: sanctorale.php:338
 msgid "missing"
 msgstr "fehlend"
 
-#: sanctorale.php:337
+#: sanctorale.php:339
 msgid "Nothing here."
 msgstr "Hier ist nichts."
 
-#: sanctorale.php:338
+#: sanctorale.php:340
 msgid "No celebration in this month matches your search."
 msgstr "Keine Feier in diesem Monat entspricht deiner Suche."
 
-#: sanctorale.php:339
+#: sanctorale.php:341
 msgid "No sanctorale lectionary is defined for this rite."
 msgstr "Für dieses Ritus ist kein Sanctorale-Lektionar definiert."
 
-#: sanctorale.php:342
+#: sanctorale.php:344
 msgid "No readings are curated for this celebration yet."
 msgstr "Für diese Feier wurden noch keine Lesungen ausgewählt."
 
-#: sanctorale.php:343
+#: sanctorale.php:345
 msgid "Could not load the names for this celebration."
 msgstr "Die Namen dieser Feier konnten nicht geladen werden."
 
-#: sanctorale.php:344
+#: sanctorale.php:346
 msgid "Could not load the readings for this celebration."
 msgstr "Die Lesungen dieser Feier konnten nicht geladen werden."
 
-#: sanctorale.php:346
+#: sanctorale.php:348
 msgid "No Missal is published for this combination of rite and calendar."
 msgstr ""
 "Für diese Kombination aus Ritus und Kalender wird kein Missale "
 "veröffentlicht."
 
-#: sanctorale.php:352
+#: sanctorale.php:354
 msgid "Add to Missal"
 msgstr "Zum Missale hinzufügen"
 
-#: sanctorale.php:361
+#: sanctorale.php:363
 msgid ""
 "Begins with a capital, then letters and digits (StIsidoreFarmer). A trailing "
 "number (StPaul_2) or _vigil is allowed, as is a lowercase two-word prefix. "
@@ -5003,24 +5014,24 @@ msgstr ""
 "erlaubt, ebenso ein Kleinbuchstaben-Prefix aus zwei Wörtern. Umbenennen ist "
 "nicht erlaubt."
 
-#: sanctorale.php:363
+#: sanctorale.php:365
 msgid "Enter a day between 1 and 31."
 msgstr "Gib einen Tag zwischen 1 und 31 ein."
 
-#: sanctorale.php:368
+#: sanctorale.php:370
 msgid "Choose…"
 msgstr "Auswählen…"
 
-#: sanctorale.php:369
+#: sanctorale.php:371
 msgid "Choose a month."
 msgstr "Wähle einen Monat."
 
-#: sanctorale.php:370
+#: sanctorale.php:372
 msgid "Choose a grade."
 msgstr "Wähle eine Stufe."
 
 #. translators: %1$s is the event key, %2$s is the Missal id
-#: sanctorale.php:372
+#: sanctorale.php:374
 #, php-format
 msgid ""
 "Delete %1$s from %2$s? Its name and readings go with it, and any earlier "
@@ -5029,7 +5040,7 @@ msgstr ""
 "Lösche %1$s von %2$s? Sein Name und seine Lesungen gehen damit einher, und "
 "jede frühere Ausgabe, die ihn bereits definiert hat, übernimmt."
 
-#: sanctorale.php:375
+#: sanctorale.php:377
 msgid ""
 "These readings live in the rite-wide lectionary, shared by every Missal of "
 "this rite."
@@ -5037,13 +5048,13 @@ msgstr ""
 "Diese Lesungen befinden sich im ritenweiten Lectionar, das von jedem Missale "
 "dieses Ritus jointly genutzt wird."
 
-#: sanctorale.php:376
+#: sanctorale.php:378
 msgid "This rite has no lectionary, so readings cannot be edited here."
 msgstr ""
 "Dieses Ritus hat kein Lectionar, daher können die Lesungen hier nicht "
 "bearbeitet werden."
 
-#: sanctorale.php:384
+#: sanctorale.php:386
 msgid ""
 "Inherited from a different lectionary source; edit it there, not from this "
 "Missal."
@@ -5051,56 +5062,56 @@ msgstr ""
 "Aus einer anderen Lectionarquelle übernommen; bearbeite es dort, nicht von "
 "diesem Missale."
 
-#: sanctorale.php:387
+#: sanctorale.php:389
 msgid "The readings were kept: another Missal still declares this celebration."
 msgstr ""
 "Die Lesungen wurden beibehalten: Ein anderes Missale erklärt diese Feier "
 "weiterhin."
 
-#: sanctorale.php:388
+#: sanctorale.php:390
 msgid "Default (from grade)"
 msgstr "Standard (von der Stufe)"
 
-#: sanctorale.php:389
+#: sanctorale.php:391
 msgid "Show no rank"
 msgstr "Keinen Rang anzeigen."
 
-#: sanctorale.php:390
+#: sanctorale.php:392
 msgid "Custom text…"
 msgstr "Benutzerdefinierter Text…"
 
-#: sanctorale.php:391
+#: sanctorale.php:393
 msgid "Nothing has changed."
 msgstr "Nichts hat sich geändert."
 
-#: sanctorale.php:392
+#: sanctorale.php:394
 msgid "Saved."
 msgstr "Gespeichert."
 
-#: sanctorale.php:393
+#: sanctorale.php:395
 msgid "Celebration created."
 msgstr "Feier erstellt."
 
-#: sanctorale.php:394
+#: sanctorale.php:396
 msgid "Celebration deleted."
 msgstr "Feier gelöscht."
 
 #. translators: %s is the error reported by the API
-#: sanctorale.php:396
+#: sanctorale.php:398
 #, php-format
 msgid "Could not save: %s"
 msgstr "Konnte nicht speichern: %s"
 
-#: sanctorale.php:397
+#: sanctorale.php:399
 msgid "You do not have permission to change this Missal."
 msgstr "Du hast keine Berechtigung, dieses Missale zu ändern."
 
-#: sanctorale.php:398
+#: sanctorale.php:400
 msgid "This clashes with another Missal"
 msgstr "Dieses Missale steht im Konflikt mit einem anderen Missale."
 
 #. translators: %s is the change request batch id
-#: sanctorale.php:404
+#: sanctorale.php:406
 #, php-format
 msgid "Queued for review as batch %s. Nothing has been written yet."
 msgstr ""
@@ -5108,19 +5119,19 @@ msgstr ""
 "geschrieben."
 
 #. translators: %s is the change request batch id
-#: sanctorale.php:406
+#: sanctorale.php:408
 #, php-format
 msgid "Approved as batch %s, awaiting publication."
 msgstr "Genehmigt als Batch %s, Veröffentlichung steht aus."
 
 #. translators: %s is a comma-separated list of batch ids
-#: sanctorale.php:408
+#: sanctorale.php:410
 #, php-format
 msgid "Earlier batches folded in: %s."
 msgstr "Frühere Chargen eingerechnet: %s."
 
 #. translators: %s is the unrecognized disposition value
-#: sanctorale.php:410
+#: sanctorale.php:412
 #, php-format
 msgid ""
 "The server reported an unrecognized outcome (%s); nothing local was changed."
@@ -5129,7 +5140,7 @@ msgstr ""
 "geändert."
 
 #. translators: %s is the error reported by the API
-#: sanctorale.php:412
+#: sanctorale.php:414
 #, php-format
 msgid "Could not load the sanctorale: %s"
 msgstr "Konnte das Sanctorale nicht laden: %s"
@@ -5137,7 +5148,7 @@ msgstr "Konnte das Sanctorale nicht laden: %s"
 #. translators: %s is the event_key a #event= link named
 #. Reported rather than left silent: the link may be stale, mistyped, or
 #. for a rite/calendar this page has since moved away from.
-#: sanctorale.php:416
+#: sanctorale.php:418
 #, php-format
 msgid "%s is not in the current selection."
 msgstr "%s ist nicht in der aktuellen Auswahl."

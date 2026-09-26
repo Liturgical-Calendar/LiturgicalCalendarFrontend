@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-22 21:29+0000\n"
+"POT-Creation-Date: 2026-09-26 21:58+0000\n"
 "PO-Revision-Date: 2026-09-23 21:55+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
@@ -1524,7 +1524,7 @@ msgstr "Emlékezz rám"
 #: admin-tests.php:259 admin-tests.php:286 admin-tests.php:313
 #: admin-applications.php:207 admin-users.php:112 admin-changes.php:233
 #: developer-dashboard.php:134 developer-dashboard.php:183
-#: developer-dashboard.php:246 sanctorale.php:199 sanctorale.php:349
+#: developer-dashboard.php:246 sanctorale.php:199 sanctorale.php:351
 msgid "Cancel"
 msgstr "Mégse"
 
@@ -1591,7 +1591,7 @@ msgstr "Munkamenet lejárt"
 
 #. translators: form field label for the unique identifier of a liturgical event
 #: includes/messages.php:17 admin-decrees.php:176 temporale.php:134
-#: sanctorale.php:174 sanctorale.php:353
+#: sanctorale.php:174 sanctorale.php:355
 msgid "Event key"
 msgstr "Esemény kulcs"
 
@@ -2333,7 +2333,7 @@ msgid "View"
 msgstr "Megtekintés"
 
 #: includes/admin-blocks.php:106 admin-decrees.php:688 admin-tests.php:347
-#: developer-dashboard.php:269 sanctorale.php:347
+#: developer-dashboard.php:269 sanctorale.php:349
 msgid "Edit"
 msgstr "Szerkesztés"
 
@@ -2764,7 +2764,7 @@ msgid "Add readings for locale"
 msgstr "Olvasmányok hozzáadása a nyelvhez"
 
 #: admin-decrees.php:584 admin-tests.php:262 developer-dashboard.php:323
-#: sanctorale.php:202 sanctorale.php:348
+#: sanctorale.php:202 sanctorale.php:350
 msgid "Save"
 msgstr "Mentés"
 
@@ -2774,7 +2774,7 @@ msgstr "Határozat törlése"
 
 #: admin-decrees.php:611 admin-decrees.php:689 admin-tests.php:316
 #: admin-tests.php:348 developer-dashboard.php:249 developer-dashboard.php:270
-#: sanctorale.php:196 sanctorale.php:350
+#: sanctorale.php:196 sanctorale.php:352
 msgid "Delete"
 msgstr "Törlés"
 
@@ -3253,7 +3253,7 @@ msgstr "Tesztdefiníció"
 msgid "Roman Rite"
 msgstr "Római rítus"
 
-#: admin-permissions.php:420 permission-requests.php:259 sanctorale.php:345
+#: admin-permissions.php:420 permission-requests.php:259 sanctorale.php:347
 msgid "Ambrosian Rite"
 msgstr "Ambrozián rítus"
 
@@ -4697,7 +4697,7 @@ msgid "Matches across every month, and moves you to one that has a result."
 msgstr ""
 "Találatok minden hónapban, és egy olyan hónapra visz, amelyen van találat."
 
-#: sanctorale.php:160 sanctorale.php:351
+#: sanctorale.php:160 sanctorale.php:353
 msgid "New celebration"
 msgstr "Új ünnep"
 
@@ -4882,11 +4882,22 @@ msgstr "Minden kiadás."
 msgid "This Missal redefines a celebration an earlier one already had."
 msgstr "Ez a misekönyv egy korábban már létező ünnepet újradefiniálja."
 
-#: sanctorale.php:323
+#: sanctorale.php:319
+#, php-format
+msgid "superseded by %s"
+msgstr ""
+
+#: sanctorale.php:320
+msgid ""
+"A later edition redeclares this celebration; the calendar uses that entry, "
+"not this one."
+msgstr ""
+
+#: sanctorale.php:325
 msgid "Redeclared by"
 msgstr "Újra közölve"
 
-#: sanctorale.php:325
+#: sanctorale.php:327
 msgid ""
 "Takes the celebration universal at the same rank; the earlier particular "
 "entry is now redundant."
@@ -4894,59 +4905,59 @@ msgstr ""
 "Az ünneplést ugyanazon rangban egyetemesnek tekinti; a korábbi külön "
 "bejegyzés most redundáns."
 
-#: sanctorale.php:328
+#: sanctorale.php:330
 msgid "Redeclares the celebration without changing anything."
 msgstr "Újra kihirdeti az ünnepet anélkül, hogy semmit sem változtatna."
 
-#: sanctorale.php:331
+#: sanctorale.php:333
 msgid "no override"
 msgstr "Nincs felülírás"
 
-#: sanctorale.php:334
+#: sanctorale.php:336
 msgid "translated"
 msgstr "fordított"
 
-#: sanctorale.php:335
+#: sanctorale.php:337
 msgid "blank"
 msgstr "üres"
 
-#: sanctorale.php:336
+#: sanctorale.php:338
 msgid "missing"
 msgstr "hiányzó"
 
-#: sanctorale.php:337
+#: sanctorale.php:339
 msgid "Nothing here."
 msgstr "Itt nincs semmi."
 
-#: sanctorale.php:338
+#: sanctorale.php:340
 msgid "No celebration in this month matches your search."
 msgstr "Ebben a hónapban nincs olyan ünnep, amely megfelel a keresésednek."
 
-#: sanctorale.php:339
+#: sanctorale.php:341
 msgid "No sanctorale lectionary is defined for this rite."
 msgstr "Ehhez a rítushoz nincs megadva szanctorále lectionárium."
 
-#: sanctorale.php:342
+#: sanctorale.php:344
 msgid "No readings are curated for this celebration yet."
 msgstr "Még nincsenek kiválasztott olvasmányok ehhez az ünnephez."
 
-#: sanctorale.php:343
+#: sanctorale.php:345
 msgid "Could not load the names for this celebration."
 msgstr "Nem sikerült betölteni ennek az ünnepnek a neveit."
 
-#: sanctorale.php:344
+#: sanctorale.php:346
 msgid "Could not load the readings for this celebration."
 msgstr "Nem sikerült betölteni ennek az ünnepnek az olvasmányait."
 
-#: sanctorale.php:346
+#: sanctorale.php:348
 msgid "No Missal is published for this combination of rite and calendar."
 msgstr "Ezen rítus és naptár kombinációjához nincs kiadva misekönyv."
 
-#: sanctorale.php:352
+#: sanctorale.php:354
 msgid "Add to Missal"
 msgstr "Mise-hez hozzáadás."
 
-#: sanctorale.php:361
+#: sanctorale.php:363
 msgid ""
 "Begins with a capital, then letters and digits (StIsidoreFarmer). A trailing "
 "number (StPaul_2) or _vigil is allowed, as is a lowercase two-word prefix. "
@@ -4956,24 +4967,24 @@ msgstr ""
 "egy végző szám (StPaul_2) vagy a _vigília, és egy kisbetűs, két szóból álló "
 "előtag is. Nem nevezhető át."
 
-#: sanctorale.php:363
+#: sanctorale.php:365
 msgid "Enter a day between 1 and 31."
 msgstr "Írjon be egy napot 1 és 31 között."
 
-#: sanctorale.php:368
+#: sanctorale.php:370
 msgid "Choose…"
 msgstr "Válasszon…"
 
-#: sanctorale.php:369
+#: sanctorale.php:371
 msgid "Choose a month."
 msgstr "Válasszon egy hónapot."
 
-#: sanctorale.php:370
+#: sanctorale.php:372
 msgid "Choose a grade."
 msgstr "Válasszon egy fokozatot."
 
 #. translators: %1$s is the event key, %2$s is the Missal id
-#: sanctorale.php:372
+#: sanctorale.php:374
 #, php-format
 msgid ""
 "Delete %1$s from %2$s? Its name and readings go with it, and any earlier "
@@ -4982,7 +4993,7 @@ msgstr ""
 "Törölje %1$s a(z) %2$s-ból? A neve és olvasmányai hozzá tartoznak, és "
 "bármely korábbi kiadás, amely már meghatározta, felülírja."
 
-#: sanctorale.php:375
+#: sanctorale.php:377
 msgid ""
 "These readings live in the rite-wide lectionary, shared by every Missal of "
 "this rite."
@@ -4990,87 +5001,87 @@ msgstr ""
 "Ezek az olvasmányok a rítus egészére kiterjedő lectionáriumban találhatók, "
 "amelyet minden ehhez a rítushoz tartozó mise használ."
 
-#: sanctorale.php:376
+#: sanctorale.php:378
 msgid "This rite has no lectionary, so readings cannot be edited here."
 msgstr ""
 "Ennek a rítusnak nincs lectionáriuma, így itt nem lehet szerkeszteni az "
 "olvasmányokat."
 
-#: sanctorale.php:384
+#: sanctorale.php:386
 msgid ""
 "Inherited from a different lectionary source; edit it there, not from this "
 "Missal."
 msgstr ""
 "Más lectionárium-forrásból származik; ott szerkeszd, ne ebből a misekönyvből."
 
-#: sanctorale.php:387
+#: sanctorale.php:389
 msgid "The readings were kept: another Missal still declares this celebration."
 msgstr ""
 "Az olvasmányokat megőrizték: egy másik mise még mindig kijelenti ezt az "
 "ünnepet."
 
-#: sanctorale.php:388
+#: sanctorale.php:390
 msgid "Default (from grade)"
 msgstr "Alapértelmezett (a fokozatból)."
 
-#: sanctorale.php:389
+#: sanctorale.php:391
 msgid "Show no rank"
 msgstr "Nincs rang megjelenítve."
 
-#: sanctorale.php:390
+#: sanctorale.php:392
 msgid "Custom text…"
 msgstr "Egyedi szöveg…"
 
-#: sanctorale.php:391
+#: sanctorale.php:393
 msgid "Nothing has changed."
 msgstr "Semmi sem változott."
 
-#: sanctorale.php:392
+#: sanctorale.php:394
 msgid "Saved."
 msgstr "Mentve."
 
-#: sanctorale.php:393
+#: sanctorale.php:395
 msgid "Celebration created."
 msgstr "Ünnep létrehozva."
 
-#: sanctorale.php:394
+#: sanctorale.php:396
 msgid "Celebration deleted."
 msgstr "Ünnep törölve."
 
 #. translators: %s is the error reported by the API
-#: sanctorale.php:396
+#: sanctorale.php:398
 #, php-format
 msgid "Could not save: %s"
 msgstr "Nem sikerült menteni: %s"
 
-#: sanctorale.php:397
+#: sanctorale.php:399
 msgid "You do not have permission to change this Missal."
 msgstr "Nincs jogod ennek a misekönyvnek a megváltoztatásához."
 
-#: sanctorale.php:398
+#: sanctorale.php:400
 msgid "This clashes with another Missal"
 msgstr "Ez ütközik egy másik misekönyvvel"
 
 #. translators: %s is the change request batch id
-#: sanctorale.php:404
+#: sanctorale.php:406
 #, php-format
 msgid "Queued for review as batch %s. Nothing has been written yet."
 msgstr "Csomagként vár ellenőrzésre %s. Még semmi sincs leírva."
 
 #. translators: %s is the change request batch id
-#: sanctorale.php:406
+#: sanctorale.php:408
 #, php-format
 msgid "Approved as batch %s, awaiting publication."
 msgstr "Csomagként jóváhagyva %s, publikálásra vár."
 
 #. translators: %s is a comma-separated list of batch ids
-#: sanctorale.php:408
+#: sanctorale.php:410
 #, php-format
 msgid "Earlier batches folded in: %s."
 msgstr "Korábbi kötegek beépültek: %s."
 
 #. translators: %s is the unrecognized disposition value
-#: sanctorale.php:410
+#: sanctorale.php:412
 #, php-format
 msgid ""
 "The server reported an unrecognized outcome (%s); nothing local was changed."
@@ -5078,7 +5089,7 @@ msgstr ""
 "A szerver ismeretlen kimenetet jelentett (%s); helyben semmi sem változott."
 
 #. translators: %s is the error reported by the API
-#: sanctorale.php:412
+#: sanctorale.php:414
 #, php-format
 msgid "Could not load the sanctorale: %s"
 msgstr "A sanctorale betöltése nem sikerült: %s"
@@ -5086,7 +5097,7 @@ msgstr "A sanctorale betöltése nem sikerült: %s"
 #. translators: %s is the event_key a #event= link named
 #. Reported rather than left silent: the link may be stale, mistyped, or
 #. for a rite/calendar this page has since moved away from.
-#: sanctorale.php:416
+#: sanctorale.php:418
 #, php-format
 msgid "%s is not in the current selection."
 msgstr "%s nem szerepel a jelenlegi kiválasztásban."
