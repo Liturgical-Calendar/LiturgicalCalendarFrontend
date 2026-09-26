@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-03 00:52+0000\n"
-"PO-Revision-Date: 2026-09-03 00:52+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"POT-Creation-Date: 2026-09-22 21:29+0000\n"
+"PO-Revision-Date: 2026-09-23 21:55+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
 "Language: fr\n"
@@ -128,13 +128,13 @@ msgstr "Paramètres de requête disponibles sur tous les chemins %1$s"
 #. translators: part of page title - refers to the Catholic liturgical calendar
 #: index.php:65 usage.php:35 examples.php:106 liturgyOfAnyDay.php:23
 #: layout/header.php:257 includes/change-request-i18n.php:56
-#: admin-permissions.php:83 admin-permissions.php:413 admin-tests.php:144
-#: admin-tests.php:350 permission-requests.php:249 sanctorale.php:224
+#: admin-permissions.php:85 admin-permissions.php:417 admin-tests.php:144
+#: admin-tests.php:350 permission-requests.php:256 sanctorale.php:224
 msgid "General Roman Calendar"
 msgstr "Calendrier Romain Général"
 
 #: index.php:74 layout/header.php:19 layout/header.php:229 admin-decrees.php:43
-#: admin-permissions.php:37 admin-tests.php:38 permission-requests.php:32
+#: admin-permissions.php:39 admin-tests.php:38 permission-requests.php:34
 #: admin-applications.php:34 admin-dashboard.php:40 admin-users.php:34
 #: admin-locales.php:39 admin-changes.php:46 change-requests.php:38
 #: developer-dashboard.php:35 temporale.php:25 sanctorale.php:91
@@ -1346,11 +1346,11 @@ msgid "Notifications"
 msgstr "Notifications"
 
 #: layout/header.php:140 includes/change-request-i18n.php:19
-#: admin-permissions.php:140 admin-permissions.php:199
-#: admin-permissions.php:206 admin-permissions.php:213
-#: admin-permissions.php:220 admin-permissions.php:380
-#: admin-permissions.php:442 admin-tests.php:332 permission-requests.php:64
-#: permission-requests.php:204 admin-applications.php:136
+#: admin-permissions.php:142 admin-permissions.php:201
+#: admin-permissions.php:208 admin-permissions.php:215
+#: admin-permissions.php:222 admin-permissions.php:384
+#: admin-permissions.php:449 admin-tests.php:332 permission-requests.php:66
+#: permission-requests.php:208 admin-applications.php:136
 #: admin-applications.php:145 admin-applications.php:154
 #: admin-applications.php:163 admin-applications.php:228 admin-users.php:70
 #: admin-users.php:85 admin-users.php:151 admin-changes.php:156
@@ -1383,8 +1383,8 @@ msgstr "Es-tu sûr de vouloir te déconnecter ?"
 msgid "Logout"
 msgstr "Déconnexion"
 
-#: layout/header.php:188 layout/header.php:251 admin-permissions.php:478
-#: permission-requests.php:90 permission-requests.php:268 admin-users.php:144
+#: layout/header.php:188 layout/header.php:251 admin-permissions.php:485
+#: permission-requests.php:92 permission-requests.php:275 admin-users.php:144
 msgid "Developer"
 msgstr "Développeur"
 
@@ -1396,8 +1396,8 @@ msgstr "Admin"
 msgid "Dashboard"
 msgstr "Tableau de bord"
 
-#: layout/header.php:261 includes/admin-blocks.php:19 admin-permissions.php:417
-#: permission-requests.php:253 temporale.php:24 temporale.php:37
+#: layout/header.php:261 includes/admin-blocks.php:19 admin-permissions.php:421
+#: permission-requests.php:260 temporale.php:24 temporale.php:37
 msgid "Temporale"
 msgstr "Temporal"
 
@@ -1417,8 +1417,8 @@ msgstr "Calendriers particuliers"
 
 #. translators: label for wider region calendar name field
 #: layout/header.php:281 includes/messages.php:230 includes/admin-blocks.php:63
-#: admin-permissions.php:87 admin-permissions.php:320 admin-permissions.php:407
-#: permission-requests.php:239
+#: admin-permissions.php:89 admin-permissions.php:322 admin-permissions.php:411
+#: permission-requests.php:246
 msgid "Wider Region"
 msgstr "Région élargie"
 
@@ -1467,7 +1467,7 @@ msgstr "Impossible de charger les notifications"
 msgid "Just now"
 msgstr "À l'instant"
 
-#: layout/footer.php:96 admin-permissions.php:474
+#: layout/footer.php:96 admin-permissions.php:481
 msgid "Requested"
 msgstr "Demandé"
 
@@ -1546,7 +1546,7 @@ msgstr "Se souvenir de moi"
 
 #. translators: button label for canceling an action
 #: includes/login-modal.php:55 includes/messages.php:156 admin-decrees.php:581
-#: admin-decrees.php:608 admin-permissions.php:337 admin-permissions.php:363
+#: admin-decrees.php:608 admin-permissions.php:339 admin-permissions.php:365
 #: admin-tests.php:259 admin-tests.php:286 admin-tests.php:313
 #: admin-applications.php:207 admin-users.php:112 admin-changes.php:233
 #: developer-dashboard.php:134 developer-dashboard.php:183
@@ -2036,9 +2036,9 @@ msgstr ""
 "ou configuré ici."
 
 #. translators: label for national calendar name field
-#: includes/messages.php:232 admin-permissions.php:85 admin-permissions.php:318
-#: admin-permissions.php:405 admin-tests.php:147 admin-tests.php:351
-#: permission-requests.php:237
+#: includes/messages.php:232 admin-permissions.php:87 admin-permissions.php:320
+#: admin-permissions.php:409 admin-tests.php:147 admin-tests.php:351
+#: permission-requests.php:244
 msgid "National Calendar"
 msgstr "Calendrier national"
 
@@ -2390,8 +2390,8 @@ msgid "Manage liturgical accuracy tests"
 msgstr "Gérer les tests d'exactitude liturgique"
 
 #: includes/change-request-i18n.php:20 admin-decrees.php:157
-#: admin-decrees.php:600 admin-permissions.php:235 admin-permissions.php:267
-#: admin-permissions.php:289 admin-permissions.php:355 admin-tests.php:131
+#: admin-decrees.php:600 admin-permissions.php:237 admin-permissions.php:269
+#: admin-permissions.php:291 admin-permissions.php:357 admin-tests.php:131
 #: admin-tests.php:278 admin-tests.php:305 admin-applications.php:184
 #: admin-users.php:104 admin-locales.php:93 admin-changes.php:210
 #: change-requests.php:97 change-requests.php:104 developer-dashboard.php:84
@@ -2400,18 +2400,18 @@ msgstr "Gérer les tests d'exactitude liturgique"
 msgid "Close"
 msgstr "Fermer"
 
-#: includes/change-request-i18n.php:22 admin-permissions.php:402
-#: admin-permissions.php:469 admin-tests.php:113 admin-applications.php:244
+#: includes/change-request-i18n.php:22 admin-permissions.php:406
+#: admin-permissions.php:476 admin-tests.php:113 admin-applications.php:244
 #: temporale.php:140
 msgid "Actions"
 msgstr "Actions"
 
-#: includes/change-request-i18n.php:23 admin-permissions.php:473
-#: permission-requests.php:221 admin-applications.php:243 admin-locales.php:77
+#: includes/change-request-i18n.php:23 admin-permissions.php:480
+#: permission-requests.php:225 admin-applications.php:243 admin-locales.php:77
 msgid "Status"
 msgstr "Statut"
 
-#: includes/change-request-i18n.php:24 admin-permissions.php:398
+#: includes/change-request-i18n.php:24 admin-permissions.php:402
 msgid "Unknown user"
 msgstr "Utilisateur inconnu"
 
@@ -2424,7 +2424,7 @@ msgid "Files"
 msgstr "Fichiers"
 
 #: includes/change-request-i18n.php:29 includes/change-request-i18n.php:35
-#: permission-requests.php:224 admin-changes.php:77 admin-changes.php:121
+#: permission-requests.php:228 admin-changes.php:77 admin-changes.php:121
 msgid "Submitted"
 msgstr "Soumis"
 
@@ -2440,16 +2440,16 @@ msgstr "Demande de fusion"
 msgid "Proposed changes"
 msgstr "Modifications proposées"
 
-#: includes/change-request-i18n.php:36 admin-permissions.php:173
-#: admin-permissions.php:481 permission-requests.php:275
+#: includes/change-request-i18n.php:36 admin-permissions.php:175
+#: admin-permissions.php:488 permission-requests.php:282
 #: admin-applications.php:68 admin-applications.php:108
 #: admin-applications.php:251 admin-changes.php:88 admin-changes.php:128
 #: developer-dashboard.php:304
 msgid "Approved"
 msgstr "Approuvé"
 
-#: includes/change-request-i18n.php:37 admin-permissions.php:180
-#: admin-permissions.php:482 permission-requests.php:276
+#: includes/change-request-i18n.php:37 admin-permissions.php:182
+#: admin-permissions.php:489 permission-requests.php:283
 #: admin-applications.php:79 admin-applications.php:114
 #: admin-applications.php:252 admin-changes.php:99 admin-changes.php:134
 #: developer-dashboard.php:305
@@ -2583,7 +2583,7 @@ msgstr ""
 "Lisez et décidez des modifications de données sources proposées pour les "
 "calendriers que vous administrez"
 
-#: includes/admin-changes-card.php:33 admin-permissions.php:470
+#: includes/admin-changes-card.php:33 admin-permissions.php:477
 #: admin-applications.php:245 admin-dashboard.php:136 admin-dashboard.php:194
 #: admin-changes.php:253
 msgid "Review"
@@ -2861,7 +2861,7 @@ msgstr "Modifier le décret"
 msgid "Select locale"
 msgstr "Sélectionner la langue"
 
-#: admin-decrees.php:650 permission-requests.php:229
+#: admin-decrees.php:650 permission-requests.php:233
 msgid "Remove"
 msgstr "Supprimer"
 
@@ -3035,11 +3035,11 @@ msgstr "Mémoire facultative"
 msgid "Weekday"
 msgstr "Férie"
 
-#: admin-permissions.php:36 admin-permissions.php:48
+#: admin-permissions.php:38 admin-permissions.php:50
 msgid "Permissions Management"
 msgstr "Gestion des permissions"
 
-#: admin-permissions.php:52
+#: admin-permissions.php:54
 msgid ""
 "Manage fine-grained permissions for calendar resources. Grant or revoke user "
 "access to specific calendars and test definitions."
@@ -3048,232 +3048,233 @@ msgstr ""
 "ou révoquer l'accès des utilisateurs à des calendriers spécifiques et tester "
 "des définitions."
 
-#: admin-permissions.php:61 temporale.php:51
+#: admin-permissions.php:63 temporale.php:51
 msgid "Filters"
 msgstr "Filtres"
 
-#: admin-permissions.php:67 admin-permissions.php:452
+#: admin-permissions.php:69 admin-permissions.php:459
 #: admin-applications.php:238 admin-users.php:213 admin-users.php:290
 msgid "User"
 msgstr "Utilisateur"
 
-#: admin-permissions.php:70
+#: admin-permissions.php:72
 msgid "Filter by user ID..."
 msgstr "Filtrer par ID utilisateur..."
 
-#: admin-permissions.php:73 admin-permissions.php:399 admin-permissions.php:455
+#: admin-permissions.php:75 admin-permissions.php:403 admin-permissions.php:462
 msgid "Object Type"
 msgstr "Type d'objet"
 
-#: admin-permissions.php:76 admin-permissions.php:102
+#: admin-permissions.php:78 admin-permissions.php:104
 msgid "All"
 msgstr "Tous"
 
-#: admin-permissions.php:81 admin-permissions.php:316 admin-permissions.php:409
-#: permission-requests.php:243
+#: admin-permissions.php:83 admin-permissions.php:318 admin-permissions.php:413
+#: permission-requests.php:250
 msgid "Rite Calendar"
 msgstr "Calendrier du rite"
 
-#: admin-permissions.php:82 admin-permissions.php:317 admin-permissions.php:410
-#: permission-requests.php:244
+#: admin-permissions.php:84 admin-permissions.php:319 admin-permissions.php:414
+#: permission-requests.php:251
 msgid "Rite Calendar Tests"
 msgstr "Tests du calendrier du rite"
 
-#: admin-permissions.php:84 admin-permissions.php:433 admin-permissions.php:464
-#: permission-requests.php:248
+#: admin-permissions.php:86 admin-permissions.php:440 admin-permissions.php:471
+#: permission-requests.php:255
 msgid "General Roman Calendar Tests"
 msgstr "Tests du calendrier général romain"
 
-#: admin-permissions.php:86 admin-permissions.php:319 admin-permissions.php:406
-#: admin-tests.php:150 admin-tests.php:352 permission-requests.php:238
+#: admin-permissions.php:88 admin-permissions.php:321 admin-permissions.php:410
+#: admin-tests.php:150 admin-tests.php:352 permission-requests.php:245
 msgid "Diocesan Calendar"
 msgstr "Calendrier diocésain"
 
-#: admin-permissions.php:88 admin-permissions.php:321 admin-permissions.php:431
-#: admin-permissions.php:462 permission-requests.php:241
+#: admin-permissions.php:90 admin-permissions.php:323 admin-permissions.php:438
+#: admin-permissions.php:469 permission-requests.php:248
 msgid "National Calendar Tests"
 msgstr "Tests du calendrier national"
 
-#: admin-permissions.php:89 admin-permissions.php:322 admin-permissions.php:432
-#: admin-permissions.php:463 permission-requests.php:242
+#: admin-permissions.php:91 admin-permissions.php:324 admin-permissions.php:439
+#: admin-permissions.php:470 permission-requests.php:249
 msgid "Diocesan Calendar Tests"
 msgstr "Tests du calendrier diocésain"
 
-#: admin-permissions.php:93 admin-permissions.php:400 admin-permissions.php:456
+#: admin-permissions.php:95 admin-permissions.php:404 admin-permissions.php:463
 msgid "Object ID"
 msgstr "ID de l'objet"
 
-#: admin-permissions.php:96
+#: admin-permissions.php:98
 msgid "Filter by object ID..."
 msgstr "Filtrer par ID d'objet..."
 
-#: admin-permissions.php:99 admin-permissions.php:298 admin-permissions.php:401
-#: admin-permissions.php:465 permission-requests.php:227
+#: admin-permissions.php:101 admin-permissions.php:300
+#: admin-permissions.php:405 admin-permissions.php:472
+#: permission-requests.php:231
 msgid "Relation"
 msgstr "Relation"
 
-#: admin-permissions.php:103 admin-permissions.php:301
-#: admin-permissions.php:435 permission-requests.php:270
+#: admin-permissions.php:105 admin-permissions.php:303
+#: admin-permissions.php:442 permission-requests.php:277
 msgid "Viewer"
 msgstr "Lecteur"
 
-#: admin-permissions.php:104 admin-permissions.php:302
-#: admin-permissions.php:436 permission-requests.php:271
+#: admin-permissions.php:106 admin-permissions.php:304
+#: admin-permissions.php:443 permission-requests.php:278
 msgid "Editor"
 msgstr "Éditeur"
 
-#: admin-permissions.php:105 admin-permissions.php:303
-#: admin-permissions.php:437 permission-requests.php:272
+#: admin-permissions.php:107 admin-permissions.php:305
+#: admin-permissions.php:444 permission-requests.php:279
 msgctxt "permission relation"
 msgid "Admin"
 msgstr "Administrateur"
 
-#: admin-permissions.php:111
+#: admin-permissions.php:113
 msgid "Apply Filters"
 msgstr "Appliquer les filtres"
 
-#: admin-permissions.php:114
+#: admin-permissions.php:116
 msgid "Clear Filters"
 msgstr "Effacer les filtres"
 
-#: admin-permissions.php:123 admin-permissions.php:287
-#: admin-permissions.php:340
+#: admin-permissions.php:125 admin-permissions.php:289
+#: admin-permissions.php:342
 msgid "Grant Permission"
 msgstr "Accorder la permission"
 
-#: admin-permissions.php:126 admin-permissions.php:155 admin-tests.php:79
+#: admin-permissions.php:128 admin-permissions.php:157 admin-tests.php:79
 #: admin-applications.php:125 admin-users.php:56 admin-locales.php:68
 #: admin-changes.php:145 change-requests.php:70
 msgid "Refresh"
 msgstr "Rafraîchir"
 
-#: admin-permissions.php:134
+#: admin-permissions.php:136
 msgid "Permission Tuples"
 msgstr "Tuples d'autorisations"
 
-#: admin-permissions.php:150 permission-requests.php:31
-#: permission-requests.php:44
+#: admin-permissions.php:152 permission-requests.php:33
+#: permission-requests.php:46
 msgid "Access Requests"
 msgstr "Demandes d'accès"
 
-#: admin-permissions.php:166 admin-permissions.php:480
-#: permission-requests.php:274 admin-applications.php:57
+#: admin-permissions.php:168 admin-permissions.php:487
+#: permission-requests.php:281 admin-applications.php:57
 #: admin-applications.php:101 admin-applications.php:250
 #: developer-dashboard.php:303
 msgid "Pending"
 msgstr "En attente"
 
-#: admin-permissions.php:187 admin-permissions.php:483
-#: permission-requests.php:277 admin-applications.php:90
+#: admin-permissions.php:189 admin-permissions.php:490
+#: permission-requests.php:284 admin-applications.php:90
 #: admin-applications.php:120 admin-applications.php:253
 #: developer-dashboard.php:306
 msgid "Revoked"
 msgstr "Révoqué"
 
-#: admin-permissions.php:233
+#: admin-permissions.php:235
 msgid "Review Access Request"
 msgstr "Examiner la demande d'accès"
 
-#: admin-permissions.php:244 admin-applications.php:193
+#: admin-permissions.php:246 admin-applications.php:193
 msgid "Notes"
 msgstr "Notes"
 
-#: admin-permissions.php:245 permission-requests.php:152
+#: admin-permissions.php:247 permission-requests.php:154
 #: admin-applications.php:194 admin-changes.php:220
 msgid "optional"
 msgstr "facultatif"
 
-#: admin-permissions.php:250 admin-applications.php:199
+#: admin-permissions.php:252 admin-applications.php:199
 msgid "Add notes about your decision..."
 msgstr "Ajoute des notes sur ta décision..."
 
-#: admin-permissions.php:258 admin-applications.php:216 admin-changes.php:239
+#: admin-permissions.php:260 admin-applications.php:216 admin-changes.php:239
 msgid "Approve"
 msgstr "Approuver"
 
-#: admin-permissions.php:261 admin-applications.php:210 admin-changes.php:236
+#: admin-permissions.php:263 admin-applications.php:210 admin-changes.php:236
 msgid "Reject"
 msgstr "Rejeter"
 
-#: admin-permissions.php:264 admin-permissions.php:403
+#: admin-permissions.php:266 admin-permissions.php:407
 #: admin-applications.php:213 developer-dashboard.php:271
 msgid "Revoke"
 msgstr "Révoquer"
 
-#: admin-permissions.php:276 admin-applications.php:172 admin-users.php:92
+#: admin-permissions.php:278 admin-applications.php:172 admin-users.php:92
 #: admin-changes.php:192 change-requests.php:82
 msgid "Back to Dashboard"
 msgstr "Retour au tableau de bord"
 
-#: admin-permissions.php:293 admin-users.php:215 admin-users.php:292
+#: admin-permissions.php:295 admin-users.php:215 admin-users.php:292
 #: user-profile.php:113
 msgid "User ID"
 msgstr "ID utilisateur"
 
-#: admin-permissions.php:295
+#: admin-permissions.php:297
 msgid "Enter user ID..."
 msgstr "Saisir l'ID utilisateur..."
 
-#: admin-permissions.php:300 permission-requests.php:228
+#: admin-permissions.php:302 permission-requests.php:232
 msgid "Select relation..."
 msgstr "Sélectionner la relation..."
 
-#: admin-permissions.php:307 admin-permissions.php:426
-#: admin-permissions.php:457 permission-requests.php:230
+#: admin-permissions.php:309 admin-permissions.php:430
+#: admin-permissions.php:464 permission-requests.php:234
 msgid "Calendar scope"
 msgstr "Portée du calendrier"
 
-#: admin-permissions.php:309 permission-requests.php:232
+#: admin-permissions.php:311 permission-requests.php:236
 msgid "Select calendar scope..."
 msgstr "Sélectionner la portée du calendrier..."
 
-#: admin-permissions.php:326 admin-permissions.php:427
-#: admin-permissions.php:458 permission-requests.php:231
+#: admin-permissions.php:328 admin-permissions.php:431
+#: admin-permissions.php:465 permission-requests.php:235
 msgid "Calendar ID"
 msgstr "ID du calendrier"
 
-#: admin-permissions.php:329 admin-permissions.php:428
-#: admin-permissions.php:459 permission-requests.php:233
+#: admin-permissions.php:331 admin-permissions.php:432
+#: admin-permissions.php:466 permission-requests.php:237
 msgid "Select calendar ID..."
 msgstr "Sélectionner l'ID du calendrier..."
 
-#: admin-permissions.php:353 admin-permissions.php:366
+#: admin-permissions.php:355 admin-permissions.php:368
 msgid "Revoke Permission"
 msgstr "Révoquer la permission"
 
-#: admin-permissions.php:381
+#: admin-permissions.php:385
 msgid "No permissions found."
 msgstr "Aucune permission trouvée."
 
-#: admin-permissions.php:382
+#: admin-permissions.php:386
 msgid "Failed to load permissions. Please try again later."
 msgstr "Échec du chargement des permissions. Réessaie plus tard."
 
-#: admin-permissions.php:383
+#: admin-permissions.php:387
 msgid "Permission granted successfully."
 msgstr "Permission accordée avec succès."
 
-#: admin-permissions.php:384
+#: admin-permissions.php:388
 msgid "Permission revoked successfully."
 msgstr "Permission révoquée avec succès."
 
-#: admin-permissions.php:385
+#: admin-permissions.php:389
 msgid "Failed to grant permission. Please try again."
 msgstr "Échec de l'octroi de la permission. Réessaie."
 
-#: admin-permissions.php:386
+#: admin-permissions.php:390
 msgid "Failed to revoke permission. Please try again."
 msgstr "Échec de la révocation de la permission. Réessaie."
 
-#: admin-permissions.php:387
+#: admin-permissions.php:391
 msgid "Granting..."
 msgstr "Octroi en cours..."
 
-#: admin-permissions.php:388 admin-users.php:353
+#: admin-permissions.php:392 admin-users.php:353
 msgid "Revoking..."
 msgstr "Révocation en cours..."
 
-#: admin-permissions.php:389
+#: admin-permissions.php:393
 msgid "Are you sure you want to revoke this permission?"
 msgstr "Es-tu sûr de vouloir révoquer cette permission ?"
 
@@ -3281,134 +3282,142 @@ msgstr "Es-tu sûr de vouloir révoquer cette permission ?"
 #. granted TO — an OpenFGA tuple subject, i.e. a user. Not the thing the permission
 #. applies to: that is the adjacent "Object Type" / "Object ID". Several locales have
 #. rendered this as "topic" or "email subject line", which collides with those columns.
-#: admin-permissions.php:396
+#: admin-permissions.php:400
 msgid "Subject"
 msgstr "Sujet"
 
-#: admin-permissions.php:408 admin-tests.php:128 permission-requests.php:240
+#: admin-permissions.php:412 admin-tests.php:128 permission-requests.php:247
 msgid "Test Definition"
 msgstr "Définition du test"
 
-#: admin-permissions.php:415 permission-requests.php:251
+#: admin-permissions.php:419 permission-requests.php:258
 msgid "Roman Rite"
 msgstr "Rite romain"
 
-#: admin-permissions.php:416 permission-requests.php:252 sanctorale.php:345
+#: admin-permissions.php:420 permission-requests.php:259 sanctorale.php:345
 msgid "Ambrosian Rite"
 msgstr "Rite ambrosien"
 
-#: admin-permissions.php:418 permission-requests.php:255
+#: admin-permissions.php:422 permission-requests.php:262
 msgid "Sanctorale — Editio Typica 1970"
 msgstr "Sanctorale — Editio Typica 1970"
 
-#: admin-permissions.php:419 permission-requests.php:257
+#: admin-permissions.php:423 permission-requests.php:264
 msgid "Sanctorale — Editio Typica 2002"
 msgstr "Sanctorale — Editio Typica 2002"
 
-#: admin-permissions.php:420 permission-requests.php:259
+#: admin-permissions.php:424 permission-requests.php:266
 msgid "Sanctorale — Editio Typica 2008"
 msgstr "Sanctorale — Editio Typica 2008"
 
-#: admin-permissions.php:421 permission-requests.php:261
+#: admin-permissions.php:425 permission-requests.php:268
 msgid "Sanctorale — Editio Typica 2024"
 msgstr "Sanctorale — Édition Typica 2024"
 
-#: admin-permissions.php:422 permission-requests.php:263
+#: admin-permissions.php:426 permission-requests.php:270
 msgid "Decrees of the Dicastery for Divine Worship"
 msgstr "Décrets du Dicastère pour le Culte Divin"
 
-#: admin-permissions.php:423 permission-requests.php:264
+#: admin-permissions.php:427 permission-requests.php:271
 msgid "Supported locales"
 msgstr "Locales prises en charge"
 
-#: admin-permissions.php:424
+#: admin-permissions.php:428
 msgid "Enter object ID..."
 msgstr "Saisir l'ID de l'objet..."
 
-#: admin-permissions.php:425
+#: admin-permissions.php:429
 msgid "Select object ID..."
 msgstr "Sélectionner l'ID de l'objet..."
 
-#: admin-permissions.php:430 admin-permissions.php:461
-#: permission-requests.php:235
+#: admin-permissions.php:434 admin-permissions.php:468
+#: permission-requests.php:239
 msgid "Could not load calendars — try reloading the page"
 msgstr "Impossible de charger les calendriers — essayez de recharger la page"
 
-#: admin-permissions.php:439
+#: admin-permissions.php:435 permission-requests.php:240
+msgid "Existing national calendars"
+msgstr "Calendriers nationaux existants"
+
+#: admin-permissions.php:437 permission-requests.php:242
+msgid "New national calendars (not yet created)"
+msgstr "Nouveaux calendriers nationaux (pas encore créés)"
+
+#: admin-permissions.php:446
 msgid "All fields are required."
 msgstr "Tous les champs sont obligatoires."
 
-#: admin-permissions.php:443
+#: admin-permissions.php:450
 msgid "No requests found."
 msgstr "Aucune demande trouvée."
 
-#: admin-permissions.php:444
+#: admin-permissions.php:451
 msgid "No pending access requests. All caught up!"
 msgstr "Aucune demande d'accès en attente. Tout est à jour !"
 
-#: admin-permissions.php:445
+#: admin-permissions.php:452
 msgid "Failed to load access requests. Please try again later."
 msgstr "Échec du chargement des demandes d'accès. Réessaie plus tard."
 
-#: admin-permissions.php:446 admin-applications.php:232 admin-changes.php:259
+#: admin-permissions.php:453 admin-applications.php:232 admin-changes.php:259
 #: change-requests.php:118
 msgid "Processing..."
 msgstr "Traitement en cours..."
 
-#: admin-permissions.php:447
+#: admin-permissions.php:454
 msgid "Access request approved successfully."
 msgstr "Demande d'accès approuvée avec succès."
 
-#: admin-permissions.php:448
+#: admin-permissions.php:455
 msgid "Access request rejected."
 msgstr "Demande d'accès rejetée."
 
-#: admin-permissions.php:449
+#: admin-permissions.php:456
 msgid "Access revoked successfully."
 msgstr "Accès révoqué avec succès."
 
-#: admin-permissions.php:450 admin-applications.php:236
+#: admin-permissions.php:457 admin-applications.php:236
 msgid "Failed to process request. Please try again."
 msgstr "Échec du traitement de la demande. Réessaie."
 
-#: admin-permissions.php:453 permission-requests.php:219
+#: admin-permissions.php:460 permission-requests.php:223
 msgid "Role"
 msgstr "Rôle"
 
-#: admin-permissions.php:454 permission-requests.php:133
-#: permission-requests.php:220 admin-dashboard.php:110 user-profile.php:178
+#: admin-permissions.php:461 permission-requests.php:135
+#: permission-requests.php:224 admin-dashboard.php:110 user-profile.php:178
 msgid "Permissions"
 msgstr "Autorisations"
 
-#: admin-permissions.php:466 permission-requests.php:151
-#: permission-requests.php:222
+#: admin-permissions.php:473 permission-requests.php:153
+#: permission-requests.php:226
 msgid "Justification"
 msgstr "Justification"
 
-#: admin-permissions.php:467 permission-requests.php:166
+#: admin-permissions.php:474 permission-requests.php:168
 msgid "Credentials"
 msgstr "Identifiants"
 
-#: admin-permissions.php:468 sanctorale.php:292
+#: admin-permissions.php:475 sanctorale.php:292
 msgid "Date"
 msgstr "Date"
 
-#: admin-permissions.php:471 admin-applications.php:247
+#: admin-permissions.php:478 admin-applications.php:247
 msgid "Reviewed At"
 msgstr "Revu le"
 
-#: admin-permissions.php:472 permission-requests.php:223
+#: admin-permissions.php:479 permission-requests.php:227
 #: admin-applications.php:248
 msgid "Review Notes"
 msgstr "Notes de révision"
 
-#: admin-permissions.php:476 permission-requests.php:80
-#: permission-requests.php:266 admin-users.php:145
+#: admin-permissions.php:483 permission-requests.php:82
+#: permission-requests.php:273 admin-users.php:145
 msgid "Calendar Editor"
 msgstr "Éditeur de calendrier"
 
-#: admin-permissions.php:477 permission-requests.php:85
-#: permission-requests.php:267 admin-users.php:146
+#: admin-permissions.php:484 permission-requests.php:87
+#: permission-requests.php:274 admin-users.php:146
 msgid "Accuracy Test Editor"
 msgstr "Éditeur de test de précision"
 
@@ -3606,7 +3615,7 @@ msgstr "Nom du test :"
 msgid "Select a valid liturgical event from the list."
 msgstr "Sélectionnez un événement liturgique valide dans la liste."
 
-#: permission-requests.php:49
+#: permission-requests.php:51
 msgid ""
 "Request access to the Liturgical Calendar system. Select a role and specify "
 "the resource permissions you need. Your request will be reviewed by an "
@@ -3616,23 +3625,23 @@ msgstr ""
 "spécifie les autorisations de ressources dont tu as besoin. Ta demande sera "
 "examinée par un administrateur."
 
-#: permission-requests.php:59
+#: permission-requests.php:61
 msgid "Your Access Requests"
 msgstr "Tes demandes d'accès"
 
-#: permission-requests.php:73
+#: permission-requests.php:75
 msgid "Request Access"
 msgstr "Demander l'accès"
 
-#: permission-requests.php:81
+#: permission-requests.php:83
 msgid "Edit national and diocesan calendar data."
 msgstr "Modifier les données du calendrier national et diocésain."
 
-#: permission-requests.php:86
+#: permission-requests.php:88
 msgid "Create and manage accuracy tests."
 msgstr "Créer et gérer des tests de précision."
 
-#: permission-requests.php:92
+#: permission-requests.php:94
 msgid ""
 "API consumer. Request access to all resources you may need — individual API "
 "keys can be scoped further at generation time."
@@ -3641,85 +3650,85 @@ msgstr ""
 "avoir besoin - les clés API individuelles peuvent être davantage spécifiées "
 "lors de la génération."
 
-#: permission-requests.php:99
+#: permission-requests.php:101
 msgid "Select a Role"
 msgstr "Sélectionner un rôle"
 
-#: permission-requests.php:136
+#: permission-requests.php:138
 msgid ""
 "Specify the resources you need access to. Add one or more permission rows."
 msgstr ""
 "Indique les ressources auxquelles tu as besoin d'accéder. Ajoute une ou "
 "plusieurs lignes de permission."
 
-#: permission-requests.php:145
+#: permission-requests.php:147
 msgid "Add Permission"
 msgstr "Ajouter une permission"
 
-#: permission-requests.php:153
+#: permission-requests.php:155
 msgid ""
 "Providing a justification helps administrators review your request faster."
 msgstr ""
 "Fournir une justification aide les administrateurs à examiner ta demande "
 "plus rapidement."
 
-#: permission-requests.php:160
+#: permission-requests.php:162
 msgid "Please describe why you need this access..."
 msgstr "Décris pourquoi tu as besoin de cet accès..."
 
-#: permission-requests.php:167
+#: permission-requests.php:169
 msgid ""
 "Optionally provide any credentials or references that support your request."
 msgstr ""
 "Fournis éventuellement toutes les références ou justificatifs qui appuient "
 "ta demande."
 
-#: permission-requests.php:174
+#: permission-requests.php:176
 msgid "Any relevant credentials or references..."
 msgstr "Tous justificatifs ou références pertinents..."
 
-#: permission-requests.php:181 permission-requests.php:210
+#: permission-requests.php:183 permission-requests.php:214
 #: developer-dashboard.php:138 developer-dashboard.php:322
 msgid "Submit Request"
 msgstr "Soumettre la demande"
 
-#: permission-requests.php:190
+#: permission-requests.php:192
 msgid "Back to Profile"
 msgstr "Retour au profil"
 
-#: permission-requests.php:205
+#: permission-requests.php:209
 msgid "You have not made any access requests yet."
 msgstr "Tu n'as pas encore fait de demandes d'accès."
 
-#: permission-requests.php:206
+#: permission-requests.php:210
 msgid "Could not load your existing requests."
 msgstr "Impossible de charger tes demandes existantes."
 
-#: permission-requests.php:207
+#: permission-requests.php:211
 msgid "Your access request has been submitted successfully."
 msgstr "Ta demande d'accès a été soumise avec succès."
 
-#: permission-requests.php:208
+#: permission-requests.php:212
 msgid "Failed to submit request. Please try again."
 msgstr "Échec de la soumission de la demande. Réessaie."
 
-#: permission-requests.php:209
+#: permission-requests.php:213
 msgid "Submitting..."
 msgstr "En cours de soumission..."
 
-#: permission-requests.php:211
+#: permission-requests.php:215
 msgid "Resubmit"
 msgstr "Soumettre à nouveau"
 
-#: permission-requests.php:212
+#: permission-requests.php:216
 msgid "Rejection reason"
 msgstr "Raison du refus"
 
-#: permission-requests.php:213
+#: permission-requests.php:217
 msgid "Please select a role."
 msgstr "Sélectionne un rôle."
 
-#: permission-requests.php:214
+#: permission-requests.php:218
 msgid ""
 "Each permission row must have a calendar scope, calendar ID, and relation "
 "filled in."
@@ -3727,12 +3736,12 @@ msgstr ""
 "Chaque ligne d'autorisation doit comporter un champ de portée du calendrier, "
 "un ID de calendrier et un champ de relation remplis."
 
-#: permission-requests.php:215
+#: permission-requests.php:219
 #, php-format
 msgid "You have reached the maximum of %1$d permissions per request."
 msgstr "Tu as atteint le maximum de %1$d autorisations par demande."
 
-#: permission-requests.php:216
+#: permission-requests.php:220
 #, php-format
 msgid ""
 "This request had more than %1$d permissions; only the first %2$d are shown."
@@ -3740,11 +3749,11 @@ msgstr ""
 "Cette demande avait plus de %1$d autorisations ; seules les %2$d premières "
 "sont affichées."
 
-#: permission-requests.php:217
+#: permission-requests.php:221
 msgid "Unknown error"
 msgstr "Erreur inconnue"
 
-#: permission-requests.php:225
+#: permission-requests.php:229
 msgid "Reviewed"
 msgstr "Révisé"
 
