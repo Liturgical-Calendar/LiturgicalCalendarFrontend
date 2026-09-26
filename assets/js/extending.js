@@ -2404,7 +2404,10 @@ const actionPromptButtonClicked = (ev) => {
     const modal = ev.target.closest('.actionPromptModal');
     const modalForm = modal.querySelector('form');
     const actionButtonId = ev.target.id;
-    const liturgicalEventInputVal = escapeHtml(modalForm.querySelector('.existingLiturgicalEventName').value);
+    // Raw, not escapeHtml()'d: it is data — a `.value`, createEventKey()'s input and
+    // an event_key lookup — never markup. Escaping it turned "d'Arc" into the literal
+    // text "d&#x27;Arc" in the name field and minted `DXArc` in the event key.
+    const liturgicalEventInputVal = modalForm.querySelector('.existingLiturgicalEventName').value;
     const eventKey = actionButtonId === 'newLiturgicalEventExNovoButton' ? '' : liturgicalEventInputVal;
     console.log('actionPromptButtonClicked! actionButtonId = <', actionButtonId, '>, liturgicalEventInputVal = <', liturgicalEventInputVal, '>, eventKey = <', eventKey, '>');
 
@@ -3795,7 +3798,9 @@ const saveDiocesanCalendar_btnClicked = () => {
     saveObj.payload.i18n[API.locale] = saveObj.payload.litcal.reduce((obj, item) => {
         const liturgicalEventCopy = { ...item.liturgical_event };
         if (liturgicalEventCopy.hasOwnProperty('name')) {
-            obj[liturgicalEventCopy.event_key] = escapeHtml(liturgicalEventCopy.name);
+            // The name is payload data, stored and served as-is; escaping belongs to
+            // whatever renders it. escapeHtml() here saved "d'Arc" as "d&#x27;Arc".
+            obj[liturgicalEventCopy.event_key] = liturgicalEventCopy.name;
             delete item.liturgical_event.name;
         } else {
             obj[liturgicalEventCopy.event_key] = document.querySelector(`.litEventName[data-valuewas="${liturgicalEventCopy.event_key}"]`).value;

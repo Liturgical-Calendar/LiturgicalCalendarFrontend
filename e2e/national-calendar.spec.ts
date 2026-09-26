@@ -711,6 +711,26 @@ test.describe('National Calendar Form - Action Buttons', () => {
         console.log(`Create New row successfully created (count: ${existingCount} -> ${newCount})`);
     });
 
+    test('Create New keeps an apostrophe in the name and mints a clean event key', async ({ page, extendingPage }) => {
+        // The modal's value used to be escapeHtml()'d before use as data: the name
+        // field showed "d&#x27;Arc" and createEventKey() minted `SainteJeanneDXArc`.
+        await extendingPage.selectCalendar('#nationalCalendarName', 'US');
+        await page.waitForLoadState('networkidle');
+        await page.waitForFunction(() => {
+            const datalist = document.querySelector('#existingLiturgicalEventsList');
+            return datalist && datalist.querySelectorAll('option').length > 0;
+        }, { timeout: 15000 });
+        await extendingPage.waitForButtonsEnabled('.litcalActionButton', 15000);
+        await extendingPage.dismissToasts();
+
+        const eventName = "Sainte Jeanne d'Arc, vierge, patronne secondaire de la France";
+        await extendingPage.createNewEventViaModal(eventName);
+
+        const row = page.locator('.regionalNationalDataForm .row[data-action="createNew"]').last();
+        await expect(row.locator('.litEventName').first()).toHaveValue(eventName);
+        await expect(row.locator('.litEventEventKey')).toHaveValue('SainteJeanneDArc');
+    });
+
 });
 
 test.describe('National Calendar Form - Validation', () => {
