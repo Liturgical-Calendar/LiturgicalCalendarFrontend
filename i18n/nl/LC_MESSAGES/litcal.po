@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-26 21:58+0000\n"
-"PO-Revision-Date: 2026-09-23 21:55+0000\n"
+"PO-Revision-Date: 2026-09-26 22:55+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -4901,13 +4901,15 @@ msgstr "Dit Missaal herdefinieert een viering die eerder al had."
 #: sanctorale.php:319
 #, php-format
 msgid "superseded by %s"
-msgstr ""
+msgstr "vervangen door %s"
 
 #: sanctorale.php:320
 msgid ""
 "A later edition redeclares this celebration; the calendar uses that entry, "
 "not this one."
 msgstr ""
+"Een latere editie verklaart deze viering opnieuw; de kalender gebruikt die "
+"vermelding, niet deze."
 
 #: sanctorale.php:325
 msgid "Redeclared by"
