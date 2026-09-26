@@ -2780,6 +2780,7 @@ async function refreshCapabilities(seq) {
         missals: applicableMissals(state.missals, state.calendar, state.baseRegion),
         rite: state.rite,
         baseRegion: state.baseRegion,
+        calendar: state.calendar,
         userSub: config?.userSub ?? '',
         isGlobalAdmin: config?.isGlobalAdmin === true,
         checkAllowed: async (path) => {
