@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-26 23:05+0000\n"
-"PO-Revision-Date: 2026-09-26 22:55+0000\n"
+"PO-Revision-Date: 2026-09-27 01:00+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -896,12 +896,12 @@ msgstr "roze"
 #. translators: context = liturgical color (Ambrosian rite)
 #: src/LitColor.php:51
 msgid "morello"
-msgstr ""
+msgstr "morello"
 
 #. translators: context = liturgical color (Ambrosian rite)
 #: src/LitColor.php:54
 msgid "black"
-msgstr ""
+msgstr "zwart"
 
 #: src/LitCommon.php:86
 msgid "Proper"
