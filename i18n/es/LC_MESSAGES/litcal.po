@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-26 21:58+0000\n"
-"PO-Revision-Date: 2026-09-23 21:55+0000\n"
+"PO-Revision-Date: 2026-09-26 22:55+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
@@ -4902,13 +4902,15 @@ msgstr "Este Misal redefine una celebración que ya tenía otro anterior."
 #: sanctorale.php:319
 #, php-format
 msgid "superseded by %s"
-msgstr ""
+msgstr "sustituido por %s"
 
 #: sanctorale.php:320
 msgid ""
 "A later edition redeclares this celebration; the calendar uses that entry, "
 "not this one."
 msgstr ""
+"Una edición posterior redeclara esta celebración; el calendario utiliza esa "
+"entrada, no esta."
 
 #: sanctorale.php:325
 msgid "Redeclared by"
