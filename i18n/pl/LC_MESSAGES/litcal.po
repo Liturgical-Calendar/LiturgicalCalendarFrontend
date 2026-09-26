@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-26 21:58+0000\n"
 "PO-Revision-Date: 2026-09-26 22:55+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pl/>\n"
 "Language: pl\n"
@@ -2453,7 +2453,7 @@ msgstr "Region szeroki"
 
 #: includes/change-request-i18n.php:55
 msgid "Rite calendar"
-msgstr "Kalendarz liturgiczny"
+msgstr "Kalendarz rytu"
 
 #: includes/change-request-i18n.php:57
 msgid "National calendar test"
@@ -2469,7 +2469,7 @@ msgstr "Test ogólnego kalendarza rzymskiego"
 
 #: includes/change-request-i18n.php:60
 msgid "Rite calendar test"
-msgstr "Test kalendarza liturgicznego"
+msgstr "Test kalendarza rytu"
 
 #: includes/change-request-i18n.php:64
 msgid "Added"
@@ -3039,12 +3039,12 @@ msgstr "Wszystko"
 #: admin-permissions.php:83 admin-permissions.php:318 admin-permissions.php:413
 #: permission-requests.php:250
 msgid "Rite Calendar"
-msgstr "Kalendarz liturgiczny"
+msgstr "Kalendarz rytu"
 
 #: admin-permissions.php:84 admin-permissions.php:319 admin-permissions.php:414
 #: permission-requests.php:251
 msgid "Rite Calendar Tests"
-msgstr "Testy kalendarza liturgicznego"
+msgstr "Testy kalendarza rytu"
 
 #: admin-permissions.php:86 admin-permissions.php:440 admin-permissions.php:471
 #: permission-requests.php:255
@@ -5013,7 +5013,7 @@ msgstr "Czytania zostały zachowane: inny Mszał wciąż ogłasza tę uroczysto�
 
 #: sanctorale.php:390
 msgid "Default (from grade)"
-msgstr "Domyślne (z ocen)"
+msgstr "Domyślne (ze stopnia)"
 
 #: sanctorale.php:391
 msgid "Show no rank"
