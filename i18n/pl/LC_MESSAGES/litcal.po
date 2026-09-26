@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-26 21:58+0000\n"
-"PO-Revision-Date: 2026-09-23 21:55+0000\n"
+"PO-Revision-Date: 2026-09-26 22:55+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pl/>\n"
@@ -4877,13 +4877,15 @@ msgstr "Ten Mszał redefiniuje celebrację, którą wcześniej miał inny Mszał
 #: sanctorale.php:319
 #, php-format
 msgid "superseded by %s"
-msgstr ""
+msgstr "zastąpione przez %s"
 
 #: sanctorale.php:320
 msgid ""
 "A later edition redeclares this celebration; the calendar uses that entry, "
 "not this one."
 msgstr ""
+"Późniejsza edycja ponownie ustanawia to święto; kalendarz używa tamtego "
+"wpisu, a nie tego."
 
 #: sanctorale.php:325
 msgid "Redeclared by"
