@@ -1965,6 +1965,19 @@ function ensureOptions(select, values) {
 }
 
 /**
+ * Select exactly `values` on a plain `<select multiple>`.
+ *
+ * @param {HTMLSelectElement} select
+ * @param {string[]} [values]
+ */
+function selectValues(select, values) {
+    const wanted = new Set(values ?? []);
+    for (const option of select.options) {
+        option.selected = wanted.has(option.value);
+    }
+}
+
+/**
  * Turn the Common and Color selects into localized bootstrap-multiselects, with
  * the same wiring as the extending page: `Proper` is exclusive of the commons
  * (setCommonMultiselect()), and choosing commons picks the colors they imply —
@@ -1980,10 +1993,17 @@ function ensureOptions(select, values) {
 function wireStructureMultiselects(row) {
     const common = el('entryCommon');
     const color = el('entryColor');
-    if (!common || !color || typeof window.jQuery?.fn?.multiselect !== 'function') return;
+    if (!common || !color) return;
 
+    // Selected on the plain selects FIRST: the option lists come from PHP with
+    // nothing selected, so without this a page whose plugin failed to load would
+    // show an entry with no commons or colors, and saving it would clear both.
     ensureOptions(common, row?.common);
     ensureOptions(color, row?.color);
+    selectValues(common, row?.common);
+    selectValues(color, row?.color);
+    if (typeof window.jQuery?.fn?.multiselect !== 'function') return;
+
     setCommonMultiselect(common.parentElement, row?.common ?? []);
     setColorMultiselect(color, row?.color ?? []);
 

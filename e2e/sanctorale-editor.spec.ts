@@ -439,6 +439,28 @@ test.describe('sanctorale editor structure controls', () => {
         await expect.poll(() => selectedValues(page, '#entryColor')).toEqual(['white', 'red']);
     });
 
+    test('without the multiselect plugin the stored selections survive, so a save clears nothing', async ({ page }) => {
+        // The option lists arrive with nothing selected; only the wiring selects
+        // the entry's values. A failed CDN load must not leave them blank, or the
+        // next save would PATCH `common: []` and `color: []`.
+        await page.route('**/bootstrap-multiselect*.js', (route) => route.abort());
+        await openMonth(page, 'StIsidoreFarmer');
+        await rowFor(page, 'StIsidoreFarmer').locator('button[data-edit-key]').click();
+        await page.waitForSelector('#entryCommon');
+
+        await expect(page.locator('#entryCommon ~ .btn-group')).toHaveCount(0);
+        expect((await selectedValues(page, '#entryCommon')).length).toBeGreaterThan(0);
+        expect((await selectedValues(page, '#entryColor')).length).toBeGreaterThan(0);
+
+        let patchIssued = false;
+        page.on('request', (r) => {
+            if (r.method() === 'PATCH') patchIssued = true;
+        });
+        await page.click('#saveEntryBtn');
+        await expect(page.locator('#entryFormError')).not.toBeEmpty();
+        expect(patchIssued).toBe(false);
+    });
+
     test('an Ambrosian entry offers the Ambrosian palette and the Ambrosian flags', async ({ page }) => {
         await page.goto('/sanctorale.php#rite=ambrosian&month=1');
         const edit = page.locator('#sanctoraleTableBody button[data-edit-key]').first();
