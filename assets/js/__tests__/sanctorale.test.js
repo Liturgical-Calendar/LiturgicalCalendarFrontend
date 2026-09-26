@@ -687,6 +687,17 @@ describe('monthOf', () => {
         expect(monthOf([APRIL_ROW], 'NoSuchKey')).toBeNull();
         expect(monthOf([], 'StIsidore')).toBeNull();
     });
+
+    it('follows the From filter\'s own declaration, as the filtered table places it', () => {
+        const out = compose([
+            { missal: VA_1970, rows: [{ event_key: 'StIsidore', month: 4, day: 4 }] },
+            { missal: US_2011, rows: [{ event_key: 'StIsidore', month: 5, day: 15 }] }
+        ]);
+        expect(monthOf(out, 'StIsidore')).toBe(5);
+        expect(monthOf(out, 'StIsidore', 'EDITIO_TYPICA_1970')).toBe(4);
+        // An edition that does not declare the key falls back to the composed row.
+        expect(monthOf(out, 'StIsidore', 'IT_1983')).toBe(5);
+    });
 });
 
 /**

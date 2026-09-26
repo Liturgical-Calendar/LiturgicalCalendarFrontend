@@ -1626,7 +1626,7 @@ function closeEntryModal() {
  */
 async function reloadAndFollow(eventKey) {
     await reload();
-    const month = monthOf(state.composed, eventKey);
+    const month = monthOf(state.composed, eventKey, state.fromMissal);
     if (month !== null && month !== state.month) {
         state.month = month;
         syncHash();
@@ -3000,12 +3000,19 @@ function readHash() {
  * left on the tab they started from — see the `monthOf()` call after `reload()`
  * in saveEntry() and deleteEntry().
  *
+ * Under a From filter the table places a row by THAT edition's declaration
+ * (filterByMissal()), so the month is read off the same one; without it, or
+ * for an edition that does not declare the key, the composed row's.
+ *
  * @param {Array<object>} composed
  * @param {string} eventKey
+ * @param {string} [missalId] the From filter's edition, or ''
  * @returns {number|null}
  */
-export function monthOf(composed, eventKey) {
-    return composed.find((r) => r.event_key === eventKey)?.month ?? null;
+export function monthOf(composed, eventKey, missalId = '') {
+    const row = composed.find((r) => r.event_key === eventKey);
+    const own = missalId ? declarationRow(row, missalId) : undefined;
+    return (own ?? row)?.month ?? null;
 }
 
 /**
@@ -3027,13 +3034,14 @@ function openDeepLinkedEvent() {
         syncHash();
         return;
     }
-    if (state.month !== row.month) {
-        state.month = row.month;
+    // Under a From filter the table shows that edition's own declaration, so the
+    // link lands on that declaration's month and opens it, as clicking its row would.
+    const own = state.fromMissal ? declarationRow(row, state.fromMissal) : undefined;
+    const month = (own ?? row).month;
+    if (state.month !== month) {
+        state.month = month;
         render();
     }
-    // Under a From filter the table shows that edition's own declaration, so the
-    // link opens the same one the reader would reach by clicking its row.
-    const own = state.fromMissal ? declarationRow(row, state.fromMissal) : undefined;
     showDetail(row.event_key, own?._missalId ?? row._missalId, false);
 }
 
