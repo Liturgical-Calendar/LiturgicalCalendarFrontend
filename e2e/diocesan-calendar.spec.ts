@@ -81,6 +81,22 @@ test.describe('Diocesan Calendar Form', () => {
         }
     });
 
+    test('should accept a diocese whose name has an apostrophe', async ({ page }) => {
+        // The name was escapeHtml()'d before being matched against the datalist, so
+        // "Arcidiocesi di L'Aquila" never matched its own option: the input was
+        // flagged invalid and the calendar form stayed disabled. Read-only: no save.
+        await page.locator('#diocesanCalendarNationalDependency').selectOption('IT');
+        const dioceseNameInput = page.locator('#diocesanCalendarDioceseName');
+        await expect(dioceseNameInput).toBeEnabled();
+        await expect(page.locator('#DiocesesList > option[value="Arcidiocesi di L\'Aquila"]')).toHaveCount(1);
+
+        await dioceseNameInput.fill("Arcidiocesi di L'Aquila");
+        await dioceseNameInput.dispatchEvent('change');
+
+        await expect(dioceseNameInput).not.toHaveClass(/is-invalid/);
+        await expect(page.locator('#carouselExampleIndicators')).not.toHaveClass(/diocesan-disabled/);
+    });
+
     test('should have national calendar options in dependency dropdown', async ({ page }) => {
         const nationalSelect = page.locator('#diocesanCalendarNationalDependency');
         await expect(nationalSelect).toBeVisible();

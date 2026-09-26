@@ -802,7 +802,7 @@ const checkCalendarExists = () => {
         }
         case 'diocesan': {
             const currentDioceseName = document.querySelector('#diocesanCalendarDioceseName').value;
-            const currentDioceseOption = document.querySelector(`#DiocesesList > option[value="${currentDioceseName}"]`);
+            const currentDioceseOption = findDioceseOption(currentDioceseName);
             const currentDiocese = currentDioceseOption ? currentDioceseOption.dataset.value : null;
             const exists = LitCalMetadata.diocesan_calendars_keys.includes(currentDiocese);
             console.log(`Diocesan calendar for ${currentDiocese} already exists: ${exists}`);
@@ -2186,6 +2186,19 @@ const datetypeToggleBtnClicked = (ev) => {
 }
 
 /**
+ * The `#DiocesesList` option whose value is exactly `name`.
+ *
+ * Compared directly rather than through an attribute selector: interpolated
+ * into `option[value="…"]`, a name containing `"` or `\` throws, and any
+ * escaping applied to make it safe there would stop it matching the value.
+ *
+ * @param {string} name A diocese name as typed or selected
+ * @returns {HTMLOptionElement|undefined}
+ */
+const findDioceseOption = (name) =>
+    Array.from(document.querySelectorAll('#DiocesesList > option')).find((option) => option.value === name);
+
+/**
  * Creates a unique key for a liturgical event based on its name, by splitting on
  * the first comma (if applicable), removing accented characters, reducing multiple
  * spaces to single spaces, removing leading and trailing spaces, splitting into
@@ -3187,7 +3200,7 @@ const loadDiocesanCalendarData = () => {
 
     const dioceseSelect = document.getElementById('diocesanCalendarDioceseName');
     const diocese = dioceseSelect.value;
-    const dioceseOption = document.querySelector(`#DiocesesList > option[value="${diocese}"]`);
+    const dioceseOption = findDioceseOption(diocese);
     const dioceseKey = dioceseOption ? dioceseOption.dataset.value : null;
     API.key = dioceseKey;
 
@@ -3588,7 +3601,10 @@ const diocesanCalendarNationalDependencyChanged = (ev) => {
  * @param {Event} ev - The event object for the change event.
  */
 const diocesanCalendarDioceseNameChanged = (ev) => {
-    const currentVal = escapeHtml( ev.target.value );
+    // Raw, not escapeHtml()'d: it is matched against the list's option values, and
+    // an escaped "St. John's" never matched its own option. removeDiocesanCalendarModal()
+    // escapes the name itself where it becomes markup.
+    const currentVal = ev.target.value;
     CalendarData = { litcal: [], i18n: {} };
     document.querySelectorAll('.carousel-item form').forEach(form => {
         form.reset();
@@ -3606,7 +3622,7 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
     });
     const forms = document.querySelectorAll('form');
     forms.forEach(form => form.classList.remove('was-validated'));
-    const selectedOption = document.querySelector(`#DiocesesList > option[value="${currentVal}"]`);
+    const selectedOption = findDioceseOption(currentVal);
     if (selectedOption) {
         ev.target.classList.remove('is-invalid');
         resetOtherLocalizationInputs();
@@ -3698,7 +3714,7 @@ const deleteDiocesanCalendarConfirmClicked = () => {
     API.method = 'DELETE';
     API.category = 'diocese';
     const diocese = document.querySelector('#diocesanCalendarDioceseName').value;
-    API.key = document.querySelector('#DiocesesList option[value="' + diocese + '"]').dataset.value;
+    API.key = findDioceseOption(diocese).dataset.value;
 
     const baseHeaders = new Headers({
         'Accept': 'application/json'
@@ -3786,7 +3802,7 @@ const saveDiocesanCalendar_btnClicked = () => {
 
     document.querySelector('#overlay').classList.remove('hidden');
     const diocese = document.querySelector('#diocesanCalendarDioceseName').value;
-    const option = document.querySelector('#DiocesesList option[value="' + diocese + '"]');
+    const option = findDioceseOption(diocese);
     const diocese_id = option ? option.getAttribute('data-value') : null;
     const saveObj = { payload: { ...CalendarData } };
     API.category = 'diocese';
