@@ -3158,7 +3158,16 @@ const saveOwnWiderRegionLocales = async (i18n, headers) => {
         }
         const outcomes = [];
         for (const { locale, names } of writes) {
-            const response = await makeAuthenticatedRequest('PUT', `${API.path}/${locale}`, { body: names, headers });
+            const makeRequest = () => makeAuthenticatedRequest('PUT', `${API.path}/${locale}`, { body: names, headers });
+            let response = await makeRequest();
+            // As the whole-region save does: a 401 refreshes the session and retries this
+            // PUT; if a login is needed, it resumes the whole save, whose PUTs are idempotent.
+            if (response.status === 401 || response.status === 403) {
+                response = await handleAuthError(response, makeRequest, () => {
+                    document.querySelector('#overlay').classList.remove('hidden');
+                    saveOwnWiderRegionLocales(i18n, headers);
+                });
+            }
             const data = await response.json().catch(() => ({}));
             if (!response.ok) {
                 throw Object.assign(data, { status: response.status });
