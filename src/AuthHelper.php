@@ -21,6 +21,14 @@ use UnexpectedValueException;
  * - Legacy: Validates tokens signed with JWT_SECRET (HS256)
  *
  * OIDC mode is used when ZITADEL_ISSUER and ZITADEL_CLIENT_ID are configured.
+ *
+ * @phpstan-type DashboardScopes array{
+ *     is_global_admin: bool,
+ *     is_resource_admin: bool,
+ *     admin_scopes: array<int, array{object_type: string, object_id: string}>,
+ *     viewer_scopes: array<string, list<string>>,
+ *     editor_scopes: array<string, list<string>>
+ * }
  */
 class AuthHelper
 {
@@ -54,7 +62,7 @@ class AuthHelper
     /**
      * Memoized dashboard-scopes result for this request.
      *
-     * @var array{is_global_admin: bool, is_resource_admin: bool, admin_scopes: array<int, array{object_type: string, object_id: string}>, viewer_scopes: array<string, list<string>>}|null
+     * @var DashboardScopes|null
      */
     private ?array $dashboardScopesResult = null;
 
@@ -342,7 +350,7 @@ class AuthHelper
      * from GET /auth/dashboard-scopes (server-side, using the caller's session
      * cookies). Lazy: the API is only contacted on first use. Fails closed.
      *
-     * @return array{is_global_admin: bool, is_resource_admin: bool, admin_scopes: array<int, array{object_type: string, object_id: string}>, viewer_scopes: array<string, list<string>>}
+     * @return DashboardScopes
      */
     public function dashboardScopes(): array
     {
@@ -356,6 +364,7 @@ class AuthHelper
                 'is_resource_admin' => false,
                 'admin_scopes'      => [],
                 'viewer_scopes'     => [],
+                'editor_scopes'     => [],
             ];
         }
 
@@ -519,7 +528,7 @@ class AuthHelper
      * @param string $apiBaseUrl Base API URL (no trailing slash)
      * @param string|null $cookieHeader Cookie header forwarding the caller's session
      * @param \GuzzleHttp\Client|null $client Injectable client (tests)
-     * @return array{is_global_admin: bool, is_resource_admin: bool, admin_scopes: array<int, array{object_type: string, object_id: string}>, viewer_scopes: array<string, list<string>>}
+     * @return DashboardScopes
      */
     public static function fetchDashboardScopes(
         string $apiBaseUrl,
@@ -531,6 +540,7 @@ class AuthHelper
             'is_resource_admin' => false,
             'admin_scopes'      => [],
             'viewer_scopes'     => [],
+            'editor_scopes'     => [],
         ];
 
         $client ??= new \GuzzleHttp\Client(['timeout' => 5, 'connect_timeout' => 2, 'http_errors' => true]);
@@ -565,15 +575,9 @@ class AuthHelper
             }
         }
 
-        $viewerScopes = [];
-        if (isset($data['viewer_scopes']) && is_array($data['viewer_scopes'])) {
-            foreach ($data['viewer_scopes'] as $type => $ids) {
-                if (!is_string($type) || !is_array($ids)) {
-                    continue;
-                }
-                $viewerScopes[$type] = array_values(array_filter($ids, 'is_string'));
-            }
-        }
+        $viewerScopes = self::scopesByType($data['viewer_scopes'] ?? null);
+        // Absent from an API that predates it: an empty map, which grants nothing.
+        $editorScopes = self::scopesByType($data['editor_scopes'] ?? null);
 
         // Strict, fail-closed booleans: only an explicit JSON `true` counts,
         // mirroring fetchAdminScopes().
@@ -582,7 +586,46 @@ class AuthHelper
             'is_resource_admin' => ( $data['is_resource_admin'] ?? false ) === true,
             'admin_scopes'      => $adminScopes,
             'viewer_scopes'     => $viewerScopes,
+            'editor_scopes'     => $editorScopes,
         ];
+    }
+
+    /**
+     * A `{object_type: [object_id, …]}` map from the API, keeping only well-typed entries.
+     *
+     * @return array<string, list<string>>
+     */
+    private static function scopesByType(mixed $raw): array
+    {
+        $scopes = [];
+        if (!is_array($raw)) {
+            return $scopes;
+        }
+        foreach ($raw as $type => $ids) {
+            if (!is_string($type) || !is_array($ids)) {
+                continue;
+            }
+            $scopes[$type] = array_values(array_filter($ids, 'is_string'));
+        }
+        return $scopes;
+    }
+
+    /**
+     * The ids of the objects of `$objectType` the caller can edit (editor or above),
+     * with the rite qualifier stripped when it is `$rite`: `roman/CA` → `CA`.
+     *
+     * @return list<string>
+     */
+    public function editableObjectIds(string $objectType, string $rite = 'roman'): array
+    {
+        $prefix = $rite . '/';
+        $ids    = [];
+        foreach ($this->dashboardScopes()['editor_scopes'][$objectType] ?? [] as $id) {
+            if (str_starts_with($id, $prefix)) {
+                $ids[] = substr($id, strlen($prefix));
+            }
+        }
+        return $ids;
     }
 
     /**

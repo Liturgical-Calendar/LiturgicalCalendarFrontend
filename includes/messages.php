@@ -88,6 +88,14 @@ $messages = [
     'National calendar saved'                         => _('National Calendar was created or updated successfully'),
     /** translators: confirmation shown after saving a wider region calendar */
     'Wider region saved'                              => _('Wider Region Calendar was created or updated successfully'),
+    /** translators: %s = comma-separated locales, e.g. "en_CA, fr_CA". Shown to a national calendar editor viewing a wider region */
+    'Wider region translations only'                  => _('You can edit this wider region\'s translations for: %s. Everything else is read-only.'),
+    /** translators: shown to a national calendar editor with no locale of their own in the wider region */
+    'Wider region no own translations'                => _('You can add your nation\'s languages to this wider region in the Locales list; everything else is read-only.'),
+    /** translators: %s = comma-separated locales, e.g. "en_CA, fr_CA" */
+    'Wider region translations saved'                 => _('The wider region\'s translations for %s were saved'),
+    /** translators: shown when a national calendar editor saves a wider region with no translation they may write */
+    'Wider region nothing to save'                    => _('There are no translations here that you may edit.'),
 
     // =========================================================================
     // Liturgical colors
