@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { nationOfLocale, editsWholeWiderRegion, editsWiderRegionLocale, localeWrites } from '../widerRegionEditRights.js';
+import { nationOfLocale, editsWholeWiderRegion, editsWiderRegionLocale, localeWrites, nationMayJoinWiderRegion } from '../widerRegionEditRights.js';
 
 const CANADA_EDITOR = { isGlobalAdmin: false, nations: ['CA'], widerRegions: [] };
 const AMERICAS_EDITOR = { isGlobalAdmin: false, nations: [], widerRegions: ['Americas'] };
@@ -53,5 +53,35 @@ describe('localeWrites', () => {
         };
         expect(localeWrites(i18n, CANADA_EDITOR, 'Americas').map(({ locale }) => locale)).toEqual(['en_CA', 'fr_CA']);
         expect(localeWrites(i18n, CANADA_EDITOR, 'Americas')[1].names).toEqual({ OurLadyOfGuadalupe: 'Notre-Dame de Guadalupe' });
+    });
+});
+
+describe('wider region membership', () => {
+    // Americas as the page sees it: its own member list, and the region each national
+    // calendar declares in /calendars.
+    const AMERICAS = { members: ['CA', 'US'], declaredRegion: { CA: 'Americas', US: 'Americas', IT: 'Europe' } };
+    const EUROPE = { members: ['IT', 'HU'], declaredRegion: { CA: 'Americas', US: 'Americas', IT: 'Europe' } };
+
+    it('admits a member, or a nation no region claims', () => {
+        expect(nationMayJoinWiderRegion('CA', 'Americas', AMERICAS)).toBe(true);
+        expect(nationMayJoinWiderRegion('VE', 'Americas', AMERICAS)).toBe(true);
+        expect(nationMayJoinWiderRegion('CA', 'Europe', EUROPE)).toBe(false);
+    });
+
+    it('keeps an editor of Canada out of Europe, and lets an editor of Venezuela into the Americas', () => {
+        expect(editsWiderRegionLocale(CANADA_EDITOR, 'Europe', 'fr_CA', EUROPE)).toBe(false);
+        expect(editsWiderRegionLocale(CANADA_EDITOR, 'Americas', 'fr_CA', AMERICAS)).toBe(true);
+        const venezuelaEditor = { isGlobalAdmin: false, nations: ['VE'], widerRegions: [] };
+        expect(editsWiderRegionLocale(venezuelaEditor, 'Americas', 'es_VE', AMERICAS)).toBe(true);
+    });
+
+    it('does not restrict the whole-region editors', () => {
+        expect(editsWiderRegionLocale(ADMIN, 'Europe', 'fr_CA', EUROPE)).toBe(true);
+    });
+
+    it('filters the writes the same way', () => {
+        const i18n = { fr_CA: { StBenedict: 'Saint Benoît' }, it_IT: { StBenedict: 'San Benedetto' } };
+        const bothNations = { isGlobalAdmin: false, nations: ['CA', 'IT'], widerRegions: [] };
+        expect(localeWrites(i18n, bothNations, 'Europe', EUROPE).map(({ locale }) => locale)).toEqual(['it_IT']);
     });
 });

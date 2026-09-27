@@ -65,6 +65,34 @@ test.describe('wider region translations by nation', () => {
         }
     });
 
+    test('an editor of Italy, a European nation, may not write into the Americas', async ({ browser }) => {
+        // Membership, not just the nation grant: Italy belongs to Europe, so the fallback
+        // that lets a national editor write their own locale does not reach the Americas.
+        const cei = await actingAs(browser, 'cei-editor');
+        const { page } = cei;
+        try {
+            const put = await page.request.put(`${API_BASE}/data/widerregion/Americas/it_IT`, {
+                headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+                data: { OurLadyOfGuadalupe: 'Nostra Signora di Guadalupe' }
+            });
+            expect(put.status(), `PUT Americas/it_IT should be 403; got ${put.status()}: ${await put.text()}`).toBe(403);
+
+            await page.goto('/extending.php?choice=widerRegion');
+            const regionInput = page.locator('#widerRegionCalendarName');
+            await regionInput.fill('Americas - en_US');
+            await regionInput.press('Enter');
+            await regionInput.blur();
+            await expect(page.locator('#widerRegionEditRightsNotice')).toBeVisible({ timeout: 20000 });
+            const itOption = page.locator('#widerRegionLocales option[value="it_IT"]');
+            if (await itOption.count() > 0) {
+                await expect(itOption).toHaveAttribute('disabled', /.*/);
+            }
+            await expect(page.locator('#widerRegionForm .litEventName').first()).toBeDisabled();
+        } finally {
+            await cei.context.close();
+        }
+    });
+
     test('the editor locks what an editor of Italy may not change, and saves it_IT alone', async ({ browser }) => {
         const cei = await actingAs(browser, 'cei-editor');
         const { page } = cei;

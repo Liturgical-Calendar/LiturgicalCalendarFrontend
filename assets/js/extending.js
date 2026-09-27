@@ -1566,6 +1566,7 @@ const updateRegionalCalendarForm = (data) => {
         case 'widerregion': {
             FormControls.settings.decreeUrlFieldShow = true;
             FormControls.settings.decreeLangMapFieldShow = true;
+            loadedWiderRegionMembers = Object.values(data.national_calendars ?? {});
             $('#widerRegionLocales').multiselect('deselectAll', false).multiselect('select', data.metadata.locales);
             const currentLocalizationChoices = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => {
                 return data.metadata.locales.includes(localeIso);
@@ -2073,6 +2074,7 @@ const processEventsResponse = (json, eventsUrlForCategory) => {
 const fetchEventsAndCalendarData = () => {
     // A new calendar starts with nothing pending; its own load sets this again.
     translationsIncomplete = false;
+    loadedWiderRegionMembers = [];
     document.querySelector('#overlay').classList.remove('hidden');
     const headers = new Headers({ 'Accept': 'application/json' });
 
@@ -3066,6 +3068,29 @@ const setFocusFirstTabWithData = () => {
 const currentWiderRegion = () => (document.querySelector('#widerRegionCalendarName')?.value ?? '').split(' - ')[0];
 
 /**
+ * ISO codes of the loaded wider region's member nations, from its `national_calendars`.
+ * Set when a wider region loads; empty for one being created.
+ * @type {string[]}
+ */
+let loadedWiderRegionMembers = [];
+
+/**
+ * Wider region membership as far as the page can know it: the loaded region's own
+ * members, and the region each existing national calendar declares. See
+ * WiderRegionMembership in widerRegionEditRights.js for what it cannot see.
+ *
+ * @returns {import('./widerRegionEditRights.js').WiderRegionMembership}
+ */
+const widerRegionMembership = () => ({
+    members: loadedWiderRegionMembers,
+    declaredRegion: Object.fromEntries(
+        (LitCalMetadata.national_calendars ?? [])
+            .filter(({ wider_region }) => typeof wider_region === 'string' && wider_region !== '')
+            .map(({ calendar_id, wider_region }) => [calendar_id, wider_region])
+    )
+});
+
+/**
  * Lock whatever the caller may not change in a wider region: for an editor of a
  * national calendar (rather than of the region, or a global admin), everything
  * except the region's translations into their own nation's locales, and the
@@ -3082,10 +3107,11 @@ const applyWiderRegionEditRights = () => {
         return;
     }
 
+    const membership = widerRegionMembership();
     const localesSelect = document.querySelector('#widerRegionLocales');
     if (localesSelect) {
         Array.from(localesSelect.options).forEach(option => {
-            option.disabled = !editsWiderRegionLocale(CalendarEditRights, region, option.value);
+            option.disabled = !editsWiderRegionLocale(CalendarEditRights, region, option.value, membership);
         });
         $(localesSelect).multiselect('rebuild');
     }
@@ -3096,7 +3122,7 @@ const applyWiderRegionEditRights = () => {
             const locale = el.matches('input[data-locale]')
                 ? el.dataset.locale
                 : (el.classList.contains('litEventName') ? current : null);
-            el.disabled = !(locale !== null && editsWiderRegionLocale(CalendarEditRights, region, locale));
+            el.disabled = !(locale !== null && editsWiderRegionLocale(CalendarEditRights, region, locale, membership));
         });
     document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = true);
     const removeBtn = document.querySelector('#removeExistingCalendarDataBtn');
@@ -3104,7 +3130,7 @@ const applyWiderRegionEditRights = () => {
 
     const own = Array.from(localesSelect?.selectedOptions ?? [])
         .map(({ value }) => value)
-        .filter(locale => editsWiderRegionLocale(CalendarEditRights, region, locale));
+        .filter(locale => editsWiderRegionLocale(CalendarEditRights, region, locale, membership));
     const notice = document.querySelector('#widerRegionEditRightsNotice');
     if (notice) {
         notice.textContent = own.length > 0
@@ -3124,7 +3150,7 @@ const applyWiderRegionEditRights = () => {
  * @param {Headers} headers
  */
 const saveOwnWiderRegionLocales = async (i18n, headers) => {
-    const writes = localeWrites(i18n, CalendarEditRights, API.key);
+    const writes = localeWrites(i18n, CalendarEditRights, API.key, widerRegionMembership());
     try {
         if (writes.length === 0) {
             toastr['warning'](Messages['Wider region nothing to save'], Messages['Warning']);
