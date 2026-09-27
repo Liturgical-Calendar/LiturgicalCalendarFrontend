@@ -70,6 +70,36 @@ class EternalHighPriest {
     }
 }
 
+/**
+ * The `holydays_of_obligation` setting: `HolyDaysOfObligation` in the API's
+ * CommonDef.json. The ten standard holy days map to booleans; a calendar may add
+ * holy days proper to it, which the schema only admits as `true`.
+ */
+class HolydaysOfObligation {
+    static STANDARD = Object.freeze([
+        'Christmas', 'Epiphany', 'Ascension', 'CorpusChristi', 'MaryMotherOfGod',
+        'ImmaculateConception', 'Assumption', 'StJoseph', 'StsPeterPaulAp', 'AllSaints'
+    ]);
+    constructor(value) {
+        if (value === null || typeof value !== 'object' || Array.isArray(value)) {
+            throw new Error('Invalid HolydaysOfObligation value, must be an object');
+        }
+        for (const [key, observed] of Object.entries(value)) {
+            const valid = HolydaysOfObligation.STANDARD.includes(key)
+                ? typeof observed === 'boolean'
+                : observed === true;
+            if (!valid) {
+                throw new Error(`Invalid HolydaysOfObligation value for ${key}: ${observed}`);
+            }
+        }
+        this.value = Object.freeze({ ...value });
+        return Object.freeze(this);
+    }
+    toJSON() {
+        return this.value;
+    }
+}
+
 class Locale {
     static #map = Object.freeze([
         "af_NA","af_ZA","agq_CM","ak_GH","am_ET",
@@ -228,8 +258,37 @@ class CalendarSettings {
         this.ascension = new Ascension(settingsObj.ascension);
         this.corpus_christi = new CorpusChristi(settingsObj.corpus_christi);
         this.eternal_high_priest = new EternalHighPriest(settingsObj.eternal_high_priest);
+        // Optional: absent means the API's defaults. Carried through when present,
+        // because the API writes a national calendar file wholesale, so a setting
+        // this class dropped would be deleted from the calendar on save.
+        if (settingsObj.holydays_of_obligation !== undefined) {
+            this.holydays_of_obligation = new HolydaysOfObligation(settingsObj.holydays_of_obligation);
+        }
         return Object.freeze(this);
     }
 }
 
-export { CalendarSettings, Locale };
+/**
+ * The `holydays_of_obligation` value to save, from the editor's multiselect.
+ *
+ * Every offered holy day is written as observed or not. Holy days proper to the
+ * calendar that the control does not offer are carried through as stored. A
+ * calendar that had no setting and still has every holy day selected keeps
+ * having none, since that is the API's default: `undefined` means "omit".
+ *
+ * @param {string[]} offered the multiselect's option values
+ * @param {string[]} selected the selected option values
+ * @param {?Object<string, boolean>} stored the calendar's stored setting, or null
+ * @returns {Object<string, boolean>|undefined}
+ */
+const holydaysOfObligationSetting = (offered, selected, stored) => {
+    const chosen = new Set(selected);
+    const map = Object.fromEntries(offered.map((key) => [key, chosen.has(key)]));
+    if (stored === null && Object.values(map).every(Boolean)) {
+        return undefined;
+    }
+    const proper = Object.fromEntries(Object.entries(stored ?? {}).filter(([key]) => !offered.includes(key)));
+    return { ...proper, ...map };
+};
+
+export { CalendarSettings, HolydaysOfObligation, Locale, holydaysOfObligationSetting };

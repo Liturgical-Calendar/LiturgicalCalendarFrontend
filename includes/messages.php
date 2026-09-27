@@ -272,6 +272,28 @@ $messages = [
     'CORPUS CHRISTI'                                  => _('CORPUS CHRISTI'),
     /** translators: label for Eternal High Priest setting */
     'ETERNAL HIGH PRIEST'                             => _('ETERNAL HIGH PRIEST'),
+    /** translators: label for the national calendar's holy days of obligation setting */
+    'HOLY DAYS OF OBLIGATION'                         => _('HOLY DAYS OF OBLIGATION'),
+    /** translators: a holy day of obligation (Nativity of the Lord) */
+    'Christmas'                                       => _('Christmas'),
+    /** translators: a holy day of obligation */
+    'Epiphany'                                        => _('Epiphany'),
+    /** translators: a holy day of obligation */
+    'Ascension'                                       => _('Ascension'),
+    /** translators: a holy day of obligation */
+    'Corpus Christi'                                  => _('Corpus Christi'),
+    /** translators: a holy day of obligation (Solemnity of Mary, Mother of God, January 1) */
+    'Mary, Mother of God'                             => _('Mary, Mother of God'),
+    /** translators: a holy day of obligation */
+    'Immaculate Conception'                           => _('Immaculate Conception'),
+    /** translators: a holy day of obligation (Assumption of the Blessed Virgin Mary) */
+    'Assumption'                                      => _('Assumption'),
+    /** translators: a holy day of obligation (Saint Joseph, Spouse of the Blessed Virgin Mary) */
+    'St. Joseph'                                      => _('St. Joseph'),
+    /** translators: a holy day of obligation */
+    'Sts. Peter and Paul, Apostles'                   => _('Sts. Peter and Paul, Apostles'),
+    /** translators: a holy day of obligation */
+    'All Saints'                                      => _('All Saints'),
 
     // =========================================================================
     // Carousel/tab labels for liturgical grades
