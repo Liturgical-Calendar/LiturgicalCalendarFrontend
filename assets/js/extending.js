@@ -35,6 +35,32 @@ import {
 } from './writeDisposition.js';
 
 import { holydaysOfObligationSetting } from './Settings.js';
+import { fetchWithRetry, mapWithConcurrency } from './boundedFetch.js';
+import { editsWholeWiderRegion, editsWiderRegionLocale, localeWrites } from './widerRegionEditRights.js';
+
+/**
+ * How many translation files load at once. Fired all together, a wider region's
+ * two dozen locales trip the API's rate limit; see boundedFetch.js.
+ */
+const TRANSLATION_FETCH_CONCURRENCY = 4;
+
+/**
+ * True while the loaded national or wider region calendar is missing the
+ * translations of some locale it declares: loading, or failed to load.
+ *
+ * The save builds `payload.i18n` from the per-locale inputs, which only exist once
+ * every locale has loaded, so saving before then submits fewer locales than
+ * `metadata.locales` announces (issue #465). Every path that enables Save goes
+ * through enableSerializeButton(), which honours this; they used to enable it
+ * directly, so a failed load left Save enabled anyway.
+ */
+let translationsIncomplete = false;
+
+/** Enable the national/wider region Save button, unless translations are incomplete. */
+const enableSerializeButton = () => {
+    if (translationsIncomplete) return;
+    document.querySelector('.serializeRegionalNationalData')?.removeAttribute('disabled');
+};
 
 /**
  * The loaded national calendar's stored `holydays_of_obligation`, or null when it
@@ -1605,14 +1631,17 @@ const updateRegionalCalendarForm = (data) => {
      */
     let translationsLoaded = Promise.resolve();
     if (document.querySelector('.calendarLocales').selectedOptions.length > 1) {
+        translationsIncomplete = true;
         const currentLocalization = document.querySelector('.currentLocalizationChoices').value;
         const otherLocalizations = Array.from(document.querySelector('.calendarLocales').selectedOptions)
                                     .filter(({ value }) => value !== currentLocalization)
                                     .map(({ value }) => value);
         console.log('otherLocalizations:', otherLocalizations);
         if (DataLoader.lastRequestPath !== API.path) {
-            translationsLoaded = Promise.all(
-                otherLocalizations.map(localization => fetchLocalization(API.path, localization))
+            translationsLoaded = mapWithConcurrency(
+                otherLocalizations,
+                TRANSLATION_FETCH_CONCURRENCY,
+                localization => fetchLocalization(API.path, localization)
             )
             .then(data => {
                 toastr["success"](`Calendar translation data retrieved successfully for calendar ${API.key} and locales ${otherLocalizations.join(', ')}`, Messages['Success']);
@@ -1659,8 +1688,13 @@ const updateRegionalCalendarForm = (data) => {
     // failures (inspecting `error.status` for the create-new-calendar case) and would
     // mis-handle a translation error.
     return translationsLoaded.then(() => {
-        document.querySelector('.serializeRegionalNationalData').disabled = false;
+        translationsIncomplete = false;
+        enableSerializeButton();
+        applyWiderRegionEditRights();
     }).catch(error => {
+        translationsIncomplete = true;
+        document.querySelector('.serializeRegionalNationalData')?.setAttribute('disabled', 'disabled');
+        applyWiderRegionEditRights();
         toastr["error"](error.message, Messages['Error']);
         console.error(error);
     });
@@ -2037,6 +2071,8 @@ const processEventsResponse = (json, eventsUrlForCategory) => {
  * @returns {void}
  */
 const fetchEventsAndCalendarData = () => {
+    // A new calendar starts with nothing pending; its own load sets this again.
+    translationsIncomplete = false;
     document.querySelector('#overlay').classList.remove('hidden');
     const headers = new Headers({ 'Accept': 'application/json' });
 
@@ -2077,7 +2113,7 @@ const fetchEventsAndCalendarData = () => {
     // Non-auth controls (.actionPromptButton) for all users, but respecting input validity
     if (typeof Auth !== 'undefined' && Auth.isAuthenticated()) {
         document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = false);
-        document.querySelector('.serializeRegionalNationalData')?.removeAttribute('disabled');
+        enableSerializeButton();
         if (API.category === 'widerregion') {
             document.querySelector('#widerRegionLocales').disabled = false;
             $('#widerRegionLocales').multiselect('enable');
@@ -2516,7 +2552,7 @@ const actionPromptButtonClicked = (ev) => {
     populateExistingEventData(eventKey, existingLiturgicalEvent, controlsRow, currentUniqid);
 
     // Enable serialize button
-    document.querySelector('.serializeRegionalNationalData').disabled = false;
+    enableSerializeButton();
 }
 
 
@@ -2949,6 +2985,11 @@ const serializeRegionalNationalDataClicked = (ev) => {
             baseHeaders.append('Accept-Language', API.locale.replaceAll('_', '-'));
         }
 
+        if (API.category === 'widerregion' && !editsWholeWiderRegion(CalendarEditRights, API.key)) {
+            saveOwnWiderRegionLocales(JSON.parse(JSON.stringify(finalPayload.i18n)), baseHeaders);
+            return;
+        }
+
         const makeRequest = () => makeAuthenticatedRequest(API.method, API.path, {
             body: finalPayload,
             headers: baseHeaders
@@ -3021,6 +3062,98 @@ const setFocusFirstTabWithData = () => {
     document.querySelector(`#diocesanCalendarDefinitionCardLinks li:nth-child(${itemIndex+2})`).classList.add('active');
 }
 
+/** The wider region the form is editing, without the ` - locale` suffix its input may carry. */
+const currentWiderRegion = () => (document.querySelector('#widerRegionCalendarName')?.value ?? '').split(' - ')[0];
+
+/**
+ * Lock whatever the caller may not change in a wider region: for an editor of a
+ * national calendar (rather than of the region, or a global admin), everything
+ * except the region's translations into their own nation's locales, and the
+ * Locales options of other nations. See widerRegionEditRights.js.
+ *
+ * Re-applied after every rebuild of the translation inputs, since a rebuild
+ * recreates them enabled.
+ */
+const applyWiderRegionEditRights = () => {
+    if (API.category !== 'widerregion') return;
+    const region = currentWiderRegion();
+    if (region === '' || editsWholeWiderRegion(CalendarEditRights, region)) {
+        document.querySelector('#widerRegionEditRightsNotice')?.classList.add('d-none');
+        return;
+    }
+
+    const localesSelect = document.querySelector('#widerRegionLocales');
+    if (localesSelect) {
+        Array.from(localesSelect.options).forEach(option => {
+            option.disabled = !editsWiderRegionLocale(CalendarEditRights, region, option.value);
+        });
+        $(localesSelect).multiselect('rebuild');
+    }
+
+    const current = document.querySelector('.currentLocalizationChoices')?.value ?? '';
+    document.querySelectorAll('#widerRegionForm input, #widerRegionForm select, #widerRegionForm textarea, #widerRegionForm button')
+        .forEach(el => {
+            const locale = el.matches('input[data-locale]')
+                ? el.dataset.locale
+                : (el.classList.contains('litEventName') ? current : null);
+            el.disabled = !(locale !== null && editsWiderRegionLocale(CalendarEditRights, region, locale));
+        });
+    document.querySelectorAll('.litcalActionButton').forEach(btn => btn.disabled = true);
+    const removeBtn = document.querySelector('#removeExistingCalendarDataBtn');
+    if (removeBtn) removeBtn.disabled = true;
+
+    const own = Array.from(localesSelect?.selectedOptions ?? [])
+        .map(({ value }) => value)
+        .filter(locale => editsWiderRegionLocale(CalendarEditRights, region, locale));
+    const notice = document.querySelector('#widerRegionEditRightsNotice');
+    if (notice) {
+        notice.textContent = own.length > 0
+            ? Messages['Wider region translations only'].replace('%s', own.join(', '))
+            : Messages['Wider region no own translations'];
+        notice.classList.remove('d-none');
+    }
+};
+
+/**
+ * A national calendar editor's save of a wider region: one
+ * `PUT /data/widerregion/{region}/{locale}` per locale they may write, with the
+ * translations the whole-region save collected. The whole-region PATCH is not
+ * theirs to send.
+ *
+ * @param {Object<string, Object<string, string>>} i18n
+ * @param {Headers} headers
+ */
+const saveOwnWiderRegionLocales = async (i18n, headers) => {
+    const writes = localeWrites(i18n, CalendarEditRights, API.key);
+    try {
+        if (writes.length === 0) {
+            toastr['warning'](Messages['Wider region nothing to save'], Messages['Warning']);
+            return;
+        }
+        const outcomes = [];
+        for (const { locale, names } of writes) {
+            const response = await makeAuthenticatedRequest('PUT', `${API.path}/${locale}`, { body: names, headers });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                throw Object.assign(data, { status: response.status });
+            }
+            outcomes.push(describeWriteOutcome(
+                data,
+                Messages,
+                Messages['Wider region translations saved'].replace('%s', writes.map(({ locale: l }) => l).join(', '))
+            ));
+        }
+        // One toast for the whole save; a pending review outranks an applied write.
+        const outcome = outcomes.find(o => !o.applied) ?? outcomes[outcomes.length - 1];
+        toastr[outcome.severity](outcome.message, outcome.applied ? Messages['Success'] : Messages['Pending Review']);
+    } catch (error) {
+        const status = error && error.status ? `${error.status}: ` : '';
+        toastr['error'](status + extractErrorMessage(error), Messages['Error']);
+    } finally {
+        document.querySelector('#overlay').classList.add('hidden');
+    }
+};
+
 /**
  * Rebuilds the other localization input fields for the given localization list.
  * This method is used when the user changes the primary localization of the calendar.
@@ -3068,6 +3201,8 @@ const refreshOtherLocalizationInputs = (otherLocalizations) => {
             });
         }
     }
+    // The inputs were just recreated enabled.
+    applyWiderRegionEditRights();
 }
 
 /**
@@ -3232,9 +3367,16 @@ const populateRowWithEventData = (row, liturgical_event, metadata) => {
  * @param {string} localization - The locale to fetch, e.g. `fr_CA`.
  * @returns {Promise<Object>} The parsed localization data.
  */
-const fetchLocalization = (path, localization) => fetch(`${path}/${localization}`, {
+const fetchLocalization = (path, localization) => fetchWithRetry(`${path}/${localization}`, {
     credentials: 'omit'
 }).then(response => {
+    // A locale the calendar declares but that has no translation file yet (Europe's
+    // hu_HU, today) has nothing to load: its fields start empty, and the save that
+    // fills them in creates the file. Treating it as a failed load instead would
+    // keep Save disabled for the whole calendar, with no way to supply it.
+    if (response.status === 404) {
+        return {};
+    }
     if (false === response.ok) {
         throw new Error(`Could not load the ${localization} translation (HTTP ${response.status} ${response.statusText})`);
     }
@@ -3313,7 +3455,11 @@ const loadDiocesanCalendarData = () => {
                                         .map(({ value }) => value);
             if (DataLoader.lastRequestPath !== API.path) {
                 // We are requesting a totally different calendar, we need to reload ALL i18n data
-                translationsLoaded = Promise.all(otherLocalizations.map(localization => fetchLocalization(API.path, localization))).then(data => {
+                translationsLoaded = mapWithConcurrency(
+                    otherLocalizations,
+                    TRANSLATION_FETCH_CONCURRENCY,
+                    localization => fetchLocalization(API.path, localization)
+                ).then(data => {
                     toastr["success"]("Diocesan Calendar translation data was retrieved successfully", Messages['Success']);
                     if (false === TranslationData.has(API.path)) {
                         TranslationData.set(API.path, new Map());
@@ -4437,7 +4583,7 @@ document.addEventListener('auth:login', () => {
     // Re-enable serialize button if there are form rows
     const formRows = document.querySelectorAll('.regionalNationalDataForm .row');
     if (formRows.length > 0) {
-        document.querySelector('.serializeRegionalNationalData')?.removeAttribute('disabled');
+        enableSerializeButton();
     }
 
     // Re-validate action prompt buttons based on current input values
