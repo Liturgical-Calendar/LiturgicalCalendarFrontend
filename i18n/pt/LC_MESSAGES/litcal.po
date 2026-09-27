@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-27 10:44+0000\n"
-"PO-Revision-Date: 2026-09-27 01:00+0000\n"
+"PO-Revision-Date: 2026-09-27 18:48+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pt/>\n"
@@ -2119,7 +2119,7 @@ msgstr "SUMO SACERDOTE ETERNO"
 #. translators: label for the national calendar's holy days of obligation setting
 #: includes/messages.php:276
 msgid "HOLY DAYS OF OBLIGATION"
-msgstr ""
+msgstr "Dias de preceito"
 
 #. translators: a holy day of obligation (Nativity of the Lord)
 #: includes/messages.php:278 temporale.php:67
@@ -2129,51 +2129,47 @@ msgstr "Natal"
 #. translators: a holy day of obligation
 #: includes/messages.php:280
 msgid "Epiphany"
-msgstr ""
+msgstr "Epifania"
 
 #. translators: a holy day of obligation
 #: includes/messages.php:282
 msgid "Ascension"
-msgstr ""
+msgstr "Ascensão"
 
 #. translators: a holy day of obligation
 #: includes/messages.php:284
 msgid "Corpus Christi"
-msgstr ""
+msgstr "Corpus Christi"
 
 #. translators: a holy day of obligation (Solemnity of Mary, Mother of God, January 1)
 #: includes/messages.php:286
 msgid "Mary, Mother of God"
-msgstr ""
+msgstr "Maria, Mãe de Deus"
 
 #. translators: a holy day of obligation
 #: includes/messages.php:288
 msgid "Immaculate Conception"
-msgstr ""
+msgstr "Imaculada Conceição"
 
 #. translators: a holy day of obligation (Assumption of the Blessed Virgin Mary)
 #: includes/messages.php:290
-#, fuzzy
-#| msgid "Action"
 msgid "Assumption"
-msgstr "Ação"
+msgstr "Assunção"
 
 #. translators: a holy day of obligation (Saint Joseph, Spouse of the Blessed Virgin Mary)
 #: includes/messages.php:292
 msgid "St. Joseph"
-msgstr ""
+msgstr "São José"
 
 #. translators: a holy day of obligation
 #: includes/messages.php:294
 msgid "Sts. Peter and Paul, Apostles"
-msgstr ""
+msgstr "Santos Pedro e Paulo, Apóstolos"
 
 #. translators: a holy day of obligation
 #: includes/messages.php:296
-#, fuzzy
-#| msgid "All Seasons"
 msgid "All Saints"
-msgstr "Todos os Tempos"
+msgstr "Todos os Santos"
 
 #. translators: tab label for solemnities section
 #: includes/messages.php:302
