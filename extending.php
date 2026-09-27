@@ -368,6 +368,32 @@ if (isset($_GET['choice'])) {
                                                 title="<?php echo $hpTooltip; ?>"></i>
                                         </div>
                                     </div>
+                                    <div class="form-group col col-md-3">
+                                        <label for="nationalCalendarSettingHolydays"><?php echo $messages['HOLY DAYS OF OBLIGATION']; ?></label>
+                                        <?php // The ten standard holy days of the API's HolyDaysOfObligation, in the order
+                                        // the API explorer's HolydaysOfObligationInput offers them. All are selected by
+                                        // default, which is what a calendar without the setting observes. ?>
+                                        <select class="form-select" id="nationalCalendarSettingHolydays" multiple="multiple" disabled>
+                                            <?php
+                                            $holydaysOfObligation = [
+                                                'Christmas'            => 'Christmas',
+                                                'Epiphany'             => 'Epiphany',
+                                                'Ascension'            => 'Ascension',
+                                                'CorpusChristi'        => 'Corpus Christi',
+                                                'MaryMotherOfGod'      => 'Mary, Mother of God',
+                                                'ImmaculateConception' => 'Immaculate Conception',
+                                                'Assumption'           => 'Assumption',
+                                                'StJoseph'             => 'St. Joseph',
+                                                'StsPeterPaulAp'       => 'Sts. Peter and Paul, Apostles',
+                                                'AllSaints'            => 'All Saints'
+                                            ];
+                                            foreach ($holydaysOfObligation as $holydayKey => $holydayLabel) : ?>
+                                            <option value="<?php echo $holydayKey; ?>" selected><?php
+                                                echo htmlspecialchars($messages[$holydayLabel], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                            ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
 
                                     <div class="col col-md-6 mt-4">
                                         <div class="row mt-2">
