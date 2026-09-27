@@ -34,6 +34,16 @@ import {
     describeWriteOutcome
 } from './writeDisposition.js';
 
+import { holydaysOfObligationSetting } from './Settings.js';
+
+/**
+ * The loaded national calendar's stored `holydays_of_obligation`, or null when it
+ * has none (or no calendar is loaded). The save builds on it: the API writes a
+ * national calendar file wholesale, so anything the payload leaves out is deleted.
+ * @type {?Object<string, boolean>}
+ */
+let storedHolydaysOfObligation = null;
+
 /**
  * @typedef {Object} RowData
  * @prop {Object} liturgical_event
@@ -161,6 +171,13 @@ const setFormEnabled = (selectorOrElement, enabled) => {
     }
     element.querySelectorAll('input, select, button, textarea').forEach(el => {
         el.disabled = !enabled;
+    });
+    // A bootstrap-multiselect draws its own button, which does not follow the
+    // underlying select's `disabled`.
+    element.querySelectorAll('select[multiple]').forEach(el => {
+        if ($(el).data('multiselect')) {
+            $(el).multiselect(enabled ? 'enable' : 'disable');
+        }
     });
 };
 
@@ -746,6 +763,22 @@ const domContentLoadedCallback = () => {
                 cancelable: true
               }));
         }
+    });
+
+    $('#nationalCalendarSettingHolydays').multiselect({
+        buttonWidth: '100%',
+        buttonClass: 'form-select',
+        templates: {
+            button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+        },
+        maxHeight: 250
+    });
+    // Every path that clears the national form resets it, so this is the one place
+    // that forgets the stored setting and redraws the multiselect. `reset` fires
+    // before the form is actually reset, hence the deferred refresh.
+    document.querySelector('#nationalCalendarSettingsForm')?.addEventListener('reset', () => {
+        storedHolydaysOfObligation = null;
+        setTimeout(() => $('#nationalCalendarSettingHolydays').multiselect('refresh'));
     });
 
     setCommonMultiselect(null, null);
@@ -1527,6 +1560,15 @@ const updateRegionalCalendarForm = (data) => {
             document.querySelector('#nationalCalendarSettingEpiphany').value = settings.epiphany;
             document.querySelector('#nationalCalendarSettingAscension').value = settings.ascension;
             document.querySelector('#nationalCalendarSettingCorpusChristi').value = settings.corpus_christi;
+
+            // Absent means the API's default, every holy day observed; a stored map
+            // marks each one observed unless it says `false`.
+            storedHolydaysOfObligation = settings.holydays_of_obligation ?? null;
+            const holydaysSelect = document.querySelector('#nationalCalendarSettingHolydays');
+            Array.from(holydaysSelect.options).forEach(option => {
+                option.selected = storedHolydaysOfObligation?.[option.value] !== false;
+            });
+            $(holydaysSelect).multiselect('refresh');
 
             const localesForNation = Object.entries(AvailableLocalesWithRegion).filter(([key, ]) => key.split('_').pop() === API.key);
 
@@ -2582,6 +2624,12 @@ const buildNationalCalendarPayload = () => {
     API.locale = document.querySelector('.currentLocalizationChoices').value;
     const widerRegion = document.querySelector('#associatedWiderRegion').value;
     const selectedLocales = document.querySelector('#nationalCalendarLocales').selectedOptions;
+    const holydaysSelect = document.querySelector('#nationalCalendarSettingHolydays');
+    const holydays = holydaysOfObligationSetting(
+        Array.from(holydaysSelect.options, ({ value }) => value),
+        Array.from(holydaysSelect.selectedOptions, ({ value }) => value),
+        storedHolydaysOfObligation
+    );
 
     return {
         litcal: [],
@@ -2589,7 +2637,8 @@ const buildNationalCalendarPayload = () => {
             epiphany: document.querySelector('#nationalCalendarSettingEpiphany').value,
             ascension: document.querySelector('#nationalCalendarSettingAscension').value,
             corpus_christi: document.querySelector('#nationalCalendarSettingCorpusChristi').value,
-            eternal_high_priest: document.querySelector('#nationalCalendarSettingHighPriest').checked
+            eternal_high_priest: document.querySelector('#nationalCalendarSettingHighPriest').checked,
+            ...(holydays !== undefined ? { holydays_of_obligation: holydays } : {})
         },
         metadata: {
             nation: API.key,

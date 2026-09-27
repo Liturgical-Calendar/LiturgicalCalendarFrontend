@@ -17,6 +17,8 @@ import { expectApplied } from './support/writeMode';
  * green without anything being written (issue #502).
  */
 
+const API_BASE_URL = `${process.env.API_PROTOCOL || 'http'}://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || '8000'}`;
+
 test.describe('National Calendar Form', () => {
     test.beforeEach(async ({ extendingPage }) => {
         await extendingPage.goToNationalCalendar();
@@ -153,6 +155,13 @@ test.describe('National Calendar Form', () => {
             expect(['JAN6', 'SUNDAY_JAN2_JAN8']).toContain(capturedPayload.settings.epiphany);
             expect(['THURSDAY', 'SUNDAY']).toContain(capturedPayload.settings.ascension);
             expect(['THURSDAY', 'SUNDAY']).toContain(capturedPayload.settings.corpus_christi);
+
+            // The API writes the calendar file wholesale, so a setting missing from
+            // the payload is deleted. US stores its holy days of obligation: the save
+            // must carry them, exactly as stored, since nothing here changed them.
+            const stored = await (await page.request.get(`${API_BASE_URL}/data/nation/US?locale=en_US`)).json();
+            expect(stored.settings.holydays_of_obligation).toBeDefined();
+            expect(capturedPayload.settings.holydays_of_obligation).toEqual(stored.settings.holydays_of_obligation);
 
             // Validate metadata structure
             expect(capturedPayload.metadata).toHaveProperty('nation');
@@ -727,6 +736,20 @@ test.describe('National Calendar Form - Action Buttons', () => {
 
         await expect(page.locator('.regionalNationalDataForm input[data-locale="fr_CA"]').filter({ has: page.locator(`xpath=self::*[@value='${quoted}']`) }))
             .toHaveCount(1, { timeout: 15000 });
+    });
+
+    test('the holy days of obligation multiselect shows the stored setting', async ({ page, extendingPage }) => {
+        await extendingPage.selectCalendar('#nationalCalendarName', 'US');
+        await page.waitForLoadState('networkidle');
+        const stored = (await (await page.request.get(`${API_BASE_URL}/data/nation/US?locale=en_US`)).json()).settings.holydays_of_obligation;
+
+        const select = page.locator('#nationalCalendarSettingHolydays');
+        await expect(select).toBeEnabled({ timeout: 15000 });
+        await expect(page.locator('#nationalCalendarSettingHolydays ~ .btn-group button.multiselect')).toBeEnabled();
+        const selected = await select.evaluate((el: HTMLSelectElement) => Array.from(el.selectedOptions, (o) => o.value));
+        expect(selected.sort()).toEqual(Object.keys(stored).filter((key) => stored[key]).sort());
+        expect(selected).toContain('Christmas');
+        expect(selected).not.toContain('Epiphany');
     });
 
     test('Create New keeps an apostrophe in the name and mints a clean event key', async ({ page, extendingPage }) => {
