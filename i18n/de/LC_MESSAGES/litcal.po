@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-27 18:49+0000\n"
-"PO-Revision-Date: 2026-09-27 18:48+0000\n"
+"PO-Revision-Date: 2026-09-28 01:12+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -1776,6 +1776,8 @@ msgid ""
 "You can edit this wider region's translations for: %s. Everything else is "
 "read-only."
 msgstr ""
+"Du kannst die Übersetzungen dieses größeren Bereichs für: %s. Alles andere "
+"ist schreibgeschützt."
 
 #. translators: shown to a national calendar editor with no locale of their own in the wider region
 #: includes/messages.php:94
@@ -1783,17 +1785,19 @@ msgid ""
 "You can add your nation's languages to this wider region in the Locales "
 "list; everything else is read-only."
 msgstr ""
+"Du kannst die Sprachen deines Landes zu diesem größeren Bereich in der "
+"Locales-Liste hinzufügen; alles andere ist schreibgeschützt."
 
 #. translators: %s = comma-separated locales, e.g. "en_CA, fr_CA"
 #: includes/messages.php:96
 #, php-format
 msgid "The wider region's translations for %s were saved"
-msgstr ""
+msgstr "Die Übersetzungen dieses größeren Bereichs für %s wurden gespeichert"
 
 #. translators: shown when a national calendar editor saves a wider region with no translation they may write
 #: includes/messages.php:98
 msgid "There are no translations here that you may edit."
-msgstr ""
+msgstr "Hier gibt es keine Übersetzungen, die du bearbeiten darfst."
 
 #. translators: form row title for designating a Doctor of the Church
 #: includes/messages.php:118
