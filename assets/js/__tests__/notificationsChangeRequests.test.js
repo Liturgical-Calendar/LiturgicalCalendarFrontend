@@ -182,6 +182,29 @@ describe('change-request notification renderers', () => {
     });
 });
 
+describe('a change request awaiting review', () => {
+    const pendingItem = {
+        type: 'change_request',
+        id: '99999999-8888-7777-6666-555555555555',
+        resource_type: 'wider_region',
+        resource_id: 'roman/Americas',
+        file_count: 27,
+        user_name: "John D'Orazio",
+        created_at: new Date(Date.now() - 600_000).toISOString(),
+        url: 'admin-changes.php'
+    };
+
+    it('names the submitter and the resource, and links to the review queue', () => {
+        const Notifications = loadNotifications();
+        const html = Notifications._renderNotificationItem(pendingItem);
+
+        expect(html).toContain("<div class=\"small fw-bold\">John D'Orazio</div>");
+        expect(html).toContain('Change request: Americas (27 files)');
+        expect(html).toContain('href="admin-changes.php"');
+        expect(html).not.toContain('Unknown');
+    });
+});
+
 describe('admin-mode notification feed', () => {
     /** Stub fetch to answer each of the two feeds. */
     function stubFeeds({ admin, user }) {

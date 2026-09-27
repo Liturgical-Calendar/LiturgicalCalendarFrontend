@@ -9,7 +9,7 @@
  *           (access_request_reviewed | change_request_reviewed |
  *           change_request_published items). Badge = data.unread_count.
  *   - admin: polls BOTH /admin/notifications (the pending review queue of
- *           role_request | access_request | application items) AND
+ *           role_request | access_request | application | change_request items) AND
  *           /auth/notifications, and MERGES them. An admin is also a user:
  *           gaining a role does not stop their own access requests being
  *           reviewed or their own change requests being published, and
@@ -430,6 +430,27 @@ const Notifications = {
                             <div class="small text-muted">
                                 ${this._getTranslation('newApplication', 'New application')}: ${this._escapeHtml(scopeLabel)}
                             </div>
+                            <div class="small text-muted">${timeAgo}</div>
+                        </div>
+                    </div>
+                </a>
+            `;
+        }
+
+        if (item.type === 'change_request') {
+            const submitter = this._escapeHtml(item.user_name || 'Unknown');
+            const summary = this._getTranslation('changeRequestPending', 'Change request: %1$s (%2$d files)')
+                .replace('%1$s', this._changeResourceLabel(item) || item.resource_type || '')
+                .replace('%2$d', String(item.file_count ?? 0));
+            return `
+                <a class="dropdown-item py-2" href="${safeUrl}">
+                    <div class="d-flex align-items-start">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-code-pull-request text-primary me-2"></i>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="small fw-bold">${submitter}</div>
+                            <div class="small text-muted">${this._escapeHtml(summary)}</div>
                             <div class="small text-muted">${timeAgo}</div>
                         </div>
                     </div>
