@@ -527,6 +527,20 @@ test.describe('National Calendar Form', () => {
         expectApplied(deleteResult.body, 'DELETE /data/nation (cleanup)');
     });
 
+    test('should default the wider region of a new national calendar', async ({ page, extendingPage }) => {
+        // English-language nations, so the General Roman Calendar is translated and
+        // the page reaches its create path (a nation whose language is not
+        // translated yet is blocked before it, and can't be created at all).
+        // Ireland has no calendar yet, and the Europe wider region lists en_IE.
+        await extendingPage.selectCalendar('#nationalCalendarName', 'IE');
+        await expect(page.locator('#associatedWiderRegion')).toHaveValue('Europe', { timeout: 15000 });
+
+        // No wider region lists an Australian locale, so nothing is suggested,
+        // and Ireland's default does not linger.
+        await extendingPage.selectCalendar('#nationalCalendarName', 'AU');
+        await expect(page.locator('#associatedWiderRegion')).toHaveValue('', { timeout: 15000 });
+    });
+
     test('should validate locale selection', async ({ page }) => {
         // Wait for form to load
         await page.waitForLoadState('networkidle');
