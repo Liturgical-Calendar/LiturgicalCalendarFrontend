@@ -216,4 +216,59 @@ final class AuthHelperDashboardScopesTest extends TestCase
             AuthHelper::reset();
         }
     }
+
+    public function testFetchDashboardScopesParsesEditorScopes(): void
+    {
+        $client = $this->clientWith(new Response(200, [], (string) json_encode([
+            'is_global_admin'   => false,
+            'is_resource_admin' => false,
+            'admin_scopes'      => [],
+            'viewer_scopes'     => [],
+            'editor_scopes'     => [
+                'national_calendar' => ['roman/CA', 42, 'roman/VE'],
+                'wider_region'      => [],
+            ],
+        ])));
+
+        $result = AuthHelper::fetchDashboardScopes('http://api.test', null, $client);
+
+        self::assertSame(['national_calendar' => ['roman/CA', 'roman/VE'], 'wider_region' => []], $result['editor_scopes']);
+    }
+
+    public function testEditorScopesFromAnApiThatPredatesThemGrantNothing(): void
+    {
+        $client = $this->clientWith(new Response(200, [], (string) json_encode([
+            'is_global_admin'   => false,
+            'is_resource_admin' => false,
+            'admin_scopes'      => [],
+            'viewer_scopes'     => [],
+        ])));
+
+        self::assertSame([], AuthHelper::fetchDashboardScopes('http://api.test', null, $client)['editor_scopes']);
+    }
+
+    public function testEditableObjectIdsStripsTheRiteQualifier(): void
+    {
+        AuthHelper::reset();
+        try {
+            $auth = AuthHelper::getInstance();
+            $prop = new ReflectionProperty(AuthHelper::class, 'dashboardScopesResult');
+            $prop->setValue($auth, [
+                'is_global_admin'   => false,
+                'is_resource_admin' => false,
+                'admin_scopes'      => [],
+                'viewer_scopes'     => [],
+                'editor_scopes'     => [
+                    'national_calendar' => ['roman/CA', 'ambrosian/XX', 'roman/VE'],
+                    'wider_region'      => ['roman/Americas'],
+                ],
+            ]);
+
+            self::assertSame(['CA', 'VE'], $auth->editableObjectIds('national_calendar'));
+            self::assertSame(['Americas'], $auth->editableObjectIds('wider_region'));
+            self::assertSame([], $auth->editableObjectIds('diocesan_calendar'));
+        } finally {
+            AuthHelper::reset();
+        }
+    }
 }

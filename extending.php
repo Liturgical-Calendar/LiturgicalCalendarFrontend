@@ -236,6 +236,8 @@ if (isset($_GET['choice'])) {
                         </div>
                         <div class="card-body">
                             <hr>
+                            <?php // Filled and shown by applyWiderRegionEditRights() for an editor of a national calendar. ?>
+                            <div id="widerRegionEditRightsNotice" class="alert alert-info d-none" role="status"></div>
                             <form class="needs-validation regionalNationalDataForm opacity-50" id="widerRegionForm" data-requires-auth="true" novalidate>
                             </form>
                             <?php echo $buttonGroup ?>
@@ -747,6 +749,12 @@ $messages = array_merge($messages, [
 <script>
 const Messages = <?php echo json_encode($messages, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 const LitCalMetadata = <?php echo json_encode($LitCalMetadata, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+<?php // What the caller may edit, for assets/js/widerRegionEditRights.js. The API enforces it; this only shows it. ?>
+const CalendarEditRights = <?php echo json_encode([
+    'isGlobalAdmin' => $authHelper->hasRole('admin'),
+    'nations'       => $authHelper->editableObjectIds('national_calendar'),
+    'widerRegions'  => $authHelper->editableObjectIds('wider_region'),
+], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 let LiturgicalEventCollection = <?php echo json_encode($LiturgicalEventCollection, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($LiturgicalEventCollection, 'event_key'), JSON_UNESCAPED_UNICODE); ?>;
 </script>
