@@ -205,6 +205,31 @@ describe('a change request awaiting review', () => {
     });
 });
 
+describe('review-queue items', () => {
+    const created_at = new Date(Date.now() - 600_000).toISOString();
+
+    it.each([
+        ['role_request', { user_name: 'Alice', role: 'developer' }, 'fa-user-plus', 'Alice', 'Requested: '],
+        ['access_request', { user_email: 'bob@example.test', role: 'calendar_editor' }, 'fa-key', 'bob@example.test', 'Requested access: '],
+        ['application', { app_name: 'My <App>', requested_scope: 'write' }, 'fa-cube', 'My &lt;App&gt;', 'New application: Read &amp; Write']
+    ])('renders a %s with its icon, subject and detail', (type, fields, icon, title, detail) => {
+        const Notifications = loadNotifications();
+        const html = Notifications._renderNotificationItem({ type, created_at, url: 'admin-permissions.php', ...fields });
+
+        expect(html).toContain(icon);
+        expect(html).toContain(`<div class="small fw-bold">${title}</div>`);
+        expect(html).toContain(detail);
+        expect(html).toContain('href="admin-permissions.php"');
+    });
+
+    it('falls back to a name and a time for an unknown type', () => {
+        const Notifications = loadNotifications();
+        const html = Notifications._renderNotificationItem({ type: 'something_new', user_name: 'Carol', created_at, url: '#' });
+
+        expect(html).toContain('<div class="small">Carol</div>');
+    });
+});
+
 describe('admin-mode notification feed', () => {
     /** Stub fetch to answer each of the two feeds. */
     function stubFeeds({ admin, user }) {

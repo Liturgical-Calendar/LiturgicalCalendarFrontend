@@ -355,115 +355,110 @@ const Notifications = {
             : this._getTranslation('noNotifications', 'No pending requests');
     },
 
+    /**
+     * Render one notification, by its `type`. Every type has its own renderer (see
+     * `_ITEM_RENDERERS`); an unknown one gets the plain fallback.
+     * @private
+     */
     _renderNotificationItem(item) {
-        if (item.type === 'onboarding_invite') {
-            return this._renderOnboardingInvite();
-        }
-        if (item.type === 'access_request_reviewed') {
-            return this._renderReviewedRequest(item);
-        }
-        if (item.type === 'change_request_reviewed') {
-            return this._renderChangeRequestReviewed(item);
-        }
-        if (item.type === 'change_request_published') {
-            return this._renderChangeRequestPublished(item);
-        }
+        const renderer = this._ITEM_RENDERERS[item.type];
+        return renderer ? this[renderer](item) : this._renderFallbackItem(item);
+    },
 
-        const timeAgo = this._formatTimeAgo(item.created_at);
-        const safeUrl = this._sanitizeUrl(item.url);
+    /**
+     * Notification `type` → the method that renders it. The user-mode inbox types come
+     * from /auth/notifications, the review-queue ones from /admin/notifications.
+     * @private
+     */
+    _ITEM_RENDERERS: Object.freeze({
+        onboarding_invite: '_renderOnboardingInvite',
+        access_request_reviewed: '_renderReviewedRequest',
+        change_request_reviewed: '_renderChangeRequestReviewed',
+        change_request_published: '_renderChangeRequestPublished',
+        role_request: '_renderRoleRequest',
+        access_request: '_renderAccessRequest',
+        application: '_renderApplication',
+        change_request: '_renderPendingChangeRequest'
+    }),
 
-        if (item.type === 'role_request') {
-            const roleName = this._roleNames[item.role] || item.role;
-            const userName = this._escapeHtml(item.user_name || item.user_email || 'Unknown');
-            return `
-                <a class="dropdown-item py-2" href="${safeUrl}">
-                    <div class="d-flex align-items-start">
-                        <div class="flex-shrink-0">
-                            <i class="fas fa-user-plus text-primary me-2"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="small fw-bold">${userName}</div>
-                            <div class="small text-muted">
-                                ${this._getTranslation('requestedRole', 'Requested')}: ${this._escapeHtml(roleName)}
-                            </div>
-                            <div class="small text-muted">${timeAgo}</div>
-                        </div>
+    /**
+     * The layout every review-queue item shares: an icon, who or what it is about, one
+     * line saying what is pending, and how long ago. `detail` is HTML: callers escape
+     * the values they put in it.
+     * @private
+     */
+    _renderQueueItem(item, iconClass, title, detail) {
+        return `
+            <a class="dropdown-item py-2" href="${this._sanitizeUrl(item.url)}">
+                <div class="d-flex align-items-start">
+                    <div class="flex-shrink-0">
+                        <i class="fas ${iconClass} me-2"></i>
                     </div>
-                </a>
-            `;
-        }
-
-        if (item.type === 'access_request') {
-            const roleName = this._roleNames[item.role] || item.role;
-            const userName = this._escapeHtml(item.user_name || item.user_email || 'Unknown');
-            return `
-                <a class="dropdown-item py-2" href="${safeUrl}">
-                    <div class="d-flex align-items-start">
-                        <div class="flex-shrink-0">
-                            <i class="fas fa-key text-warning me-2"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="small fw-bold">${userName}</div>
-                            <div class="small text-muted">
-                                ${this._getTranslation('requestedAccess', 'Requested access')}: ${this._escapeHtml(roleName)}
-                            </div>
-                            <div class="small text-muted">${timeAgo}</div>
-                        </div>
+                    <div class="flex-grow-1">
+                        <div class="small fw-bold">${this._escapeHtml(title)}</div>
+                        <div class="small text-muted">${detail}</div>
+                        <div class="small text-muted">${this._formatTimeAgo(item.created_at)}</div>
                     </div>
-                </a>
-            `;
-        }
+                </div>
+            </a>
+        `;
+    },
 
-        if (item.type === 'application') {
-            const appName = this._escapeHtml(item.app_name || 'Unknown');
-            const scopeLabel = item.requested_scope === 'write'
-                ? this._getTranslation('scopeReadWrite', 'Read & Write')
-                : this._getTranslation('scopeReadOnly', 'Read-only');
-            return `
-                <a class="dropdown-item py-2" href="${safeUrl}">
-                    <div class="d-flex align-items-start">
-                        <div class="flex-shrink-0">
-                            <i class="fas fa-cube text-success me-2"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="small fw-bold">${appName}</div>
-                            <div class="small text-muted">
-                                ${this._getTranslation('newApplication', 'New application')}: ${this._escapeHtml(scopeLabel)}
-                            </div>
-                            <div class="small text-muted">${timeAgo}</div>
-                        </div>
-                    </div>
-                </a>
-            `;
-        }
+    /** A pending role request. @private */
+    _renderRoleRequest(item) {
+        const roleName = this._roleNames[item.role] || item.role;
+        return this._renderQueueItem(
+            item,
+            'fa-user-plus text-primary',
+            item.user_name || item.user_email || 'Unknown',
+            `${this._getTranslation('requestedRole', 'Requested')}: ${this._escapeHtml(roleName)}`
+        );
+    },
 
-        if (item.type === 'change_request') {
-            const submitter = this._escapeHtml(item.user_name || 'Unknown');
-            const summary = this._getTranslation('changeRequestPending', 'Change request: %1$s (%2$d files)')
-                .replace('%1$s', this._changeResourceLabel(item) || item.resource_type || '')
-                .replace('%2$d', String(item.file_count ?? 0));
-            return `
-                <a class="dropdown-item py-2" href="${safeUrl}">
-                    <div class="d-flex align-items-start">
-                        <div class="flex-shrink-0">
-                            <i class="fas fa-code-pull-request text-primary me-2"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="small fw-bold">${submitter}</div>
-                            <div class="small text-muted">${this._escapeHtml(summary)}</div>
-                            <div class="small text-muted">${timeAgo}</div>
-                        </div>
-                    </div>
-                </a>
-            `;
-        }
+    /** A pending access request. @private */
+    _renderAccessRequest(item) {
+        const roleName = this._roleNames[item.role] || item.role;
+        return this._renderQueueItem(
+            item,
+            'fa-key text-warning',
+            item.user_name || item.user_email || 'Unknown',
+            `${this._getTranslation('requestedAccess', 'Requested access')}: ${this._escapeHtml(roleName)}`
+        );
+    },
 
-        // Default fallback for other notification types
+    /** A pending API application. @private */
+    _renderApplication(item) {
+        const scopeLabel = item.requested_scope === 'write'
+            ? this._getTranslation('scopeReadWrite', 'Read & Write')
+            : this._getTranslation('scopeReadOnly', 'Read-only');
+        return this._renderQueueItem(
+            item,
+            'fa-cube text-success',
+            item.app_name || 'Unknown',
+            `${this._getTranslation('newApplication', 'New application')}: ${this._escapeHtml(scopeLabel)}`
+        );
+    },
+
+    /** A source-data change request awaiting review, linking to the review queue. @private */
+    _renderPendingChangeRequest(item) {
+        const summary = this._getTranslation('changeRequestPending', 'Change request: %1$s (%2$d files)')
+            .replace('%1$s', this._changeResourceLabel(item) || item.resource_type || '')
+            .replace('%2$d', String(item.file_count ?? 0));
+        return this._renderQueueItem(
+            item,
+            'fa-code-pull-request text-primary',
+            item.user_name || 'Unknown',
+            this._escapeHtml(summary)
+        );
+    },
+
+    /** Any other notification type: a name and how long ago. @private */
+    _renderFallbackItem(item) {
         const displayName = this._escapeHtml(item.user_name || item.app_name || 'Unknown');
         return `
-            <a class="dropdown-item py-2" href="${safeUrl}">
+            <a class="dropdown-item py-2" href="${this._sanitizeUrl(item.url)}">
                 <div class="small">${displayName}</div>
-                <div class="small text-muted">${timeAgo}</div>
+                <div class="small text-muted">${this._formatTimeAgo(item.created_at)}</div>
             </a>
         `;
     },
