@@ -711,6 +711,24 @@ test.describe('National Calendar Form - Action Buttons', () => {
         console.log(`Create New row successfully created (count: ${existingCount} -> ${newCount})`);
     });
 
+    test('a translation containing double quotes renders intact in its locale input', async ({ page, extendingPage }) => {
+        // Names are stored as typed, so translationTemplate() must escape a stored
+        // translation where it becomes a `value="…"` attribute: unescaped, the `"`
+        // would end the attribute and truncate the name (or inject markup).
+        const quoted = 'Saint André "le frère" Bessette, religieux';
+        await page.route('**/data/nation/CA/fr_CA', async (route) => {
+            const response = await route.fetch();
+            const names = await response.json();
+            await route.fulfill({ response, json: { ...names, StAndreBessette: quoted } });
+        });
+
+        await extendingPage.selectCalendar('#nationalCalendarName', 'CA');
+        await page.waitForLoadState('networkidle');
+
+        await expect(page.locator('.regionalNationalDataForm input[data-locale="fr_CA"]').filter({ has: page.locator(`xpath=self::*[@value='${quoted}']`) }))
+            .toHaveCount(1, { timeout: 15000 });
+    });
+
     test('Create New keeps an apostrophe in the name and mints a clean event key', async ({ page, extendingPage }) => {
         // The modal's value used to be escapeHtml()'d before use as data: the name
         // field showed "d&#x27;Arc" and createEventKey() minted `SainteJeanneDXArc`.

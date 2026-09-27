@@ -671,7 +671,9 @@ const translationTemplate = (path, locale, el) => {
     const langWithRegion = AvailableLocalesWithRegion[locale];
     const eventKeyEl = el.closest('.row').querySelector('.litEventEventKey');
     const eventKey = eventKeyEl ? eventKeyEl.value : (el.dataset.hasOwnProperty('valuewas') ? el.dataset.valuewas : '');
-    const value = (TranslationData.has(path) && TranslationData.get(path).has(locale) && TranslationData.get(path).get(locale).hasOwnProperty(eventKey)) ? ` value="${TranslationData.get(path).get(locale)[eventKey]}"` : '';
+    // Escaped here, where it becomes markup: names are stored as typed, so a
+    // translation containing `"` would otherwise break out of the attribute.
+    const value = (TranslationData.has(path) && TranslationData.get(path).has(locale) && TranslationData.get(path).get(locale).hasOwnProperty(eventKey)) ? ` value="${escapeHtml(TranslationData.get(path).get(locale)[eventKey])}"` : '';
     return `<div class="input-group input-group-sm mt-1">
             <label class="input-group-text font-monospace" for="${el.id}_${locale}" title="${langWithRegion}"><span class="noto-color-emoji-regular me-2">${country2flag(region)}</span>${lang}</label>
             <input type="text" class="form-control litEvent litEventName_${lang}" id="${el.id}_${locale}" data-locale="${locale}"${value}>
