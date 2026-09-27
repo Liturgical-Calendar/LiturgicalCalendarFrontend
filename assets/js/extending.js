@@ -671,7 +671,9 @@ const translationTemplate = (path, locale, el) => {
     const langWithRegion = AvailableLocalesWithRegion[locale];
     const eventKeyEl = el.closest('.row').querySelector('.litEventEventKey');
     const eventKey = eventKeyEl ? eventKeyEl.value : (el.dataset.hasOwnProperty('valuewas') ? el.dataset.valuewas : '');
-    const value = (TranslationData.has(path) && TranslationData.get(path).has(locale) && TranslationData.get(path).get(locale).hasOwnProperty(eventKey)) ? ` value="${TranslationData.get(path).get(locale)[eventKey]}"` : '';
+    // Escaped here, where it becomes markup: names are stored as typed, so a
+    // translation containing `"` would otherwise break out of the attribute.
+    const value = (TranslationData.has(path) && TranslationData.get(path).has(locale) && TranslationData.get(path).get(locale).hasOwnProperty(eventKey)) ? ` value="${escapeHtml(TranslationData.get(path).get(locale)[eventKey])}"` : '';
     return `<div class="input-group input-group-sm mt-1">
             <label class="input-group-text font-monospace" for="${el.id}_${locale}" title="${langWithRegion}"><span class="noto-color-emoji-regular me-2">${country2flag(region)}</span>${lang}</label>
             <input type="text" class="form-control litEvent litEventName_${lang}" id="${el.id}_${locale}" data-locale="${locale}"${value}>
@@ -802,7 +804,7 @@ const checkCalendarExists = () => {
         }
         case 'diocesan': {
             const currentDioceseName = document.querySelector('#diocesanCalendarDioceseName').value;
-            const currentDioceseOption = document.querySelector(`#DiocesesList > option[value="${currentDioceseName}"]`);
+            const currentDioceseOption = findDioceseOption(currentDioceseName);
             const currentDiocese = currentDioceseOption ? currentDioceseOption.dataset.value : null;
             const exists = LitCalMetadata.diocesan_calendars_keys.includes(currentDiocese);
             console.log(`Diocesan calendar for ${currentDiocese} already exists: ${exists}`);
@@ -2186,6 +2188,19 @@ const datetypeToggleBtnClicked = (ev) => {
 }
 
 /**
+ * The `#DiocesesList` option whose value is exactly `name`.
+ *
+ * Compared directly rather than through an attribute selector: interpolated
+ * into `option[value="…"]`, a name containing `"` or `\` throws, and any
+ * escaping applied to make it safe there would stop it matching the value.
+ *
+ * @param {string} name A diocese name as typed or selected
+ * @returns {HTMLOptionElement|undefined}
+ */
+const findDioceseOption = (name) =>
+    Array.from(document.querySelectorAll('#DiocesesList > option')).find((option) => option.value === name);
+
+/**
  * Creates a unique key for a liturgical event based on its name, by splitting on
  * the first comma (if applicable), removing accented characters, reducing multiple
  * spaces to single spaces, removing leading and trailing spaces, splitting into
@@ -2404,7 +2419,10 @@ const actionPromptButtonClicked = (ev) => {
     const modal = ev.target.closest('.actionPromptModal');
     const modalForm = modal.querySelector('form');
     const actionButtonId = ev.target.id;
-    const liturgicalEventInputVal = escapeHtml(modalForm.querySelector('.existingLiturgicalEventName').value);
+    // Raw, not escapeHtml()'d: it is data — a `.value`, createEventKey()'s input and
+    // an event_key lookup — never markup. Escaping it turned "d'Arc" into the literal
+    // text "d&#x27;Arc" in the name field and minted `DXArc` in the event key.
+    const liturgicalEventInputVal = modalForm.querySelector('.existingLiturgicalEventName').value;
     const eventKey = actionButtonId === 'newLiturgicalEventExNovoButton' ? '' : liturgicalEventInputVal;
     console.log('actionPromptButtonClicked! actionButtonId = <', actionButtonId, '>, liturgicalEventInputVal = <', liturgicalEventInputVal, '>, eventKey = <', eventKey, '>');
 
@@ -3184,7 +3202,7 @@ const loadDiocesanCalendarData = () => {
 
     const dioceseSelect = document.getElementById('diocesanCalendarDioceseName');
     const diocese = dioceseSelect.value;
-    const dioceseOption = document.querySelector(`#DiocesesList > option[value="${diocese}"]`);
+    const dioceseOption = findDioceseOption(diocese);
     const dioceseKey = dioceseOption ? dioceseOption.dataset.value : null;
     API.key = dioceseKey;
 
@@ -3585,7 +3603,10 @@ const diocesanCalendarNationalDependencyChanged = (ev) => {
  * @param {Event} ev - The event object for the change event.
  */
 const diocesanCalendarDioceseNameChanged = (ev) => {
-    const currentVal = escapeHtml( ev.target.value );
+    // Raw, not escapeHtml()'d: it is matched against the list's option values, and
+    // an escaped "St. John's" never matched its own option. removeDiocesanCalendarModal()
+    // escapes the name itself where it becomes markup.
+    const currentVal = ev.target.value;
     CalendarData = { litcal: [], i18n: {} };
     document.querySelectorAll('.carousel-item form').forEach(form => {
         form.reset();
@@ -3603,7 +3624,7 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
     });
     const forms = document.querySelectorAll('form');
     forms.forEach(form => form.classList.remove('was-validated'));
-    const selectedOption = document.querySelector(`#DiocesesList > option[value="${currentVal}"]`);
+    const selectedOption = findDioceseOption(currentVal);
     if (selectedOption) {
         ev.target.classList.remove('is-invalid');
         resetOtherLocalizationInputs();
@@ -3695,7 +3716,7 @@ const deleteDiocesanCalendarConfirmClicked = () => {
     API.method = 'DELETE';
     API.category = 'diocese';
     const diocese = document.querySelector('#diocesanCalendarDioceseName').value;
-    API.key = document.querySelector('#DiocesesList option[value="' + diocese + '"]').dataset.value;
+    API.key = findDioceseOption(diocese).dataset.value;
 
     const baseHeaders = new Headers({
         'Accept': 'application/json'
@@ -3783,7 +3804,7 @@ const saveDiocesanCalendar_btnClicked = () => {
 
     document.querySelector('#overlay').classList.remove('hidden');
     const diocese = document.querySelector('#diocesanCalendarDioceseName').value;
-    const option = document.querySelector('#DiocesesList option[value="' + diocese + '"]');
+    const option = findDioceseOption(diocese);
     const diocese_id = option ? option.getAttribute('data-value') : null;
     const saveObj = { payload: { ...CalendarData } };
     API.category = 'diocese';
@@ -3795,7 +3816,9 @@ const saveDiocesanCalendar_btnClicked = () => {
     saveObj.payload.i18n[API.locale] = saveObj.payload.litcal.reduce((obj, item) => {
         const liturgicalEventCopy = { ...item.liturgical_event };
         if (liturgicalEventCopy.hasOwnProperty('name')) {
-            obj[liturgicalEventCopy.event_key] = escapeHtml(liturgicalEventCopy.name);
+            // The name is payload data, stored and served as-is; escaping belongs to
+            // whatever renders it. escapeHtml() here saved "d'Arc" as "d&#x27;Arc".
+            obj[liturgicalEventCopy.event_key] = liturgicalEventCopy.name;
             delete item.liturgical_event.name;
         } else {
             obj[liturgicalEventCopy.event_key] = document.querySelector(`.litEventName[data-valuewas="${liturgicalEventCopy.event_key}"]`).value;

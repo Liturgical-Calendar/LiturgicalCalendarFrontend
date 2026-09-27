@@ -22,6 +22,9 @@ import { expectApplied } from './support/writeMode';
  * which used to turn these tests green without testing anything (issue #502).
  */
 
+/** A patron name with an apostrophe, which must reach the payload unescaped. */
+const PATRON_NAME = "Test Principal Patron d'Arc";
+
 test.describe('Diocesan Calendar Form', () => {
     test.beforeEach(async ({ extendingPage }) => {
         await extendingPage.goToDiocesanCalendar();
@@ -76,6 +79,22 @@ test.describe('Diocesan Calendar Form', () => {
             // Help text should be hidden
             await expect(helpText).toHaveClass(/d-none/);
         }
+    });
+
+    test('should accept a diocese whose name has an apostrophe', async ({ page }) => {
+        // The name was escapeHtml()'d before being matched against the datalist, so
+        // "Arcidiocesi di L'Aquila" never matched its own option: the input was
+        // flagged invalid and the calendar form stayed disabled. Read-only: no save.
+        await page.locator('#diocesanCalendarNationalDependency').selectOption('IT');
+        const dioceseNameInput = page.locator('#diocesanCalendarDioceseName');
+        await expect(dioceseNameInput).toBeEnabled();
+        await expect(page.locator('#DiocesesList > option[value="Arcidiocesi di L\'Aquila"]')).toHaveCount(1);
+
+        await dioceseNameInput.fill("Arcidiocesi di L'Aquila");
+        await dioceseNameInput.dispatchEvent('change');
+
+        await expect(dioceseNameInput).not.toHaveClass(/is-invalid/);
+        await expect(page.locator('#carouselExampleIndicators')).not.toHaveClass(/diocesan-disabled/);
     });
 
     test('should have national calendar options in dependency dropdown', async ({ page }) => {
@@ -255,7 +274,9 @@ test.describe('Diocesan Calendar Form', () => {
         // Fill in at least one valid liturgical event (Principal Patron)
         // This is required because empty form rows would fail API schema validation
         const principalPatronNameInput = page.locator('.carousel-item.active input.litEventName').first();
-        await principalPatronNameInput.fill('Test Principal Patron');
+        // The apostrophe pins that the name reaches the payload as typed: the save
+        // handler used to escapeHtml() it, storing "d&#x27;Arc" in the API data.
+        await principalPatronNameInput.fill(PATRON_NAME);
         // Use bubbling event dispatch to properly trigger litEventChanged handler
         await principalPatronNameInput.evaluate(el => el.dispatchEvent(new Event('change', { bubbles: true })));
 
@@ -339,6 +360,9 @@ test.describe('Diocesan Calendar Form', () => {
         // Verify payload metadata matches the selected diocese from the datalist
         expect(capturedPayload.metadata.diocese_id).toBe(dioceseToCreate.key);
         expect(capturedPayload.metadata.diocese_name).toBe(dioceseToCreate.name);
+        const payloadNames = Object.values(capturedPayload.i18n ?? {}).flatMap((names) => Object.values(names as object));
+        expect(payloadNames).toContain(PATRON_NAME);
+        expect(payloadNames.join()).not.toContain('&#x27;');
 
         // CLEANUP: DELETE the created diocese and verify 200 response
         const deleteResult = await extendingPage.deleteCalendar('diocese', dioceseToCreate.key);
