@@ -38,6 +38,7 @@ import { holydaysOfObligationSetting } from './Settings.js';
 import { fetchWithRetry, mapWithConcurrency } from './boundedFetch.js';
 import { editsWholeWiderRegion, editsWiderRegionLocale, localeWrites } from './widerRegionEditRights.js';
 import { widerRegionForNation } from './widerRegionForNation.js';
+import { isOfficialLocale, newNationalCalendarLocaleOptions, unofficialLocales } from './nationalCalendarLocales.js';
 
 /**
  * How many translation files load at once. Fired all together, a wider region's
@@ -57,9 +58,20 @@ const TRANSLATION_FETCH_CONCURRENCY = 4;
  */
 let translationsIncomplete = false;
 
-/** Enable the national/wider region Save button, unless translations are incomplete. */
+/**
+ * The selected locales of a national calendar being created whose language is not
+ * officially supported yet (see nationalCalendarLocales.js). Save stays disabled
+ * while there are any: the calendar would declare languages it cannot be created in.
+ * @type {string[]}
+ */
+let unofficialLocalesSelected = [];
+
+/**
+ * Enable the national/wider region Save button, unless translations are incomplete
+ * or a new national calendar declares a locale that is not officially supported.
+ */
 const enableSerializeButton = () => {
-    if (translationsIncomplete) return;
+    if (translationsIncomplete || unofficialLocalesSelected.length > 0) return;
     document.querySelector('.serializeRegionalNationalData')?.removeAttribute('disabled');
 };
 
@@ -1421,7 +1433,109 @@ const calendarLocalesChanged = (ev) => {
                                 .filter(({ value }) => value !== currentLocalization)
                                 .map(({ value }) => value);
     refreshOtherLocalizationInputs(otherLocalizations);
+    if (ev.target.id === 'nationalCalendarLocales') {
+        checkNewNationalCalendarLocales();
+    }
 }
+
+/**
+ * The message naming the locales that block a new national calendar, with a link
+ * to the page on contributing translations.
+ *
+ * @param {string[]} locales
+ * @returns {string} HTML
+ */
+const unofficialLocalesMessage = (locales) => {
+    const text = Messages['Locales not officially supported'].replace('%s', locales.join(', '));
+    return `${escapeHtml(text)} <a href="translations.php">${escapeHtml(Messages['Help complete the translations'])}</a>`;
+};
+
+/**
+ * Show the alert under the national calendar's controls, and outline the Locales
+ * multiselect it is about; an empty message hides both.
+ *
+ * @param {string} html - The message, as HTML
+ */
+const showNationalCalendarLocalesFeedback = (html) => {
+    const feedback = document.querySelector('#nationalCalendarLocalesFeedback');
+    if (feedback) {
+        feedback.querySelector('.feedback-message').innerHTML = html;
+        feedback.hidden = html === '';
+    }
+    document.querySelector('#nationalCalendarLocales ~ .btn-group button.multiselect')
+        ?.classList.toggle('border-danger', html !== '');
+};
+
+/**
+ * Check the locales selected for a national calendar being created: each must be
+ * officially supported. Names the ones that are not under the select, and keeps
+ * Save disabled until they are deselected. Clears itself for any other calendar.
+ */
+const checkNewNationalCalendarLocales = () => {
+    const select = document.querySelector('#nationalCalendarLocales');
+    const wasBlocking = unofficialLocalesSelected.length > 0;
+    unofficialLocalesSelected = API.category === 'nation' && API.method === 'PUT' && select
+        ? unofficialLocales(Array.from(select.selectedOptions, ({ value }) => value), LitCalMetadata.locales)
+        : [];
+
+    showNationalCalendarLocalesFeedback(unofficialLocalesSelected.length > 0 ? unofficialLocalesMessage(unofficialLocalesSelected) : '');
+    if (unofficialLocalesSelected.length > 0) {
+        document.querySelector('.serializeRegionalNationalData')?.setAttribute('disabled', 'disabled');
+        return;
+    }
+    // Re-enable only what this check disabled, and only for a user who may save at all.
+    if (wasBlocking && typeof Auth !== 'undefined' && Auth.isAuthenticated()) {
+        enableSerializeButton();
+    }
+};
+
+/**
+ * Fill the locales of a national calendar being created: every locale of the
+ * nation, with the officially supported ones selected, and the current
+ * localization defaulted to the most spoken of those.
+ */
+const prepareNewNationalCalendarLocales = () => {
+    const localesForRegion = Object.entries(AvailableLocalesWithRegion).filter(([key, ]) => key.split('_').pop() === API.key);
+    const calendarLocalesSelect = document.getElementById('nationalCalendarLocales');
+    calendarLocalesSelect.innerHTML = newNationalCalendarLocaleOptions(
+        localesForRegion,
+        LitCalMetadata.locales,
+        Messages['Not yet available: translations incomplete']
+    );
+    $(calendarLocalesSelect).multiselect('rebuild');
+
+    // The current localization is one of the selected locales, as calendarLocalesChanged()
+    // keeps it; with none official, the whole form is blocked anyway (shouldFetchEvents()).
+    const officialForRegion = localesForRegion.filter(([key, ]) => isOfficialLocale(key, LitCalMetadata.locales));
+    const localizationChoices = officialForRegion.length > 0 ? officialForRegion : localesForRegion;
+    const currentLocalizationEl = document.querySelector('.currentLocalizationChoices');
+    currentLocalizationEl.innerHTML = localizationChoices
+        .map(([key, displayName]) => `<option value="${key}">${escapeHtml(displayName)}</option>`).join('');
+    const defaultLocale = mostSpokenLocale(API.key, localizationChoices.map(([key, ]) => key));
+    if (defaultLocale) {
+        currentLocalizationEl.value = defaultLocale;
+    }
+
+    checkNewNationalCalendarLocales();
+};
+
+/**
+ * Of a nation's locales, the one in its most spoken language (CLDR), else the first.
+ *
+ * @param {string} region - The nation, e.g. `CH`
+ * @param {string[]} locales - Locales of that nation, e.g. `['fr_CH', 'it_CH']`
+ * @returns {?string} one of `locales`, or null when there are none
+ */
+const mostSpokenLocale = (region, locales) => {
+    if (locales.length === 0) return null;
+    let language = null;
+    try {
+        language = likelyLanguage(region, locales.map(locale => locale.split('_')[0]));
+    } catch (err) {
+        console.warn('likelyLanguage failed for region', region, err);
+    }
+    return locales.find(locale => locale.split('_')[0] === language) ?? locales[0];
+};
 
 
 /**
@@ -1790,15 +1904,7 @@ const fetchRegionalCalendarData = (headers) => {
                         document.querySelector('#nationalCalendarSettingsForm').reset();
                         document.querySelector('#publishedRomanMissalList').innerHTML = '';
                         defaultWiderRegionForNewNation();
-                        const LocalesForRegion = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => {
-                            const jsLocaleStr = localeIso.replaceAll('_', '-');
-                            const locale = new Intl.Locale(jsLocaleStr);
-                            return locale.region === API.key;
-                        });
-                        const localeOptions = LocalesForRegion.map(([localeIso, localeDisplayName]) => {
-                            return `<option value="${localeIso}">${localeDisplayName}</option>`;
-                        });
-                        document.querySelector('#nationalCalendarLocales').innerHTML = localeOptions.join('\n');
+                        prepareNewNationalCalendarLocales();
                         break;
                     }
                 }
@@ -1835,25 +1941,7 @@ const fetchRegionalCalendarData = (headers) => {
                 document.querySelector('#nationalCalendarSettingsForm').reset();
                 document.querySelector('#publishedRomanMissalList').innerHTML = '';
                 defaultWiderRegionForNewNation();
-                const LocalesForRegion = Object.entries(AvailableLocalesWithRegion).filter(([key, ]) => key.split('_').pop() === API.key);
-                const calendarLocalesSelect = document.getElementById('nationalCalendarLocales');
-                calendarLocalesSelect.innerHTML = LocalesForRegion.map(item => `<option value="${item[0]}" selected>${item[1]}</option>`).join('');
-                $(calendarLocalesSelect).multiselect('rebuild');
-                const currentLocalizationEl = document.querySelector('.currentLocalizationChoices');
-                currentLocalizationEl.innerHTML = LocalesForRegion.map(item => `<option value="${item[0]}">${item[1]}</option>`).join('');
-                // set as default currentLocalization the locale with greater percentage per population, of those that are available
-                if (LocalesForRegion.length > 0) {
-                    const regionalLocales = LocalesForRegion.map(item => item[0].split('_')[0]);
-                    let mostSpokenLanguage = null;
-                    try {
-                        mostSpokenLanguage = likelyLanguage(API.key, regionalLocales);
-                    } catch (err) {
-                        console.warn('likelyLanguage failed for region', API.key, err);
-                    }
-                    // Fall back to first available locale if CLDR lookup failed
-                    const defaultLanguage = mostSpokenLanguage || regionalLocales[0];
-                    currentLocalizationEl.value = `${defaultLanguage}_${API.key}`;
-                }
+                prepareNewNationalCalendarLocales();
                 break;
             }
         }
@@ -1861,6 +1949,9 @@ const fetchRegionalCalendarData = (headers) => {
         document.querySelector('#overlay').classList.add('hidden');
     }
 }
+
+/** CLDR `_officialStatus` of a language in a territory, ranked; absent ranks 0. */
+const OFFICIAL_STATUS_RANK = Object.freeze({ official: 2, de_facto_official: 2, official_regional: 1 });
 
 /**
  * Given a region code, find the first language matching the region code.
@@ -1877,9 +1968,12 @@ const likelyLanguage = (region, filteredLocales = null) => {
     // Find the first language matching the country code
     const regionData = cldrData.supplemental.territoryInfo[region];
     if (regionData && regionData.languagePopulation) {
-        // Find the language with the highest "official status" or population
+        // Find the language with the highest official status, then the largest population.
+        // Status first: CLDR counts second-language speakers too, so by population alone
+        // Switzerland's most spoken language after German would be English, not French.
         const mainLanguage = Object.entries(regionData.languagePopulation)
-            .sort((a, b) => (b[1]._populationPercent || 0) - (a[1]._populationPercent || 0)) // Sort by population
+            .sort((a, b) => (OFFICIAL_STATUS_RANK[b[1]._officialStatus] ?? 0) - (OFFICIAL_STATUS_RANK[a[1]._officialStatus] ?? 0)
+                || (b[1]._populationPercent || 0) - (a[1]._populationPercent || 0))
             .filter(([lang]) => filteredLocales ? filteredLocales.includes(lang) : true)
             .map(([lang]) => lang)[0]; // Get the top language
 
@@ -1922,6 +2016,14 @@ const emptyStringPercentage = (translations) => {
  * @returns {string|null} The resolved locale or null if none found
  */
 const resolveNewNationalCalendarLocale = (region) => {
+    // An officially supported language of the nation first, the most spoken of them:
+    // Switzerland is created in French or Italian, not blocked on German.
+    const officialForRegion = Object.keys(AvailableLocalesWithRegion)
+        .filter(loc => loc.split('_').pop() === region && isOfficialLocale(loc, LitCalMetadata.locales));
+    if (officialForRegion.length > 0) {
+        return mostSpokenLocale(region, officialForRegion);
+    }
+
     let likely = null;
     try {
         likely = likelyLanguage(region);
@@ -2020,7 +2122,7 @@ const shouldFetchEvents = (eventsUrlForCategory) => {
             return {
                 shouldFetch: false,
                 isBlocked: true,
-                reason: Messages['General Roman Calendar not translated'].replace('%s', localeLabel)
+                reason: Messages['Locale not officially supported'].replace('%s', localeLabel)
             };
         }
         console.log('shouldFetchEvents: API.locale is empty; skipping events fetch and missing-translation checks until a locale is selected.');
@@ -2048,7 +2150,7 @@ const shouldFetchEvents = (eventsUrlForCategory) => {
     // Determine if we're blocked: we need events but they're not available because translations are missing
     const isBlocked = missingForLocale && isFetchingFromBase && !LitCalMetadata.locales.includes(localeToCheck);
     const reason = isBlocked
-        ? Messages['General Roman Calendar not translated'].replace('%s', localeToCheck)
+        ? Messages['Locale not officially supported'].replace('%s', localeToCheck)
         : '';
 
     return { shouldFetch, isBlocked, reason };
@@ -2066,7 +2168,7 @@ const processEventsResponse = (json, eventsUrlForCategory) => {
 
     if (emptyPercentage > 50) {
         console.warn('Warning: More than 50% of event names are empty strings.');
-        toastr['warning']('More than 50% of event names are empty strings, perhaps you should finish translating before creating a new calendar?', 'Warning');
+        toastr['warning'](Messages['Event names mostly untranslated'], Messages['Warning']);
     } else {
         console.log(`More than 50% of event names are translated, translated string percentage = ${100 - emptyPercentage}%`);
     }
@@ -2089,6 +2191,8 @@ const processEventsResponse = (json, eventsUrlForCategory) => {
 const fetchEventsAndCalendarData = () => {
     // A new calendar starts with nothing pending; its own load sets this again.
     translationsIncomplete = false;
+    unofficialLocalesSelected = [];
+    showNationalCalendarLocalesFeedback('');
     loadedWiderRegionMembers = [];
     document.querySelector('#overlay').classList.remove('hidden');
     const headers = new Headers({ 'Accept': 'application/json' });
@@ -2971,6 +3075,17 @@ const serializeRegionalNationalDataClicked = (ev) => {
     // Check authentication before allowing write operations
     if (!requireAuth(() => serializeRegionalNationalDataClicked(ev))) {
         return;
+    }
+
+    // Save is disabled while a new national calendar declares an unsupported locale, but
+    // the check is repeated here: it is the last point before the PUT is serialized.
+    if (ev.target.dataset.category === 'nation') {
+        checkNewNationalCalendarLocales();
+        if (unofficialLocalesSelected.length > 0) {
+            toastr['error'](unofficialLocalesMessage(unofficialLocalesSelected), Messages['Missing Translations'])
+                .attr('data-toast-type', 'unofficial-locales');
+            return;
+        }
     }
 
     document.querySelector('#overlay').classList.remove('hidden');
