@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-28 10:41+0000\n"
 "PO-Revision-Date: 2026-09-28 13:42+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
 "Language: fr\n"
@@ -1820,8 +1820,8 @@ msgid ""
 "You can edit this wider region's translations for: %s. Everything else is "
 "read-only."
 msgstr ""
-"Vous pouvez modifier les traductions de cette région élargie pour : %s. Tout "
-"le reste est en lecture seule."
+"Tu peux modifier les traductions de cette région élargie pour : %s. Tout le "
+"reste est en lecture seule."
 
 #. translators: shown to a national calendar editor with no locale of their own in the wider region
 #: includes/messages.php:102
@@ -1829,8 +1829,8 @@ msgid ""
 "You can add your nation's languages to this wider region in the Locales "
 "list; everything else is read-only."
 msgstr ""
-"Vous pouvez ajouter les langues de votre nation à cette région élargie dans "
-"la liste Locales ; tout le reste est en lecture seule."
+"Tu peux ajouter les langues de ta nation à cette région élargie dans la "
+"liste « Langues » ; tout le reste est en lecture seule."
 
 #. translators: %s = comma-separated locales, e.g. "en_CA, fr_CA"
 #: includes/messages.php:104
@@ -1841,7 +1841,7 @@ msgstr "Les traductions de cette région élargie pour %s ont été enregistrée
 #. translators: shown when a national calendar editor saves a wider region with no translation they may write
 #: includes/messages.php:106
 msgid "There are no translations here that you may edit."
-msgstr "Il n'y a aucune traduction ici que vous puissiez modifier."
+msgstr "Il n'y a ici aucune traduction que tu puisses modifier."
 
 #. translators: form row title for designating a Doctor of the Church
 #: includes/messages.php:126
@@ -4891,7 +4891,7 @@ msgstr ""
 
 #: sanctorale.php:209
 msgid "Ferial Readings"
-msgstr "Lectures feriales"
+msgstr "Lectures fériales"
 
 #: sanctorale.php:210
 msgid "Festive Readings"
