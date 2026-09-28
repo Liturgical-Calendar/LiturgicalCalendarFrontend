@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-28 10:41+0000\n"
 "PO-Revision-Date: 2026-09-28 13:42+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Portuguese <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pt/>\n"
 "Language: pt\n"
@@ -1813,7 +1813,7 @@ msgid ""
 "list; everything else is read-only."
 msgstr ""
 "Você pode adicionar as línguas do seu país a esta região mais ampla na lista "
-"de locales; o resto é apenas leitura."
+"“Idiomas”; o resto é apenas leitura."
 
 #. translators: %s = comma-separated locales, e.g. "en_CA, fr_CA"
 #: includes/messages.php:104
@@ -5113,7 +5113,7 @@ msgstr "Escolha um mês."
 
 #: sanctorale.php:343
 msgid "Choose a grade."
-msgstr "Escolha uma nota."
+msgstr "Escolha um grau."
 
 #. translators: %1$s is the event key, %2$s is the Missal id
 #: sanctorale.php:345
@@ -5151,7 +5151,7 @@ msgstr "As leituras foram mantidas: outro misal ainda declara esta celebração.
 
 #: sanctorale.php:361
 msgid "Default (from grade)"
-msgstr "Padrão (da nota)"
+msgstr "Padrão (do grau)"
 
 #: sanctorale.php:362
 msgid "Show no rank"
