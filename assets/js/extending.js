@@ -37,6 +37,7 @@ import {
 import { holydaysOfObligationSetting } from './Settings.js';
 import { fetchWithRetry, mapWithConcurrency } from './boundedFetch.js';
 import { editsWholeWiderRegion, editsWiderRegionLocale, localeWrites } from './widerRegionEditRights.js';
+import { widerRegionForNation } from './widerRegionForNation.js';
 
 /**
  * How many translation files load at once. Fired all together, a wider region's
@@ -60,6 +61,18 @@ let translationsIncomplete = false;
 const enableSerializeButton = () => {
     if (translationsIncomplete) return;
     document.querySelector('.serializeRegionalNationalData')?.removeAttribute('disabled');
+};
+
+/**
+ * Default the wider region of a national calendar being created, from the
+ * nations the `/calendars` metadata places in each wider region. Called after
+ * the settings form has been reset, so it only ever fills an empty field.
+ */
+const defaultWiderRegionForNewNation = () => {
+    const input = document.querySelector('#associatedWiderRegion');
+    if (input && input.value === '') {
+        input.value = widerRegionForNation(LitCalMetadata.wider_regions, API.key);
+    }
 };
 
 /**
@@ -1776,6 +1789,7 @@ const fetchRegionalCalendarData = (headers) => {
                     case 'nation': {
                         document.querySelector('#nationalCalendarSettingsForm').reset();
                         document.querySelector('#publishedRomanMissalList').innerHTML = '';
+                        defaultWiderRegionForNewNation();
                         const LocalesForRegion = Object.entries(AvailableLocalesWithRegion).filter(([localeIso, ]) => {
                             const jsLocaleStr = localeIso.replaceAll('_', '-');
                             const locale = new Intl.Locale(jsLocaleStr);
@@ -1820,6 +1834,7 @@ const fetchRegionalCalendarData = (headers) => {
             case 'nation': {
                 document.querySelector('#nationalCalendarSettingsForm').reset();
                 document.querySelector('#publishedRomanMissalList').innerHTML = '';
+                defaultWiderRegionForNewNation();
                 const LocalesForRegion = Object.entries(AvailableLocalesWithRegion).filter(([key, ]) => key.split('_').pop() === API.key);
                 const calendarLocalesSelect = document.getElementById('nationalCalendarLocales');
                 calendarLocalesSelect.innerHTML = LocalesForRegion.map(item => `<option value="${item[0]}" selected>${item[1]}</option>`).join('');
@@ -2103,6 +2118,9 @@ const fetchEventsAndCalendarData = () => {
             document.querySelector('#nationalCalendarLocales').disabled = true;
             $('#nationalCalendarLocales').multiselect('disable');
             document.querySelector('#currentLocalizationNational').disabled = true;
+            // Cleared as well as disabled: otherwise the previous nation's settings,
+            // and its wider region, stay on screen for a nation that cannot load.
+            document.querySelector('#nationalCalendarSettingsForm').reset();
             // Disable nationalCalendarSettingsForm controls
             setFormEnabled('#nationalCalendarSettingsForm', false);
         }
