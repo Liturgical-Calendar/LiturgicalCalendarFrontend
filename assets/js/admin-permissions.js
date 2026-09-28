@@ -222,6 +222,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 riteNodes: [...riteHolder.childNodes],
                 metadata:  client._metadata,
                 dioceses,
+                loadDioceses: loadWorldDioceses,
                 locale:    LITCAL_LOCALE,
                 nation:    {
                     className: 'form-select mb-2',
@@ -233,11 +234,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     selectNation:  config.i18n.selectNation || 'Select a nation...',
                     selectDiocese: config.i18n.selectDiocese || 'Select a diocese...',
                     existingGroup: config.i18n.existingDiocesanCalendars || 'Existing diocesan calendars',
-                    newGroup:      config.i18n.newDiocesanCalendars || 'New diocesan calendars (not yet created)'
+                    newGroup:      config.i18n.newDiocesanCalendars || 'New diocesan calendars (not yet created)',
+                    diocesesUnavailable: config.i18n.diocesesUnavailable
+                        || 'The dioceses without a calendar yet could not be loaded; only existing calendars are listed.',
+                    retry:         config.i18n.retry || 'Retry'
                 }
             });
         } catch (err) {
             console.error('[admin-permissions] Could not build the diocese picker:', err);
+            // The scope may have changed while this was loading: its own control
+            // is in the mount now, and must not be replaced by this failure.
+            if (grantObjectType.value !== DIOCESAN_CALENDAR_TYPE) return;
             mount.replaceChildren(buildGrantObjectIdLoadFailure());
         }
     }

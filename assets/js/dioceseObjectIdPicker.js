@@ -65,9 +65,10 @@ let worldDioceses = null;
  * The world's dioceses by nation, fetched once per page.
  *
  * Only the "not yet created" group depends on it, so a failed fetch resolves to
- * an empty map rather than rejecting: the existing calendars can still be picked.
+ * null rather than rejecting: the picker still offers the existing calendars, says
+ * the rest could not be loaded, and can call this again to retry.
  * @param {typeof fetch} [fetchImpl] - For tests
- * @returns {Promise<Map<string, Diocese[]>>} See diocesesByNation()
+ * @returns {Promise<Map<string, Diocese[]>|null>} See diocesesByNation(); null when it failed
  */
 export function loadWorldDioceses(fetchImpl = globalThis.fetch) {
     worldDioceses ??= fetchImpl(WORLD_DIOCESES_URL, { headers: { Accept: 'application/json' } })
@@ -78,8 +79,8 @@ export function loadWorldDioceses(fetchImpl = globalThis.fetch) {
         .then(diocesesByNation)
         .catch(err => {
             console.error('[dioceseObjectIdPicker] Could not load the list of dioceses:', err);
-            worldDioceses = null; // let a later mount try again
-            return new Map();
+            worldDioceses = null; // let a retry, or a later mount, try again
+            return null;
         });
     return worldDioceses;
 }
@@ -208,8 +209,10 @@ export function nationOfDiocese(metadata, dioceses, id) {
  * @property {HTMLElement[]} [riteNodes] - The rite select with any label/wrapper it came with,
  *   placed first in `mount`; defaults to `[riteEl]`
  * @property {object} metadata - `litcal_metadata` from the ApiClient
- * @property {Map<string, Diocese[]>} dioceses - See diocesesByNation()
- * @property {string} locale - UI locale
+ * @property {Map<string, Diocese[]>|null} dioceses - See diocesesByNation(); null when the list
+ *   could not be loaded, in which case only existing calendars are offered, with a notice
+ * @property {() => Promise<Map<string, Diocese[]>|null>} [loadDioceses] - Retries the load from
+ *   that notice (see loadWorldDioceses()); without it the notice offers no retry
  * @property {{className: string, id?: string, label?: {text: string, className: string}}} nation
  *   - Attributes of the nation select, and its optional <label>
  * @property {{className: string, id?: string}} diocese - Attributes of the diocese select
@@ -218,6 +221,8 @@ export function nationOfDiocese(metadata, dioceses, id) {
  * @property {string} i18n.selectDiocese - Placeholder of the diocese select
  * @property {string} i18n.existingGroup - Label of the existing-calendars <optgroup>
  * @property {string} i18n.newGroup - Label of the not-yet-created <optgroup>
+ * @property {string} i18n.diocesesUnavailable - Notice shown when the list could not be loaded
+ * @property {string} i18n.retry - Label of the notice's retry button
  */
 
 /**
@@ -232,7 +237,10 @@ export function nationOfDiocese(metadata, dioceses, id) {
  * @param {DiocesePickerOptions} opts - Options
  * @returns {DiocesePicker} The mounted picker
  */
-export function mountDioceseObjectIdPicker({ mount, riteEl, riteNodes, metadata, dioceses, locale, nation, diocese, i18n }) {
+export function mountDioceseObjectIdPicker({ mount, riteEl, riteNodes, metadata, dioceses, loadDioceses, locale, nation, diocese, i18n }) {
+    let known = dioceses ?? new Map();
+    let listMissing = dioceses === null;
+
     const nationEl = document.createElement('select');
     nationEl.className = nation.className;
     if (nation.id) nationEl.id = nation.id;
@@ -253,9 +261,24 @@ export function mountDioceseObjectIdPicker({ mount, riteEl, riteNodes, metadata,
     }
     nationWrapper.appendChild(nationEl);
 
+    // Shown while the list of prospective dioceses is missing: the existing
+    // calendars are still offered, and the rest can be fetched again.
+    const unavailable = document.createElement('div');
+    unavailable.className = 'form-text text-warning dioceses-unavailable';
+    unavailable.setAttribute('role', 'status');
+    unavailable.append(i18n.diocesesUnavailable);
+    let retryBtn = null;
+    if (loadDioceses) {
+        retryBtn = document.createElement('button');
+        retryBtn.type = 'button';
+        retryBtn.className = 'btn btn-link btn-sm p-0 ms-1 align-baseline';
+        retryBtn.textContent = i18n.retry;
+        unavailable.append(retryBtn);
+    }
+
     // Replace, not append: an earlier mount for an overlapping scope change
     // must not leave a second object-id control behind.
-    mount.replaceChildren(...(riteNodes ?? [riteEl]), nationWrapper, dioceseEl);
+    mount.replaceChildren(...(riteNodes ?? [riteEl]), nationWrapper, dioceseEl, unavailable);
 
     const renderDioceses = () => {
         dioceseEl.replaceChildren(placeholder(i18n.selectDiocese));
@@ -270,7 +293,7 @@ export function mountDioceseObjectIdPicker({ mount, riteEl, riteNodes, metadata,
             dioceseEl.disabled = true;
             return;
         }
-        const { existing, created } = diocesesOfNation(metadata, dioceses, nationEl.value, locale);
+        const { existing, created } = diocesesOfNation(metadata, known, nationEl.value, locale);
         if (existing.length > 0) dioceseEl.appendChild(group(i18n.existingGroup, existing));
         if (created.length > 0) dioceseEl.appendChild(group(i18n.newGroup, created));
         dioceseEl.disabled = false;
@@ -279,11 +302,13 @@ export function mountDioceseObjectIdPicker({ mount, riteEl, riteNodes, metadata,
     const renderNations = () => {
         const roman = riteEl.value === ROMAN_RITE;
         nationWrapper.hidden = !roman;
+        // Only the Roman rite has prospective dioceses to miss.
+        unavailable.hidden = !(roman && listMissing);
         nationEl.required = roman;
         nationEl.disabled = !roman;
         nationEl.replaceChildren(placeholder(i18n.selectNation));
         if (roman) {
-            for (const [code, name] of nationsWithDioceses(metadata, dioceses, locale)) {
+            for (const [code, name] of nationsWithDioceses(metadata, known, locale)) {
                 nationEl.appendChild(option(code, `${name} (${code})`));
             }
         }
@@ -294,6 +319,21 @@ export function mountDioceseObjectIdPicker({ mount, riteEl, riteNodes, metadata,
     nationEl.addEventListener('change', renderDioceses);
     renderNations();
 
+    retryBtn?.addEventListener('click', async () => {
+        retryBtn.disabled = true;
+        const loaded = await loadDioceses();
+        retryBtn.disabled = false;
+        if (loaded === null) return;
+        // Rebuild with the full list, keeping what was already chosen.
+        const [nationValue, dioceseValue] = [nationEl.value, dioceseEl.value];
+        known = loaded;
+        listMissing = false;
+        renderNations();
+        nationEl.value = nationValue;
+        renderDioceses();
+        dioceseEl.value = dioceseValue;
+    });
+
     return {
         nationEl,
         dioceseEl,
@@ -303,7 +343,7 @@ export function mountDioceseObjectIdPicker({ mount, riteEl, riteNodes, metadata,
                 renderNations();
             }
             if (riteEl.value === ROMAN_RITE) {
-                nationEl.value = nationOfDiocese(metadata, dioceses, id);
+                nationEl.value = nationOfDiocese(metadata, known, id);
                 renderDioceses();
             }
             dioceseEl.value = id;

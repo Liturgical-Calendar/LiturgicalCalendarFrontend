@@ -367,6 +367,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 riteNodes: [...riteHolder.childNodes],
                 metadata:  client._metadata,
                 dioceses,
+                loadDioceses: loadWorldDioceses,
                 locale:    LITCAL_LOCALE,
                 nation:    { className: 'form-select form-select-sm mb-2 perm-object-nation' },
                 diocese:   { className: 'form-select form-select-sm perm-object-id' },
@@ -374,11 +375,20 @@ document.addEventListener('DOMContentLoaded', async function() {
                     selectNation:  config.i18n.selectNation || 'Select a nation...',
                     selectDiocese: config.i18n.selectDiocese || 'Select a diocese...',
                     existingGroup: config.i18n.existingDiocesanCalendars || 'Existing diocesan calendars',
-                    newGroup:      config.i18n.newDiocesanCalendars || 'New diocesan calendars (not yet created)'
+                    newGroup:      config.i18n.newDiocesanCalendars || 'New diocesan calendars (not yet created)',
+                    diocesesUnavailable: config.i18n.diocesesUnavailable
+                        || 'The dioceses without a calendar yet could not be loaded; only existing calendars are listed.',
+                    retry:         config.i18n.retry || 'Retry'
                 }
             }));
         } catch (err) {
             console.error('[permission-requests] Could not build the diocese picker:', err);
+            // The scope may have changed while this was loading: its own control
+            // is in the mount now, and must not be replaced by this failure.
+            if (
+                !row.isConnected ||
+                row.querySelector('.perm-object-type').value !== DIOCESAN_CALENDAR_TYPE
+            ) return;
             mount.replaceChildren(buildObjectIdLoadFailure());
         }
     }

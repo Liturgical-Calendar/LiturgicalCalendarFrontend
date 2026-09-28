@@ -33,7 +33,9 @@ const I18N = {
     selectNation: 'Select a nation...',
     selectDiocese: 'Select a diocese...',
     existingGroup: 'Existing diocesan calendars',
-    newGroup: 'New diocesan calendars (not yet created)'
+    newGroup: 'New diocesan calendars (not yet created)',
+    diocesesUnavailable: 'Could not load the dioceses.',
+    retry: 'Retry'
 };
 
 const DIOCESES = diocesesByNation(WORLD);
@@ -48,7 +50,7 @@ function riteSelect() {
     return el;
 }
 
-function mount() {
+function mount(overrides = {}) {
     const container = document.createElement('div');
     document.body.replaceChildren(container);
     const riteEl = riteSelect();
@@ -57,6 +59,7 @@ function mount() {
         riteEl,
         metadata: METADATA,
         dioceses: DIOCESES,
+        ...overrides,
         locale: 'en',
         nation: { className: 'perm-object-nation' },
         diocese: { className: 'perm-object-id' },
@@ -149,13 +152,59 @@ describe('mountDioceseObjectIdPicker', () => {
     });
 });
 
+describe('when the list of dioceses could not be loaded', () => {
+    it('offers the existing calendars and says the rest are missing', () => {
+        const { container, picker } = mount({ dioceses: null });
+        const notice = container.querySelector('.dioceses-unavailable');
+        expect(notice.hidden).toBe(false);
+        expect(notice.textContent).toContain('Could not load the dioceses.');
+        expect(notice.querySelector('button')).toBeNull(); // no loader, no retry
+
+        expect(optionValues(picker.nationEl)).toEqual(['US']); // only the nation with an existing calendar
+        picker.nationEl.value = 'US';
+        picker.nationEl.dispatchEvent(new Event('change'));
+        expect(groups(picker.dioceseEl)).toEqual([['Existing diocesan calendars', ['boston_us']]]);
+    });
+
+    it('hides the notice under the Ambrosian rite, which has no prospective dioceses', () => {
+        const { container, riteEl } = mount({ dioceses: null });
+        riteEl.value = 'ambrosian';
+        riteEl.dispatchEvent(new Event('change'));
+        expect(container.querySelector('.dioceses-unavailable').hidden).toBe(true);
+    });
+
+    it('restores the full list on a successful retry, keeping the choice made', async () => {
+        const loadDioceses = vi.fn()
+            .mockResolvedValueOnce(null)
+            .mockResolvedValueOnce(DIOCESES);
+        const { container, picker } = mount({ dioceses: null, loadDioceses });
+        picker.nationEl.value = 'US';
+        picker.nationEl.dispatchEvent(new Event('change'));
+        picker.dioceseEl.value = 'boston_us';
+        const notice = container.querySelector('.dioceses-unavailable');
+        const retry = notice.querySelector('button');
+
+        retry.click();
+        await vi.waitFor(() => expect(loadDioceses).toHaveBeenCalledTimes(1));
+        await vi.waitFor(() => expect(retry.disabled).toBe(false));
+        expect(notice.hidden).toBe(false); // still failing
+
+        retry.click();
+        await vi.waitFor(() => expect(notice.hidden).toBe(true));
+        expect(optionValues(picker.nationEl)).toEqual(['CA', 'US']);
+        expect(picker.nationEl.value).toBe('US');
+        expect(picker.dioceseEl.value).toBe('boston_us');
+        expect(groups(picker.dioceseEl)[1]).toEqual(['New diocesan calendars (not yet created)', ['albany_us']]);
+    });
+});
+
 describe('loadWorldDioceses', () => {
     beforeEach(() => vi.restoreAllMocks());
 
     it('degrades to no prospective dioceses when the list cannot be fetched, and retries later', async () => {
         vi.spyOn(console, 'error').mockImplementation(() => {});
         const failing = vi.fn(async () => ({ ok: false, status: 500 }));
-        expect(await loadWorldDioceses(failing)).toEqual(new Map());
+        expect(await loadWorldDioceses(failing)).toBeNull();
 
         const working = vi.fn(async () => ({ ok: true, json: async () => WORLD }));
         expect((await loadWorldDioceses(working)).get('US')).toHaveLength(2);

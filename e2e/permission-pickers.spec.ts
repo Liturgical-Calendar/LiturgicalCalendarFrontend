@@ -48,6 +48,38 @@ test.describe('Access request form — diocesan calendar picker', () => {
         await expect(diocese).toHaveValue('albany_us');
     });
 
+    test('says when the dioceses without a calendar could not be loaded, and retries', async ({ page }) => {
+        const metadata = (await (await page.request.get(`${API_BASE_URL}/calendars`)).json()).litcal_metadata;
+        test.skip(!metadata.national_calendars_keys.includes('US'), 'The United States has no national calendar on this stack');
+        test.skip(metadata.diocesan_calendars_keys.includes('albany_us'), 'Albany already has a diocesan calendar on this stack');
+
+        // The first load of the diocese list fails; every later one goes through.
+        let failed = false;
+        await page.route('**/assets/data/WorldDiocesesByNation.json', async (route) => {
+            if (!failed) {
+                failed = true;
+                await route.fulfill({ status: 503, body: 'unavailable' });
+                return;
+            }
+            await route.continue();
+        });
+
+        await page.goto('/permission-requests.php');
+        await page.check('input[name="requested_role"][value="calendar_editor"]');
+        const row = page.locator('#permissionRows .card').first();
+        await row.locator('.perm-object-type').selectOption('diocesan_calendar');
+
+        const notice = row.locator('.dioceses-unavailable');
+        await expect(notice).toBeVisible({ timeout: 15000 });
+        await row.locator('.perm-object-nation').selectOption('US');
+        await expect(row.locator('.perm-object-id option[value="albany_us"]')).toHaveCount(0);
+
+        await notice.getByRole('button').click();
+        await expect(notice).toBeHidden();
+        await expect(row.locator('.perm-object-nation')).toHaveValue('US');
+        await expect(row.locator('.perm-object-id option[value="albany_us"]')).toHaveCount(1);
+    });
+
     test('offers only existing calendars under the Ambrosian rite, with no nation step', async ({ page }) => {
         const metadata = (await (await page.request.get(`${API_BASE_URL}/calendars`)).json()).litcal_metadata;
         const ambrosian: string[] = (metadata.diocesan_calendars ?? [])
