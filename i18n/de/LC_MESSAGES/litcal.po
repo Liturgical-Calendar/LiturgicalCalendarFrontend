@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-28 10:41+0000\n"
 "PO-Revision-Date: 2026-09-28 13:41+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
 "Language: de\n"
@@ -1816,8 +1816,8 @@ msgid ""
 "You can edit this wider region's translations for: %s. Everything else is "
 "read-only."
 msgstr ""
-"Du kannst die Übersetzungen dieses größeren Bereichs für: %s. Alles andere "
-"ist schreibgeschützt."
+"Du kannst die Übersetzungen dieses größeren Bereichs für %s bearbeiten. "
+"Alles andere ist schreibgeschützt."
 
 #. translators: shown to a national calendar editor with no locale of their own in the wider region
 #: includes/messages.php:102
@@ -1825,8 +1825,8 @@ msgid ""
 "You can add your nation's languages to this wider region in the Locales "
 "list; everything else is read-only."
 msgstr ""
-"Du kannst die Sprachen deines Landes zu diesem größeren Bereich in der "
-"Locales-Liste hinzufügen; alles andere ist schreibgeschützt."
+"Du kannst die Sprachen deines Landes in der Liste „Sprachen“ zu diesem "
+"größeren Bereich hinzufügen; alles andere ist schreibgeschützt."
 
 #. translators: %s = comma-separated locales, e.g. "en_CA, fr_CA"
 #: includes/messages.php:104
@@ -2221,7 +2221,7 @@ msgstr "Epiphanie"
 #. translators: a holy day of obligation
 #: includes/messages.php:298
 msgid "Ascension"
-msgstr "Himmelfahrt"
+msgstr "Christi Himmelfahrt"
 
 #. translators: a holy day of obligation
 #: includes/messages.php:300
@@ -2241,7 +2241,7 @@ msgstr "Unbefleckte Empfängnis"
 #. translators: a holy day of obligation (Assumption of the Blessed Virgin Mary)
 #: includes/messages.php:306
 msgid "Assumption"
-msgstr "Annahme"
+msgstr "Mariä Himmelfahrt"
 
 #. translators: a holy day of obligation (Saint Joseph, Spouse of the Blessed Virgin Mary)
 #: includes/messages.php:308
@@ -4716,7 +4716,7 @@ msgstr "Alle Stufen"
 
 #: temporale.php:78
 msgid "Higher Solemnity (7)"
-msgstr "Hochfest (7)"
+msgstr "Höheres Hochfest (7)"
 
 #: temporale.php:79
 msgid "Solemnity (6)"
@@ -4740,7 +4740,7 @@ msgstr "Nichtgebotener Gedenktag (2)"
 
 #: temporale.php:84
 msgid "Commemoration (1)"
-msgstr "Gedenktag (1)"
+msgstr "Gedächtnis (1)"
 
 #: temporale.php:85
 msgid "Weekday (0)"
@@ -5034,7 +5034,7 @@ msgstr "Kein Rang angezeigt"
 
 #: sanctorale.php:281
 msgid "Higher solemnity"
-msgstr "Höhere Festlichkeit"
+msgstr "Höheres Hochfest"
 
 #: sanctorale.php:284
 msgid "Colour"
@@ -5178,13 +5178,13 @@ msgid ""
 "These readings live in the rite-wide lectionary, shared by every Missal of "
 "this rite."
 msgstr ""
-"Diese Lesungen befinden sich im ritenweiten Lectionar, das von jedem Missale "
-"dieses Ritus jointly genutzt wird."
+"Diese Lesungen stehen im Lektionar des gesamten Ritus, das alle Missalien "
+"dieses Ritus gemeinsam nutzen."
 
 #: sanctorale.php:349
 msgid "This rite has no lectionary, so readings cannot be edited here."
 msgstr ""
-"Dieses Ritus hat kein Lectionar, daher können die Lesungen hier nicht "
+"Dieser Ritus hat kein Lektionar, daher können die Lesungen hier nicht "
 "bearbeitet werden."
 
 #: sanctorale.php:357
@@ -5192,7 +5192,7 @@ msgid ""
 "Inherited from a different lectionary source; edit it there, not from this "
 "Missal."
 msgstr ""
-"Aus einer anderen Lectionarquelle übernommen; bearbeite es dort, nicht von "
+"Aus einer anderen Lektionarquelle übernommen; bearbeite es dort, nicht in "
 "diesem Missale."
 
 #: sanctorale.php:360
