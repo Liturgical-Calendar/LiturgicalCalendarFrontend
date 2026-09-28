@@ -108,8 +108,8 @@ const NotificationTranslations = {
     changeRequestMerged: <?php echo json_encode(_('Your change request was published')); ?>,
     changeRequestClosed: <?php echo json_encode(_('Your change request was closed without merging')); ?>,
     changeRequestPullRequest: <?php echo json_encode(_('Pull request #%1$d')); ?>,
-    /** translators: reviewer notification. %1$s = the calendar resource, e.g. "roman/Americas"; %2$d = how many files it changes */
-    changeRequestPending: <?php echo json_encode(_('Change request: %1$s (%2$d files)')); ?>
+    /** translators: reviewer notification. %1$s = the calendar resource, e.g. "roman/Americas"; %2$d = how many files it changes, which may be 1 */
+    changeRequestPending: <?php echo json_encode(_('Change request: %1$s (files: %2$d)')); ?>
 };
 // The GitHub repository the source-data publisher opens pull requests against, so a
 // notification carrying a pr_number can link to it. Empty unless the deployment names

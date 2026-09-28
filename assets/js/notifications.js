@@ -357,11 +357,13 @@ const Notifications = {
 
     /**
      * Render one notification, by its `type`. Every type has its own renderer (see
-     * `_ITEM_RENDERERS`); an unknown one gets the plain fallback.
+     * `_ITEM_RENDERERS`); an unknown one gets the plain fallback. The lookup is own-keys
+     * only, so a type spelled like an Object.prototype member (`constructor`, `toString`)
+     * is unknown too rather than dispatched to an inherited function.
      * @private
      */
     _renderNotificationItem(item) {
-        const renderer = this._ITEM_RENDERERS[item.type];
+        const renderer = Object.hasOwn(this._ITEM_RENDERERS, item.type) ? this._ITEM_RENDERERS[item.type] : null;
         return renderer ? this[renderer](item) : this._renderFallbackItem(item);
     },
 
@@ -441,7 +443,7 @@ const Notifications = {
 
     /** A source-data change request awaiting review, linking to the review queue. @private */
     _renderPendingChangeRequest(item) {
-        const summary = this._getTranslation('changeRequestPending', 'Change request: %1$s (%2$d files)')
+        const summary = this._getTranslation('changeRequestPending', 'Change request: %1$s (files: %2$d)')
             .replace('%1$s', this._changeResourceLabel(item) || item.resource_type || '')
             .replace('%2$d', String(item.file_count ?? 0));
         return this._renderQueueItem(

@@ -199,7 +199,7 @@ describe('a change request awaiting review', () => {
         const html = Notifications._renderNotificationItem(pendingItem);
 
         expect(html).toContain("<div class=\"small fw-bold\">John D'Orazio</div>");
-        expect(html).toContain('Change request: Americas (27 files)');
+        expect(html).toContain('Change request: Americas (files: 27)');
         expect(html).toContain('href="admin-changes.php"');
         expect(html).not.toContain('Unknown');
     });
@@ -225,6 +225,13 @@ describe('review-queue items', () => {
     it('falls back to a name and a time for an unknown type', () => {
         const Notifications = loadNotifications();
         const html = Notifications._renderNotificationItem({ type: 'something_new', user_name: 'Carol', created_at, url: '#' });
+
+        expect(html).toContain('<div class="small">Carol</div>');
+    });
+
+    it.each(['constructor', 'toString', '__proto__'])('treats a %s type as unknown rather than dispatching to an inherited member', (type) => {
+        const Notifications = loadNotifications();
+        const html = Notifications._renderNotificationItem({ type, user_name: 'Carol', created_at, url: '#' });
 
         expect(html).toContain('<div class="small">Carol</div>');
     });
