@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-27 18:49+0000\n"
+"POT-Creation-Date: 2026-09-28 01:12+0000\n"
 "PO-Revision-Date: 2026-09-28 01:12+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
@@ -1491,6 +1491,11 @@ msgstr "Vaša žiadosť o zmenu bola uzavretá bez zlúčenia"
 #, php-format
 msgid "Pull request #%1$d"
 msgstr "Pull request #%1$d"
+
+#: layout/footer.php:112
+#, php-format
+msgid "Change request: %1$s (files: %2$d)"
+msgstr ""
 
 #: includes/login-modal.php:6
 msgid "Session Expiring"
