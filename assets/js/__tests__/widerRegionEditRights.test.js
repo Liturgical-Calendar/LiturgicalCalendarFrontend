@@ -59,8 +59,10 @@ describe('localeWrites', () => {
 describe('wider region membership', () => {
     // Americas as the page sees it: its own member list, and the region each national
     // calendar declares in /calendars.
-    const AMERICAS = { members: ['CA', 'US'], declaredRegion: { CA: 'Americas', US: 'Americas', IT: 'Europe' } };
-    const EUROPE = { members: ['IT', 'HU'], declaredRegion: { CA: 'Americas', US: 'Americas', IT: 'Europe' } };
+    const DECLARED = { CA: ['Americas'], US: ['Americas'], IT: ['Europe'], SE: ['Europe', 'Nordic'] };
+    const AMERICAS = { members: ['CA', 'US'], declaredRegions: DECLARED };
+    const EUROPE = { members: ['IT', 'HU', 'SE'], declaredRegions: DECLARED };
+    const NORDIC = { members: ['SE'], declaredRegions: DECLARED };
 
     it('admits a member, or a nation no region claims', () => {
         expect(nationMayJoinWiderRegion('CA', 'Americas', AMERICAS)).toBe(true);
@@ -83,5 +85,19 @@ describe('wider region membership', () => {
         const i18n = { fr_CA: { StBenedict: 'Saint Benoît' }, it_IT: { StBenedict: 'San Benedetto' } };
         const bothNations = { isGlobalAdmin: false, nations: ['CA', 'IT'], widerRegions: [] };
         expect(localeWrites(i18n, bothNations, 'Europe', EUROPE).map(({ locale }) => locale)).toEqual(['it_IT']);
+    });
+
+    it('lets an editor of a nation in two regions write its locales to both', () => {
+        const swedenEditor = { isGlobalAdmin: false, nations: ['SE'], widerRegions: [] };
+        expect(editsWiderRegionLocale(swedenEditor, 'Europe', 'sv_SE', EUROPE)).toBe(true);
+        expect(editsWiderRegionLocale(swedenEditor, 'Nordic', 'sv_SE', NORDIC)).toBe(true);
+    });
+
+    it('admits a nation to a region it declares, even off that region\'s roster', () => {
+        expect(nationMayJoinWiderRegion('SE', 'Nordic', { members: [], declaredRegions: DECLARED })).toBe(true);
+    });
+
+    it('keeps out a nation that declares only other regions', () => {
+        expect(nationMayJoinWiderRegion('SE', 'Americas', AMERICAS)).toBe(false);
     });
 });
