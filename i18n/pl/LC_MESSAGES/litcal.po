@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-28 01:12+0000\n"
-"PO-Revision-Date: 2026-09-28 01:12+0000\n"
+"PO-Revision-Date: 2026-09-28 01:34+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pl/>\n"
@@ -1507,7 +1507,7 @@ msgstr "Żądanie scalania #%1$d"
 #: layout/footer.php:112
 #, php-format
 msgid "Change request: %1$s (files: %2$d)"
-msgstr ""
+msgstr "Wniosek o zmianę: %1$s (pliki: %2$d)"
 
 #: includes/login-modal.php:6
 msgid "Session Expiring"
