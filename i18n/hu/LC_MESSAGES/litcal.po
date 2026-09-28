@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-28 10:41+0000\n"
+"POT-Creation-Date: 2026-09-28 16:08+0000\n"
 "PO-Revision-Date: 2026-09-28 13:42+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
@@ -124,7 +124,7 @@ msgstr "Minden %1$s útvonalon elérhető kérési paraméterek"
 #: index.php:65 usage.php:35 examples.php:106 liturgyOfAnyDay.php:23
 #: layout/header.php:257 includes/change-request-i18n.php:56
 #: admin-permissions.php:85 admin-permissions.php:417 admin-tests.php:144
-#: admin-tests.php:350 permission-requests.php:256 sanctorale.php:195
+#: admin-tests.php:350 permission-requests.php:266 sanctorale.php:195
 msgid "General Roman Calendar"
 msgstr "Általános római naptár"
 
@@ -1333,7 +1333,7 @@ msgstr "Értesítések"
 #: admin-permissions.php:142 admin-permissions.php:201
 #: admin-permissions.php:208 admin-permissions.php:215
 #: admin-permissions.php:222 admin-permissions.php:384
-#: admin-permissions.php:449 admin-tests.php:332 permission-requests.php:66
+#: admin-permissions.php:460 admin-tests.php:332 permission-requests.php:66
 #: permission-requests.php:208 admin-applications.php:136
 #: admin-applications.php:145 admin-applications.php:154
 #: admin-applications.php:163 admin-applications.php:228 admin-users.php:70
@@ -1367,8 +1367,8 @@ msgstr "Biztosan ki szeretne jelentkezni?"
 msgid "Logout"
 msgstr "Kijelentkezés"
 
-#: layout/header.php:188 layout/header.php:251 admin-permissions.php:485
-#: permission-requests.php:92 permission-requests.php:275 admin-users.php:144
+#: layout/header.php:188 layout/header.php:251 admin-permissions.php:496
+#: permission-requests.php:92 permission-requests.php:285 admin-users.php:144
 msgid "Developer"
 msgstr "Fejlesztő"
 
@@ -1381,7 +1381,7 @@ msgid "Dashboard"
 msgstr "Irányítópult"
 
 #: layout/header.php:261 includes/admin-blocks.php:19 admin-permissions.php:421
-#: permission-requests.php:260 temporale.php:24 temporale.php:37
+#: permission-requests.php:270 temporale.php:24 temporale.php:37
 msgid "Temporale"
 msgstr "Temporále"
 
@@ -1402,7 +1402,7 @@ msgstr "Partikuláris naptárak"
 #. translators: label for wider region calendar name field
 #: layout/header.php:281 includes/messages.php:246 includes/admin-blocks.php:63
 #: admin-permissions.php:89 admin-permissions.php:322 admin-permissions.php:411
-#: permission-requests.php:246
+#: permission-requests.php:256
 msgid "Wider Region"
 msgstr "Tágabb régió"
 
@@ -1451,7 +1451,7 @@ msgstr "Értesítések betöltése nem sikerült"
 msgid "Just now"
 msgstr "Épp most"
 
-#: layout/footer.php:96 admin-permissions.php:481
+#: layout/footer.php:96 admin-permissions.php:492
 msgid "Requested"
 msgstr "Kérve"
 
@@ -2087,7 +2087,7 @@ msgstr ""
 #. translators: label for national calendar name field
 #: includes/messages.php:248 admin-permissions.php:87 admin-permissions.php:320
 #: admin-permissions.php:409 admin-tests.php:147 admin-tests.php:351
-#: permission-requests.php:244
+#: permission-requests.php:254
 msgid "National Calendar"
 msgstr "Nemzeti naptár"
 
@@ -2499,12 +2499,12 @@ msgid "Close"
 msgstr "Bezárás"
 
 #: includes/change-request-i18n.php:22 admin-permissions.php:406
-#: admin-permissions.php:476 admin-tests.php:113 admin-applications.php:244
+#: admin-permissions.php:487 admin-tests.php:113 admin-applications.php:244
 #: temporale.php:140
 msgid "Actions"
 msgstr "Műveletek"
 
-#: includes/change-request-i18n.php:23 admin-permissions.php:480
+#: includes/change-request-i18n.php:23 admin-permissions.php:491
 #: permission-requests.php:225 admin-applications.php:243 admin-locales.php:77
 msgid "Status"
 msgstr "Állapot"
@@ -2539,7 +2539,7 @@ msgid "Proposed changes"
 msgstr "Javasolt módosítások"
 
 #: includes/change-request-i18n.php:36 admin-permissions.php:175
-#: admin-permissions.php:488 permission-requests.php:282
+#: admin-permissions.php:499 permission-requests.php:292
 #: admin-applications.php:68 admin-applications.php:108
 #: admin-applications.php:251 admin-changes.php:88 admin-changes.php:128
 #: developer-dashboard.php:304
@@ -2547,7 +2547,7 @@ msgid "Approved"
 msgstr "Jóváhagyott"
 
 #: includes/change-request-i18n.php:37 admin-permissions.php:182
-#: admin-permissions.php:489 permission-requests.php:283
+#: admin-permissions.php:500 permission-requests.php:293
 #: admin-applications.php:79 admin-applications.php:114
 #: admin-applications.php:252 admin-changes.php:99 admin-changes.php:134
 #: developer-dashboard.php:305
@@ -2679,7 +2679,7 @@ msgstr ""
 "Olvasd el, és dönts a naptárakhoz kapcsolódó forrásadat-változtatási "
 "javaslatokról, amelyeket te kezelsz."
 
-#: includes/admin-changes-card.php:33 admin-permissions.php:477
+#: includes/admin-changes-card.php:33 admin-permissions.php:488
 #: admin-applications.php:245 admin-dashboard.php:136 admin-dashboard.php:194
 #: admin-changes.php:253
 msgid "Review"
@@ -3146,7 +3146,7 @@ msgstr ""
 msgid "Filters"
 msgstr "Szűrők"
 
-#: admin-permissions.php:69 admin-permissions.php:459
+#: admin-permissions.php:69 admin-permissions.php:470
 #: admin-applications.php:238 admin-users.php:213 admin-users.php:290
 msgid "User"
 msgstr "Felhasználó"
@@ -3155,7 +3155,7 @@ msgstr "Felhasználó"
 msgid "Filter by user ID..."
 msgstr "Szűrés felhasználói azonosító alapján..."
 
-#: admin-permissions.php:75 admin-permissions.php:403 admin-permissions.php:462
+#: admin-permissions.php:75 admin-permissions.php:403 admin-permissions.php:473
 msgid "Object Type"
 msgstr "Objektumtípus"
 
@@ -3164,36 +3164,36 @@ msgid "All"
 msgstr "Összes"
 
 #: admin-permissions.php:83 admin-permissions.php:318 admin-permissions.php:413
-#: permission-requests.php:250
+#: permission-requests.php:260
 msgid "Rite Calendar"
 msgstr "Rítus naptár"
 
 #: admin-permissions.php:84 admin-permissions.php:319 admin-permissions.php:414
-#: permission-requests.php:251
+#: permission-requests.php:261
 msgid "Rite Calendar Tests"
 msgstr "Rítus naptár tesztek"
 
-#: admin-permissions.php:86 admin-permissions.php:440 admin-permissions.php:471
-#: permission-requests.php:255
+#: admin-permissions.php:86 admin-permissions.php:451 admin-permissions.php:482
+#: permission-requests.php:265
 msgid "General Roman Calendar Tests"
 msgstr "Általános római naptári tesztek"
 
 #: admin-permissions.php:88 admin-permissions.php:321 admin-permissions.php:410
-#: admin-tests.php:150 admin-tests.php:352 permission-requests.php:245
+#: admin-tests.php:150 admin-tests.php:352 permission-requests.php:255
 msgid "Diocesan Calendar"
 msgstr "Egyházmegyei naptár"
 
-#: admin-permissions.php:90 admin-permissions.php:323 admin-permissions.php:438
-#: admin-permissions.php:469 permission-requests.php:248
+#: admin-permissions.php:90 admin-permissions.php:323 admin-permissions.php:449
+#: admin-permissions.php:480 permission-requests.php:258
 msgid "National Calendar Tests"
 msgstr "Nemzeti naptári tesztek"
 
-#: admin-permissions.php:91 admin-permissions.php:324 admin-permissions.php:439
-#: admin-permissions.php:470 permission-requests.php:249
+#: admin-permissions.php:91 admin-permissions.php:324 admin-permissions.php:450
+#: admin-permissions.php:481 permission-requests.php:259
 msgid "Diocesan Calendar Tests"
 msgstr "Egyházmegyei naptári tesztek"
 
-#: admin-permissions.php:95 admin-permissions.php:404 admin-permissions.php:463
+#: admin-permissions.php:95 admin-permissions.php:404 admin-permissions.php:474
 msgid "Object ID"
 msgstr "Objektumazonosító"
 
@@ -3202,23 +3202,23 @@ msgid "Filter by object ID..."
 msgstr "Szűrés objektumazonosító alapján..."
 
 #: admin-permissions.php:101 admin-permissions.php:300
-#: admin-permissions.php:405 admin-permissions.php:472
+#: admin-permissions.php:405 admin-permissions.php:483
 #: permission-requests.php:231
 msgid "Relation"
 msgstr "Kapcsolat"
 
 #: admin-permissions.php:105 admin-permissions.php:303
-#: admin-permissions.php:442 permission-requests.php:277
+#: admin-permissions.php:453 permission-requests.php:287
 msgid "Viewer"
 msgstr "Megtekintő"
 
 #: admin-permissions.php:106 admin-permissions.php:304
-#: admin-permissions.php:443 permission-requests.php:278
+#: admin-permissions.php:454 permission-requests.php:288
 msgid "Editor"
 msgstr "Szerkesztő"
 
 #: admin-permissions.php:107 admin-permissions.php:305
-#: admin-permissions.php:444 permission-requests.php:279
+#: admin-permissions.php:455 permission-requests.php:289
 msgctxt "permission relation"
 msgid "Admin"
 msgstr "Adminisztrátor"
@@ -3251,15 +3251,15 @@ msgstr "Engedélybejegyzések"
 msgid "Access Requests"
 msgstr "Hozzáférési Kérelmek"
 
-#: admin-permissions.php:168 admin-permissions.php:487
-#: permission-requests.php:281 admin-applications.php:57
+#: admin-permissions.php:168 admin-permissions.php:498
+#: permission-requests.php:291 admin-applications.php:57
 #: admin-applications.php:101 admin-applications.php:250
 #: developer-dashboard.php:303
 msgid "Pending"
 msgstr "Függőben"
 
-#: admin-permissions.php:189 admin-permissions.php:490
-#: permission-requests.php:284 admin-applications.php:90
+#: admin-permissions.php:189 admin-permissions.php:501
+#: permission-requests.php:294 admin-applications.php:90
 #: admin-applications.php:120 admin-applications.php:253
 #: developer-dashboard.php:306
 msgid "Revoked"
@@ -3314,7 +3314,7 @@ msgid "Select relation..."
 msgstr "Válasszon kapcsolatot..."
 
 #: admin-permissions.php:309 admin-permissions.php:430
-#: admin-permissions.php:464 permission-requests.php:234
+#: admin-permissions.php:475 permission-requests.php:234
 msgid "Calendar scope"
 msgstr "Naptár hatóköre"
 
@@ -3323,12 +3323,12 @@ msgid "Select calendar scope..."
 msgstr "Válaszd ki a naptár hatókörét..."
 
 #: admin-permissions.php:328 admin-permissions.php:431
-#: admin-permissions.php:465 permission-requests.php:235
+#: admin-permissions.php:476 permission-requests.php:235
 msgid "Calendar ID"
 msgstr "Naptár azonosítója"
 
 #: admin-permissions.php:331 admin-permissions.php:432
-#: admin-permissions.php:466 permission-requests.php:237
+#: admin-permissions.php:477 permission-requests.php:237
 msgid "Select calendar ID..."
 msgstr "Válaszd ki a naptár azonosítóját..."
 
@@ -3380,39 +3380,39 @@ msgstr "Biztosan vissza akarja vonni ezt az engedélyt?"
 msgid "Subject"
 msgstr "Alany"
 
-#: admin-permissions.php:412 admin-tests.php:128 permission-requests.php:247
+#: admin-permissions.php:412 admin-tests.php:128 permission-requests.php:257
 msgid "Test Definition"
 msgstr "Tesztdefiníció"
 
-#: admin-permissions.php:419 permission-requests.php:258
+#: admin-permissions.php:419 permission-requests.php:268
 msgid "Roman Rite"
 msgstr "Római rítus"
 
-#: admin-permissions.php:420 permission-requests.php:259 sanctorale.php:318
+#: admin-permissions.php:420 permission-requests.php:269 sanctorale.php:318
 msgid "Ambrosian Rite"
 msgstr "Ambrozián rítus"
 
-#: admin-permissions.php:422 permission-requests.php:262
+#: admin-permissions.php:422 permission-requests.php:272
 msgid "Sanctorale — Editio Typica 1970"
 msgstr "Sanctorale — Editio Typica 1970"
 
-#: admin-permissions.php:423 permission-requests.php:264
+#: admin-permissions.php:423 permission-requests.php:274
 msgid "Sanctorale — Editio Typica 2002"
 msgstr "Sanctorale — Editio Typica 2002"
 
-#: admin-permissions.php:424 permission-requests.php:266
+#: admin-permissions.php:424 permission-requests.php:276
 msgid "Sanctorale — Editio Typica 2008"
 msgstr "Sanctorale — Editio Typica 2008"
 
-#: admin-permissions.php:425 permission-requests.php:268
+#: admin-permissions.php:425 permission-requests.php:278
 msgid "Sanctorale — Editio Typica 2024"
 msgstr "Sanctorale — Editio Typica 2024"
 
-#: admin-permissions.php:426 permission-requests.php:270
+#: admin-permissions.php:426 permission-requests.php:280
 msgid "Decrees of the Dicastery for Divine Worship"
 msgstr "Az Istentiszteleti Dikasztérium dekrétumai"
 
-#: admin-permissions.php:427 permission-requests.php:271
+#: admin-permissions.php:427 permission-requests.php:281
 msgid "Supported locales"
 msgstr "Támogatott nyelvek"
 
@@ -3424,7 +3424,7 @@ msgstr "Adja meg az objektum ID-t..."
 msgid "Select object ID..."
 msgstr "Válasszon objektumazonosítót..."
 
-#: admin-permissions.php:434 admin-permissions.php:468
+#: admin-permissions.php:434 admin-permissions.php:479
 #: permission-requests.php:239
 msgid "Could not load calendars — try reloading the page"
 msgstr "Nem sikerült betölteni a naptárakat — próbáld újratölteni az oldalt"
@@ -3437,82 +3437,122 @@ msgstr "Meglévő nemzeti naptárak"
 msgid "New national calendars (not yet created)"
 msgstr "Új nemzeti naptárak (még nem készültek el)"
 
-#: admin-permissions.php:446
+#: admin-permissions.php:439
+#, fuzzy
+#| msgid "National"
+msgid "Nation"
+msgstr "Nemzeti"
+
+#: admin-permissions.php:440 permission-requests.php:244
+#, fuzzy
+#| msgid "Select relation..."
+msgid "Select a nation..."
+msgstr "Válasszon kapcsolatot..."
+
+#: admin-permissions.php:441 permission-requests.php:245
+#, fuzzy
+#| msgid "Select relation..."
+msgid "Select a diocese..."
+msgstr "Válasszon kapcsolatot..."
+
+#: admin-permissions.php:442 permission-requests.php:246
+#, fuzzy
+#| msgid "Existing national calendars"
+msgid "Existing diocesan calendars"
+msgstr "Meglévő nemzeti naptárak"
+
+#: admin-permissions.php:444 permission-requests.php:248
+#, fuzzy
+#| msgid "New national calendars (not yet created)"
+msgid "New diocesan calendars (not yet created)"
+msgstr "Új nemzeti naptárak (még nem készültek el)"
+
+#: admin-permissions.php:446 permission-requests.php:250
+msgid ""
+"The dioceses without a calendar yet could not be loaded; only existing "
+"calendars are listed."
+msgstr ""
+
+#: admin-permissions.php:448 permission-requests.php:252
+msgid "Retry"
+msgstr ""
+
+#: admin-permissions.php:457
 msgid "All fields are required."
 msgstr "Minden mező kitöltése kötelező."
 
-#: admin-permissions.php:450
+#: admin-permissions.php:461
 msgid "No requests found."
 msgstr "Nem találhatók kérelmek."
 
-#: admin-permissions.php:451
+#: admin-permissions.php:462
 msgid "No pending access requests. All caught up!"
 msgstr "Nincs függőben lévő hozzáférési kérelem. Minden beérkezett!"
 
-#: admin-permissions.php:452
+#: admin-permissions.php:463
 msgid "Failed to load access requests. Please try again later."
 msgstr ""
 "Nem sikerült betölteni a hozzáférési kérelmeket. Kérlek, próbáld meg később."
 
-#: admin-permissions.php:453 admin-applications.php:232 admin-changes.php:259
+#: admin-permissions.php:464 admin-applications.php:232 admin-changes.php:259
 #: change-requests.php:118
 msgid "Processing..."
 msgstr "Feldolgozás..."
 
-#: admin-permissions.php:454
+#: admin-permissions.php:465
 msgid "Access request approved successfully."
 msgstr "A hozzáférési kérelem sikeresen jóváhagyva."
 
-#: admin-permissions.php:455
+#: admin-permissions.php:466
 msgid "Access request rejected."
 msgstr "A hozzáférési kérelmet elutasították."
 
-#: admin-permissions.php:456
+#: admin-permissions.php:467
 msgid "Access revoked successfully."
 msgstr "A hozzáférés sikeresen visszavonva."
 
-#: admin-permissions.php:457 admin-applications.php:236
+#: admin-permissions.php:468 admin-applications.php:236
 msgid "Failed to process request. Please try again."
 msgstr "Kérelem feldolgozása sikertelen. Kérlek, próbáld meg újra."
 
-#: admin-permissions.php:460 permission-requests.php:223
+#: admin-permissions.php:471 permission-requests.php:223
 msgid "Role"
 msgstr "Szerep"
 
-#: admin-permissions.php:461 permission-requests.php:135
+#: admin-permissions.php:472 permission-requests.php:135
 #: permission-requests.php:224 admin-dashboard.php:110 user-profile.php:178
 msgid "Permissions"
 msgstr "Engedélyek"
 
-#: admin-permissions.php:473 permission-requests.php:153
+#: admin-permissions.php:484 permission-requests.php:153
 #: permission-requests.php:226
 msgid "Justification"
 msgstr "Indoklás"
 
-#: admin-permissions.php:474 permission-requests.php:168
+#: admin-permissions.php:485 permission-requests.php:168
 msgid "Credentials"
 msgstr "Hitelesítő adatok"
 
-#: admin-permissions.php:475 sanctorale.php:263
+#: admin-permissions.php:486 sanctorale.php:263
 msgid "Date"
 msgstr "Dátum"
 
-#: admin-permissions.php:478 admin-applications.php:247
+#: admin-permissions.php:489 admin-applications.php:247
 msgid "Reviewed At"
 msgstr "Felülvizsgálat időpontja"
 
-#: admin-permissions.php:479 permission-requests.php:227
+#: admin-permissions.php:490 permission-requests.php:227
 #: admin-applications.php:248
 msgid "Review Notes"
 msgstr "Felülvizsgálati megjegyzések"
 
-#: admin-permissions.php:483 permission-requests.php:82
-#: permission-requests.php:273 admin-users.php:145
+#: admin-permissions.php:494 permission-requests.php:82
+#: permission-requests.php:283 admin-users.php:145
 msgid "Calendar Editor"
 msgstr "Naptárszerkesztő"
 
-#: admin-permissions.php:484 permission-requests.php:87
-#: permission-requests.php:274 admin-users.php:146
+#: admin-permissions.php:495 permission-requests.php:87
+#: permission-requests.php:284 admin-users.php:146
 msgid "Accuracy Test Editor"
 msgstr "Pontossági teszt szerkesztője"
 
