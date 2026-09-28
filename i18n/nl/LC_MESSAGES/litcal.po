@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-26 21:58+0000\n"
-"PO-Revision-Date: 2026-09-26 22:55+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"POT-Creation-Date: 2026-09-28 10:41+0000\n"
+"PO-Revision-Date: 2026-09-28 13:42+0000\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
 "Language: nl\n"
@@ -126,7 +126,7 @@ msgstr "Aanvraagparameters beschikbaar op alle paden %1$s"
 #: index.php:65 usage.php:35 examples.php:106 liturgyOfAnyDay.php:23
 #: layout/header.php:257 includes/change-request-i18n.php:56
 #: admin-permissions.php:85 admin-permissions.php:417 admin-tests.php:144
-#: admin-tests.php:350 permission-requests.php:256 sanctorale.php:224
+#: admin-tests.php:350 permission-requests.php:256 sanctorale.php:195
 msgid "General Roman Calendar"
 msgstr "Algemene Romeinse kalender"
 
@@ -134,7 +134,7 @@ msgstr "Algemene Romeinse kalender"
 #: admin-permissions.php:39 admin-tests.php:38 permission-requests.php:34
 #: admin-applications.php:34 admin-dashboard.php:40 admin-users.php:34
 #: admin-locales.php:39 admin-changes.php:46 change-requests.php:38
-#: developer-dashboard.php:35 temporale.php:25 sanctorale.php:91
+#: developer-dashboard.php:35 temporale.php:25 sanctorale.php:61
 #: user-profile.php:24
 msgid "Catholic Liturgical Calendar"
 msgstr "Katholieke Liturgische Kalender"
@@ -340,7 +340,7 @@ msgid "View JavaScript Example"
 msgstr "Bekijk JavaScript-voorbeeld"
 
 #. translators: card header for FullCalendar example
-#: usage.php:103 sanctorale.php:127 sanctorale.php:312
+#: usage.php:103 sanctorale.php:97 sanctorale.php:283
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -865,33 +865,43 @@ msgstr ""
 
 #. translators: context = liturgical color
 #. translators: liturgical color - green
-#: src/LitColor.php:33 includes/messages.php:100
+#: src/LitColor.php:36 includes/messages.php:116
 msgid "green"
 msgstr "groen"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - purple/violet
-#: src/LitColor.php:36 includes/messages.php:102
+#: src/LitColor.php:39 includes/messages.php:118
 msgid "purple"
 msgstr "paars"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - white
-#: src/LitColor.php:39 includes/messages.php:96
+#: src/LitColor.php:42 includes/messages.php:112
 msgid "white"
 msgstr "wit"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - red
-#: src/LitColor.php:42 includes/messages.php:98
+#: src/LitColor.php:45 includes/messages.php:114
 msgid "red"
 msgstr "rood"
 
 #. translators: context = liturgical color
 #. translators: liturgical color - rose/pink
-#: src/LitColor.php:45 includes/messages.php:104
+#: src/LitColor.php:48 includes/messages.php:120
 msgid "rose"
 msgstr "roze"
+
+#. translators: context = liturgical color (Ambrosian rite)
+#: src/LitColor.php:51
+msgid "morello"
+msgstr "morello"
+
+#. translators: context = liturgical color (Ambrosian rite)
+#: src/LitColor.php:54
+msgid "black"
+msgstr "zwart"
 
 #: src/LitCommon.php:86
 msgid "Proper"
@@ -1096,7 +1106,7 @@ msgctxt "(SING_MASC)"
 msgid "of the"
 msgstr "voor de"
 
-#: src/LitCommon.php:322 sanctorale.php:229
+#: src/LitCommon.php:322 sanctorale.php:200
 msgid "From the Common"
 msgstr "Gemeenschappelijke"
 
@@ -1114,12 +1124,12 @@ msgstr "weekdag"
 #. translators: liturgical grade 1 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: src/LitGrade.php:105 admin-decrees.php:732 sanctorale.php:304
+#: src/LitGrade.php:105 admin-decrees.php:732 sanctorale.php:275
 msgid "Commemoration"
 msgstr "Herdenking"
 
 #. translators: liturgical rank. Keep Capitalized
-#: src/LitGrade.php:108 sanctorale.php:305
+#: src/LitGrade.php:108 sanctorale.php:276
 msgid "Optional memorial"
 msgstr "Vrije gedachtenis"
 
@@ -1127,7 +1137,7 @@ msgstr "Vrije gedachtenis"
 #. translators: liturgical grade 3 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: src/LitGrade.php:111 admin-decrees.php:720 sanctorale.php:306
+#: src/LitGrade.php:111 admin-decrees.php:720 sanctorale.php:277
 msgid "Memorial"
 msgstr "Gedachtenis"
 
@@ -1249,51 +1259,51 @@ msgid "Property to change"
 msgstr "Eigenschap wijzigen"
 
 #. translators: form field label for the name of a liturgical event
-#: src/Utilities.php:301 src/FormControls.php:139 includes/messages.php:19
+#: src/Utilities.php:301 src/FormControls.php:156 includes/messages.php:19
 #: admin-tests.php:108 temporale.php:135
 msgid "Name"
 msgstr "Naam"
 
-#: src/Utilities.php:302 src/FormControls.php:303 admin-decrees.php:472
-#: admin-decrees.php:513 temporale.php:75 temporale.php:136 sanctorale.php:293
+#: src/Utilities.php:302 src/FormControls.php:320 admin-decrees.php:472
+#: admin-decrees.php:513 temporale.php:75 temporale.php:136 sanctorale.php:264
 msgid "Grade"
 msgstr "Graad"
 
 #. translators: form field label for the day of the month
-#: src/FormControls.php:146 includes/messages.php:21 admin-decrees.php:393
-#: sanctorale.php:172
+#: src/FormControls.php:163 includes/messages.php:21 admin-decrees.php:393
+#: sanctorale.php:142
 msgid "Day"
 msgstr "Dag"
 
-#: src/FormControls.php:151
+#: src/FormControls.php:168
 msgid "switch on for mobile celebration as opposed to fixed date"
 msgstr "inschakelen voor mobiele viering in plaats van vaste datum"
 
 #. translators: form field label for the month of the year
-#: src/FormControls.php:156 includes/messages.php:23 admin-decrees.php:401
+#: src/FormControls.php:173 includes/messages.php:23 admin-decrees.php:401
 msgid "Month"
 msgstr "Maand"
 
-#: src/FormControls.php:158 admin-decrees.php:383
+#: src/FormControls.php:175 admin-decrees.php:383
 msgid "Mobile"
 msgstr "Mobiel"
 
 #. translators: form field label for liturgical color selection
-#: src/FormControls.php:177 includes/messages.php:25
+#: src/FormControls.php:194 includes/messages.php:25
 msgid "Liturgical color"
 msgstr "Liturgische kleur"
 
 #. translators: form field label - first year a liturgical event takes effect
-#: src/FormControls.php:186 includes/messages.php:27
+#: src/FormControls.php:203 includes/messages.php:27
 msgid "Since"
 msgstr "Vanaf"
 
 #. translators: form field label - last year a liturgical event is observed
-#: src/FormControls.php:193 includes/messages.php:29
+#: src/FormControls.php:210 includes/messages.php:29
 msgid "Until"
 msgstr "Tot"
 
-#: src/FormControls.php:293 admin-decrees.php:501
+#: src/FormControls.php:310 admin-decrees.php:501
 msgid "Common (or Proper)"
 msgstr "Gemeenschappelijke (of Eigen)"
 
@@ -1310,7 +1320,7 @@ msgid "Usage"
 msgstr "Gebruik"
 
 #. translators: link to translations page
-#: layout/header.php:51 includes/messages.php:221 admin-decrees.php:645
+#: layout/header.php:51 includes/messages.php:237 admin-decrees.php:645
 msgid "Translations"
 msgstr "Vertalingen"
 
@@ -1386,8 +1396,8 @@ msgstr "Dashboard"
 msgid "Temporale"
 msgstr "Tijdelijk"
 
-#: layout/header.php:265 includes/admin-blocks.php:37 sanctorale.php:90
-#: sanctorale.php:102
+#: layout/header.php:265 includes/admin-blocks.php:37 sanctorale.php:60
+#: sanctorale.php:72
 msgid "Sanctorale"
 msgstr "Heiligenkalender"
 
@@ -1401,7 +1411,7 @@ msgid "Particular Calendars"
 msgstr "Bijzondere Kalenders"
 
 #. translators: label for wider region calendar name field
-#: layout/header.php:281 includes/messages.php:230 includes/admin-blocks.php:63
+#: layout/header.php:281 includes/messages.php:246 includes/admin-blocks.php:63
 #: admin-permissions.php:89 admin-permissions.php:322 admin-permissions.php:411
 #: permission-requests.php:246
 msgid "Wider Region"
@@ -1501,6 +1511,11 @@ msgstr "Uw wijzigingsverzoek is gesloten zonder samen te voegen"
 msgid "Pull request #%1$d"
 msgstr "Pull request #%1$d"
 
+#: layout/footer.php:112
+#, php-format
+msgid "Change request: %1$s (files: %2$d)"
+msgstr "Wijzigingsverzoek: %1$s (bestanden: %2$d)"
+
 #: includes/login-modal.php:6
 msgid "Session Expiring"
 msgstr "Sessie verloopt"
@@ -1530,12 +1545,12 @@ msgid "Remember me"
 msgstr "Onthoud mij"
 
 #. translators: button label for canceling an action
-#: includes/login-modal.php:55 includes/messages.php:156 admin-decrees.php:581
+#: includes/login-modal.php:55 includes/messages.php:172 admin-decrees.php:581
 #: admin-decrees.php:608 admin-permissions.php:339 admin-permissions.php:365
 #: admin-tests.php:259 admin-tests.php:286 admin-tests.php:313
 #: admin-applications.php:207 admin-users.php:112 admin-changes.php:233
 #: developer-dashboard.php:134 developer-dashboard.php:183
-#: developer-dashboard.php:246 sanctorale.php:199 sanctorale.php:351
+#: developer-dashboard.php:246 sanctorale.php:169 sanctorale.php:322
 msgid "Cancel"
 msgstr "Annuleren"
 
@@ -1602,7 +1617,7 @@ msgstr "Sessie verlopen"
 
 #. translators: form field label for the unique identifier of a liturgical event
 #: includes/messages.php:17 admin-decrees.php:176 temporale.php:134
-#: sanctorale.php:174 sanctorale.php:355
+#: sanctorale.php:144 sanctorale.php:326
 msgid "Event key"
 msgstr "Evenementsleutel"
 
@@ -1667,21 +1682,57 @@ msgstr "Ontbrekende vertalingen"
 msgid "Cannot proceed: translations missing for locale %s"
 msgstr "Kan niet doorgaan: vertalingen ontbreken voor taal %s"
 
-#. translators: detailed explanation when General Roman Calendar translations are missing.
-#. %s is the locale code. This message should mention Weblate as the translation server.
+#. translators: shown when a new national calendar's language cannot be used yet. %s is the locale code (e.g. "es_VE").
+#. "Officially supported" is a status a language reaches once all of these translations are complete.
 #: includes/messages.php:68
 #, php-format
 msgid ""
-"The General Roman Calendar has not yet been translated into the locale "
-"\"%s\". Please translate the General Roman Calendar via the Weblate "
-"translation server before creating a calendar for this locale."
+"\"%s\" is not yet an officially supported locale: the translations of the "
+"General Roman Calendar, the Decrees and the Lectionary into this language "
+"are not complete. A national calendar can only be created in an officially "
+"supported locale."
 msgstr ""
-"De Algemene Romeinse Kalender is nog niet vertaald in de taal \"%s\". "
-"Vertaal de Algemene Romeinse Kalender via de Weblate vertaalserver voordat "
-"je een kalender voor deze taal maakt."
+"\"%s\" is nog geen officieel ondersteunde taalinstelling: de vertalingen van "
+"de Algemene Romeinse Kalender, de Decreten en het Lectionarium in deze taal "
+"zijn niet compleet. Een nationale kalender kan alleen worden aangemaakt in "
+"een officieel ondersteunde taalinstelling."
+
+#. translators: shown when a new national calendar declares locales that cannot be used yet. %s is a comma-separated list of locale codes (e.g. "br_FR, oc_FR")
+#: includes/messages.php:70
+#, php-format
+msgid ""
+"Not yet officially supported: %s. The translations of the General Roman "
+"Calendar, the Decrees and the Lectionary into these languages are not "
+"complete, so a new national calendar cannot declare them. Deselect them to "
+"save the calendar."
+msgstr ""
+"Nog niet officieel ondersteund: %s. De vertalingen van de Algemene Romeinse "
+"Kalender, de Decreten en het Lectionarium in deze talen zijn niet compleet, "
+"zodat een nieuwe nationale kalender ze niet kan opnemen. Deselecteer ze om "
+"de kalender op te slaan."
+
+#. translators: link to the page explaining how to contribute translations
+#: includes/messages.php:72
+msgid "Help complete the translations"
+msgstr "Help de vertalingen voltooien."
+
+#. translators: appended in parentheses to a language in the list of a new national calendar's locales, when it cannot be selected yet
+#: includes/messages.php:74
+msgid "not yet available: translations incomplete"
+msgstr "nog niet beschikbaar: vertalingen onvolledig"
+
+#. translators: warning shown when most event names of the calendar being created are untranslated in its locale
+#: includes/messages.php:76
+msgid ""
+"More than half of the event names have not been translated into this locale "
+"yet. Consider completing the translations before creating a new calendar."
+msgstr ""
+"Meer dan de helft van de evenementennamen is nog niet vertaald naar deze "
+"taalinstelling. Denk eraan de vertalingen af te ronden voordat je een nieuwe "
+"kalender aanmaakt."
 
 #. translators: %s is the change request batch id. The changes were queued for review, not saved
-#: includes/messages.php:76 admin-decrees.php:638 admin-tests.php:341
+#: includes/messages.php:84 admin-decrees.php:638 admin-tests.php:341
 #: admin-locales.php:135
 #, php-format
 msgid ""
@@ -1692,7 +1743,7 @@ msgstr ""
 "opgeslagen."
 
 #. translators: %s is the change request batch id. The changes were approved but are not published yet
-#: includes/messages.php:78 admin-decrees.php:639 admin-tests.php:342
+#: includes/messages.php:86 admin-decrees.php:639 admin-tests.php:342
 #: admin-locales.php:136
 #, php-format
 msgid ""
@@ -1703,7 +1754,7 @@ msgstr ""
 "publicatie. Ze zijn nog niet live."
 
 #. translators: %s is a comma separated list of change request batch ids folded into the current one
-#: includes/messages.php:80 admin-decrees.php:640 admin-tests.php:343
+#: includes/messages.php:88 admin-decrees.php:640 admin-tests.php:343
 #: admin-locales.php:137
 #, php-format
 msgid ""
@@ -1714,7 +1765,7 @@ msgstr ""
 "niet langer in uw wachtrij: %s"
 
 #. translators: %s is the unrecognized outcome value the server sent
-#: includes/messages.php:82 admin-decrees.php:642 admin-tests.php:344
+#: includes/messages.php:90 admin-decrees.php:642 admin-tests.php:344
 #: admin-locales.php:139
 #, php-format
 msgid ""
@@ -1725,205 +1776,235 @@ msgstr ""
 "Vernieuw de pagina om te controleren of ze zijn opgeslagen."
 
 #. translators: %s is a calendar identifier such as "nation/US"
-#: includes/messages.php:84
+#: includes/messages.php:92
 #, php-format
 msgid "Calendar '%s' was deleted successfully"
 msgstr "Kalender '%s' is succesvol verwijderd"
 
 #. translators: %s is a diocese identifier such as "rome_it"
-#: includes/messages.php:86
+#: includes/messages.php:94
 #, php-format
 msgid "Diocesan Calendar '%s' was deleted successfully"
 msgstr "Diocesane Kalender '%s' is succesvol verwijderd"
 
 #. translators: confirmation shown after saving a national calendar
-#: includes/messages.php:88
+#: includes/messages.php:96
 msgid "National Calendar was created or updated successfully"
 msgstr "Nationale kalender is succesvol aangemaakt of bijgewerkt"
 
 #. translators: confirmation shown after saving a wider region calendar
-#: includes/messages.php:90
+#: includes/messages.php:98
 msgid "Wider Region Calendar was created or updated successfully"
 msgstr "Breder Regio kalender is succesvol aangemaakt of bijgewerkt"
 
+#. translators: %s = comma-separated locales, e.g. "en_CA, fr_CA". Shown to a national calendar editor viewing a wider region
+#: includes/messages.php:100
+#, php-format
+msgid ""
+"You can edit this wider region's translations for: %s. Everything else is "
+"read-only."
+msgstr ""
+"Je kunt de vertalingen van deze bredere regio bewerken voor: %s. De rest is "
+"alleen-lezen."
+
+#. translators: shown to a national calendar editor with no locale of their own in the wider region
+#: includes/messages.php:102
+msgid ""
+"You can add your nation's languages to this wider region in the Locales "
+"list; everything else is read-only."
+msgstr ""
+"Je kunt de talen van jouw land aan deze bredere regio toevoegen in de lijst ‘"
+"Talen’; de rest is alleen-lezen."
+
+#. translators: %s = comma-separated locales, e.g. "en_CA, fr_CA"
+#: includes/messages.php:104
+#, php-format
+msgid "The wider region's translations for %s were saved"
+msgstr "De vertalingen van deze bredere regio voor %s zijn opgeslagen"
+
+#. translators: shown when a national calendar editor saves a wider region with no translation they may write
+#: includes/messages.php:106
+msgid "There are no translations here that you may edit."
+msgstr "Er zijn hier geen vertalingen die je kunt bewerken."
+
 #. translators: form row title for designating a Doctor of the Church
-#: includes/messages.php:110
+#: includes/messages.php:126
 msgid "Designate Doctor of the Church"
 msgstr "Kerkleraar aanwijzen"
 
 #. translators: form row title for creating a new liturgical event
-#: includes/messages.php:112
+#: includes/messages.php:128
 msgid "New liturgical event"
 msgstr "Nieuw liturgisch evenement"
 
 #. translators: form row title for changing the name of a liturgical event
-#: includes/messages.php:114
+#: includes/messages.php:130
 msgid "Change name"
 msgstr "Naam wijzigen"
 
 #. translators: form row title for changing the grade of a liturgical event
-#: includes/messages.php:116
+#: includes/messages.php:132
 msgid "Change grade"
 msgstr "Graad wijzigen"
 
 #. translators: form row title for changing name or grade
-#: includes/messages.php:118
+#: includes/messages.php:134
 msgid "Change name or grade"
 msgstr "Naam of graad wijzigen"
 
 #. translators: form row title for moving a liturgical event to a new date
-#: includes/messages.php:120
+#: includes/messages.php:136
 msgid "Move liturgical event"
 msgstr "Verplaats een liturgisch evenement"
 
 #. translators: button text for adding a solemnity in diocesan calendar
-#: includes/messages.php:126
+#: includes/messages.php:142
 msgid "Other Solemnity"
 msgstr "Andere Hoogfeest"
 
 #. translators: button text for adding a feast in diocesan calendar
-#: includes/messages.php:128
+#: includes/messages.php:144
 msgid "Other Feast"
 msgstr "Andere Feest"
 
 #. translators: button text for adding a memorial in diocesan calendar
-#: includes/messages.php:130
+#: includes/messages.php:146
 msgid "Other Memorial"
 msgstr "Andere Gedachtenis"
 
 #. translators: button text for adding an optional memorial in diocesan calendar
-#: includes/messages.php:132
+#: includes/messages.php:148
 msgid "Other Optional Memorial"
 msgstr "Andere Vrije Gedachtenis"
 
 #. translators: button description for designating patron action
-#: includes/messages.php:138
+#: includes/messages.php:154
 msgid "Designate patron"
 msgstr "Patroonheilige aanwijzen"
 
 #. translators: button description for changing name or grade of existing event
-#: includes/messages.php:140
+#: includes/messages.php:156
 msgid "Change name or grade of existing liturgical event"
 msgstr "Naam of rang van een bestaand liturgisch evenement wijzigen"
 
 #. translators: button description for moving event to new date
-#: includes/messages.php:142
+#: includes/messages.php:158
 msgid "Move liturgical event to new date"
 msgstr "Verplaats een liturgisch evenement naar een nieuwe datum"
 
 #. translators: button description for creating new liturgical event
-#: includes/messages.php:144
+#: includes/messages.php:160
 msgid "Create new liturgical event"
 msgstr "Nieuw liturgisch evenement creëren"
 
 #. translators: button description for designating Doctor of the Church
-#: includes/messages.php:146
+#: includes/messages.php:162
 msgid "Designate Doctor of the Church from existing liturgical event"
 msgstr "Kerkleraar aanwijzen vanuit bestaande liturgische gebeurtenis"
 
 #. translators: button label for deleting a calendar
-#: includes/messages.php:152
+#: includes/messages.php:168
 msgid "Delete calendar"
 msgstr "Kalender verwijderen"
 
 #. translators: button label for removing existing data
-#: includes/messages.php:154
+#: includes/messages.php:170
 msgid "Remove existing data"
 msgstr "Verwijder bestaande gegevens"
 
 #. translators: button label for setting a property
-#: includes/messages.php:158
+#: includes/messages.php:174
 msgid "Set Property"
 msgstr "Stel Eigenschap in"
 
 #. translators: button label for moving a liturgical event
-#: includes/messages.php:160
+#: includes/messages.php:176
 msgid "Move Liturgical Event"
 msgstr "Liturgisch evenement verplaatsen"
 
 #. translators: button label for creating a liturgical event
-#: includes/messages.php:162
+#: includes/messages.php:178
 msgid "Create Liturgical Event"
 msgstr "Creëer een liturgisch evenement"
 
 #. translators: button label for creating event from existing
-#: includes/messages.php:164
+#: includes/messages.php:180
 msgid "New liturgical event from existing"
 msgstr "Nieuwe liturgische gebeurtenis vanuit bestaande"
 
 #. translators: button label for creating entirely new event
-#: includes/messages.php:166
+#: includes/messages.php:182
 msgid "New liturgical event ex novo"
 msgstr "Nieuwe liturgische gebeurtenis ex novo"
 
 #. translators: button label for adding a missal
-#: includes/messages.php:168
+#: includes/messages.php:184
 msgid "Add Missal"
 msgstr "Missaal toevoegen"
 
 #. translators: button label for adding language edition Roman Missal
-#: includes/messages.php:170
+#: includes/messages.php:186
 msgid "Add language edition Roman Missal"
 msgstr "Taaleditie Romeins Missaal toevoegen"
 
 #. translators: link text for reading a decree document
-#: includes/messages.php:172
+#: includes/messages.php:188
 msgid "Read the Decree"
 msgstr "Lees het Decreet"
 
 #. translators: button label for adding a column in admin table
-#: includes/messages.php:174
+#: includes/messages.php:190
 msgid "Add Column"
 msgstr "Kolom Toevoegen"
 
 #. translators: button label for saving data in admin
-#: includes/messages.php:176
+#: includes/messages.php:192
 msgid "Save data"
 msgstr "Gegevens opslaan"
 
 #. translators: button title for adding a decree
-#: includes/messages.php:178
+#: includes/messages.php:194
 msgid "Add Decree"
 msgstr "Besluit toevoegen"
 
 #. translators: page title for particular calendars
-#: includes/messages.php:184
+#: includes/messages.php:200
 msgid "General Roman Calendar - Particular Calendars"
 msgstr "Algemene Romeinse Kalender - Bijzondere Kalenders"
 
 #. translators: page title for decrees
-#: includes/messages.php:186
+#: includes/messages.php:202
 msgid "General Roman Calendar - Decrees"
 msgstr "Algemene Romeinse Kalender - Decreten"
 
 #. translators: page title for admin tools
-#: includes/messages.php:188
+#: includes/messages.php:204
 msgid "Administration tools"
 msgstr "Beheerhulpmiddelen"
 
 #. translators: main heading for particular calendars page
-#: includes/messages.php:194
+#: includes/messages.php:210
 msgid "Define Particular Calendars based on the General Roman Calendar"
 msgstr ""
 "Bijzondere kalenders definiëren op basis van de Algemene Romeinse Kalender"
 
 #. translators: main heading for particular calendars page
-#: includes/messages.php:196
+#: includes/messages.php:212
 msgid "Particular Calendars - Define Wider Region events"
 msgstr "Bijzondere Kalenders - Gebeurtenissen voor bredere regio definiëren"
 
 #. translators: main heading for particular calendars page
-#: includes/messages.php:198
+#: includes/messages.php:214
 msgid "Particular Calendars - Define a National Calendar"
 msgstr "Bijzondere Kalenders - Een nationale kalender definiëren"
 
 #. translators: main heading for particular calendars page
-#: includes/messages.php:200
+#: includes/messages.php:216
 msgid "Particular Calendars - Define a Diocesan Calendar"
 msgstr "Bijzondere Kalenders - Een diocesane kalender definiëren"
 
 #. translators: main heading for decrees page
-#: includes/messages.php:202
+#: includes/messages.php:218
 msgid ""
 "Refine the General Roman Calendar with Decrees of the Dicastery for Divine "
 "Worship and the Discipline of the Sacraments"
@@ -1932,12 +2013,12 @@ msgstr ""
 "Goddelijke Eredienst en de Discipline van de Sacramenten"
 
 #. translators: main heading for admin page
-#: includes/messages.php:204
+#: includes/messages.php:220
 msgid "Liturgical Calendar project Administration tools"
 msgstr "Liturgisch Kalender project Beheerhulpmiddelen"
 
 #. translators: introductory paragraph about decrees
-#: includes/messages.php:206
+#: includes/messages.php:222
 msgid ""
 "The Liturgical Calendar is based off of both published Roman Missals, and "
 "Decrees of the Dicastery for Divine Worship and the Discipline of the "
@@ -1953,7 +2034,7 @@ msgstr ""
 "met eventuele samenloop van verplichte vieringen."
 
 #. translators: explanation about API endpoints for missals and decrees
-#: includes/messages.php:208
+#: includes/messages.php:224
 msgid ""
 "Data for <b>Roman Missals</b> is handled by the <code>/missals</code> "
 "endpoint of the API, while data for <b>Decrees</b> is handled by the <code>/"
@@ -1964,7 +2045,7 @@ msgstr ""
 "worden beheerd door de <code>/decrees</code> endpoint van de API."
 
 #. translators: explanation about hierarchy of particular calendars
-#: includes/messages.php:214
+#: includes/messages.php:230
 msgid ""
 "The <b>General Roman Calendar</b> serves as the foundation for <b>Particular "
 "Calendars</b>, which are established to meet the liturgical needs of a "
@@ -1975,7 +2056,7 @@ msgstr ""
 "van een specifiek gebied."
 
 #. translators: explanation about hierarchy of particular calendars
-#: includes/messages.php:216
+#: includes/messages.php:232
 msgid ""
 "These calendars follow a hierarchical structure: a <b>Diocesan calendar</b> "
 "inherits and adapts the data from its respective <b>National calendar</b>. "
@@ -1987,7 +2068,7 @@ msgstr ""
 "<b>nationale kalender</b>. Daarom moet een nationale kalender worden "
 "gedefinieerd voordat een diocesane kalender kan worden opgesteld."
 
-#: includes/messages.php:219
+#: includes/messages.php:235
 #, php-format
 msgid ""
 "The first step in this process is ensuring the <b>General Roman Calendar</b> "
@@ -2006,7 +2087,7 @@ msgstr ""
 "rechtsgebied."
 
 #. translators: help text for diocesan group field
-#: includes/messages.php:224
+#: includes/messages.php:240
 msgid ""
 "If a group of dioceses decides to pool their Liturgical Calendar data, for "
 "example to print out one single yearly calendar with the data for all the "
@@ -2018,139 +2099,194 @@ msgstr ""
 "gedefinieerd of ingesteld."
 
 #. translators: label for national calendar name field
-#: includes/messages.php:232 admin-permissions.php:87 admin-permissions.php:320
+#: includes/messages.php:248 admin-permissions.php:87 admin-permissions.php:320
 #: admin-permissions.php:409 admin-tests.php:147 admin-tests.php:351
 #: permission-requests.php:244
 msgid "National Calendar"
 msgstr "Nationale kalender"
 
 #. translators: label for diocesan calendar dependency
-#: includes/messages.php:234
+#: includes/messages.php:250
 msgid "Depends on national calendar"
 msgstr "Hangt af van de nationale kalender"
 
 #. translators: label for diocese name field
-#: includes/messages.php:236
+#: includes/messages.php:252
 msgid "Diocese"
 msgstr "Bisdom"
 
 #. translators: label for diocesan group field
-#: includes/messages.php:238
+#: includes/messages.php:254
 msgid "Diocesan group"
 msgstr "Groep bisdommen"
 
 #. translators: label for locales selection
-#: includes/messages.php:240
+#: includes/messages.php:256
 msgid "Locales"
 msgstr "Talen"
 
 #. translators: label for current localization selection
-#: includes/messages.php:242
+#: includes/messages.php:258
 msgid "Current localization"
 msgstr "Huidige lokalisatie"
 
 #. translators: label for published Roman Missals list
-#: includes/messages.php:244
+#: includes/messages.php:260
 msgid "Published Roman Missals"
 msgstr "Romeinse missalen gepubliceerd"
 
 #. translators: card heading for creating wider region calendar
-#: includes/messages.php:250
+#: includes/messages.php:266
 msgid "Define a Calendar for a Wider Region"
 msgstr "Een kalender voor een bredere regio definiëren"
 
 #. translators: card heading for creating national calendar
-#: includes/messages.php:252
+#: includes/messages.php:268
 msgid "Define a National Calendar"
 msgstr "Een nationale kalender definiëren"
 
 #. translators: card heading for creating diocesan calendar
-#: includes/messages.php:254
+#: includes/messages.php:270
 msgid "Define a Diocesan Calendar"
 msgstr "Een diocesane kalender definiëren"
 
 #. translators: section heading for national calendar settings
-#: includes/messages.php:256
+#: includes/messages.php:272
 msgid "National calendar settings"
 msgstr "Nationale kalenderinstellingen"
 
 #. translators: heading for diocesan overrides section
-#: includes/messages.php:258
+#: includes/messages.php:274
 msgid "Diocesan overrides to the national calendar for …"
 msgstr "Diocesane overschrijvingen op de nationale kalender voor …"
 
 #. translators: label for Epiphany setting
-#: includes/messages.php:264
+#: includes/messages.php:280
 msgid "EPIPHANY"
 msgstr "OPENBARING"
 
 #. translators: option for Epiphany on January 6
-#: includes/messages.php:266
+#: includes/messages.php:282
 msgid "January 6"
 msgstr "6 januari"
 
 #. translators: option for Epiphany on Sunday
-#: includes/messages.php:268
+#: includes/messages.php:284
 msgid "Sunday between January 2 and January 8"
 msgstr "Zondag tussen 2 januari en 8 januari"
 
 #. translators: label for Ascension setting
-#: includes/messages.php:270
+#: includes/messages.php:286
 msgid "ASCENSION"
 msgstr "HEMELVAART"
 
 #. translators: label for Corpus Christi setting
-#: includes/messages.php:272
+#: includes/messages.php:288
 msgid "CORPUS CHRISTI"
 msgstr "SACRAMENTSDAG"
 
 #. translators: label for Eternal High Priest setting
-#: includes/messages.php:274
+#: includes/messages.php:290
 msgid "ETERNAL HIGH PRIEST"
 msgstr "EEUWIGE HOGEPRIESTER"
 
+#. translators: label for the national calendar's holy days of obligation setting
+#: includes/messages.php:292
+msgid "HOLY DAYS OF OBLIGATION"
+msgstr "Verplichte heilige dagen"
+
+#. translators: a holy day of obligation (Nativity of the Lord)
+#: includes/messages.php:294 temporale.php:67
+msgid "Christmas"
+msgstr "Kerstmis"
+
+#. translators: a holy day of obligation
+#: includes/messages.php:296
+msgid "Epiphany"
+msgstr "Epifanie"
+
+#. translators: a holy day of obligation
+#: includes/messages.php:298
+msgid "Ascension"
+msgstr "Hemelvaart"
+
+#. translators: a holy day of obligation
+#: includes/messages.php:300
+msgid "Corpus Christi"
+msgstr "Sacramentsdag"
+
+#. translators: a holy day of obligation (Solemnity of Mary, Mother of God, January 1)
+#: includes/messages.php:302
+msgid "Mary, Mother of God"
+msgstr "Maria, Moeder van God"
+
+#. translators: a holy day of obligation
+#: includes/messages.php:304
+msgid "Immaculate Conception"
+msgstr "Onbevlekt Ontvangenis"
+
+#. translators: a holy day of obligation (Assumption of the Blessed Virgin Mary)
+#: includes/messages.php:306
+msgid "Assumption"
+msgstr "Tenhemelopneming van Maria"
+
+#. translators: a holy day of obligation (Saint Joseph, Spouse of the Blessed Virgin Mary)
+#: includes/messages.php:308
+msgid "St. Joseph"
+msgstr "Sint-Jozef"
+
+#. translators: a holy day of obligation
+#: includes/messages.php:310
+msgid "Sts. Peter and Paul, Apostles"
+msgstr "Sint-Petrus en Paulus, Apostelen"
+
+#. translators: a holy day of obligation
+#: includes/messages.php:312
+msgid "All Saints"
+msgstr "Allerheiligen"
+
 #. translators: tab label for solemnities section
-#: includes/messages.php:280
+#: includes/messages.php:318
 msgid "Solemnities"
 msgstr "Hoogfeesten"
 
 #. translators: tab label for feasts section
-#: includes/messages.php:282
+#: includes/messages.php:320
 msgid "Feasts"
 msgstr "Feesten"
 
 #. translators: tab label for memorials section
-#: includes/messages.php:284
+#: includes/messages.php:322
 msgid "Memorials"
 msgstr "Gedachtenissen"
 
 #. translators: tab label for optional memorials section
-#: includes/messages.php:286
+#: includes/messages.php:324
 msgid "Optional memorials"
 msgstr "Vrije Gedachtenissen"
 
 #. translators: subtitle for defining solemnities
-#: includes/messages.php:292
+#: includes/messages.php:330
 msgid "Define the Solemnities"
 msgstr "Definieer de Hoogfeesten"
 
 #. translators: subtitle for defining feasts
-#: includes/messages.php:294
+#: includes/messages.php:332
 msgid "Define the Feasts"
 msgstr "Definieer de Feesten"
 
 #. translators: subtitle for defining memorials
-#: includes/messages.php:296
+#: includes/messages.php:334
 msgid "Define the Memorials"
 msgstr "Definieer de gedachtenissen"
 
 #. translators: subtitle for defining optional memorials
-#: includes/messages.php:298
+#: includes/messages.php:336
 msgid "Define the Optional Memorials"
 msgstr "Definieer de vrije gedachtenissen"
 
 #. translators: row title for principal patron solemnity
-#: includes/messages.php:304
+#: includes/messages.php:342
 msgid ""
 "Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
@@ -2158,19 +2294,19 @@ msgstr ""
 "territorium"
 
 #. translators: row title for dedication of cathedral
-#: includes/messages.php:306
+#: includes/messages.php:344
 msgid "Dedication of the Cathedral"
 msgstr "Toewijding van de kathedraal"
 
 #. translators: row title for patron feast
-#: includes/messages.php:308
+#: includes/messages.php:346
 msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
 "Patroon(s) van de plaats, het bisdom, de regio, de provincie of het "
 "territorium"
 
 #. translators: row title for secondary patron memorial
-#: includes/messages.php:310
+#: includes/messages.php:348
 msgid ""
 "Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
@@ -2178,7 +2314,7 @@ msgstr ""
 "het territorium"
 
 #. translators: row title for local saints optional memorial
-#: includes/messages.php:312
+#: includes/messages.php:350
 msgid ""
 "Saints whose veneration is local to the Place, Diocese, Region, Province or "
 "Territory"
@@ -2187,52 +2323,52 @@ msgstr ""
 "provincie of het territorium"
 
 #. translators: button to save wider region calendar data
-#: includes/messages.php:318
+#: includes/messages.php:356
 msgid "Save Wider Region Calendar Data"
 msgstr "Bewaar kalendergegevens van grotere regio's"
 
 #. translators: button to save national calendar data
-#: includes/messages.php:320
+#: includes/messages.php:358
 msgid "Save National Calendar Data"
 msgstr "Sla nationale kalendergegevens op"
 
 #. translators: button to save diocesan calendar data
-#: includes/messages.php:322
+#: includes/messages.php:360
 msgid "Save Diocesan Calendar Data"
 msgstr "Diocesane Kalendergegevens Opslaan"
 
 #. translators: modal title for changing name or grade
-#: includes/messages.php:328
+#: includes/messages.php:366
 msgid "Change the name or grade of an existing liturgical event"
 msgstr "Wijzig de naam of graad van een bestaand liturgisch evenement"
 
 #. translators: modal title for moving event
-#: includes/messages.php:330
+#: includes/messages.php:368
 msgid "Move a liturgical event to a new date"
 msgstr "Verplaats een liturgisch evenement naar een nieuwe datum"
 
 #. translators: modal title for creating new event
-#: includes/messages.php:332
+#: includes/messages.php:370
 msgid "Create a new liturgical event"
 msgstr "Maak een nieuw liturgisch evenement"
 
 #. translators: modal title for choosing missal
-#: includes/messages.php:334
+#: includes/messages.php:372
 msgid "Choose from known Roman Missal language editions"
 msgstr "Kies uit bekende edities van het Romeins Missaal"
 
 #. translators: modal title for deleting a diocesan calendar
-#: includes/messages.php:336
+#: includes/messages.php:374
 msgid "Delete diocesan calendar"
 msgstr "Schrap de diocesane kalender"
 
 #. translators: validation error when field is empty
-#: includes/messages.php:342
+#: includes/messages.php:380
 msgid "This value cannot be empty."
 msgstr "Deze waarde kan niet leeg zijn."
 
 #. translators: validation error for unknown missal
-#: includes/messages.php:344
+#: includes/messages.php:382
 msgid ""
 "This Missal is unknown to the Liturgical Calendar API. Please choose from a "
 "value in the list, or contact the curator of the API to have the Missal "
@@ -2243,7 +2379,7 @@ msgstr ""
 "missaal toe te voegen aan missalen in de bekende taaleditie."
 
 #. translators: warning message when deleting a calendar
-#: includes/messages.php:350
+#: includes/messages.php:388
 msgid ""
 "If you choose to delete this calendar, the liturgical events defined for the "
 "calendar and the corresponding index entries will be removed and no longer "
@@ -2255,7 +2391,7 @@ msgstr ""
 "clienttoepassingen."
 
 #. translators: tooltip explaining the first step in defining a national calendar
-#: includes/messages.php:356
+#: includes/messages.php:394
 msgid ""
 "please keep in mind that the first step to creating a national calendar, is "
 "to translate the already existing calendar data into the correct language. "
@@ -2266,13 +2402,13 @@ msgstr ""
 "Dit kan op de LitCal-vertaalserver gedaan worden (zie hierboven voor details)"
 
 #. translators: help text shown when diocese input is disabled
-#: includes/messages.php:358
+#: includes/messages.php:396
 msgid "Select a national calendar first to see available dioceses."
 msgstr ""
 "Selecteer eerst een nationale kalender om beschikbare bisdommen te zien."
 
 #. translators: tooltip explaining the Eternal High Priest feast
-#: includes/messages.php:360
+#: includes/messages.php:398
 msgid ""
 "In 2012, Pope Benedict XVI gave faculty to the Episcopal Conferences to "
 "insert the Feast of Jesus Christ Eternal High Priest in their own liturgical "
@@ -2283,7 +2419,7 @@ msgstr ""
 "Pinksteren in hun eigen liturgische kalenders in te voegen."
 
 #. translators: tooltip explaining published Roman Missals selection
-#: includes/messages.php:362
+#: includes/messages.php:400
 msgid ""
 "if data from the Proper of Saints of a given Missal for this nation has "
 "already been incorporated into the main LitCal engine, you can choose the "
@@ -2297,7 +2433,7 @@ msgstr ""
 "niet in de lijst staat, is hij niet in de LitCal-engine opgenomen)"
 
 #. translators: tooltip explaining wider region association
-#: includes/messages.php:364
+#: includes/messages.php:402
 msgid ""
 "if data for a Wider Region that regards this National Calendar has already "
 "been defined, you can associate the Wider Region data with the National "
@@ -2308,17 +2444,17 @@ msgstr ""
 "regio koppelen aan de nationale kalender"
 
 #. translators: screen reader text for previous button
-#: includes/messages.php:370 temporale.php:173
+#: includes/messages.php:408 temporale.php:173
 msgid "Previous"
 msgstr "Vorige"
 
 #. translators: screen reader text for next button
-#: includes/messages.php:372 temporale.php:179
+#: includes/messages.php:410 temporale.php:179
 msgid "Next"
 msgstr "Volgende"
 
 #. translators: aria-label for diocesan calendar definition navigation
-#: includes/messages.php:374
+#: includes/messages.php:412
 msgid "Diocesan calendar definition"
 msgstr "Definitie van diocesane kalender"
 
@@ -2352,7 +2488,7 @@ msgid "View"
 msgstr "Bekijk"
 
 #: includes/admin-blocks.php:106 admin-decrees.php:688 admin-tests.php:347
-#: developer-dashboard.php:269 sanctorale.php:349
+#: developer-dashboard.php:269 sanctorale.php:320
 msgid "Edit"
 msgstr "Bewerk"
 
@@ -2378,7 +2514,7 @@ msgstr "Beheer liturgische nauwkeurigheidstesten"
 #: admin-users.php:104 admin-locales.php:93 admin-changes.php:210
 #: change-requests.php:97 change-requests.php:104 developer-dashboard.php:84
 #: developer-dashboard.php:154 developer-dashboard.php:239 temporale.php:163
-#: temporale.php:186 sanctorale.php:190
+#: temporale.php:186 sanctorale.php:160
 msgid "Close"
 msgstr "Sluiten"
 
@@ -2778,7 +2914,7 @@ msgstr "Basistaal — kan niet worden verwijderd"
 msgid "Add translation"
 msgstr "Vertaling toevoegen"
 
-#: admin-decrees.php:561 admin-decrees.php:646 sanctorale.php:227
+#: admin-decrees.php:561 admin-decrees.php:646 sanctorale.php:198
 msgid "Lectionary readings"
 msgstr "Lectionarium lezingen"
 
@@ -2787,7 +2923,7 @@ msgid "Add readings for locale"
 msgstr "Lezingen toevoegen voor taal"
 
 #: admin-decrees.php:584 admin-tests.php:262 developer-dashboard.php:323
-#: sanctorale.php:202 sanctorale.php:350
+#: sanctorale.php:172 sanctorale.php:321
 msgid "Save"
 msgstr "Opslaan"
 
@@ -2797,11 +2933,11 @@ msgstr "Decreet verwijderen"
 
 #: admin-decrees.php:611 admin-decrees.php:689 admin-tests.php:316
 #: admin-tests.php:348 developer-dashboard.php:249 developer-dashboard.php:270
-#: sanctorale.php:196 sanctorale.php:352
+#: sanctorale.php:166 sanctorale.php:323
 msgid "Delete"
 msgstr "Verwijderen"
 
-#: admin-decrees.php:627 admin-locales.php:112 sanctorale.php:222
+#: admin-decrees.php:627 admin-locales.php:112 sanctorale.php:193
 msgid "Loading…"
 msgstr "Laden…"
 
@@ -2880,7 +3016,7 @@ msgstr ""
 msgid "Gospel acclamation"
 msgstr "Evangelievers"
 
-#: admin-decrees.php:664 sanctorale.php:274
+#: admin-decrees.php:664 sanctorale.php:245
 msgid "Gospel"
 msgstr "Evangelie"
 
@@ -2896,7 +3032,7 @@ msgstr "Vaticaan URL-code (bijv. ge, sp, po)"
 msgid "Full URL for this language"
 msgstr "Volledige URL voor deze taal"
 
-#: admin-decrees.php:669 sanctorale.php:317
+#: admin-decrees.php:669 sanctorale.php:288
 msgid "override"
 msgstr "overschrijving"
 
@@ -2988,21 +3124,21 @@ msgstr "Hogere Plechtigheid"
 #. translators: liturgical grade 6 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:702 sanctorale.php:309
+#: admin-decrees.php:702 sanctorale.php:280
 msgid "Solemnity"
 msgstr "Plechtigheid"
 
 #. translators: liturgical grade 5 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:708 sanctorale.php:308
+#: admin-decrees.php:708 sanctorale.php:279
 msgid "Feast of the Lord"
 msgstr "Feest van de Heer"
 
 #. translators: liturgical grade 4 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:714 sanctorale.php:307
+#: admin-decrees.php:714 sanctorale.php:278
 msgid "Feast"
 msgstr "Feest"
 
@@ -3016,7 +3152,7 @@ msgstr "Optionele Gedachtenis"
 #. translators: liturgical grade 0 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:738 sanctorale.php:303
+#: admin-decrees.php:738 sanctorale.php:274
 msgid "Weekday"
 msgstr "Weekdag"
 
@@ -3278,7 +3414,7 @@ msgstr "Testdefinitie"
 msgid "Roman Rite"
 msgstr "Romeins Ritus"
 
-#: admin-permissions.php:420 permission-requests.php:259 sanctorale.php:347
+#: admin-permissions.php:420 permission-requests.php:259 sanctorale.php:318
 msgid "Ambrosian Rite"
 msgstr "Ambrosian Rite"
 
@@ -3382,7 +3518,7 @@ msgstr "Motivering"
 msgid "Credentials"
 msgstr "Referenties"
 
-#: admin-permissions.php:475 sanctorale.php:292
+#: admin-permissions.php:475 sanctorale.php:263
 msgid "Date"
 msgstr "Datum"
 
@@ -3978,7 +4114,7 @@ msgstr "Locale"
 msgid "Readiness"
 msgstr "Gereedheid"
 
-#: admin-locales.php:79 sanctorale.php:176 sanctorale.php:223
+#: admin-locales.php:79 sanctorale.php:146 sanctorale.php:194
 msgid "Details"
 msgstr "Details"
 
@@ -4515,7 +4651,7 @@ msgstr ""
 "Proprium de Tempore - De tijdscyclus van het liturgische jaar inclusief "
 "Advent, Kerstmis, de Vastentijd, Paastriduüm, Pasen en Gewone Tijd."
 
-#: temporale.php:57 sanctorale.php:131
+#: temporale.php:57 sanctorale.php:101
 msgid "Language"
 msgstr "Taal"
 
@@ -4530,10 +4666,6 @@ msgstr "Alle Seizoenen"
 #: temporale.php:66
 msgid "Advent"
 msgstr "Advent"
-
-#: temporale.php:67
-msgid "Christmas"
-msgstr "Kerstmis"
 
 #: temporale.php:68
 msgid "Lent"
@@ -4663,7 +4795,7 @@ msgstr "Eerste"
 msgid "Last"
 msgstr "Laatste"
 
-#: sanctorale.php:107
+#: sanctorale.php:77
 msgid ""
 "Each Roman Missal contributes only what it adds: the 2008 edition defines "
 "three celebrations, not a whole sanctorale. This page composes the editions "
@@ -4675,61 +4807,61 @@ msgstr ""
 "edities samen die van toepassing zijn op de kalender die je kiest, en laat "
 "zien uit welke editie elke viering afkomstig is."
 
-#: sanctorale.php:120
+#: sanctorale.php:90
 msgid "Rite"
 msgstr "Ritus"
 
-#: sanctorale.php:122
+#: sanctorale.php:92
 msgid "Roman"
 msgstr "Romeins"
 
-#: sanctorale.php:123
+#: sanctorale.php:93
 msgid "Ambrosian"
 msgstr "Ambrosiaanse"
 
-#: sanctorale.php:133
+#: sanctorale.php:103
 msgid "Languages this calendar is published in."
 msgstr "Talen waarin deze kalender is gepubliceerd."
 
-#: sanctorale.php:139 sanctorale.php:175
+#: sanctorale.php:109 sanctorale.php:145
 msgid "From"
 msgstr "Vanaf"
 
-#: sanctorale.php:141
+#: sanctorale.php:111
 msgid "Show only what one edition contributes."
 msgstr "Toon alleen wat één editie bijdraagt."
 
-#: sanctorale.php:144
+#: sanctorale.php:114
 msgid "Search all months"
 msgstr "Zoek alle maanden"
 
-#: sanctorale.php:146
+#: sanctorale.php:116
 msgid "Name or event key…"
 msgstr "Naam of evenement-sleutel…"
 
-#: sanctorale.php:147
+#: sanctorale.php:117
 msgid "Matches across every month, and moves you to one that has a result."
 msgstr ""
 "Koppelt aan alle maanden, en brengt je naar een maand die een resultaat "
 "heeft."
 
-#: sanctorale.php:160 sanctorale.php:353
+#: sanctorale.php:130 sanctorale.php:324
 msgid "New celebration"
 msgstr "Nieuwe viering"
 
-#: sanctorale.php:173 sanctorale.php:225
+#: sanctorale.php:143 sanctorale.php:196
 msgid "Celebration"
 msgstr "Viering"
 
-#: sanctorale.php:226
+#: sanctorale.php:197
 msgid "Names by locale"
 msgstr "Namen per locale"
 
-#: sanctorale.php:228
+#: sanctorale.php:199
 msgid "Readings structure"
 msgstr "Lezingenstructuur"
 
-#: sanctorale.php:230
+#: sanctorale.php:201
 msgid ""
 "No readings are curated for this celebration yet. Fill in what you know; "
 "blank citations are not saved."
@@ -4737,173 +4869,173 @@ msgstr ""
 "Er zijn nog geen lezingen geselecteerd voor deze viering. Vul in wat je "
 "weet; lege verwijzingen worden niet opgeslagen."
 
-#: sanctorale.php:238
+#: sanctorale.php:209
 msgid "Ferial Readings"
 msgstr "Feria-lezingen"
 
-#: sanctorale.php:239
+#: sanctorale.php:210
 msgid "Festive Readings"
 msgstr "Feestlezingen"
 
-#: sanctorale.php:240
+#: sanctorale.php:211
 msgid "Palm Sunday Readings"
 msgstr "Palmpasenlezingen"
 
-#: sanctorale.php:241
+#: sanctorale.php:212
 msgid "Easter Vigil Readings"
 msgstr "Paaswakelezingen"
 
-#: sanctorale.php:242
+#: sanctorale.php:213
 msgid "Christmas Readings"
 msgstr "Kerstlezingen"
 
-#: sanctorale.php:243
+#: sanctorale.php:214
 msgid "Readings with Evening Mass"
 msgstr "Lezingen bij de avondmis"
 
-#: sanctorale.php:244
+#: sanctorale.php:215
 msgid "Readings with Multiple Schemas"
 msgstr "Lezingen met meerdere schema's"
 
-#: sanctorale.php:245
+#: sanctorale.php:216
 msgid "Readings from liturgical Commons"
 msgstr "Lezingen uit liturgische Commons"
 
-#: sanctorale.php:246
+#: sanctorale.php:217
 msgid "Seasonal Readings"
 msgstr "Seizoenslezingen"
 
-#: sanctorale.php:247
+#: sanctorale.php:218
 msgid "Readings with a Vigil Mass"
 msgstr "Lezingen bij de vooravondmis"
 
-#: sanctorale.php:248
+#: sanctorale.php:219
 msgid "Christmas Readings with a Vigil Mass"
 msgstr "Kerstlezingen bij de vooravondmis"
 
-#: sanctorale.php:256
+#: sanctorale.php:227
 msgid "Gospel at the Procession"
 msgstr "Evangelie bij de processie"
 
-#: sanctorale.php:257
+#: sanctorale.php:228
 msgid "First Reading"
 msgstr "Eerste Lezing"
 
-#: sanctorale.php:258 sanctorale.php:260 sanctorale.php:262 sanctorale.php:264
-#: sanctorale.php:266 sanctorale.php:268 sanctorale.php:270 sanctorale.php:272
+#: sanctorale.php:229 sanctorale.php:231 sanctorale.php:233 sanctorale.php:235
+#: sanctorale.php:237 sanctorale.php:239 sanctorale.php:241 sanctorale.php:243
 msgid "Responsorial Psalm"
 msgstr "Antwoordpsalm"
 
-#: sanctorale.php:259
+#: sanctorale.php:230
 msgid "Second Reading"
 msgstr "Tweede Lezing"
 
-#: sanctorale.php:261
+#: sanctorale.php:232
 msgid "Third Reading"
 msgstr "Derde Lezing"
 
-#: sanctorale.php:263
+#: sanctorale.php:234
 msgid "Fourth Reading"
 msgstr "Vierde Lezing"
 
-#: sanctorale.php:265
+#: sanctorale.php:236
 msgid "Fifth Reading"
 msgstr "Vijfde Lezing"
 
-#: sanctorale.php:267
+#: sanctorale.php:238
 msgid "Sixth Reading"
 msgstr "Zesde Lezing"
 
-#: sanctorale.php:269
+#: sanctorale.php:240
 msgid "Seventh Reading"
 msgstr "Zevende Lezing"
 
-#: sanctorale.php:271
+#: sanctorale.php:242
 msgid "Epistle"
 msgstr "Epistel"
 
-#: sanctorale.php:273
+#: sanctorale.php:244
 msgid "Gospel Acclamation"
 msgstr "Gospelacclamatie"
 
-#: sanctorale.php:281
+#: sanctorale.php:252
 msgid "Vigil Mass"
 msgstr "Vigilie-Mis"
 
-#: sanctorale.php:282
+#: sanctorale.php:253
 msgid "Mass during the Night"
 msgstr "Nachtmis"
 
-#: sanctorale.php:283
+#: sanctorale.php:254
 msgid "Mass at Dawn"
 msgstr "Ochtendmis"
 
-#: sanctorale.php:284
+#: sanctorale.php:255
 msgid "Mass during the Day"
 msgstr "Dagmis"
 
-#: sanctorale.php:285
+#: sanctorale.php:256
 msgid "Evening Mass"
 msgstr "Avondmis"
 
-#: sanctorale.php:286
+#: sanctorale.php:257
 msgid "Schema I"
 msgstr "Schema I"
 
-#: sanctorale.php:287
+#: sanctorale.php:258
 msgid "Schema II"
 msgstr "Schema II"
 
-#: sanctorale.php:288
+#: sanctorale.php:259
 msgid "Schema III"
 msgstr "Schema III"
 
-#: sanctorale.php:289
+#: sanctorale.php:260
 msgid "Easter Season"
 msgstr "Paastijd"
 
-#: sanctorale.php:290
+#: sanctorale.php:261
 msgid "Outside Easter Season"
 msgstr "Buiten Paastijd"
 
-#: sanctorale.php:296
+#: sanctorale.php:267
 msgid "Displays as"
 msgstr "Weergegegeven als"
 
-#: sanctorale.php:299
+#: sanctorale.php:270
 msgid "no rank shown"
 msgstr "geen rang weergegeven"
 
-#: sanctorale.php:310
+#: sanctorale.php:281
 msgid "Higher solemnity"
 msgstr "Hogere solemniteit"
 
-#: sanctorale.php:313
+#: sanctorale.php:284
 msgid "Colour"
 msgstr "Kleur"
 
-#: sanctorale.php:314
+#: sanctorale.php:285
 msgid "Common"
 msgstr "Algemeen"
 
-#: sanctorale.php:315
+#: sanctorale.php:286
 msgid "From this Missal"
 msgstr "Uit dit Missaal"
 
-#: sanctorale.php:316
+#: sanctorale.php:287
 msgid "All editions"
 msgstr "Alle edities"
 
-#: sanctorale.php:318
+#: sanctorale.php:289
 msgid "This Missal redefines a celebration an earlier one already had."
-msgstr "Dit Missaal herdefinieert een viering die eerder al had."
+msgstr "Dit Missaal herdefinieert een viering die een eerdere editie al had."
 
-#: sanctorale.php:319
+#: sanctorale.php:290
 #, php-format
 msgid "superseded by %s"
 msgstr "vervangen door %s"
 
-#: sanctorale.php:320
+#: sanctorale.php:291
 msgid ""
 "A later edition redeclares this celebration; the calendar uses that entry, "
 "not this one."
@@ -4911,11 +5043,11 @@ msgstr ""
 "Een latere editie verklaart deze viering opnieuw; de kalender gebruikt die "
 "vermelding, niet deze."
 
-#: sanctorale.php:325
+#: sanctorale.php:296
 msgid "Redeclared by"
 msgstr "Opnieuw verklaard door"
 
-#: sanctorale.php:327
+#: sanctorale.php:298
 msgid ""
 "Takes the celebration universal at the same rank; the earlier particular "
 "entry is now redundant."
@@ -4923,60 +5055,60 @@ msgstr ""
 "Neemt de viering op hetzelfde rangniveau universeel over; de eerdere "
 "specifieke vermelding is nu overbodig."
 
-#: sanctorale.php:330
+#: sanctorale.php:301
 msgid "Redeclares the celebration without changing anything."
 msgstr "Herkondigt de viering opnieuw zonder iets te veranderen."
 
-#: sanctorale.php:333
+#: sanctorale.php:304
 msgid "no override"
 msgstr "geen override"
 
-#: sanctorale.php:336
+#: sanctorale.php:307
 msgid "translated"
 msgstr "vertaald"
 
-#: sanctorale.php:337
+#: sanctorale.php:308
 msgid "blank"
 msgstr "leeg"
 
-#: sanctorale.php:338
+#: sanctorale.php:309
 msgid "missing"
 msgstr "ontbrekend"
 
-#: sanctorale.php:339
+#: sanctorale.php:310
 msgid "Nothing here."
 msgstr "Niets hier."
 
-#: sanctorale.php:340
+#: sanctorale.php:311
 msgid "No celebration in this month matches your search."
 msgstr "Geen viering in deze maand komt overeen met uw zoekopdracht."
 
-#: sanctorale.php:341
+#: sanctorale.php:312
 msgid "No sanctorale lectionary is defined for this rite."
 msgstr "Er is geen sanctorale lectionarium gedefinieerd voor dit rite."
 
-#: sanctorale.php:344
+#: sanctorale.php:315
 msgid "No readings are curated for this celebration yet."
 msgstr "Nog geen lezingen zijn geselecteerd voor deze viering."
 
-#: sanctorale.php:345
+#: sanctorale.php:316
 msgid "Could not load the names for this celebration."
 msgstr "Kon de namen voor deze viering niet laden."
 
-#: sanctorale.php:346
+#: sanctorale.php:317
 msgid "Could not load the readings for this celebration."
 msgstr "Kon de lezingen voor deze viering niet laden."
 
-#: sanctorale.php:348
+#: sanctorale.php:319
 msgid "No Missal is published for this combination of rite and calendar."
 msgstr ""
 "Er is geen Missaal gepubliceerd voor deze combinatie van rite en kalender."
 
-#: sanctorale.php:354
+#: sanctorale.php:325
 msgid "Add to Missal"
 msgstr "Aan Missaal toevoegen"
 
-#: sanctorale.php:363
+#: sanctorale.php:334
 msgid ""
 "Begins with a capital, then letters and digits (StIsidoreFarmer). A trailing "
 "number (StPaul_2) or _vigil is allowed, as is a lowercase two-word prefix. "
@@ -4986,24 +5118,24 @@ msgstr ""
 "achteraan toegevoegd nummer (StPaul_2) of _vigil is toegestaan, evenals een "
 "twee-woordige prefix met kleine letters. Kan niet worden hernoemd."
 
-#: sanctorale.php:365
+#: sanctorale.php:336
 msgid "Enter a day between 1 and 31."
 msgstr "Voer een dag in tussen 1 en 31."
 
-#: sanctorale.php:370
+#: sanctorale.php:341
 msgid "Choose…"
 msgstr "Kies…"
 
-#: sanctorale.php:371
+#: sanctorale.php:342
 msgid "Choose a month."
 msgstr "Kies een maand."
 
-#: sanctorale.php:372
+#: sanctorale.php:343
 msgid "Choose a grade."
 msgstr "Kies een graad."
 
 #. translators: %1$s is the event key, %2$s is the Missal id
-#: sanctorale.php:374
+#: sanctorale.php:345
 #, php-format
 msgid ""
 "Delete %1$s from %2$s? Its name and readings go with it, and any earlier "
@@ -5012,7 +5144,7 @@ msgstr ""
 "Verwijder %1$s uit %2$s? De naam en lezingen gaan hiermee mee, en elke "
 "eerdere editie die het al heeft gedefinieerd neemt het over."
 
-#: sanctorale.php:377
+#: sanctorale.php:348
 msgid ""
 "These readings live in the rite-wide lectionary, shared by every Missal of "
 "this rite."
@@ -5020,13 +5152,13 @@ msgstr ""
 "Deze lezingen staan in het ritusbrede lectionarium, gedeeld door elk Missaal "
 "van dit ritus."
 
-#: sanctorale.php:378
+#: sanctorale.php:349
 msgid "This rite has no lectionary, so readings cannot be edited here."
 msgstr ""
 "Dit ritus heeft geen lectionarium, dus lezingen kunnen hier niet worden "
 "bewerkt."
 
-#: sanctorale.php:386
+#: sanctorale.php:357
 msgid ""
 "Inherited from a different lectionary source; edit it there, not from this "
 "Missal."
@@ -5034,75 +5166,75 @@ msgstr ""
 "Overgenomen uit een andere lectionariumbron; wijzig het daar, niet vanuit "
 "dit Missaal."
 
-#: sanctorale.php:389
+#: sanctorale.php:360
 msgid "The readings were kept: another Missal still declares this celebration."
 msgstr ""
 "De lezingen zijn bewaard: een ander Missaal verklaart deze viering nog "
 "steeds."
 
-#: sanctorale.php:390
+#: sanctorale.php:361
 msgid "Default (from grade)"
 msgstr "Standaard (van graad)"
 
-#: sanctorale.php:391
+#: sanctorale.php:362
 msgid "Show no rank"
 msgstr "Geen rang weergeven."
 
-#: sanctorale.php:392
+#: sanctorale.php:363
 msgid "Custom text…"
 msgstr "Aangepaste tekst…"
 
-#: sanctorale.php:393
+#: sanctorale.php:364
 msgid "Nothing has changed."
 msgstr "Niets is veranderd."
 
-#: sanctorale.php:394
+#: sanctorale.php:365
 msgid "Saved."
 msgstr "Opgeslagen."
 
-#: sanctorale.php:395
+#: sanctorale.php:366
 msgid "Celebration created."
 msgstr "Viering aangemaakt."
 
-#: sanctorale.php:396
+#: sanctorale.php:367
 msgid "Celebration deleted."
 msgstr "Viering verwijderd."
 
 #. translators: %s is the error reported by the API
-#: sanctorale.php:398
+#: sanctorale.php:369
 #, php-format
 msgid "Could not save: %s"
 msgstr "Kon niet opslaan: %s"
 
-#: sanctorale.php:399
+#: sanctorale.php:370
 msgid "You do not have permission to change this Missal."
 msgstr "Je hebt geen toestemming om dit Missaal te wijzigen."
 
-#: sanctorale.php:400
+#: sanctorale.php:371
 msgid "This clashes with another Missal"
 msgstr "Dit botst met een ander Missaal."
 
 #. translators: %s is the change request batch id
-#: sanctorale.php:406
+#: sanctorale.php:377
 #, php-format
 msgid "Queued for review as batch %s. Nothing has been written yet."
 msgstr ""
 "In de wachtrij voor beoordeling als batch %s. Er is nog niets geschreven."
 
 #. translators: %s is the change request batch id
-#: sanctorale.php:408
+#: sanctorale.php:379
 #, php-format
 msgid "Approved as batch %s, awaiting publication."
 msgstr "Goedgekeurd als batch %s, in afwachting van publicatie."
 
 #. translators: %s is a comma-separated list of batch ids
-#: sanctorale.php:410
+#: sanctorale.php:381
 #, php-format
 msgid "Earlier batches folded in: %s."
 msgstr "Eerdere batches ingevoegd: %s."
 
 #. translators: %s is the unrecognized disposition value
-#: sanctorale.php:412
+#: sanctorale.php:383
 #, php-format
 msgid ""
 "The server reported an unrecognized outcome (%s); nothing local was changed."
@@ -5111,7 +5243,7 @@ msgstr ""
 "gewijzigd."
 
 #. translators: %s is the error reported by the API
-#: sanctorale.php:414
+#: sanctorale.php:385
 #, php-format
 msgid "Could not load the sanctorale: %s"
 msgstr "Kon het sanctorale niet laden: %s"
@@ -5119,7 +5251,7 @@ msgstr "Kon het sanctorale niet laden: %s"
 #. translators: %s is the event_key a #event= link named
 #. Reported rather than left silent: the link may be stale, mistyped, or
 #. for a rite/calendar this page has since moved away from.
-#: sanctorale.php:418
+#: sanctorale.php:389
 #, php-format
 msgid "%s is not in the current selection."
 msgstr "%s staat niet in de huidige selectie."
