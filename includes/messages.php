@@ -63,9 +63,17 @@ $messages = [
     // =========================================================================
     /** translators: error message when translations are missing. %s is the locale code (e.g., "en_US") */
     'Cannot proceed: translations missing for locale' => _('Cannot proceed: translations missing for locale %s'),
-    /** translators: detailed explanation when General Roman Calendar translations are missing.
-        %s is the locale code. This message should mention Weblate as the translation server. */
-    'General Roman Calendar not translated'           => _('The General Roman Calendar has not yet been translated into the locale "%s". Please translate the General Roman Calendar via the Weblate translation server before creating a calendar for this locale.'),
+    /** translators: shown when a new national calendar's language cannot be used yet. %s is the locale code (e.g. "es_VE").
+        "Officially supported" is a status a language reaches once all of these translations are complete. */
+    'Locale not officially supported'                 => _('"%s" is not yet an officially supported locale: the translations of the General Roman Calendar, the Decrees and the Lectionary into this language are not complete. A national calendar can only be created in an officially supported locale.'),
+    /** translators: shown when a new national calendar declares locales that cannot be used yet. %s is a comma-separated list of locale codes (e.g. "br_FR, oc_FR") */
+    'Locales not officially supported'                => _('Not yet officially supported: %s. The translations of the General Roman Calendar, the Decrees and the Lectionary into these languages are not complete, so a new national calendar cannot declare them. Deselect them to save the calendar.'),
+    /** translators: link to the page explaining how to contribute translations */
+    'Help complete the translations'                  => _('Help complete the translations'),
+    /** translators: appended in parentheses to a language in the list of a new national calendar's locales, when it cannot be selected yet */
+    'Not yet available: translations incomplete'      => _('not yet available: translations incomplete'),
+    /** translators: warning shown when most event names of the calendar being created are untranslated in its locale */
+    'Event names mostly untranslated'                 => _('More than half of the event names have not been translated into this locale yet. Consider completing the translations before creating a new calendar.'),
 
     // =========================================================================
     // Write outcome messages (see assets/js/writeDisposition.js)

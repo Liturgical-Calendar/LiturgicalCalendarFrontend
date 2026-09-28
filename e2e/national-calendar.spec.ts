@@ -541,6 +541,68 @@ test.describe('National Calendar Form', () => {
         await expect(page.locator('#associatedWiderRegion')).toHaveValue('', { timeout: 15000 });
     });
 
+    test('a new national calendar selects only its officially supported locales, and names any other one selected', async ({ page, extendingPage }) => {
+        // France has five regional ICU locales (br, ca, fr, gsw, oc); today only French is an
+        // officially supported language (issue #566). Expectations follow the live list, so
+        // promoting another of them does not break the test.
+        const calendars = await (await page.request.get(`${API_BASE_URL}/calendars`)).json();
+        const metadata = calendars.litcal_metadata ?? {};
+        const official: string[] = metadata.locales ?? [];
+        test.skip((metadata.national_calendars_keys ?? []).includes('FR'), 'France already has a national calendar, so it is not created here');
+        const isOfficial = (locale: string) => official.includes(locale.split('_')[0]);
+
+        await extendingPage.selectCalendar('#nationalCalendarName', 'FR');
+        const select = page.locator('#nationalCalendarLocales');
+        const options = () => select.evaluate((el: HTMLSelectElement) => Array.from(el.options, o => o.value));
+        const selected = () => select.evaluate((el: HTMLSelectElement) => Array.from(el.selectedOptions, o => o.value));
+        await expect.poll(async () => (await options()).length, { timeout: 15000 }).toBeGreaterThan(1);
+        const all = await options();
+        expect(all).toContain('fr_FR');
+        await expect.poll(selected).toEqual(all.filter(isOfficial));
+        await expect(page.locator('#currentLocalizationNational')).toHaveValue('fr_FR');
+
+        const unsupported = all.find(locale => !isOfficial(locale));
+        test.skip(!unsupported, 'Every locale of France is officially supported now');
+
+        const toggle = async (locale: string, on: boolean) => select.evaluate((el: HTMLSelectElement, [value, state]) => {
+            (el.querySelector(`option[value="${value}"]`) as HTMLOptionElement).selected = state as boolean;
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+        }, [locale, on] as const);
+
+        const feedback = page.locator('#nationalCalendarLocalesFeedback');
+        const save = page.locator('#serializeNationalCalendarData');
+        await expect(feedback).toBeHidden();
+
+        await toggle(unsupported!, true);
+        await expect(feedback).toBeVisible();
+        await expect(feedback).toContainText(unsupported!);
+        await expect(feedback).not.toContainText('fr_FR');
+        await expect(feedback.locator('a[href="translations.php"]')).toBeVisible();
+        await expect(save).toBeDisabled();
+
+        await toggle(unsupported!, false);
+        await expect(feedback).toBeHidden();
+        await expect(save).toBeEnabled();
+    });
+
+    test('a new national calendar opens in its most spoken officially supported language', async ({ page, extendingPage }) => {
+        // German is Switzerland's most spoken language but is not officially supported, so
+        // the calendar is created in French rather than blocked on German (issue #566).
+        const calendars = await (await page.request.get(`${API_BASE_URL}/calendars`)).json();
+        const metadata = calendars.litcal_metadata ?? {};
+        test.skip((metadata.national_calendars_keys ?? []).includes('CH'), 'Switzerland already has a national calendar');
+        test.skip((metadata.locales ?? []).includes('de'), 'German is officially supported now, so nothing is skipped over');
+
+        await extendingPage.selectCalendar('#nationalCalendarName', 'CH');
+        await expect(page.locator('[data-toast-type="calendar-not-found"]')).toBeAttached({ timeout: 15000 });
+        await expect(page.locator('[data-toast-type="missing-translations"]')).toHaveCount(0);
+        await expect(page.locator('#currentLocalizationNational')).toHaveValue('fr_CH');
+        const selected = await page.locator('#nationalCalendarLocales')
+            .evaluate((el: HTMLSelectElement) => Array.from(el.selectedOptions, o => o.value));
+        expect(selected).toContain('fr_CH');
+        expect(selected).not.toContain('de_CH');
+    });
+
     test('should validate locale selection', async ({ page }) => {
         // Wait for form to load
         await page.waitForLoadState('networkidle');
