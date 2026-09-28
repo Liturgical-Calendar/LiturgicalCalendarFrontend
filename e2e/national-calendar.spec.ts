@@ -542,21 +542,27 @@ test.describe('National Calendar Form', () => {
     });
 
     test('a new national calendar selects only its officially supported locales, and names any other one selected', async ({ page, extendingPage }) => {
-        // France has five regional ICU locales (br, ca, fr, gsw, oc), and only French is an
-        // officially supported language (issue #566).
+        // France has five regional ICU locales (br, ca, fr, gsw, oc); today only French is an
+        // officially supported language (issue #566). Expectations follow the live list, so
+        // promoting another of them does not break the test.
         const calendars = await (await page.request.get(`${API_BASE_URL}/calendars`)).json();
-        test.skip(
-            (calendars.litcal_metadata?.national_calendars_keys ?? []).includes('FR'),
-            'France already has a national calendar, so it is not created here'
-        );
+        const metadata = calendars.litcal_metadata ?? {};
+        const official: string[] = metadata.locales ?? [];
+        test.skip((metadata.national_calendars_keys ?? []).includes('FR'), 'France already has a national calendar, so it is not created here');
+        const isOfficial = (locale: string) => official.includes(locale.split('_')[0]);
 
         await extendingPage.selectCalendar('#nationalCalendarName', 'FR');
         const select = page.locator('#nationalCalendarLocales');
+        const options = () => select.evaluate((el: HTMLSelectElement) => Array.from(el.options, o => o.value));
         const selected = () => select.evaluate((el: HTMLSelectElement) => Array.from(el.selectedOptions, o => o.value));
-        await expect.poll(selected, { timeout: 15000 }).toEqual(['fr_FR']);
-        expect(await select.evaluate((el: HTMLSelectElement) => Array.from(el.options, o => o.value)))
-            .toEqual(expect.arrayContaining(['br_FR', 'oc_FR']));
+        await expect.poll(async () => (await options()).length, { timeout: 15000 }).toBeGreaterThan(1);
+        const all = await options();
+        expect(all).toContain('fr_FR');
+        await expect.poll(selected).toEqual(all.filter(isOfficial));
         await expect(page.locator('#currentLocalizationNational')).toHaveValue('fr_FR');
+
+        const unsupported = all.find(locale => !isOfficial(locale));
+        test.skip(!unsupported, 'Every locale of France is officially supported now');
 
         const toggle = async (locale: string, on: boolean) => select.evaluate((el: HTMLSelectElement, [value, state]) => {
             (el.querySelector(`option[value="${value}"]`) as HTMLOptionElement).selected = state as boolean;
@@ -567,14 +573,14 @@ test.describe('National Calendar Form', () => {
         const save = page.locator('#serializeNationalCalendarData');
         await expect(feedback).toBeHidden();
 
-        await toggle('br_FR', true);
+        await toggle(unsupported!, true);
         await expect(feedback).toBeVisible();
-        await expect(feedback).toContainText('br_FR');
-        await expect(feedback).not.toContainText('fr_FR,');
+        await expect(feedback).toContainText(unsupported!);
+        await expect(feedback).not.toContainText('fr_FR');
         await expect(feedback.locator('a[href="translations.php"]')).toBeVisible();
         await expect(save).toBeDisabled();
 
-        await toggle('br_FR', false);
+        await toggle(unsupported!, false);
         await expect(feedback).toBeHidden();
         await expect(save).toBeEnabled();
     });
