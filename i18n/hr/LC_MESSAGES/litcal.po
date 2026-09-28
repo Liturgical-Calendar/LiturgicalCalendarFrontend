@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-28 10:41+0000\n"
 "PO-Revision-Date: 2026-09-28 13:42+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
 "Language: hr\n"
@@ -1781,7 +1781,7 @@ msgid ""
 "You can edit this wider region's translations for: %s. Everything else is "
 "read-only."
 msgstr ""
-"Možete uređivati prijevode ovog šireg područja za: %s. Sve ostalo je samo za "
+"Možeš uređivati prijevode ove šire regije za: %s. Sve ostalo je samo za "
 "čitanje."
 
 #. translators: shown to a national calendar editor with no locale of their own in the wider region
@@ -1790,8 +1790,8 @@ msgid ""
 "You can add your nation's languages to this wider region in the Locales "
 "list; everything else is read-only."
 msgstr ""
-"Možete dodati jezike svoje države u ovu širu regiju na popisu lokalizacija; "
-"sve ostalo je samo za čitanje."
+"Možeš dodati jezike svoje države ovoj široj regiji na popisu „Jezici”; sve "
+"ostalo je samo za čitanje."
 
 #. translators: %s = comma-separated locales, e.g. "en_CA, fr_CA"
 #: includes/messages.php:104
@@ -1802,7 +1802,7 @@ msgstr "Prijevodi ove šire regije za %s su spremljeni"
 #. translators: shown when a national calendar editor saves a wider region with no translation they may write
 #: includes/messages.php:106
 msgid "There are no translations here that you may edit."
-msgstr "Ovdje nema prijevoda koje možete uređivati."
+msgstr "Ovdje nema prijevoda koje možeš uređivati."
 
 #. translators: form row title for designating a Doctor of the Church
 #: includes/messages.php:126
