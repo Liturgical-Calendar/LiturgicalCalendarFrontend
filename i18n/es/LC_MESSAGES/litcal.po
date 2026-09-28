@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-28 10:41+0000\n"
 "PO-Revision-Date: 2026-09-28 13:42+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
 "Language: es\n"
@@ -1824,8 +1824,8 @@ msgid ""
 "You can add your nation's languages to this wider region in the Locales "
 "list; everything else is read-only."
 msgstr ""
-"Puedes añadir los idiomas de tu nación a esta región más amplia en la lista "
-"de Locales; todo lo demás es de solo lectura."
+"Puedes añadir los idiomas de tu nación a esta región más amplia en la lista «"
+"Idiomas»; todo lo demás es de solo lectura."
 
 #. translators: %s = comma-separated locales, e.g. "en_CA, fr_CA"
 #: includes/messages.php:104
@@ -4856,7 +4856,7 @@ msgstr "Celebración"
 
 #: sanctorale.php:197
 msgid "Names by locale"
-msgstr "Nombres por localidad"
+msgstr "Nombres por idioma"
 
 #: sanctorale.php:199
 msgid "Readings structure"
