@@ -240,6 +240,16 @@ if (!$authHelper->emailVerified) {
                 existingNationalCalendars: <?php echo json_encode(_('Existing national calendars'), $jsonFlags); ?>,
                 /** translators: group of nations whose national calendar has not been created yet; requesting admin access on one is how it gets created */
                 newNationalCalendars: <?php echo json_encode(_('New national calendars (not yet created)'), $jsonFlags); ?>,
+                /** translators: placeholder of the nation step of the diocese picker; only nations with a national calendar are listed */
+                selectNation: <?php echo json_encode(_('Select a nation...'), $jsonFlags); ?>,
+                selectDiocese: <?php echo json_encode(_('Select a diocese...'), $jsonFlags); ?>,
+                existingDiocesanCalendars: <?php echo json_encode(_('Existing diocesan calendars'), $jsonFlags); ?>,
+                /** translators: group of dioceses whose calendar has not been created yet; requesting admin access on one is how it gets created */
+                newDiocesanCalendars: <?php echo json_encode(_('New diocesan calendars (not yet created)'), $jsonFlags); ?>,
+                /** translators: shown under the diocese list when the dioceses without a calendar could not be loaded */
+                diocesesUnavailable: <?php echo json_encode(_('The dioceses without a calendar yet could not be loaded; only existing calendars are listed.'), $jsonFlags); ?>,
+                /** translators: button that tries again to load a list that failed to load */
+                retry: <?php echo json_encode(_('Retry'), $jsonFlags); ?>,
                 // Object type display names
                 nationalCalendar: <?php echo json_encode(_('National Calendar'), $jsonFlags); ?>,
                 diocesanCalendar: <?php echo json_encode(_('Diocesan Calendar'), $jsonFlags); ?>,

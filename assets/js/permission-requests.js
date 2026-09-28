@@ -19,6 +19,7 @@ import {
     splitObjectId,
 } from './riteScopedObjectId.js';
 import { buildNationObjectIdSelectFromConfig, NATIONAL_CALENDAR_TYPE } from './nationObjectIdSelect.js';
+import { DIOCESAN_CALENDAR_TYPE, loadWorldDioceses, mountDioceseObjectIdPicker } from './dioceseObjectIdPicker.js';
 
 // Initialize the API client once; CalendarSelect requires this to have resolved.
 // Since components-js 2.0.0 init() rejects on failure rather than resolving to
@@ -330,6 +331,69 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     /**
+     * The diocese picker mounted in each row, so a stored request can be restored into it.
+     * @type {WeakMap<HTMLElement, import('./dioceseObjectIdPicker.js').DiocesePicker>}
+     */
+    const diocesePickers = new WeakMap();
+
+    /**
+     * Mount the diocese picker for the `diocesan_calendar` scope.
+     *
+     * Not a CalendarSelect: that lists only the dioceses whose calendar already
+     * exists, and requesting `admin` on one that has none yet is how a new
+     * diocesan calendar gets created (issue #563). For the Roman rite it offers
+     * only dioceses of nations that have a national calendar, which a diocesan
+     * calendar depends on. The test tier keeps the CalendarSelect — there is
+     * nothing to test until the calendar exists.
+     * @param {HTMLElement} row - The permission row (.card element)
+     * @param {HTMLElement} mount - The row's `.perm-objid-mount`
+     */
+    async function mountDioceseObjectIdSelect(row, mount) {
+        try {
+            const [client, dioceses] = await Promise.all([apiClientReady, loadWorldDioceses()]);
+            if (!client) throw new Error('ApiClient initialization failed');
+            // Guard against a rapid scope change that already replaced the mount.
+            if (
+                !row.isConnected ||
+                row.querySelector('.perm-object-type').value !== DIOCESAN_CALENDAR_TYPE
+            ) return;
+            const riteSelect = new RiteSelect(LITCAL_LOCALE)
+                .class('form-select form-select-sm mb-2 perm-object-rite');
+            const riteHolder = document.createElement('div');
+            riteSelect.appendTo(riteHolder);
+            diocesePickers.set(row, mountDioceseObjectIdPicker({
+                mount,
+                riteEl:    riteSelect._domElement,
+                riteNodes: [...riteHolder.childNodes],
+                metadata:  client._metadata,
+                dioceses,
+                loadDioceses: loadWorldDioceses,
+                locale:    LITCAL_LOCALE,
+                nation:    { className: 'form-select form-select-sm mb-2 perm-object-nation' },
+                diocese:   { className: 'form-select form-select-sm perm-object-id' },
+                i18n:      {
+                    selectNation:  config.i18n.selectNation || 'Select a nation...',
+                    selectDiocese: config.i18n.selectDiocese || 'Select a diocese...',
+                    existingGroup: config.i18n.existingDiocesanCalendars || 'Existing diocesan calendars',
+                    newGroup:      config.i18n.newDiocesanCalendars || 'New diocesan calendars (not yet created)',
+                    diocesesUnavailable: config.i18n.diocesesUnavailable
+                        || 'The dioceses without a calendar yet could not be loaded; only existing calendars are listed.',
+                    retry:         config.i18n.retry || 'Retry'
+                }
+            }));
+        } catch (err) {
+            console.error('[permission-requests] Could not build the diocese picker:', err);
+            // The scope may have changed while this was loading: its own control
+            // is in the mount now, and must not be replaced by this failure.
+            if (
+                !row.isConnected ||
+                row.querySelector('.perm-object-type').value !== DIOCESAN_CALENDAR_TYPE
+            ) return;
+            mount.replaceChildren(buildObjectIdLoadFailure());
+        }
+    }
+
+    /**
      * Rebuild the Calendar ID control for a row based on the chosen scope.
      * Calendar-backed scopes mount a CalendarSelect; the rest use a native select.
      * @param {HTMLElement} row - The permission row (.card element)
@@ -342,6 +406,11 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         if (objectType === NATIONAL_CALENDAR_TYPE) {
             await mountNationObjectIdSelect(row, mount);
+            return;
+        }
+
+        if (objectType === DIOCESAN_CALENDAR_TYPE) {
+            await mountDioceseObjectIdSelect(row, mount);
             return;
         }
 
@@ -836,6 +905,15 @@ document.addEventListener('DOMContentLoaded', async function() {
         // rite first, then the calendar. splitObjectId() tolerates a legacy
         // bare id from a request stored before the API migration.
         const { rite, id } = splitObjectId(objectType, perm.object_id || '');
+        // The diocese picker restores its own three steps: the nation in the
+        // middle is not part of the stored id.
+        const diocesePicker = objectType === DIOCESAN_CALENDAR_TYPE ? diocesePickers.get(row) : undefined;
+        if (diocesePicker) {
+            diocesePicker.restore(rite, id);
+            const relation = row.querySelector('.perm-relation');
+            if (relation) relation.value = perm.relation || '';
+            return;
+        }
         const riteField = row.querySelector('.perm-object-rite');
         if (riteField && riteField.value !== rite) {
             riteField.value = rite;

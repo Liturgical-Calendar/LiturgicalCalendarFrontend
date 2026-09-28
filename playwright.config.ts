@@ -102,7 +102,7 @@ export default defineConfig({
         // unauthenticated request to index.php before any markup renders.
         {
             name: 'chromium-ci-auth',
-            testMatch: /(diocesan-calendar|national-calendar|wider-region-calendar|admin-tests|sanctorale-editor)\.spec\.ts/,
+            testMatch: /(diocesan-calendar|national-calendar|wider-region-calendar|admin-tests|sanctorale-editor|permission-pickers)\.spec\.ts/,
             use: {
                 ...devices['Desktop Chrome'],
                 storageState: 'e2e/.auth/user.json',

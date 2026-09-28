@@ -435,6 +435,17 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
                 existingNationalCalendars: <?php echo json_encode(_('Existing national calendars')); ?>,
                 /** translators: group of nations whose national calendar has not been created yet; requesting admin access on one is how it gets created */
                 newNationalCalendars: <?php echo json_encode(_('New national calendars (not yet created)')); ?>,
+                /** translators: label of the nation step of the diocese picker; only nations with a national calendar are listed */
+                nation: <?php echo json_encode(_('Nation')); ?>,
+                selectNation: <?php echo json_encode(_('Select a nation...')); ?>,
+                selectDiocese: <?php echo json_encode(_('Select a diocese...')); ?>,
+                existingDiocesanCalendars: <?php echo json_encode(_('Existing diocesan calendars')); ?>,
+                /** translators: group of dioceses whose calendar has not been created yet; granting admin access on one is how it gets created */
+                newDiocesanCalendars: <?php echo json_encode(_('New diocesan calendars (not yet created)')); ?>,
+                /** translators: shown under the diocese list when the dioceses without a calendar could not be loaded */
+                diocesesUnavailable: <?php echo json_encode(_('The dioceses without a calendar yet could not be loaded; only existing calendars are listed.')); ?>,
+                /** translators: button that tries again to load a list that failed to load */
+                retry: <?php echo json_encode(_('Retry')); ?>,
                 testsNational: <?php echo json_encode(_('National Calendar Tests')); ?>,
                 testsDiocesan: <?php echo json_encode(_('Diocesan Calendar Tests')); ?>,
                 testsGeneralRoman: <?php echo json_encode(_('General Roman Calendar Tests')); ?>,
