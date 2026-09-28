@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-28 01:12+0000\n"
-"PO-Revision-Date: 2026-09-28 01:12+0000\n"
+"PO-Revision-Date: 2026-09-28 01:34+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
@@ -1494,7 +1494,7 @@ msgstr "Pull request #%1$d"
 #: layout/footer.php:112
 #, php-format
 msgid "Change request: %1$s (files: %2$d)"
-msgstr ""
+msgstr "Zahtjev za promjenu: %1$s (datoteke: %2$d)"
 
 #: includes/login-modal.php:6
 msgid "Session Expiring"
