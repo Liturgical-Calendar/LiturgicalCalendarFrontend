@@ -244,6 +244,8 @@ $messages = [
     // =========================================================================
     /** translators: label for wider region calendar name field */
     'Wider Region'                                    => _('Wider Region'),
+    /** translators: label of the list of wider regions a national calendar inherits from */
+    'Wider regions'                                   => _('Wider regions'),
     /** translators: label for national calendar name field */
     'National Calendar'                               => _('National Calendar'),
     /** translators: label for diocesan calendar dependency */
@@ -399,7 +401,8 @@ $messages = [
     /** translators: tooltip explaining published Roman Missals selection */
     'Tooltip - Published Roman Missals'               => _('if data from the Proper of Saints of a given Missal for this nation has already been incorporated into the main LitCal engine, you can choose the Missal from this list to associate it with this National Calendar (if the Missal is not in the list, it has not been incorporated into the LitCal engine)'),
     /** translators: tooltip explaining wider region association */
-    'Tooltip - Wider Region association'              => _('if data for a Wider Region that regards this National Calendar has already been defined, you can associate the Wider Region data with the National Calendar here'),
+    /** translators: tooltip of the wider regions of a national calendar */
+    'Tooltip - Wider regions association'             => _('The wider regions whose data this national calendar inherits. Only the wider regions that list this nation are offered.'),
 
     // =========================================================================
     // Navigation/accessibility labels

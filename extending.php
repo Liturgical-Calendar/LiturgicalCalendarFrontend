@@ -436,25 +436,17 @@ if (isset($_GET['choice'])) {
                                     </div>
                                     <div class="form-group col col-md-3 mt-4">
                                         <?php $wrTooltip = htmlspecialchars(
-                                            $messages['Tooltip - Wider Region association'],
+                                            $messages['Tooltip - Wider regions association'],
                                             ENT_QUOTES | ENT_SUBSTITUTE,
                                             'UTF-8'
                                         ); ?>
-                                        <label for="associatedWiderRegion"><?php
-                                            echo $messages['Wider Region'];
+                                        <label for="associatedWiderRegions"><?php
+                                            echo $messages['Wider regions'];
                                         ?><i class="fas fa-info-circle ms-2 text-black"
                                             style="--bs-text-opacity: .3;" role="button"
                                             title="<?php echo $wrTooltip; ?>"></i></label>
-                                        <input class="form-control" list="WiderRegionsList" id="associatedWiderRegion" disabled />
-                                        <datalist id="WiderRegionsList">
-                                            <option value=""></option>
-                                        <?php
-                                        foreach ($LitCalMetadata['wider_regions_keys'] as $WiderRegion) {
-                                            $widerRegionKeySafe = htmlspecialchars($WiderRegion, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-                                            echo "<option value=\"{$widerRegionKeySafe}\">{$widerRegionKeySafe}</option>";
-                                        }
-                                        ?>
-                                        </datalist>
+                                        <?php // Filled per nation by extending.js: the regions whose roster lists it. ?>
+                                        <select class="form-select" id="associatedWiderRegions" multiple="multiple" disabled></select>
                                     </div>
                                 </form>
                             </div>

@@ -29,16 +29,3 @@ export function widerRegionsForNation(widerRegions, nation) {
     return orderWiderRegions(matches.map(region => region.name), regions);
 }
 
-/**
- * The single region of a new nation, for the page's one-region input until it
- * becomes a multiselect; '' when there is none or more than one.
- *
- * @deprecated Removed in the same change that replaces the input.
- * @param {Array<{name: string, locales?: string[], roster?: string[]}>} widerRegions
- * @param {string} nation
- * @returns {string}
- */
-export function widerRegionForNation(widerRegions, nation) {
-    const regions = widerRegionsForNation(widerRegions, nation);
-    return regions.length === 1 ? regions[0] : '';
-}

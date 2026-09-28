@@ -37,7 +37,8 @@ import {
 import { holydaysOfObligationSetting } from './Settings.js';
 import { fetchWithRetry, mapWithConcurrency } from './boundedFetch.js';
 import { editsWholeWiderRegion, editsWiderRegionLocale, localeWrites } from './widerRegionEditRights.js';
-import { widerRegionForNation } from './widerRegionForNation.js';
+import { widerRegionsForNation } from './widerRegionForNation.js';
+import { eligibleWiderRegions, nationWiderRegions, widerRegionRoster } from './widerRegions.js';
 import { isOfficialLocale, newNationalCalendarLocaleOptions, unofficialLocales } from './nationalCalendarLocales.js';
 
 /**
@@ -76,15 +77,28 @@ const enableSerializeButton = () => {
 };
 
 /**
- * Default the wider region of a national calendar being created, from the
- * nations the `/calendars` metadata places in each wider region. Called after
- * the settings form has been reset, so it only ever fills an empty field.
+ * Fill the national calendar's wider regions control for `nation`: the regions
+ * whose roster lists it, plus those it declares, broadest first, with `selected`
+ * ones selected. The options are rebuilt for every nation, so one nation's
+ * regions never carry over to the next.
+ *
+ * @param {string} nation ISO 3166-1 alpha-2 code
+ * @param {string[]} selected the regions to select
  */
-const defaultWiderRegionForNewNation = () => {
-    const input = document.querySelector('#associatedWiderRegion');
-    if (input && input.value === '') {
-        input.value = widerRegionForNation(LitCalMetadata.wider_regions, API.key);
-    }
+const fillWiderRegionsControl = (nation, selected) => {
+    const select = document.querySelector('#associatedWiderRegions');
+    if (!select) return;
+    const names = eligibleWiderRegions(nation, LitCalMetadata.wider_regions, selected);
+    select.replaceChildren(...names.map(name => new Option(name, name, false, selected.includes(name))));
+    $(select).multiselect('rebuild');
+};
+
+/**
+ * Default the wider regions of a national calendar being created: every region
+ * whose roster lists the nation. Called after the settings form has been reset.
+ */
+const defaultWiderRegionsForNewNation = () => {
+    fillWiderRegionsControl(API.key, widerRegionsForNation(LitCalMetadata.wider_regions, API.key));
 };
 
 /**
@@ -824,12 +838,23 @@ const domContentLoadedCallback = () => {
         },
         maxHeight: 250
     });
+    $('#associatedWiderRegions').multiselect({
+        buttonWidth: '100%',
+        buttonClass: 'form-select',
+        templates: {
+            button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown"><span class="multiselect-selected-text"></span></button>'
+        },
+        maxHeight: 250
+    });
     // Every path that clears the national form resets it, so this is the one place
     // that forgets the stored setting and redraws the multiselect. `reset` fires
     // before the form is actually reset, hence the deferred refresh.
     document.querySelector('#nationalCalendarSettingsForm')?.addEventListener('reset', () => {
         storedHolydaysOfObligation = null;
-        setTimeout(() => $('#nationalCalendarSettingHolydays').multiselect('refresh'));
+        setTimeout(() => {
+            $('#nationalCalendarSettingHolydays').multiselect('refresh');
+            $('#associatedWiderRegions').multiselect('refresh');
+        });
     });
 
     setCommonMultiselect(null, null);
@@ -1746,7 +1771,7 @@ const updateRegionalCalendarForm = (data) => {
             const publishedRomanMissalList = document.querySelector('#publishedRomanMissalList');
             publishedRomanMissalList.innerHTML = metadata.missals.map(missal => `<li class="list-group-item">${missal}</li>`).join('');
 
-            document.querySelector('#associatedWiderRegion').value = metadata.wider_region;
+            fillWiderRegionsControl(API.key, nationWiderRegions(metadata));
             document.querySelector('#nationalCalendarSettingHighPriest').checked = settings.eternal_high_priest;
             break;
         }
@@ -1903,7 +1928,7 @@ const fetchRegionalCalendarData = (headers) => {
                     case 'nation': {
                         document.querySelector('#nationalCalendarSettingsForm').reset();
                         document.querySelector('#publishedRomanMissalList').innerHTML = '';
-                        defaultWiderRegionForNewNation();
+                        defaultWiderRegionsForNewNation();
                         prepareNewNationalCalendarLocales();
                         break;
                     }
@@ -1940,7 +1965,7 @@ const fetchRegionalCalendarData = (headers) => {
             case 'nation': {
                 document.querySelector('#nationalCalendarSettingsForm').reset();
                 document.querySelector('#publishedRomanMissalList').innerHTML = '';
-                defaultWiderRegionForNewNation();
+                defaultWiderRegionsForNewNation();
                 prepareNewNationalCalendarLocales();
                 break;
             }
@@ -2782,7 +2807,8 @@ const deleteCalendarConfirmClicked = () => {
 const buildNationalCalendarPayload = () => {
     API.key = document.querySelector('#nationalCalendarName').value;
     API.locale = document.querySelector('.currentLocalizationChoices').value;
-    const widerRegion = document.querySelector('#associatedWiderRegion').value;
+    // Option order is already broadest first (fillWiderRegionsControl), which is the order the API applies.
+    const widerRegions = Array.from(document.querySelector('#associatedWiderRegions').selectedOptions, ({ value }) => value);
     const selectedLocales = document.querySelector('#nationalCalendarLocales').selectedOptions;
     const holydaysSelect = document.querySelector('#nationalCalendarSettingHolydays');
     const holydays = holydaysOfObligationSetting(
@@ -2802,7 +2828,7 @@ const buildNationalCalendarPayload = () => {
         },
         metadata: {
             nation: API.key,
-            wider_region: widerRegion,
+            wider_regions: widerRegions,
             missals: Array.from(document.querySelectorAll('#publishedRomanMissalList li')).map(el => el.textContent),
             locales: Array.from(selectedLocales).map(({ value }) => value)
         },
@@ -3208,20 +3234,24 @@ const currentWiderRegion = () => (document.querySelector('#widerRegionCalendarNa
 let loadedWiderRegionMembers = [];
 
 /**
- * Wider region membership as far as the page can know it: the loaded region's own
- * members, and the region each existing national calendar declares. See
- * WiderRegionMembership in widerRegionEditRights.js for what it cannot see.
+ * Wider region membership as far as the page can know it: the region's roster
+ * (from /calendars, or the loaded region file on an API that does not publish
+ * it), and the regions each existing national calendar declares. See
+ * WiderRegionMembership in widerRegionEditRights.js.
  *
  * @returns {import('./widerRegionEditRights.js').WiderRegionMembership}
  */
-const widerRegionMembership = () => ({
-    members: loadedWiderRegionMembers,
-    declaredRegion: Object.fromEntries(
-        (LitCalMetadata.national_calendars ?? [])
-            .filter(({ wider_region }) => typeof wider_region === 'string' && wider_region !== '')
-            .map(({ calendar_id, wider_region }) => [calendar_id, wider_region])
-    )
-});
+const widerRegionMembership = () => {
+    const region = (LitCalMetadata.wider_regions ?? []).find(({ name }) => name === currentWiderRegion());
+    return {
+        members: widerRegionRoster(region) ?? loadedWiderRegionMembers,
+        declaredRegions: Object.fromEntries(
+            (LitCalMetadata.national_calendars ?? [])
+                .map(item => [item.calendar_id, nationWiderRegions(item)])
+                .filter(([, regions]) => regions.length > 0)
+        )
+    };
+};
 
 /**
  * Lock whatever the caller may not change in a wider region: for an editor of a
