@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-28 01:12+0000\n"
-"PO-Revision-Date: 2026-09-28 01:12+0000\n"
+"PO-Revision-Date: 2026-09-28 01:33+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Spanish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/es/>\n"
@@ -1524,7 +1524,7 @@ msgstr "Solicitud de extracción #%1$d"
 #: layout/footer.php:112
 #, php-format
 msgid "Change request: %1$s (files: %2$d)"
-msgstr ""
+msgstr "Solicitud de cambio: %1$s (archivos: %2$d)"
 
 #: includes/login-modal.php:6
 msgid "Session Expiring"
