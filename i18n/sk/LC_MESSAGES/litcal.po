@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-28 10:41+0000\n"
 "PO-Revision-Date: 2026-09-28 13:42+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
 "Language: sk\n"
@@ -1107,7 +1107,7 @@ msgstr "pracovný deň"
 #. by one rank before
 #: src/LitGrade.php:105 admin-decrees.php:732 sanctorale.php:275
 msgid "Commemoration"
-msgstr "Spomienka"
+msgstr "Pamiatka"
 
 #. translators: liturgical rank. Keep Capitalized
 #: src/LitGrade.php:108 sanctorale.php:276
@@ -1120,7 +1120,7 @@ msgstr "Ľubovoľná spomienka"
 #. by one rank before
 #: src/LitGrade.php:111 admin-decrees.php:720 sanctorale.php:277
 msgid "Memorial"
-msgstr "Pamiatka"
+msgstr "Spomienka"
 
 #. translators: liturgical rank. Keep UPPERCASE
 #: src/LitGrade.php:114
@@ -1793,8 +1793,8 @@ msgid ""
 "You can add your nation's languages to this wider region in the Locales "
 "list; everything else is read-only."
 msgstr ""
-"Môžeš pridať jazyky svojej krajiny do tejto širšej oblasti v zozname "
-"lokalít; všetko ostatné je iba na čítanie."
+"Môžeš pridať jazyky svojej krajiny do tejto širšej oblasti v zozname „Jazyky"
+"“; všetko ostatné je iba na čítanie."
 
 #. translators: %s = comma-separated locales, e.g. "en_CA, fr_CA"
 #: includes/messages.php:104
@@ -2185,7 +2185,7 @@ msgstr "Zjavenie Pána"
 #. translators: a holy day of obligation
 #: includes/messages.php:298
 msgid "Ascension"
-msgstr "Nanebovzatie Pána"
+msgstr "Nanebovstúpenie Pána"
 
 #. translators: a holy day of obligation
 #: includes/messages.php:300
