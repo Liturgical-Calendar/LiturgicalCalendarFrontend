@@ -275,7 +275,8 @@ if (isset($_GET['choice'])) {
                         <div class="col col-md-3">
                             <div>
                                 <label for="nationalCalendarLocales" class="fw-bold"><?php echo $messages['Locales']; ?></label>
-                                <select class="form-select calendarLocales" id="nationalCalendarLocales" data-requires-auth="true" disabled multiple="multiple" size="1">
+                                <select class="form-select calendarLocales" id="nationalCalendarLocales" data-requires-auth="true" disabled multiple="multiple" size="1"
+                                        aria-describedby="nationalCalendarLocalesFeedback">
                                 <?php foreach ($SystemLocalesWithRegion as $locale => $lang_region) {
                                         echo "<option value='$locale'>$lang_region</option>";
                                 } ?>
@@ -299,6 +300,14 @@ if (isset($_GET['choice'])) {
                                 <i class="far fa-trash-alt me-2"></i>
                                 <?php echo $messages['RemoveDataButton']; ?>
                             </button>
+                        </div>
+                        <!-- Full width, on a line of its own: under the Locales column it would
+                             stretch the row and push the controls out of alignment. -->
+                        <div class="col-12" id="nationalCalendarLocalesFeedback" hidden>
+                            <div class="alert alert-warning d-flex align-items-start gap-2 mt-3 mb-0" role="alert">
+                                <i class="fas fa-language mt-1" aria-hidden="true"></i>
+                                <div class="feedback-message"></div>
+                            </div>
                         </div>
                     </form>
                     <div class="card border-4 border-top-0 border-bottom-0 border-end-0 border-primary rounded-3 m-4">
