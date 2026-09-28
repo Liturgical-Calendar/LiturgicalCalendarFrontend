@@ -11,7 +11,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-28 10:41+0000\n"
 "PO-Revision-Date: 2026-09-28 13:42+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
 "Language: nl\n"
@@ -1804,8 +1804,8 @@ msgid ""
 "You can edit this wider region's translations for: %s. Everything else is "
 "read-only."
 msgstr ""
-"Je kunt de vertalingen van deze bredere regio voor: %s. De rest is alleen-"
-"lezen."
+"Je kunt de vertalingen van deze bredere regio bewerken voor: %s. De rest is "
+"alleen-lezen."
 
 #. translators: shown to a national calendar editor with no locale of their own in the wider region
 #: includes/messages.php:102
@@ -1813,8 +1813,8 @@ msgid ""
 "You can add your nation's languages to this wider region in the Locales "
 "list; everything else is read-only."
 msgstr ""
-"Je kunt de talen van jouw land aan deze bredere regio toevoegen in de "
-"Locales-lijst; de rest is alleen-lezen."
+"Je kunt de talen van jouw land aan deze bredere regio toevoegen in de lijst ‘"
+"Talen’; de rest is alleen-lezen."
 
 #. translators: %s = comma-separated locales, e.g. "en_CA, fr_CA"
 #: includes/messages.php:104
@@ -2228,7 +2228,7 @@ msgstr "Onbevlekt Ontvangenis"
 #. translators: a holy day of obligation (Assumption of the Blessed Virgin Mary)
 #: includes/messages.php:306
 msgid "Assumption"
-msgstr "Aanname"
+msgstr "Tenhemelopneming van Maria"
 
 #. translators: a holy day of obligation (Saint Joseph, Spouse of the Blessed Virgin Mary)
 #: includes/messages.php:308
@@ -5028,7 +5028,7 @@ msgstr "Alle edities"
 
 #: sanctorale.php:289
 msgid "This Missal redefines a celebration an earlier one already had."
-msgstr "Dit Missaal herdefinieert een viering die eerder al had."
+msgstr "Dit Missaal herdefinieert een viering die een eerdere editie al had."
 
 #: sanctorale.php:290
 #, php-format
