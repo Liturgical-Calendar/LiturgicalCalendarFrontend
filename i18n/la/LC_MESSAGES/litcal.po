@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-28 16:08+0000\n"
-"PO-Revision-Date: 2026-09-28 13:42+0000\n"
+"PO-Revision-Date: 2026-09-29 05:38+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
@@ -3422,44 +3422,36 @@ msgid "New national calendars (not yet created)"
 msgstr "Calendaria nationalia nova (nondum creata sunt)."
 
 #: admin-permissions.php:439
-#, fuzzy
-#| msgid "National"
 msgid "Nation"
-msgstr "Nationalis"
+msgstr "Gens"
 
 #: admin-permissions.php:440 permission-requests.php:244
-#, fuzzy
-#| msgid "Select relation..."
 msgid "Select a nation..."
-msgstr "Elige relationem..."
+msgstr "Elige gentem..."
 
 #: admin-permissions.php:441 permission-requests.php:245
-#, fuzzy
-#| msgid "Select relation..."
 msgid "Select a diocese..."
-msgstr "Elige relationem..."
+msgstr "Elige dioecesim..."
 
 #: admin-permissions.php:442 permission-requests.php:246
-#, fuzzy
-#| msgid "Existing national calendars"
 msgid "Existing diocesan calendars"
-msgstr "Calendaria nationalia exsistentia."
+msgstr "Calendaria dioecesana exstantia"
 
 #: admin-permissions.php:444 permission-requests.php:248
-#, fuzzy
-#| msgid "New national calendars (not yet created)"
 msgid "New diocesan calendars (not yet created)"
-msgstr "Calendaria nationalia nova (nondum creata sunt)."
+msgstr "Calendaria dioecesana nova (nondum creata)"
 
 #: admin-permissions.php:446 permission-requests.php:250
 msgid ""
 "The dioceses without a calendar yet could not be loaded; only existing "
 "calendars are listed."
 msgstr ""
+"Dioeceses adhuc sine calendario non poterant caricari; sola calendaria "
+"exstant indicantur."
 
 #: admin-permissions.php:448 permission-requests.php:252
 msgid "Retry"
-msgstr ""
+msgstr "Conare iterum."
 
 #: admin-permissions.php:457
 msgid "All fields are required."
