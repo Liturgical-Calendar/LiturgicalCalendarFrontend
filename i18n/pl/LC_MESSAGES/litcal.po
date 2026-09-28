@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-28 10:41+0000\n"
-"PO-Revision-Date: 2026-09-28 01:34+0000\n"
+"PO-Revision-Date: 2026-09-28 13:42+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Polish <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/pl/>\n"
@@ -1685,6 +1685,10 @@ msgid ""
 "are not complete. A national calendar can only be created in an officially "
 "supported locale."
 msgstr ""
+"\"%s\" nie jest jeszcze oficjalnie obsługiwana jako lokalizacja: tłumaczenia "
+"Ogólnego Kalendarza Rzymskiego, Dekretów i Lekcjonarza na ten język nie są "
+"kompletne. Narodowy kalendarz może być utworzony wyłącznie w oficjalnie "
+"obsługiwanej lokalizacji."
 
 #. translators: shown when a new national calendar declares locales that cannot be used yet. %s is a comma-separated list of locale codes (e.g. "br_FR, oc_FR")
 #: includes/messages.php:70
@@ -1695,31 +1699,28 @@ msgid ""
 "complete, so a new national calendar cannot declare them. Deselect them to "
 "save the calendar."
 msgstr ""
+"Nieobsługiwane oficjalnie: %s. Tłumaczenia Ogólnego Kalendarza Rzymskiego, "
+"Dekretów i Lekcjonarza na te języki nie są kompletne, więc nowy narodowy "
+"kalendarz nie może ich uwzględnić. Odznacz je, aby zapisać kalendarz."
 
 #. translators: link to the page explaining how to contribute translations
 #: includes/messages.php:72
 msgid "Help complete the translations"
-msgstr ""
+msgstr "Pomóż uzupełnić tłumaczenia"
 
 #. translators: appended in parentheses to a language in the list of a new national calendar's locales, when it cannot be selected yet
 #: includes/messages.php:74
 msgid "not yet available: translations incomplete"
-msgstr ""
+msgstr "niedostępne jeszcze: tłumaczenia niekompletne"
 
 #. translators: warning shown when most event names of the calendar being created are untranslated in its locale
 #: includes/messages.php:76
-#, fuzzy
-#| msgid ""
-#| "The General Roman Calendar has not yet been translated into the locale "
-#| "\"%s\". Please translate the General Roman Calendar via the Weblate "
-#| "translation server before creating a calendar for this locale."
 msgid ""
 "More than half of the event names have not been translated into this locale "
 "yet. Consider completing the translations before creating a new calendar."
 msgstr ""
-"Kalendarz Rzymski Powszechny nie został jeszcze przetłumaczony na język "
-"\"%s\". Proszę przetłumaczyć Kalendarz Rzymski Powszechny za pośrednictwem "
-"serwera tłumaczeń Weblate, zanim utworzysz kalendarz dla tego języka."
+"Ponad połowa nazw wydarzeń nie została jeszcze przetłumaczona dla tej "
+"lokalizacji. Rozważ ukończenie tłumaczeń przed utworzeniem nowego kalendarza."
 
 #. translators: %s is the change request batch id. The changes were queued for review, not saved
 #: includes/messages.php:84 admin-decrees.php:638 admin-tests.php:341
