@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-28 10:41+0000\n"
-"PO-Revision-Date: 2026-09-28 01:34+0000\n"
+"PO-Revision-Date: 2026-09-28 13:42+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hu/>\n"
@@ -1681,6 +1681,10 @@ msgid ""
 "are not complete. A national calendar can only be created in an officially "
 "supported locale."
 msgstr ""
+"\"%s\" még nem hivatalosan támogatott lokálbeállítás. Az Általános római "
+"naptár, a dekrétumok és az olvasmánykönyv ezen nyelvre fordításai még nem "
+"teljesek. Egy nemzeti naptár csak egy hivatalosan támogatott "
+"lokálbeállításban hozható létre."
 
 #. translators: shown when a new national calendar declares locales that cannot be used yet. %s is a comma-separated list of locale codes (e.g. "br_FR, oc_FR")
 #: includes/messages.php:70
@@ -1691,31 +1695,29 @@ msgid ""
 "complete, so a new national calendar cannot declare them. Deselect them to "
 "save the calendar."
 msgstr ""
+"Még nem hivatalosan támogatott: %s. Az Általános római naptár, a dekrétumok "
+"és az olvasmánykönyv ezen nyelvekre fordításai még nem teljesek, így egy új "
+"nemzeti naptár nem tudja meghatározni őket. Vedd ki őket a kiválasztásból, "
+"hogy elmenthesd a naptárat."
 
 #. translators: link to the page explaining how to contribute translations
 #: includes/messages.php:72
 msgid "Help complete the translations"
-msgstr ""
+msgstr "Segíts a fordítások befejezésében"
 
 #. translators: appended in parentheses to a language in the list of a new national calendar's locales, when it cannot be selected yet
 #: includes/messages.php:74
 msgid "not yet available: translations incomplete"
-msgstr ""
+msgstr "még nem érhető el: a fordítások hiányosak"
 
 #. translators: warning shown when most event names of the calendar being created are untranslated in its locale
 #: includes/messages.php:76
-#, fuzzy
-#| msgid ""
-#| "The General Roman Calendar has not yet been translated into the locale "
-#| "\"%s\". Please translate the General Roman Calendar via the Weblate "
-#| "translation server before creating a calendar for this locale."
 msgid ""
 "More than half of the event names have not been translated into this locale "
 "yet. Consider completing the translations before creating a new calendar."
 msgstr ""
-"Az Általános Római Naptár még nincs lefordítva a(z) \"%s\" nyelvi "
-"környezetre. Kérjük, a Weblate fordítási szerveren fordítsa le az Általános "
-"Római Naptárt, mielőtt naptárat készít ehhez a nyelvi környezethez."
+"Az eseménynevek több mint fele még nincs lefordítva ebben a lokalizációban. "
+"Érdemes befejezni a fordításokat, mielőtt létrehozol egy új naptárat."
 
 #. translators: %s is the change request batch id. The changes were queued for review, not saved
 #: includes/messages.php:84 admin-decrees.php:638 admin-tests.php:341
