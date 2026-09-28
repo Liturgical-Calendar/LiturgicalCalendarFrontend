@@ -27,14 +27,17 @@
 
 /**
  * What the page knows of wider region membership. Since LiturgicalCalendarAPI#1005
- * `/calendars` publishes each region's `roster`, so `members` is the region's full
- * list of eligible nations. Against an older API it is only the loaded region's own
- * list, and a nation that belongs to another region only by that region's list is
- * treated here as unassigned; the API has the last word.
+ * `/calendars` publishes every region's `roster`, so the page sees membership as the
+ * API does: `members` is this region's roster, and `declaredRegions` holds every
+ * region a nation belongs to, declared or by a roster (see widerRegionsByNation()).
+ * Against an older API, `members` is only the loaded region's own list and
+ * `declaredRegions` only what national calendars declare, so a nation that belongs
+ * to another region only by that region's list is treated here as unassigned; the
+ * API has the last word.
  *
  * @typedef {Object} WiderRegionMembership
  * @property {string[]} members ISO codes on the region's roster
- * @property {Object<string, string[]>} declaredRegions nation => the wider regions its national calendar declares
+ * @property {Object<string, string[]>} declaredRegions nation => every wider region it belongs to
  */
 
 /**

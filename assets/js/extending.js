@@ -38,7 +38,7 @@ import { holydaysOfObligationSetting } from './Settings.js';
 import { fetchWithRetry, mapWithConcurrency } from './boundedFetch.js';
 import { editsWholeWiderRegion, editsWiderRegionLocale, localeWrites } from './widerRegionEditRights.js';
 import { widerRegionsForNation } from './widerRegionForNation.js';
-import { eligibleWiderRegions, nationWiderRegions, widerRegionRoster } from './widerRegions.js';
+import { eligibleWiderRegions, nationWiderRegions, widerRegionRoster, widerRegionsByNation } from './widerRegions.js';
 import { isOfficialLocale, newNationalCalendarLocaleOptions, unofficialLocales } from './nationalCalendarLocales.js';
 
 /**
@@ -3236,7 +3236,7 @@ let loadedWiderRegionMembers = [];
 /**
  * Wider region membership as far as the page can know it: the region's roster
  * (from /calendars, or the loaded region file on an API that does not publish
- * it), and the regions each existing national calendar declares. See
+ * it), and every region each nation belongs to, declared or by a roster. See
  * WiderRegionMembership in widerRegionEditRights.js.
  *
  * @returns {import('./widerRegionEditRights.js').WiderRegionMembership}
@@ -3245,11 +3245,7 @@ const widerRegionMembership = () => {
     const region = (LitCalMetadata.wider_regions ?? []).find(({ name }) => name === currentWiderRegion());
     return {
         members: widerRegionRoster(region) ?? loadedWiderRegionMembers,
-        declaredRegions: Object.fromEntries(
-            (LitCalMetadata.national_calendars ?? [])
-                .map(item => [item.calendar_id, nationWiderRegions(item)])
-                .filter(([, regions]) => regions.length > 0)
-        )
+        declaredRegions: widerRegionsByNation(LitCalMetadata.national_calendars, LitCalMetadata.wider_regions)
     };
 };
 

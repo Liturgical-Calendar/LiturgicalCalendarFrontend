@@ -120,8 +120,11 @@ Pure functions over `/calendars` and `/data` shapes, so they work against the AP
 
 ### 5.5 Edit rights (`assets/js/widerRegionEditRights.js`, `extending.js`)
 
-- `WiderRegionMembership.declaredRegion` (nation → string) becomes `declaredRegions` (nation → string[]), built with
-  `nationWiderRegions()`.
+- `WiderRegionMembership.declaredRegion` (nation → string) becomes `declaredRegions` (nation → string[]): every region
+  the nation belongs to, as the API's #999 rule reads it — those its calendar declares and those whose roster lists it
+  (`widerRegionsByNation()` in `widerRegions.js`). Declared regions alone are not enough: a nation on Europe's roster
+  with no calendar (Hungary) would otherwise look unassigned and be offered another region's locale controls, which the
+  API refuses.
 - `WiderRegionMembership.members` comes from the region's `roster` in `/calendars` when published, instead of only from
   the loaded region file. The module's caveat that the page cannot see other regions' member lists then no longer holds,
   and is rewritten to say when it still applies (an API without `roster`).

@@ -65,3 +65,32 @@ export function eligibleWiderRegions(nation, regions, declared) {
         .map(region => region.name);
     return orderWiderRegions([...new Set([...offered, ...declared])], all);
 }
+
+/**
+ * Every wider region each nation belongs to: those its national calendar
+ * declares, and those whose roster lists it, calendar or not. This is the API's
+ * own reading of membership (#999), which refuses a nation's locale in a region
+ * when the nation belongs to other regions but not to this one. Without published
+ * rosters, only the declared regions are known.
+ *
+ * @param {object[]|undefined} nationalCalendars `/calendars` `national_calendars`
+ * @param {object[]|undefined} regions `/calendars` `wider_regions`
+ * @returns {Object<string, string[]>} nation => its regions, broadest first; nations in no region are left out
+ */
+export function widerRegionsByNation(nationalCalendars, regions) {
+    const byNation = {};
+    const add = (nation, name) => {
+        byNation[nation] ??= [];
+        if (!byNation[nation].includes(name)) byNation[nation].push(name);
+    };
+    for (const item of nationalCalendars ?? []) {
+        for (const name of nationWiderRegions(item)) add(item.calendar_id, name);
+    }
+    for (const region of regions ?? []) {
+        for (const nation of widerRegionRoster(region) ?? []) add(nation, region.name);
+    }
+    for (const nation of Object.keys(byNation)) {
+        byNation[nation] = orderWiderRegions(byNation[nation], regions);
+    }
+    return byNation;
+}

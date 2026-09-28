@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { eligibleWiderRegions, nationWiderRegions, orderWiderRegions, widerRegionRoster } from '../widerRegions.js';
+import { eligibleWiderRegions, nationWiderRegions, orderWiderRegions, widerRegionRoster, widerRegionsByNation } from '../widerRegions.js';
 
 // Shaped like `litcal_metadata.wider_regions` from /calendars after API #1005, trimmed.
 const REGIONS = [
@@ -70,5 +70,30 @@ describe('eligibleWiderRegions', () => {
         const legacy = [{ name: 'Europe' }, { name: 'Americas' }];
         expect(eligibleWiderRegions('SE', legacy, [])).toEqual(['Americas', 'Europe']);
         expect(eligibleWiderRegions('SE', undefined, ['Europe'])).toEqual(['Europe']);
+    });
+});
+
+describe('widerRegionsByNation', () => {
+    const CALENDARS = [
+        { calendar_id: 'IT', wider_regions: ['Europe'] },
+        { calendar_id: 'SE', wider_regions: ['Europe', 'Nordic'] },
+        { calendar_id: 'VA', wider_regions: [] }
+    ];
+
+    it('lists every region a nation declares or whose roster lists it', () => {
+        const index = widerRegionsByNation(CALENDARS, REGIONS);
+        expect(index.SE).toEqual(['Europe', 'Nordic']);
+        // On Europe's roster, with no calendar of its own.
+        expect(index.IE).toEqual(['Europe']);
+        expect(index.VE).toEqual(['Americas']);
+    });
+
+    it('leaves out a nation in no region', () => {
+        expect(widerRegionsByNation(CALENDARS, REGIONS)).not.toHaveProperty('VA');
+    });
+
+    it('falls back to the declared regions when no roster is published', () => {
+        const legacy = [{ calendar_id: 'IT', wider_region: 'Europe' }];
+        expect(widerRegionsByNation(legacy, [{ name: 'Europe' }])).toEqual({ IT: ['Europe'] });
     });
 });

@@ -101,3 +101,11 @@ describe('wider region membership', () => {
         expect(nationMayJoinWiderRegion('SE', 'Americas', AMERICAS)).toBe(false);
     });
 });
+
+describe('membership from every roster', () => {
+    it('keeps a nation on another region\'s roster out, though it declares nothing', () => {
+        // Hungary: on Europe's roster, no calendar of its own, not on the Americas'.
+        const americas = { members: ['CA', 'US'], declaredRegions: { HU: ['Europe'] } };
+        expect(nationMayJoinWiderRegion('HU', 'Americas', americas)).toBe(false);
+    });
+});
