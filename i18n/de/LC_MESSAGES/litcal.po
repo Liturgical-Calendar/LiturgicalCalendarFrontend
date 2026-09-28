@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-28 10:41+0000\n"
-"PO-Revision-Date: 2026-09-28 13:41+0000\n"
+"PO-Revision-Date: 2026-09-28 14:40+0000\n"
 "Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -2241,7 +2241,7 @@ msgstr "Unbefleckte Empfängnis"
 #. translators: a holy day of obligation (Assumption of the Blessed Virgin Mary)
 #: includes/messages.php:306
 msgid "Assumption"
-msgstr "Mariä Himmelfahrt"
+msgstr "Mariä Aufnahme in den Himmel"
 
 #. translators: a holy day of obligation (Saint Joseph, Spouse of the Blessed Virgin Mary)
 #: includes/messages.php:308
