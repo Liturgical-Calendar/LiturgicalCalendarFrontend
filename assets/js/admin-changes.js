@@ -127,32 +127,6 @@ const AdminChanges = createAdminModule({
     },
 
     /**
-     * What became of a decided batch.
-     *
-     * `review_decision` is the frozen human decision; `review_status` is where the
-     * batch currently sits and CAN diverge from it — a published pull request closed
-     * without merging moves an approved batch to `rejected` so it stays out of the
-     * accumulation base. When the two disagree, say so rather than implying a
-     * reviewer refused something they approved.
-     */
-    renderOutcome(batch) {
-        const parts = [this.renderStatusBadge(batch.review_status)];
-
-        if (batch.review_decision === 'approved' && batch.review_status === 'rejected') {
-            parts.push(`<br><small class="text-muted fst-italic">${this.escapeHtml(this.config.i18n.approvedThenClosed)}</small>`);
-        }
-
-        if (batch.rejected_reason) {
-            const reason = batch.rejected_reason.length > 80
-                ? `${batch.rejected_reason.slice(0, 80)}…`
-                : batch.rejected_reason;
-            parts.push(`<br><small class="text-muted fst-italic">${this.escapeHtml(reason)}</small>`);
-        }
-
-        return parts.join('');
-    },
-
-    /**
      * The batch summary. The proposed file contents are fetched separately by
      * `onDetailsRendered` below and dropped into `#changeRequestFiles`.
      */
@@ -217,23 +191,6 @@ const AdminChanges = createAdminModule({
     },
 
     /**
-     * Link to the pull request a batch was published as. `repoUrl` is empty unless
-     * the deployment names the source-data repository, in which case only the bare
-     * number is shown — a wrong link is worse than none.
-     */
-    renderPullRequestLink(prNumber) {
-        if (typeof prNumber !== 'number') {
-            return '';
-        }
-        const repoUrl = this.config.repoUrl || '';
-        if (repoUrl === '') {
-            return `#${this.escapeHtml(String(prNumber))}`;
-        }
-        return `<a href="${ChangeRequestCommon.escapeHtml(`${repoUrl}/pull/${prNumber}`)}" target="_blank" rel="noopener">`
-            + `#${this.escapeHtml(String(prNumber))}</a>`;
-    },
-
-    /**
      * Fetch what the batch actually proposes and render it as a before/after diff.
      *
      * This is the whole point of the review page: approval is the only human gate in
@@ -262,6 +219,55 @@ const AdminChanges = createAdminModule({
                 </div>
             `;
         }
+    }
+});
+
+// Helpers the renderers above reach through `this`. createAdminModule() builds its own
+// module object and copies only the options it knows, so helpers left among the options
+// never reach it: `this.renderPullRequestLink` threw on opening a review, and
+// `this.renderOutcome` on rendering any decided batch. They are attached here instead.
+Object.assign(AdminChanges, {
+    /**
+     * What became of a decided batch.
+     *
+     * `review_decision` is the frozen human decision; `review_status` is where the
+     * batch currently sits and CAN diverge from it — a published pull request closed
+     * without merging moves an approved batch to `rejected` so it stays out of the
+     * accumulation base. When the two disagree, say so rather than implying a
+     * reviewer refused something they approved.
+     */
+    renderOutcome(batch) {
+        const parts = [this.renderStatusBadge(batch.review_status)];
+
+        if (batch.review_decision === 'approved' && batch.review_status === 'rejected') {
+            parts.push(`<br><small class="text-muted fst-italic">${this.escapeHtml(this.config.i18n.approvedThenClosed)}</small>`);
+        }
+
+        if (batch.rejected_reason) {
+            const reason = batch.rejected_reason.length > 80
+                ? `${batch.rejected_reason.slice(0, 80)}…`
+                : batch.rejected_reason;
+            parts.push(`<br><small class="text-muted fst-italic">${this.escapeHtml(reason)}</small>`);
+        }
+
+        return parts.join('');
+    },
+
+    /**
+     * Link to the pull request a batch was published as. `repoUrl` is empty unless
+     * the deployment names the source-data repository, in which case only the bare
+     * number is shown — a wrong link is worse than none.
+     */
+    renderPullRequestLink(prNumber) {
+        if (typeof prNumber !== 'number') {
+            return '';
+        }
+        const repoUrl = this.config.repoUrl || '';
+        if (repoUrl === '') {
+            return `#${this.escapeHtml(String(prNumber))}`;
+        }
+        return `<a href="${ChangeRequestCommon.escapeHtml(`${repoUrl}/pull/${prNumber}`)}" target="_blank" rel="noopener">`
+            + `#${this.escapeHtml(String(prNumber))}</a>`;
     }
 });
 
