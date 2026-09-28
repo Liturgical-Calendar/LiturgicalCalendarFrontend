@@ -18,6 +18,7 @@ import {
     ROMAN_RITE,
 } from './riteScopedObjectId.js';
 import { buildNationObjectIdSelectFromConfig, NATIONAL_CALENDAR_TYPE } from './nationObjectIdSelect.js';
+import { DIOCESAN_CALENDAR_TYPE, loadWorldDioceses, mountDioceseObjectIdPicker } from './dioceseObjectIdPicker.js';
 
 // Initialize the API client once; CalendarSelect requires this to have resolved.
 // Since components-js 2.0.0 init() rejects on failure rather than resolving to
@@ -179,6 +180,69 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     /**
+     * Build the disabled stand-in shown when the calendar list cannot be loaded.
+     * @returns {HTMLSelectElement} A disabled #grantObjectId carrying the failure notice
+     */
+    function buildGrantObjectIdLoadFailure() {
+        const failed = document.createElement('select');
+        failed.className = 'form-select is-invalid';
+        failed.id = 'grantObjectId';
+        failed.disabled = true;
+        failed.dataset.loadFailed = 'true';
+        const opt = document.createElement('option');
+        opt.value = '';
+        opt.textContent = config.i18n.calendarIdLoadFailed || 'Could not load calendars — try reloading the page';
+        opt.selected = true;
+        failed.appendChild(opt);
+        return failed;
+    }
+
+    /**
+     * Mount the diocese picker for the `diocesan_calendar` scope.
+     *
+     * See permission-requests.js: a CalendarSelect lists only dioceses whose
+     * calendar already exists, so it could never grant the `admin` that
+     * creating a new diocesan calendar needs (issue #563).
+     * @param {HTMLElement} mount - #grantObjectIdMount
+     */
+    async function mountDioceseObjectIdSelect(mount) {
+        try {
+            const [client, dioceses] = await Promise.all([apiClientReady, loadWorldDioceses()]);
+            if (!client) throw new Error('ApiClient initialization failed');
+            if (grantObjectType.value !== DIOCESAN_CALENDAR_TYPE) return; // scope changed again meanwhile
+            const riteSelect = new RiteSelect(LITCAL_LOCALE)
+                .class('form-select mb-2')
+                .id('grantObjectRite')
+                .label({ class: 'form-label' });
+            const riteHolder = document.createElement('div');
+            riteSelect.appendTo(riteHolder);
+            mountDioceseObjectIdPicker({
+                mount,
+                riteEl:    riteSelect._domElement,
+                riteNodes: [...riteHolder.childNodes],
+                metadata:  client._metadata,
+                dioceses,
+                locale:    LITCAL_LOCALE,
+                nation:    {
+                    className: 'form-select mb-2',
+                    id:        'grantObjectNation',
+                    label:     { text: config.i18n.nation || 'Nation', className: 'form-label' }
+                },
+                diocese:   { className: 'form-select', id: 'grantObjectId' },
+                i18n:      {
+                    selectNation:  config.i18n.selectNation || 'Select a nation...',
+                    selectDiocese: config.i18n.selectDiocese || 'Select a diocese...',
+                    existingGroup: config.i18n.existingDiocesanCalendars || 'Existing diocesan calendars',
+                    newGroup:      config.i18n.newDiocesanCalendars || 'New diocesan calendars (not yet created)'
+                }
+            });
+        } catch (err) {
+            console.error('[admin-permissions] Could not build the diocese picker:', err);
+            mount.replaceChildren(buildGrantObjectIdLoadFailure());
+        }
+    }
+
+    /**
      * Swap the contents of #grantObjectIdMount.
      * Calendar-backed scopes mount a CalendarSelect; the rest use a native select.
      * @param {string} objectType - The currently selected object type
@@ -189,6 +253,10 @@ document.addEventListener('DOMContentLoaded', function() {
         mount.innerHTML = '';
         if (objectType === NATIONAL_CALENDAR_TYPE) {
             await mountNationObjectIdSelect(mount);
+            return;
+        }
+        if (objectType === DIOCESAN_CALENDAR_TYPE) {
+            await mountDioceseObjectIdSelect(mount);
             return;
         }
         if (
@@ -253,17 +321,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     `[admin-permissions] Could not build the calendar select for object type "${objectType}":`,
                     err
                 );
-                const failed = document.createElement('select');
-                failed.className = 'form-select is-invalid';
-                failed.id = 'grantObjectId';
-                failed.disabled = true;
-                failed.dataset.loadFailed = 'true';
-                const opt = document.createElement('option');
-                opt.value = '';
-                opt.textContent = config.i18n.calendarIdLoadFailed || 'Could not load calendars — try reloading the page';
-                opt.selected = true;
-                failed.appendChild(opt);
-                mount.appendChild(failed);
+                mount.appendChild(buildGrantObjectIdLoadFailure());
             }
         } else {
             mount.appendChild(buildStaticGrantObjectId(objectType));
@@ -603,7 +661,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 let errorMsg = config.i18n.failedToGrant;
                 try {
                     const data = await response.json();
-                    errorMsg = data.message || data.error || errorMsg;
+                    errorMsg = data.detail || data.message || data.error || errorMsg;
                 } catch { /* non-JSON response */ }
                 throw new Error(errorMsg);
             }
@@ -692,7 +750,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 let errorMsg = config.i18n.failedToRevoke;
                 try {
                     const data = await response.json();
-                    errorMsg = data.message || data.error || errorMsg;
+                    errorMsg = data.detail || data.message || data.error || errorMsg;
                 } catch { /* non-JSON response */ }
                 throw new Error(errorMsg);
             }
@@ -1188,7 +1246,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 let errorMsg = 'Request failed';
                 try {
                     const errData = await response.json();
-                    errorMsg = errData.message || errData.error || errorMsg;
+                    errorMsg = errData.detail || errData.message || errData.error || errorMsg;
                 } catch { /* non-JSON error response */ }
                 throw new Error(errorMsg);
             }

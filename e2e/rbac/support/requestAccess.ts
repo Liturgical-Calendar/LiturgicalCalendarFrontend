@@ -35,6 +35,8 @@ export interface AccessRequestOptions {
         // NOTE: `rite_calendar` option VALUES are the full rite-qualified ids
         // (`roman/decrees`), not bare sub-resource names.
         objectType: 'national_calendar' | 'diocesan_calendar' | 'wider_region' | 'rite_calendar' | 'national_calendar_test' | 'diocesan_calendar_test' | 'rite_calendar_test';
+        // Bare, as the option values are; a `diocesan_calendar` id must be a Roman-rite
+        // diocese, its nation read from its country suffix.
         objectId: string;
         relation: 'viewer' | 'editor' | 'admin';
     };
@@ -52,6 +54,16 @@ export async function submitAccessRequest(page: Page, opts: AccessRequestOptions
 
     // Object-type first — populates the object-id <select> options for this type.
     await row.locator('.perm-object-type').selectOption(opts.permission.objectType);
+
+    // A Roman-rite diocese is picked in two steps: first its nation (only nations with a
+    // national calendar are offered), then the diocese (issue #563). The nation is the
+    // diocese id's country suffix, `romamo_it` => `IT`.
+    if (opts.permission.objectType === 'diocesan_calendar') {
+        const nation = opts.permission.objectId.split('_').pop()!.toUpperCase();
+        const nationControl = row.locator('.perm-object-nation');
+        await nationControl.waitFor({ state: 'visible' });
+        await nationControl.selectOption(nation);
+    }
 
     const objectIdControl = row.locator('.perm-object-id');
     await objectIdControl.waitFor({ state: 'visible' });

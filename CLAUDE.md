@@ -264,6 +264,13 @@ because requesting `admin` on one is how a new national calendar gets created (A
 list comes from `src/CatholicNations.php`, the same list `extending.php` offers for creation. Keep it
 that way when migrating these files — `CalendarResourcePicker` only lists existing calendars.
 
+The `diocesan_calendar` scope is likewise **not** a `CalendarSelect` (issue #563): it uses
+`assets/js/dioceseObjectIdPicker.js`, a rite → nation → diocese picker that offers dioceses whose calendar
+does not exist yet, but only of nations that **have** a national calendar — a diocesan calendar cannot be
+created before the national one it depends on. The dioceses come from `assets/data/WorldDiocesesByNation.json`,
+fetched on demand. The Ambrosian rite has no national tier, so under it the nation step hides and only
+existing calendars are offered. The `*_test` scopes keep the existing-only `CalendarSelect`.
+
 **Theme bag notes:** The theme bag's keys are HTML roles (`select`, `label`, `input`, `wrapper`) with
 per-child overrides named for the public getters. Two sharp edges: `label()` is **one-shot**, so once the
 theme bag has themed a child, custom label text must go through the per-child `labelText` key rather than
