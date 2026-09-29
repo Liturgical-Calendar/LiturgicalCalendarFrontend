@@ -363,7 +363,10 @@ log line saying nothing was written.
 | Wider Region  | `createNew`, `makePatron` only                                                               |
 | Diocesan      | `createNew`, `makePatron` only                                                               |
 
-WiderRegion names must be: `Americas`, `Europe`, `Asia`, `Africa`, or `Oceania`.
+A WiderRegion name must match the API's shape rule `^[A-Z][A-Za-z]*( [A-Z][A-Za-z]*)*$` (API #1007); whether the region
+exists is a runtime check against `/calendars` `wider_regions_keys`. The regions that do not exist yet but can be
+created — the multinational groupings of the Notitiae survey — are curated in `assets/data/ProspectiveWiderRegions.json`
+(read by `src/ProspectiveWiderRegions.php`), and both the permission pickers and the extending page offer them.
 
 ## Troubleshooting
 
