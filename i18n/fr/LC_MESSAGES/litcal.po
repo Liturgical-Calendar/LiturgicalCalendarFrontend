@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-29 11:45+0000\n"
-"PO-Revision-Date: 2026-09-29 05:38+0000\n"
+"PO-Revision-Date: 2026-09-30 08:10+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
@@ -2118,10 +2118,8 @@ msgstr ""
 
 #. translators: label of the list of wider regions a national calendar inherits from
 #: includes/messages.php:248
-#, fuzzy
-#| msgid "Wider region"
 msgid "Wider regions"
-msgstr "Région plus large"
+msgstr "Régions plus vastes"
 
 #. translators: label for national calendar name field
 #: includes/messages.php:250 admin-permissions.php:87 admin-permissions.php:320
@@ -2465,6 +2463,8 @@ msgid ""
 "The wider regions whose data this national calendar inherits. Only the wider "
 "regions that list this nation are offered."
 msgstr ""
+"Les régions plus vastes dont les données alimentent ce calendrier national. "
+"Seules les régions plus vastes qui répertorient cette nation sont proposées."
 
 #. translators: screen reader text for previous button
 #: includes/messages.php:411 temporale.php:173
