@@ -244,6 +244,8 @@ $messages = [
     // =========================================================================
     /** translators: label for wider region calendar name field */
     'Wider Region'                                    => _('Wider Region'),
+    /** translators: suffix appended to a prospective wider region's option label in the datalist */
+    'not yet created'                                 => _('not yet created'),
     /** translators: label of the list of wider regions a national calendar inherits from */
     'Wider regions'                                   => _('Wider regions'),
     /** translators: label for national calendar name field */

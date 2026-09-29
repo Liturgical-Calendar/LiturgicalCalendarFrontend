@@ -2,6 +2,7 @@
 
 use LiturgicalCalendar\Frontend\ApiClient;
 use LiturgicalCalendar\Frontend\FormControls;
+use LiturgicalCalendar\Frontend\ProspectiveWiderRegions;
 use LiturgicalCalendar\Frontend\Utilities;
 
 include_once 'includes/common.php'; // provides $i18n and all API URLs
@@ -193,6 +194,18 @@ if (isset($_GET['choice'])) {
                                     $widerRegionLanguageSafe = htmlspecialchars($widerRegionLanguage, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                                     echo "<option value=\"{$widerRegionName} - {$widerRegionLanguageSafe}\">{$widerRegionName}</option>";
                                 }
+                            }
+                            foreach (ProspectiveWiderRegions::all() as $prospectiveRegion) {
+                                if (in_array($prospectiveRegion['name'], $LitCalMetadata['wider_regions_keys'] ?? [], true)) {
+                                    continue;
+                                }
+                                $prospectiveName  = htmlspecialchars($prospectiveRegion['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                $prospectiveLabel = htmlspecialchars(
+                                    $prospectiveRegion['name'] . ' (' . implode(', ', $prospectiveRegion['roster']) . ') — ' . $messages['not yet created'],
+                                    ENT_QUOTES | ENT_SUBSTITUTE,
+                                    'UTF-8'
+                                );
+                                echo "<option value=\"{$prospectiveName}\">{$prospectiveLabel}</option>";
                             }
                             ?>
                             </datalist>
@@ -743,7 +756,8 @@ $messages = array_merge($messages, [
     'AvailableLocales'              => $SystemLocalesWithoutRegion,
     'AvailableLocalesWithRegion'    => $SystemLocalesWithRegion,
     'CountriesWithCatholicDioceses' => $CountriesWithCatholicDioceses,
-    'DiocesesList'                  => $CatholicDiocesesByNation
+    'DiocesesList'                  => $CatholicDiocesesByNation,
+    'ProspectiveWiderRegions'       => ProspectiveWiderRegions::all(),
 ]);
 
 ?>

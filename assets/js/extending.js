@@ -40,6 +40,12 @@ import { editsWholeWiderRegion, editsWiderRegionLocale, localeWrites } from './w
 import { widerRegionsForNation } from './widerRegionForNation.js';
 import { eligibleWiderRegions, nationWiderRegions, widerRegionRoster, widerRegionsByNation } from './widerRegions.js';
 import { isOfficialLocale, newNationalCalendarLocaleOptions, unofficialLocales } from './nationalCalendarLocales.js';
+import {
+    findProspectiveRegion,
+    isValidWiderRegionName,
+    offeredLocales,
+    widerRegionNationalCalendars,
+} from './prospectiveWiderRegions.js';
 
 /**
  * How many translation files load at once. Fired all together, a wider region's
@@ -139,7 +145,7 @@ toastr.options = {
  * The Messages global is set in extending.php
  * @global
  */
-const { LOCALE, AvailableLocales, AvailableLocalesWithRegion, CountriesWithCatholicDioceses, DiocesesList } = Messages;
+const { LOCALE, AvailableLocales, AvailableLocalesWithRegion, CountriesWithCatholicDioceses, DiocesesList, ProspectiveWiderRegions } = Messages;
 const jsLocale = LOCALE.replace('_', '-');
 
 /**
@@ -629,9 +635,15 @@ const sanitizeProxiedAPI = {
                     if (value.includes(' - ')) {
                         ([value, target['locale']] = value.split(' - '));
                     }
-                    if (false === ['Americas', 'Europe', 'Africa', 'Oceania', 'Asia'].includes(value)) {
-                        console.error(`property 'key=${value}' of this object is not a valid value, valid values are: 'Americas', 'Europe', 'Africa', 'Oceania', 'Asia'`);
+                    // Since API #1007 any name of the right shape can be a wider region;
+                    // whether it exists is a runtime check (wider_regions_keys).
+                    if (false === isValidWiderRegionName(value)) {
+                        console.error(`property 'key=${value}' of this object is not a valid wider region name: each word must start with an uppercase letter and contain only letters`);
                         return;
+                    }
+                    if (false === LitCalMetadata.wider_regions_keys.includes(value)) {
+                        console.warn(`property 'key=${value}' of this object is not yet defined, defined values are: ${LitCalMetadata.wider_regions_keys.join(', ')}`);
+                        target['method'] = 'PUT';
                     }
                 }
                 else if (target['category'] === 'nation') {
@@ -1545,6 +1557,33 @@ const prepareNewNationalCalendarLocales = () => {
 };
 
 /**
+ * Prepare the form for a wider region being created. For a prospective region
+ * (assets/data/ProspectiveWiderRegions.json) select its suggested locales —
+ * those this page offers — and take its roster as the region's members, so the
+ * edit-rights check sees its nations before the region exists. Any other new
+ * region starts with no locales.
+ */
+const prepareNewWiderRegion = () => {
+    const prospective = findProspectiveRegion(ProspectiveWiderRegions, API.key);
+    loadedWiderRegionMembers = prospective ? [...prospective.roster] : [];
+    const locales = prospective
+        ? offeredLocales(
+              prospective.locales,
+              Object.keys(AvailableLocalesWithRegion),
+          )
+        : [];
+    const localesSelect = document.querySelector('#widerRegionLocales');
+    $(localesSelect).multiselect('deselectAll', false);
+    if (locales.length === 0) return;
+    $(localesSelect).multiselect('select', locales);
+    // calendarLocalesChanged() rebuilds the current-localization choices from the selection.
+    localesSelect.dispatchEvent(
+        new CustomEvent('change', { bubbles: true, cancelable: true }),
+    );
+    document.querySelector('.currentLocalizationChoices').value = locales[0];
+};
+
+/**
  * Of a nation's locales, the one in its most spoken language (CLDR), else the first.
  *
  * @param {string} region - The nation, e.g. `CH`
@@ -1923,7 +1962,7 @@ const fetchRegionalCalendarData = (headers) => {
                 });
                 switch(API.category) {
                     case 'widerregion':
-                        $('#widerRegionLocales').multiselect('deselectAll', false);
+                        prepareNewWiderRegion();
                         break;
                     case 'nation': {
                         document.querySelector('#nationalCalendarSettingsForm').reset();
@@ -1960,7 +1999,7 @@ const fetchRegionalCalendarData = (headers) => {
         console.warn(message);
         switch(API.category) {
             case 'widerregion':
-                $('#widerRegionLocales').multiselect('deselectAll', false);
+                prepareNewWiderRegion();
                 break;
             case 'nation': {
                 document.querySelector('#nationalCalendarSettingsForm').reset();
@@ -2853,9 +2892,15 @@ const buildWiderRegionPayload = () => {
         return prev;
     }, {});
 
+    // A prospective region being created brings its whole roster: some members
+    // (Brunei, Eswatini, Mauritania) have no locale in the Locales list.
+    const prospective = API.method === 'PUT' ? findProspectiveRegion(ProspectiveWiderRegions, API.key) : undefined;
+
     return {
         litcal: [],
-        national_calendars: nationalCalendars,
+        national_calendars: prospective
+            ? widerRegionNationalCalendars(prospective.roster, nationalCalendars)
+            : nationalCalendars,
         metadata: {
             locales: Array.from(selectedLocales).map(({ value }) => value),
             wider_region: document.querySelector('#widerRegionCalendarName').value.split(' - ')[0]
