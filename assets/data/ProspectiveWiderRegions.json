@@ -1,0 +1,58 @@
+{
+    "$comment": "Prospective wider regions: groupings of three or more nations that share a calendar, from the Notitiae survey (LiturgicalCalendarAPI docs/decrees/notitiae-register.json; see Frontend #66, #591). `name` must match ^[A-Z][A-Za-z]*( [A-Z][A-Za-z]*)*$. `roster` = nations eligible to join; `locales` = suggested locales pre-selected on create; `sources` = register entry ids. Names may change freely until the region is created.",
+    "wider_regions": [
+        {
+            "name": "German Language Area",
+            "description": "Regionalkalender für das deutsche Sprachgebiet",
+            "roster": ["DE", "AT", "CH", "LU"],
+            "locales": ["de_DE", "de_AT", "de_CH", "de_LU"],
+            "sources": ["N1972-2069-71", "N1972-2069"],
+            "note": "The diocese of Bolzano-Bressanone (IT) follows this regional calendar, but a roster can only list whole nations."
+        },
+        {
+            "name": "Malaysia Singapore Brunei",
+            "description": "Catholic Bishops' Conference of Malaysia, Singapore and Brunei",
+            "roster": ["MY", "SG", "BN"],
+            "locales": ["en_MY", "ms_MY", "en_SG", "ms_BN"],
+            "sources": ["N2005-45-05-L"],
+            "note": null
+        },
+        {
+            "name": "Nordic",
+            "description": "Nordic Episcopal Conference",
+            "roster": ["DK", "SE", "NO", "FI", "IS"],
+            "locales": ["da_DK", "sv_SE", "nb_NO", "fi_FI", "is_IS"],
+            "sources": ["N2011-526-11-L", "N2012-556-12-L", "N2016-491-16"],
+            "note": null
+        },
+        {
+            "name": "North Africa",
+            "description": "Regional Episcopal Conference of North Africa",
+            "roster": ["DZ", "TN", "MA", "LY"],
+            "locales": ["fr_DZ", "fr_TN", "fr_MA"],
+            "sources": ["N1973-1870-72"],
+            "note": null
+        },
+        {
+            "name": "Senegal Mauritania Cabo Verde Guinea Bissau",
+            "description": "Episcopal Conference of Senegal, Mauritania, Cabo Verde and Guinea-Bissau",
+            "roster": ["SN", "MR", "CV", "GW"],
+            "locales": ["fr_SN", "fr_MR", "pt_CV", "pt_GW"],
+            "sources": ["N2013-18-13-L"],
+            "note": null
+        },
+        {
+            "name": "Southern Africa",
+            "description": "Southern African Catholic Bishops' Conference",
+            "roster": ["ZA", "BW", "SZ"],
+            "locales": ["en_ZA", "af_ZA", "zu_ZA", "en_BW", "en_SZ"],
+            "sources": [
+                "N1976-CD-324-76",
+                "N1982-CD-1012-81",
+                "N2015-291-15",
+                "N2015-681-15"
+            ],
+            "note": null
+        }
+    ]
+}
