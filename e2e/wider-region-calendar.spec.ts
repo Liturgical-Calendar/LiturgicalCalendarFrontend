@@ -1,6 +1,27 @@
 import { test, expect, gitRestoreApiData } from './fixtures';
-import { VALID_WIDER_REGIONS } from './constants';
+import { WIDER_REGION_NAME_PATTERN } from './constants';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import { expectApplied } from './support/writeMode';
+
+type ProspectiveRegion = { name: string; roster: string[]; locales: string[] };
+
+/** The prospective wider regions the extending page offers (assets/data/ProspectiveWiderRegions.json). */
+function prospectiveWiderRegions(): ProspectiveRegion[] {
+    const file = path.resolve(
+        __dirname,
+        '../assets/data/ProspectiveWiderRegions.json',
+    );
+    return JSON.parse(readFileSync(file, 'utf8')).wider_regions;
+}
+
+/** A pattern-valid region name no stack will have, e.g. `Test Region Kqbx`. */
+function generatedRegionName(): string {
+    const suffix = Array.from({ length: 4 }, () =>
+        String.fromCharCode(97 + Math.floor(Math.random() * 26)),
+    ).join('');
+    return `Test Region ${suffix.charAt(0).toUpperCase()}${suffix.slice(1)}`;
+}
 
 /**
  * Tests for the Wider Region Calendar form on extending.php
@@ -258,13 +279,12 @@ test.describe('Wider Region Calendar Form', () => {
         const existingRegionIds: string[] = calendarsData.litcal_metadata?.wider_regions_keys || [];
         console.log(`Found ${existingRegionIds.length} existing wider regions: ${existingRegionIds.join(', ')}`);
 
-        // Find a valid wider region that doesn't have calendar data yet
-        const regionToCreate = VALID_WIDER_REGIONS.find(r => !existingRegionIds.includes(r));
-
-        if (!regionToCreate) {
-            test.skip(true, `All valid wider regions already have calendar data`);
-            return;
-        }
+        // Create a prospective region that does not exist yet, so the pre-fill path runs;
+        // if every one already exists, any pattern-valid name still exercises CREATE.
+        const prospective = prospectiveWiderRegions().find(
+            (r) => !existingRegionIds.includes(r.name),
+        );
+        const regionToCreate = prospective?.name ?? generatedRegionName();
 
         console.log(`Selected region for CREATE test: ${regionToCreate}`);
 
@@ -328,6 +348,29 @@ test.describe('Wider Region Calendar Form', () => {
             return select && select.options.length > 0;
         }, { timeout: 10000 });
         console.log('Locales dropdown populated');
+
+        if (prospective) {
+            // The region's suggested locales that this page offers are pre-selected.
+            // selectedOptions come back in DOM order (sorted by display name), not the
+            // JSON file's order, so compare as sorted arrays (controller ruling).
+            const preselected = await page.evaluate(() =>
+                Array.from(
+                    (document.querySelector('#widerRegionLocales') as HTMLSelectElement)
+                        .selectedOptions,
+                    (o) => o.value,
+                ),
+            );
+            const offered = await page.evaluate(() =>
+                Array.from(
+                    (document.querySelector('#widerRegionLocales') as HTMLSelectElement)
+                        .options,
+                    (o) => o.value,
+                ),
+            );
+            expect([...preselected].sort()).toEqual(
+                prospective.locales.filter((l) => offered.includes(l)).sort(),
+            );
+        }
 
         // STEP 1: Select locales BEFORE creating the liturgical event
         // Use bootstrap-multiselect plugin - click button to open, then check items
@@ -661,8 +704,22 @@ test.describe('Wider Region Calendar Form', () => {
         expect(Array.isArray(capturedPayload.metadata.locales)).toBe(true);
         expect(capturedPayload.metadata.locales.length).toBeGreaterThan(0);
 
-        // Validate wider_region is one of the valid values
-        expect(VALID_WIDER_REGIONS).toContain(capturedPayload.metadata.wider_region);
+        // The name follows the API's shape rule, and is the region we chose
+        expect(capturedPayload.metadata.wider_region).toMatch(
+            WIDER_REGION_NAME_PATTERN,
+        );
+        expect(capturedPayload.metadata.wider_region).toBe(regionToCreate);
+
+        // A prospective region sends its whole roster, even nations with no selected locale
+        if (prospective) {
+            const members = Object.values(capturedPayload.national_calendars ?? {});
+            for (const code of prospective.roster) {
+                expect(
+                    members,
+                    `${code} is on the ${prospective.name} roster`,
+                ).toContain(code);
+            }
+        }
 
         // Validate i18n structure against metadata.locales
         const hasI18n = capturedPayload.i18n && typeof capturedPayload.i18n === 'object';
