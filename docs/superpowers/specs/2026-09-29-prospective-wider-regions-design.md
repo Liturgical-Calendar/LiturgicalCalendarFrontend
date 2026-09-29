@@ -126,7 +126,7 @@ Mirrors `nationObjectIdSelect.js`:
 
 - **Datalist** (`extending.php`, `#WiderRegionsList`): keeps the `{name} - {locale}` options of existing regions and
   adds one option per prospective region not yet created, value `{name}`, label `{name} ({roster}) — not yet created`
-  (translatable suffix). The page gets `ProspectiveWiderRegions` as a JS global declared in `eslint.config.mjs`.
+  (translatable suffix). The page gets the list as `Messages.ProspectiveWiderRegions`, next to `CountriesWithCatholicDioceses`.
 - **Key validation** (`extending.js`, the `API` proxy's `key` case): the hard-coded continent check is replaced by
   `isValidWiderRegionName()`. A valid name missing from `LitCalMetadata.wider_regions_keys` sets `method = 'PUT'`, as
   the `nation` branch does. An invalid name logs an error and is rejected, as today.
