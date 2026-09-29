@@ -101,3 +101,61 @@ test.describe('Access request form — diocesan calendar picker', () => {
         await expect(diocese).toHaveValue('lugano_ch');
     });
 });
+
+test.describe('Access request form — wider region picker', () => {
+    test('offers existing wider regions and prospective ones, told apart (#591)', async ({
+        page,
+    }) => {
+        const metadata = (
+            await (await page.request.get(`${API_BASE_URL}/calendars`)).json()
+        ).litcal_metadata;
+        const existingRegions: string[] = metadata.wider_regions_keys;
+
+        await page.goto('/permission-requests.php');
+        await page.check(
+            'input[name="requested_role"][value="calendar_editor"]',
+        );
+        const row = page.locator('#permissionRows .card').first();
+        await row.locator('.perm-object-type').selectOption('wider_region');
+
+        const select = row.locator('.perm-object-id');
+        await expect(select).toBeVisible({ timeout: 15000 });
+
+        const offered = await select
+            .locator('option:not([value=""])')
+            .evaluateAll((opts) =>
+                opts.map((o) => ({
+                    value: (o as HTMLOptionElement).value,
+                    group: (o.parentElement as HTMLOptGroupElement).label ?? '',
+                })),
+            );
+        const offeredNames = offered.map((o) => o.value);
+
+        for (const name of existingRegions) {
+            expect(
+                offered.find((o) => o.value === name)?.group,
+                `${name} exists`,
+            ).toMatch(/existing/i);
+        }
+        expect(offeredNames).toContain('Nordic');
+        if (!existingRegions.includes('Nordic')) {
+            expect(offered.find((o) => o.value === 'Nordic')?.group).toMatch(
+                /not yet created/i,
+            );
+        }
+        for (const continent of ['Africa', 'Oceania']) {
+            if (!existingRegions.includes(continent)) {
+                expect(
+                    offeredNames,
+                    `${continent} does not exist and is not prospective`,
+                ).not.toContain(continent);
+            }
+        }
+        expect(new Set(offeredNames).size, 'no region is listed twice').toBe(
+            offeredNames.length,
+        );
+
+        await select.selectOption('Nordic');
+        await expect(select).toHaveValue('Nordic');
+    });
+});
