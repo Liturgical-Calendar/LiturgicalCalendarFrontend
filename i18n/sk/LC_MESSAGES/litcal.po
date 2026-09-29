@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-29 11:45+0000\n"
 "PO-Revision-Date: 2026-09-30 08:10+0000\n"
-"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
+"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
 "Language: sk\n"
@@ -877,7 +877,7 @@ msgstr "ružová"
 #. translators: context = liturgical color (Ambrosian rite)
 #: src/LitColor.php:51
 msgid "morello"
-msgstr "višňa Morello"
+msgstr "tmavofialová"
 
 #. translators: context = liturgical color (Ambrosian rite)
 #: src/LitColor.php:54
