@@ -1,5 +1,4 @@
 import { test, expect, gitRestoreApiData } from './fixtures';
-import { VALID_WIDER_REGIONS } from './constants';
 import { expectApplied } from './support/writeMode';
 
 /**
@@ -166,7 +165,8 @@ test.describe('National Calendar Form', () => {
             // Validate metadata structure
             expect(capturedPayload.metadata).toHaveProperty('nation');
             expect(capturedPayload.metadata).toHaveProperty('locales');
-            expect(capturedPayload.metadata).toHaveProperty('wider_region');
+            expect(capturedPayload.metadata).toHaveProperty('wider_regions');
+            expect(capturedPayload.metadata).not.toHaveProperty('wider_region');
             expect(capturedPayload.metadata).toHaveProperty('missals');
 
             // Validate nation is a 2-letter ISO code
@@ -176,8 +176,8 @@ test.describe('National Calendar Form', () => {
             expect(Array.isArray(capturedPayload.metadata.locales)).toBe(true);
             expect(capturedPayload.metadata.locales.length).toBeGreaterThan(0);
 
-            // Validate wider_region is one of the allowed values
-            expect(VALID_WIDER_REGIONS).toContain(capturedPayload.metadata.wider_region);
+            // The save carries the calendar's stored regions, unchanged: nothing here edits them.
+            expect(capturedPayload.metadata.wider_regions).toEqual(stored.metadata.wider_regions);
 
             // Validate missals is an array
             expect(Array.isArray(capturedPayload.metadata.missals)).toBe(true);
@@ -385,16 +385,10 @@ test.describe('National Calendar Form', () => {
             const toastContainer = document.querySelector('#toast-container');
             if (toastContainer) toastContainer.remove();
 
-            // Set wider region dynamically from available options
-            const widerRegionInput = document.querySelector('#associatedWiderRegion') as HTMLInputElement;
-            if (widerRegionInput) {
-                // Use the first available option from the datalist or keep existing value
-                const datalist = document.querySelector('#WiderRegionsList') as HTMLDataListElement;
-                const firstOption = datalist?.querySelector('option')?.getAttribute('value');
-                widerRegionInput.value = firstOption || widerRegionInput.value || 'Americas';
-                widerRegionInput.dispatchEvent(new Event('input', { bubbles: true }));
-                widerRegionInput.dispatchEvent(new Event('change', { bubbles: true }));
-            }
+            // The wider regions keep their default: the regions whose roster lists the nation. Forcing
+            // one that does not list it would be refused by the API (422).
+            const widerRegionsSelect = document.querySelector('#associatedWiderRegions') as HTMLSelectElement;
+            const widerRegions = widerRegionsSelect ? Array.from(widerRegionsSelect.selectedOptions, o => o.value) : [];
 
             // Log selected locales (leave all selected, don't modify)
             const localesSelect = document.querySelector('#nationalCalendarLocales') as HTMLSelectElement;
@@ -427,7 +421,7 @@ test.describe('National Calendar Form', () => {
 
             // Get values for logging (don't force enable or click here)
             return {
-                widerRegion: widerRegionInput?.value || '',
+                widerRegions: widerRegions,
                 selectedLocales: selectedLocales,
                 currentLocale: currentLocaleSelect?.value || '',
                 epiphany: epiphanyEl?.value || '',
@@ -527,18 +521,18 @@ test.describe('National Calendar Form', () => {
         expectApplied(deleteResult.body, 'DELETE /data/nation (cleanup)');
     });
 
-    test('should default the wider region of a new national calendar', async ({ page, extendingPage }) => {
-        // English-language nations, so the General Roman Calendar is translated and
-        // the page reaches its create path (a nation whose language is not
-        // translated yet is blocked before it, and can't be created at all).
-        // Ireland has no calendar yet, and the Europe wider region lists en_IE.
-        await extendingPage.selectCalendar('#nationalCalendarName', 'IE');
-        await expect(page.locator('#associatedWiderRegion')).toHaveValue('Europe', { timeout: 15000 });
+    test('should default the wider regions of a new national calendar', async ({ page, extendingPage }) => {
+        // English-language nations, so the General Roman Calendar is translated and the page
+        // reaches its create path. Ireland has no calendar yet and is on Europe's roster.
+        const selected = () => page.locator('#associatedWiderRegions')
+            .evaluate((el: HTMLSelectElement) => Array.from(el.selectedOptions, o => o.value));
 
-        // No wider region lists an Australian locale, so nothing is suggested,
-        // and Ireland's default does not linger.
+        await extendingPage.selectCalendar('#nationalCalendarName', 'IE');
+        await expect.poll(selected, { timeout: 15000 }).toEqual(['Europe']);
+
+        // No wider region lists Australia, so nothing is selected, and Ireland's regions do not linger.
         await extendingPage.selectCalendar('#nationalCalendarName', 'AU');
-        await expect(page.locator('#associatedWiderRegion')).toHaveValue('', { timeout: 15000 });
+        await expect.poll(selected, { timeout: 15000 }).toEqual([]);
     });
 
     test('a new national calendar selects only its officially supported locales, and names any other one selected', async ({ page, extendingPage }) => {
@@ -613,9 +607,8 @@ test.describe('National Calendar Form', () => {
     });
 
     test('should have wider region selection', async ({ page }) => {
-        // Verify wider region dropdown exists
-        const widerRegionSelect = page.locator('#associatedWiderRegion');
-        await expect(widerRegionSelect).toBeVisible();
+        await expect(page.locator('#associatedWiderRegions')).toHaveAttribute('multiple', 'multiple');
+        await expect(page.locator('#associatedWiderRegions ~ .btn-group button.multiselect')).toBeVisible();
     });
 
     test('should have published Roman Missals section', async ({ page }) => {

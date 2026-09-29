@@ -26,14 +26,18 @@
  */
 
 /**
- * What the page knows of wider region membership. Partial by nature: the API also
- * reads every other region's member list, which `/calendars` does not publish, so
- * a nation that belongs to another region only by that region's own list (Hungary,
- * in Europe) is treated here as unassigned, and the API has the last word.
+ * What the page knows of wider region membership. Since LiturgicalCalendarAPI#1005
+ * `/calendars` publishes every region's `roster`, so the page sees membership as the
+ * API does: `members` is this region's roster, and `declaredRegions` holds every
+ * region a nation belongs to, declared or by a roster (see widerRegionsByNation()).
+ * Against an older API, `members` is only the loaded region's own list and
+ * `declaredRegions` only what national calendars declare, so a nation that belongs
+ * to another region only by that region's list is treated here as unassigned; the
+ * API has the last word.
  *
  * @typedef {Object} WiderRegionMembership
- * @property {string[]} members       ISO codes the loaded region lists in its `national_calendars`
- * @property {Object<string, string>} declaredRegion nation => the `wider_region` its national calendar declares
+ * @property {string[]} members ISO codes on the region's roster
+ * @property {Object<string, string[]>} declaredRegions nation => every wider region it belongs to
  */
 
 /**
@@ -58,8 +62,8 @@ export function editsWholeWiderRegion(rights, region) {
 }
 
 /**
- * Whether a nation may take part in `region`: it is one of the region's members,
- * or, as far as the page knows, a member of no other region.
+ * Whether a nation may take part in `region`: it is on the region's roster, or it
+ * declares this region, or, as far as the page knows, it declares no region at all.
  *
  * @param {string} nation
  * @param {string} region
@@ -68,8 +72,8 @@ export function editsWholeWiderRegion(rights, region) {
  */
 export function nationMayJoinWiderRegion(nation, region, membership) {
     if ((membership?.members ?? []).includes(nation)) return true;
-    const declared = membership?.declaredRegion?.[nation];
-    return !declared || declared === region;
+    const declared = membership?.declaredRegions?.[nation] ?? [];
+    return declared.length === 0 || declared.includes(region);
 }
 
 /**

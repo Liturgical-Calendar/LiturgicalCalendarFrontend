@@ -668,7 +668,7 @@ class NationalCalendarPayloadMetadata {
      * @param {Object} metadata The object passed to the constructor.
      * @param {string} metadata.nation A two-letter country ISO code (capital letters).
      * @param {string[]} metadata.locales An array of valid locale codes, must not be empty.
-     * @param {string} metadata.wider_region One of `Americas`, `Europe`, `Asia`, `Africa`, or `Oceania`.
+     * @param {string[]} metadata.wider_regions The wider regions the calendar inherits from, most general first; may be empty.
      * @param {string[]} metadata.missals An array of valid Roman Missal identifiers.
      *
      * @throws {Error} If any parameter does not meet the specified criteria.
@@ -677,10 +677,10 @@ class NationalCalendarPayloadMetadata {
         if (
             false === metadata.hasOwnProperty('nation')
             || false === metadata.hasOwnProperty('locales')
-            || false === metadata.hasOwnProperty('wider_region')
+            || false === metadata.hasOwnProperty('wider_regions')
             || false === metadata.hasOwnProperty('missals')
         ) {
-            throw new Error('`metadata.nation`, `metadata.locales`, `metadata.wider_region`, and `metadata.missals` parameters are required');
+            throw new Error('`metadata.nation`, `metadata.locales`, `metadata.wider_regions`, and `metadata.missals` parameters are required');
         }
         if (typeof metadata.nation !== 'string') {
             throw new Error('`metadata.nation` parameter must be a string');
@@ -700,12 +700,15 @@ class NationalCalendarPayloadMetadata {
                 throw new Error('`metadata.locales` parameter must be an array of valid locale codes');
             }
         }
-        if (typeof metadata.wider_region !== 'string') {
-            throw new Error('`metadata.wider_region` parameter must be a string');
-        }
-        const re2 = /^(Americas|Europe|Asia|Africa|Oceania)$/;
-        if (false === re2.test(metadata.wider_region)) {
-            throw new Error('`metadata.wider_region` parameter must be one of `Americas`, `Europe`, `Asia`, `Africa`, or `Oceania`');
+        // The API's shape for a wider region name; whether the region exists, and
+        // lists this nation, is the API's own check (422 on save).
+        const widerRegionName = /^[A-Z][A-Za-z]*( [A-Z][A-Za-z]*)*$/;
+        if (
+            false === Array.isArray(metadata.wider_regions)
+            || metadata.wider_regions.some(name => typeof name !== 'string' || false === widerRegionName.test(name))
+            || new Set(metadata.wider_regions).size !== metadata.wider_regions.length
+        ) {
+            throw new Error('`metadata.wider_regions` parameter must be an array of distinct wider region names');
         }
         if (false === Array.isArray(metadata.missals)) {
             throw new Error('`metadata.missals` parameter must be an array');
@@ -721,7 +724,7 @@ class NationalCalendarPayloadMetadata {
         }
         this.nation       = metadata.nation;
         this.locales      = metadata.locales;
-        this.wider_region = metadata.wider_region;
+        this.wider_regions = [...metadata.wider_regions];
         this.missals      = metadata.missals;
         Object.freeze(this);
     }
@@ -776,5 +779,6 @@ class NationalCalendarPayload {
 }
 
 export {
-    NationalCalendarPayload
+    NationalCalendarPayload,
+    NationalCalendarPayloadMetadata
 }
