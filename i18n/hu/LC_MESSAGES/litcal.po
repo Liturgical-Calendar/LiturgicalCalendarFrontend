@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-29 11:45+0000\n"
-"PO-Revision-Date: 2026-09-29 05:39+0000\n"
+"PO-Revision-Date: 2026-09-30 08:11+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hu/>\n"
@@ -2086,10 +2086,8 @@ msgstr ""
 
 #. translators: label of the list of wider regions a national calendar inherits from
 #: includes/messages.php:248
-#, fuzzy
-#| msgid "Wider region"
 msgid "Wider regions"
-msgstr "Szélesebb régió"
+msgstr "Szélesebb régiók"
 
 #. translators: label for national calendar name field
 #: includes/messages.php:250 admin-permissions.php:87 admin-permissions.php:320
@@ -2427,6 +2425,8 @@ msgid ""
 "The wider regions whose data this national calendar inherits. Only the wider "
 "regions that list this nation are offered."
 msgstr ""
+"Azok a szélesebb régiók, amelyek adatai ezt a nemzeti naptárat öröklik. Csak "
+"azok a szélesebb régiók érhetők el, amelyek listázzák ezt a nemzetet."
 
 #. translators: screen reader text for previous button
 #: includes/messages.php:411 temporale.php:173
