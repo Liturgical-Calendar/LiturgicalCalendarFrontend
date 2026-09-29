@@ -767,6 +767,27 @@ test.describe('Wider Region Calendar Form', () => {
         const regionNameInput = page.locator('#widerRegionCalendarName');
         await expect(regionNameInput).toHaveAttribute('required', '');
     });
+
+    test('should show an error toast and not get stuck under the overlay for an invalid wider region name', async ({ page }) => {
+        // A hyphenated name like "Guinea-Bissau" or "São Tomé" fails the API's
+        // WiderRegionName shape rule (isValidWiderRegionName). Before the fix, the
+        // API Proxy's `set` trap rejected it AFTER the overlay had already been shown,
+        // and since extending.js is a strict-mode ES module, the Proxy's falsish
+        // return from `set` threw a TypeError at the assignment site — leaving the
+        // overlay stuck with no feedback to the user.
+        const regionNameInput = page.locator('#widerRegionCalendarName');
+        await regionNameInput.fill('Guinea-Bissau');
+        await regionNameInput.blur();
+
+        // An error toast should appear...
+        await expect(page.locator('.toast-error, .toast.bg-danger')).toBeVisible({ timeout: 5000 });
+
+        // ...the input should be marked invalid...
+        await expect(regionNameInput).toHaveClass(/is-invalid/);
+
+        // ...and the loading overlay must never have been left stuck open.
+        await expect(page.locator('#overlay')).toBeHidden({ timeout: 5000 });
+    });
 });
 
 test.describe('Wider Region Calendar Form - National Calendar Association', () => {

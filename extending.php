@@ -205,7 +205,7 @@ if (isset($_GET['choice'])) {
                                     ENT_QUOTES | ENT_SUBSTITUTE,
                                     'UTF-8'
                                 );
-                                echo "<option value=\"{$prospectiveName}\">{$prospectiveLabel}</option>";
+                                echo "<option value=\"{$prospectiveName}\" label=\"{$prospectiveLabel}\">{$prospectiveLabel}</option>";
                             }
                             ?>
                             </datalist>

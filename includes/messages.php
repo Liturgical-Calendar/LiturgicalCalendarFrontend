@@ -246,6 +246,8 @@ $messages = [
     'Wider Region'                                    => _('Wider Region'),
     /** translators: suffix appended to a prospective wider region's option label in the datalist */
     'not yet created'                                 => _('not yet created'),
+    /** translators: error message when a wider region name typed by the user does not match the required shape */
+    'Invalid wider region name'                       => _('A wider region name must be one or more words, each starting with a capital letter and containing only letters (A–Z, a–z), separated by single spaces.'),
     /** translators: label of the list of wider regions a national calendar inherits from */
     'Wider regions'                                   => _('Wider regions'),
     /** translators: label for national calendar name field */

@@ -2396,6 +2396,18 @@ const regionalNationalCalendarNameChanged = (ev) => {
         return;
     }
 
+    if (category === 'widerregion') {
+        // Strip a ' - locale' suffix the same way the API Proxy's set trap does, so we
+        // validate the name the proxy will actually check.
+        const [name] = ev.target.value.split(' - ');
+        if (false === isValidWiderRegionName(name)) {
+            toastr["error"](Messages['Invalid wider region name'], Messages['Error']);
+            ev.target.classList.add('is-invalid');
+            return;
+        }
+    }
+    ev.target.classList.remove('is-invalid');
+
     document.querySelector('#overlay').classList.remove('hidden');
     API.category = category;
     // our proxy will take care of splitting locale from wider region, when we are setting a wider region key
