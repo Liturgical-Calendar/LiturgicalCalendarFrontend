@@ -36,6 +36,7 @@
 
 import { CalendarSettings, Locale } from './Settings.js';
 import { getMonthMaxDay } from './FormControls.js';
+import { WIDER_REGION_NAME_PATTERN } from './prospectiveWiderRegions.js';
 
 /**
  * Checks if a given day value is valid for a given month.
@@ -702,7 +703,7 @@ class NationalCalendarPayloadMetadata {
         }
         // The API's shape for a wider region name; whether the region exists, and
         // lists this nation, is the API's own check (422 on save).
-        const widerRegionName = /^[A-Z][A-Za-z]*( [A-Z][A-Za-z]*)*$/;
+        const widerRegionName = WIDER_REGION_NAME_PATTERN;
         if (
             false === Array.isArray(metadata.wider_regions)
             || metadata.wider_regions.some(name => typeof name !== 'string' || false === widerRegionName.test(name))
