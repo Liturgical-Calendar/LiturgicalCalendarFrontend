@@ -15,12 +15,16 @@ function prospectiveWiderRegions(): ProspectiveRegion[] {
     return JSON.parse(readFileSync(file, 'utf8')).wider_regions;
 }
 
-/** A pattern-valid region name no stack will have, e.g. `Test Region Kqbx`. */
+/**
+ * A pattern-valid, single-word region name no stack will have, e.g. `Testregionkqbx`.
+ * Single-word, like the prospective-region pick below: a multi-word name 422s on the
+ * API until it decodes path segments (LiturgicalCalendarAPI issue to be filed).
+ */
 function generatedRegionName(): string {
     const suffix = Array.from({ length: 4 }, () =>
         String.fromCharCode(97 + Math.floor(Math.random() * 26)),
     ).join('');
-    return `Test Region ${suffix.charAt(0).toUpperCase()}${suffix.slice(1)}`;
+    return `Testregion${suffix}`;
 }
 
 /**
@@ -281,8 +285,12 @@ test.describe('Wider Region Calendar Form', () => {
 
         // Create a prospective region that does not exist yet, so the pre-fill path runs;
         // if every one already exists, any pattern-valid name still exercises CREATE.
+        // Restricted to single-word names: a multi-word name 422s on the API until it
+        // decodes path segments (LiturgicalCalendarAPI issue to be filed) — the path
+        // segment stays percent-encoded while the payload's `wider_region` is plain text,
+        // so the two never match.
         const prospective = prospectiveWiderRegions().find(
-            (r) => !existingRegionIds.includes(r.name),
+            (r) => !r.name.includes(' ') && !existingRegionIds.includes(r.name),
         );
         const regionToCreate = prospective?.name ?? generatedRegionName();
 
