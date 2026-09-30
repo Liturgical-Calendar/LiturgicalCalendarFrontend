@@ -42,7 +42,8 @@ import { AMBROSIAN_RITE, ROMAN_RITE, qualifyObjectId } from './riteScopedObjectI
  *   has no calendar
  * @property {string[]} [missals] - Nation nodes only: the national Missal editions `/missals`
  *   lists for it, when it has any
- * @property {string} [note] - `no-missal` on a nation without Missal editions
+ * @property {string} [note] - `no-missal` on a nation without Missal editions;
+ *   `ambrosian-unsupported` on an Ambrosian diocese, which no form can load yet (it has no actions)
  * @property {boolean} mine - Whether the user holds rights on this node (any action but `request`)
  * @property {boolean} [context] - Set by `filterMine()` on an ancestor kept only to reach a `mine` node
  * @property {NavigatorNode[]} children
@@ -236,6 +237,12 @@ function buildDioceseNode({ id, label, rite, exists, nationExists, rights }) {
         children: [],
     };
     if (disabledReason) node.disabledReason = disabledReason;
+    // The diocesan form reads and writes the Roman rite's `/data/diocese/{id}` only, so it
+    // cannot open an Ambrosian diocese: offer no action, but keep `mine` driven by the rights.
+    if (rite === AMBROSIAN_RITE) {
+        node.actions = [];
+        node.note = 'ambrosian-unsupported';
+    }
     return node;
 }
 

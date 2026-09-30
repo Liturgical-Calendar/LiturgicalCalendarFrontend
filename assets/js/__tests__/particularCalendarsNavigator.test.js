@@ -47,6 +47,7 @@ const MESSAGES = {
     'Navigator - Proper of Saints': 'Proper of Saints (%1$s)',
     'Navigator - Request access': 'Request access',
     'Navigator - No national Missal data': 'No national Missal data: the national calendar alone defines it',
+    'Navigator - ambrosian-unsupported': 'Ambrosian diocesan calendars cannot be edited here yet',
     'Navigator - nation-missing': 'Create the national calendar first',
     'Navigator - no-region': 'Nations in no wider region',
     'Navigator - ambrosian': 'Ambrosian rite',
@@ -434,5 +435,16 @@ describe('the page wiring — sessionStorage unavailable', () => {
         container.querySelectorAll('.pcn-view-toggle button')[1].click();
         expect(pressed()).toBe('Show all');
         expect(rows(container, 'nation', 'FR')).toHaveLength(1);
+    });
+});
+
+describe('renderNavigator — Ambrosian dioceses', () => {
+    it('shows the not-yet-supported note and no action buttons', () => {
+        const container = render({ tree: tree(rights({ isGlobalAdmin: true })) });
+        const [lugano] = rows(container, 'diocese', 'lugano_ch');
+        expect(lugano).toBeTruthy();
+        expect(lugano.querySelector('.pcn-note')?.textContent)
+            .toBe('Ambrosian diocesan calendars cannot be edited here yet');
+        expect(actionLabels(lugano)).toEqual([]);
     });
 });

@@ -43,6 +43,7 @@ const DEFAULT_MESSAGES = {
     'Navigator - Proper of Saints': 'Proper of Saints (%1$s)',
     'Navigator - Request access': 'Request access',
     'Navigator - No national Missal data': 'No national Missal data: the national calendar alone defines it',
+    'Navigator - ambrosian-unsupported': 'Ambrosian diocesan calendars cannot be edited here yet',
     'Navigator - nation-missing': 'Create the national calendar first',
     'Navigator - no-region': 'Nations in no wider region',
     'Navigator - ambrosian': 'Ambrosian rite',
@@ -53,6 +54,12 @@ const DEFAULT_MESSAGES = {
     'Navigator - Dioceses of': 'Dioceses of %1$s',
     'Navigator - Loading': 'Loading…',
     'Navigator - No match': 'No calendars match the filter',
+};
+
+/** The message key of each node `note`. */
+const NOTE_KEYS = {
+    'no-missal': 'Navigator - No national Missal data',
+    'ambrosian-unsupported': 'Navigator - ambrosian-unsupported',
 };
 
 /** The label key of each action button (`sanctorale` takes the Missal ids as `%1$s`). */
@@ -248,6 +255,16 @@ function isExpanded(expanded, key, fallback) {
 }
 
 /**
+ * @param {NavigatorNode} node
+ * @param {Object<string,string>} messages
+ * @returns {HTMLElement[]} The node's note, as a one-element list, or none
+ */
+function noteElements(node, messages) {
+    const key = NOTE_KEYS[node.note];
+    return key ? [el('small', { class: 'pcn-note', text: t(messages, key) })] : [];
+}
+
+/**
  * A diocese row (also used for the Ambrosian group's dioceses).
  * @param {NavigatorNode} node
  * @param {object} options
@@ -263,6 +280,7 @@ function dioceseItem(node, options) {
             el('div', { class: 'pcn-row-main' }, [
                 statusDot(node, options.messages),
                 el('span', { class: 'pcn-label', text: node.label }),
+                ...noteElements(node, options.messages),
             ]),
             actionButtons(node, options),
         ]),
@@ -319,9 +337,7 @@ function nationItem(node, parentId, options) {
         el('span', { class: 'pcn-label', text: node.label }),
         el('code', { class: 'pcn-code', text: node.id }),
     );
-    if (node.note === 'no-missal') {
-        main.append(el('small', { class: 'pcn-note', text: t(messages, 'Navigator - No national Missal data') }));
-    }
+    main.append(...noteElements(node, messages));
     item.append(el('div', { class: 'pcn-row' }, [main, actionButtons(node, options)]));
 
     if (expandable) {

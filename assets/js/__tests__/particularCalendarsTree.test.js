@@ -144,7 +144,7 @@ describe('buildNavigatorTree — global admin', () => {
     const tree = buildTree({ rights: rights({ isGlobalAdmin: true }) });
 
     it('offers edit on every existing node and create on every missing one', () => {
-        const nodes = findAll(tree, (n) => n.kind !== 'group');
+        const nodes = findAll(tree, (n) => n.kind !== 'group' && n.note !== 'ambrosian-unsupported');
         expect(nodes.length).toBeGreaterThan(0);
         for (const node of nodes) {
             if (node.exists) {
@@ -166,6 +166,31 @@ describe('buildNavigatorTree — global admin', () => {
         expect(nl.actions).toEqual(['edit']);
         expect(nl.note).toBe('no-missal');
         expect(nl.missals).toBeUndefined();
+    });
+});
+
+describe('buildNavigatorTree — Ambrosian dioceses', () => {
+    const lugano = (theRights) => findNode(buildTree({ rights: theRights }), (n) => n.kind === 'diocese' && n.id === 'lugano_ch');
+
+    it('offers no action, with the ambrosian-unsupported note, even to a global admin', () => {
+        const node = lugano(rights({ isGlobalAdmin: true }));
+        expect(node.actions).toEqual([]);
+        expect(node.note).toBe('ambrosian-unsupported');
+        expect(node.exists).toBe(true);
+        expect(node.mine).toBe(true);
+    });
+
+    it('is mine for a user with rights on it, and kept by filterMine', () => {
+        const theRights = rights({ admin: { diocesan_calendar: ['ambrosian/lugano_ch'] } });
+        expect(lugano(theRights).mine).toBe(true);
+        const mine = filterMine(buildTree({ rights: theRights }));
+        expect(findNode(mine, (n) => n.id === 'lugano_ch')).toBeTruthy();
+    });
+
+    it('is not mine, and offers no Request access, for a user without rights on it', () => {
+        const node = lugano(rights());
+        expect(node.actions).toEqual([]);
+        expect(node.mine).toBe(false);
     });
 });
 

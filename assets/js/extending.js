@@ -614,11 +614,13 @@ function offersOption(listId, matches) {
  * An existing region loads one locale at a time, so a link without a locale (see
  * widerRegionOpeningLocale()) opens one; a prospective region opens by its bare id.
  * @param {{calendar: string, locale: string|null}} link
- * @returns {boolean} False when the region is neither an existing nor a prospective one
+ * @returns {boolean} False when the region is neither an existing nor a prospective one, or
+ *   does not offer the link's locale
  */
 function openWiderRegionDeepLink({ calendar, locale }) {
     const id = normalizeWiderRegionKey(calendar);
     if (!offersOption('WiderRegionsList', (value) => value.split(' - ')[0] === id)) return false;
+    if (locale && !offersOption('WiderRegionsList', (value) => value === `${id} - ${locale}`)) return false;
     const openingLocale = locale ?? widerRegionOpeningLocale(id, LitCalMetadata, Messages.LOCALE_WITH_REGION);
     setValueAsUser(document.querySelector('#widerRegionCalendarName'), openingLocale ? `${id} - ${openingLocale}` : id);
     return true;

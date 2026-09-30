@@ -453,6 +453,8 @@ $messages = [
     'Navigator - Request access'                      => _('Request access'),
     /** translators: note on a nation that has no national Missal edition */
     'Navigator - No national Missal data'             => _('No national Missal data: the national calendar alone defines it'),
+    /** translators: note on an Ambrosian rite diocese in the navigator, which offers no Edit button for it */
+    'Navigator - ambrosian-unsupported'               => _('Ambrosian diocesan calendars cannot be edited here yet'),
     /** translators: why a diocese's Create button is disabled */
     'Navigator - nation-missing'                      => _('Create the national calendar first'),
     /** translators: navigator group of the nations that belong to no wider region */
