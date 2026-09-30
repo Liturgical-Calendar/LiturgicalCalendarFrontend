@@ -568,6 +568,95 @@ class LitCalMakePatronMetadata extends LitCalMetadata {
     }
 }
 
+/**
+ * Actions whose liturgical event must be named in every locale of the i18n data.
+ * @param {Object} metadata - The row's metadata
+ * @returns {boolean} Whether the row needs translated names
+ */
+const needsTranslatedName = (metadata) => ['createNew', 'makePatron'].includes(metadata.action)
+    || (metadata.action === 'setProperty' && metadata.property === 'name');
+
+/**
+ * Throw unless every locale of the i18n data names the row's liturgical event.
+ * We no longer use the `name` property, because we have translated strings in the i18n data;
+ * it is simply easier to check that here than to pass the i18nData down to each subclass.
+ * @param {Object} liturgicalEvent - The row's liturgical event
+ * @param {Object} i18nData - Locale => { event_key => name }
+ */
+const assertTranslatedName = (liturgicalEvent, i18nData) => {
+    if (false === liturgicalEvent.hasOwnProperty('event_key')) {
+        throw new Error('litcalItem.liturgical_event must have an `event_key` property');
+    }
+    Object.entries(i18nData).forEach( ([isoCode, translations]) => {
+        if (false === (liturgicalEvent.event_key in translations)) {
+            throw new Error(`The litcalItem.liturgical_event.event_key ${liturgicalEvent.event_key} is missing in i18nData[${isoCode}]: ${JSON.stringify(translations)}`);
+        }
+    });
+};
+
+/**
+ * The data and metadata of a `createNew` row: fixed (day and month) or mobile (strtotime).
+ * @param {RowData} litcalItem - The row
+ * @returns {{liturgical_event: LitCalCreateNewFixedData|LitCalCreateNewMobileData, metadata: LitCalMetadata}}
+ */
+const buildCreateNew = (litcalItem) => {
+    const event = litcalItem.liturgical_event;
+    let liturgical_event;
+    if (event.hasOwnProperty('day') && event.hasOwnProperty('month')) {
+        liturgical_event = new LitCalCreateNewFixedData(event);
+    } else if (event.hasOwnProperty('strtotime')) {
+        liturgical_event = new LitCalCreateNewMobileData(event);
+    } else {
+        throw new Error('when metadata.action is `createNew`, `liturgical_event` must have either `day` and `month` properties or `strtotime` property');
+    }
+    return {
+        liturgical_event,
+        metadata: Object.freeze(new LitCalMetadata(litcalItem.metadata.since_year, litcalItem.metadata.until_year ?? null))
+    };
+};
+
+/**
+ * The data and metadata of a `setProperty` row (`name` or `grade`).
+ * @param {RowData} litcalItem - The row
+ * @returns {{liturgical_event: Object, metadata: Object}}
+ */
+const buildSetProperty = (litcalItem) => {
+    if (false === litcalItem.metadata.hasOwnProperty('property')) {
+        throw new Error('when metadata.action is `setProperty`, the metadata `property` property must also be set');
+    }
+    switch (litcalItem.metadata.property) {
+        case 'name':
+            return {
+                liturgical_event: new LitCalSetPropertyNameData(litcalItem.liturgical_event),
+                metadata: new LitCalSetPropertyNameMetadata(litcalItem.metadata)
+            };
+        case 'grade':
+            return {
+                liturgical_event: new LitCalSetPropertyGradeData(litcalItem.liturgical_event),
+                metadata: new LitCalSetPropertyGradeMetadata(litcalItem.metadata)
+            };
+        default:
+            throw new Error('when metadata.action is `setProperty`, the metadata `property` property must be either `name` or `grade`');
+    }
+};
+
+/**
+ * Builders of a row's data and metadata, by `metadata.action`.
+ * @type {Object<string, function(RowData): {liturgical_event: Object, metadata: Object}>}
+ */
+const LITCAL_ITEM_BUILDERS = {
+    moveEvent: (litcalItem) => ({
+        liturgical_event: new LitCalMoveEventData(litcalItem.liturgical_event),
+        metadata: new LitCalMoveEventMetadata(litcalItem.metadata)
+    }),
+    createNew: buildCreateNew,
+    setProperty: buildSetProperty,
+    makePatron: (litcalItem) => ({
+        liturgical_event: new LitCalMakePatronData(litcalItem.liturgical_event),
+        metadata: new LitCalMakePatronMetadata(litcalItem.metadata)
+    })
+};
+
 class NationalCalendarLitCalItem {
     /**
      * Constructor for NationalCalendarLitCalItem.
@@ -587,80 +676,78 @@ class NationalCalendarLitCalItem {
         if (false === litcalItem.metadata.hasOwnProperty('action')) {
             throw new Error('metadata must have an `action` property');
         }
-
-        // Cases in which we would need a `name` property: createNew, makePatron, and setProperty.name
-        // We no longer use the `name` property, because we have translated strings in the i18n data
-        // We should however check that the i18n data does actually exist for the litcalItem.event_key,
-        // and it's simply easier to theck that here rather than continue passing down the i18nData to each subclass
-        if (
-            (['createNew', 'makePatron'].includes(litcalItem.metadata.action))
-            ||
-            (litcalItem.metadata.action === 'setProperty' && litcalItem.metadata.property === 'name')
-        ) {
-            if (false === litcalItem.liturgical_event.hasOwnProperty('event_key')) {
-                throw new Error('litcalItem.liturgical_event must have an `event_key` property');
-            }
-            Object.entries(i18nData).forEach( ([isoCode, translations]) => {
-                if (false === (litcalItem.liturgical_event.event_key in translations)) {
-                    throw new Error(`The litcalItem.liturgical_event.event_key ${litcalItem.liturgical_event.event_key} is missing in i18nData[${isoCode}]: ${JSON.stringify(translations)}`);
-                }
-            });
+        if (needsTranslatedName(litcalItem.metadata)) {
+            assertTranslatedName(litcalItem.liturgical_event, i18nData);
         }
-
-        switch (litcalItem.metadata.action) {
-            case 'moveEvent':
-                /**@type {LitCalMoveEventData} */
-                this.liturgical_event = new LitCalMoveEventData(litcalItem.liturgical_event);
-                /**@type {LitCalMoveEventMetadata} */
-                this.metadata = new LitCalMoveEventMetadata(litcalItem.metadata);
-                break;
-            case 'createNew':
-                if (litcalItem.liturgical_event.hasOwnProperty('day') && litcalItem.liturgical_event.hasOwnProperty('month')) {
-                    /**@type {LitCalCreateNewFixedData} */
-                    this.liturgical_event = new LitCalCreateNewFixedData(litcalItem.liturgical_event);
-                } else if (litcalItem.liturgical_event.hasOwnProperty('strtotime')) {
-                    /**@type {LitCalCreateNewMobileData} */
-                    this.liturgical_event = new LitCalCreateNewMobileData(litcalItem.liturgical_event);
-                } else {
-                    throw new Error('when metadata.action is `createNew`, `liturgical_event` must have either `day` and `month` properties or `strtotime` property');
-                }
-                /**@type {LitCalMetadata} */
-                this.metadata = Object.freeze(new LitCalMetadata(litcalItem.metadata.since_year, litcalItem.metadata.until_year ?? null));
-                break;
-            case 'setProperty':
-                if (false === litcalItem.metadata.hasOwnProperty('property')) {
-                    throw new Error('when metadata.action is `setProperty`, the metadata `property` property must also be set');
-                }
-                switch (litcalItem.metadata.property) {
-                    case 'name':
-                        /**@type {LitCalSetPropertyNameData} */
-                        this.liturgical_event = new LitCalSetPropertyNameData(litcalItem.liturgical_event);
-                        /**@type {LitCalSetPropertyNameMetadata} */
-                        this.metadata = new LitCalSetPropertyNameMetadata(litcalItem.metadata);
-                        break;
-                    case 'grade':
-                        /**@type {LitCalSetPropertyGradeData} */
-                        this.liturgical_event = new LitCalSetPropertyGradeData(litcalItem.liturgical_event);
-                        /**@type {LitCalSetPropertyGradeMetadata} */
-                        this.metadata = new LitCalSetPropertyGradeMetadata(litcalItem.metadata);
-                        break;
-                    default:
-                        throw new Error('when metadata.action is `setProperty`, the metadata `property` property must be either `name` or `grade`');
-                }
-                break;
-            case 'makePatron':
-                /**@type {LitCalMakePatronData} */
-                this.liturgical_event = new LitCalMakePatronData(litcalItem.liturgical_event);
-                /**@type {LitCalMakePatronMetadata} */
-                this.metadata = new LitCalMakePatronMetadata(litcalItem.metadata);
-                break;
-            default:
-                throw new Error('metadata.action must be one of `moveEvent`, `createNew`, `setProperty` or `makePatron`');
+        const build = Object.hasOwn(LITCAL_ITEM_BUILDERS, litcalItem.metadata.action)
+            ? LITCAL_ITEM_BUILDERS[litcalItem.metadata.action]
+            : null;
+        if (build === null) {
+            throw new Error('metadata.action must be one of `moveEvent`, `createNew`, `setProperty` or `makePatron`');
         }
+        const { liturgical_event, metadata } = build(litcalItem);
+        this.liturgical_event = liturgical_event;
+        this.metadata = metadata;
         Object.freeze(this);
     }
 }
 
+
+/**
+ * Throw unless `locales` is a non-empty array of valid locale codes.
+ * @param {unknown} locales - `metadata.locales`
+ */
+const assertLocales = (locales) => {
+    if (false === Array.isArray(locales) || 0 === locales.length) {
+        throw new Error('`metadata.locales` parameter must be an array and must not be empty');
+    }
+    for (const locale of locales) {
+        if (typeof locale !== 'string') {
+            throw new Error('`metadata.locales` parameter must be an array of strings, an item of a different type was detected');
+        }
+        if (Locale.isValid(locale) === false) {
+            throw new Error('`metadata.locales` parameter must be an array of valid locale codes');
+        }
+    }
+};
+
+/**
+ * The wider region ids of a national calendar. The API's rule for a wider region id,
+ * after mapping a legacy name to its id as the API does; whether the region exists,
+ * and lists this nation, is the API's own check (422 on save).
+ * @param {unknown} widerRegions - `metadata.wider_regions`
+ * @returns {string[]} The ids, in the given order
+ */
+const normalizedWiderRegions = (widerRegions) => {
+    const ids = Array.isArray(widerRegions) ? widerRegions.map(normalizeWiderRegionKey) : null;
+    if (
+        null === ids
+        || ids.some(id => false === isValidWiderRegionId(id))
+        || new Set(ids).size !== ids.length
+    ) {
+        throw new Error('`metadata.wider_regions` parameter must be an array of distinct wider region ids');
+    }
+    return ids;
+};
+
+/**
+ * Throw unless `missals` is an array of Roman Missal identifiers (`IT_1983`).
+ * @param {unknown} missals - `metadata.missals`
+ */
+const assertMissals = (missals) => {
+    if (false === Array.isArray(missals)) {
+        throw new Error('`metadata.missals` parameter must be an array');
+    }
+    const missalId = /^[A-Z]{2}_[0-9]{4}$/;
+    for (const missal of missals) {
+        if (typeof missal !== 'string') {
+            throw new Error('`metadata.missals` parameter must be an array of strings, an item of a different type was detected');
+        }
+        if (false === missalId.test(missal)) {
+            throw new Error('`metadata.missals` parameter must be an array of valid Roman Missal identifiers, an item with a different value was detected');
+        }
+    }
+};
 
 class NationalCalendarPayloadMetadata {
     /**
@@ -676,57 +763,18 @@ class NationalCalendarPayloadMetadata {
      * @throws {Error} If any parameter does not meet the specified criteria.
      */
     constructor( metadata ) {
-        if (
-            false === metadata.hasOwnProperty('nation')
-            || false === metadata.hasOwnProperty('locales')
-            || false === metadata.hasOwnProperty('wider_regions')
-            || false === metadata.hasOwnProperty('missals')
-        ) {
+        if (['nation', 'locales', 'wider_regions', 'missals'].some(prop => false === metadata.hasOwnProperty(prop))) {
             throw new Error('`metadata.nation`, `metadata.locales`, `metadata.wider_regions`, and `metadata.missals` parameters are required');
         }
         if (typeof metadata.nation !== 'string') {
             throw new Error('`metadata.nation` parameter must be a string');
         }
-        const re = /^[A-Z]{2}$/;
-        if (false === re.test(metadata.nation)) {
+        if (false === /^[A-Z]{2}$/.test(metadata.nation)) {
             throw new Error('`metadata.nation` parameter must be a two letter country ISO code (capital letters)');
         }
-        if (false === Array.isArray(metadata.locales) || 0 === metadata.locales.length) {
-            throw new Error('`metadata.locales` parameter must be an array and must not be empty');
-        }
-        for (const locale of metadata.locales) {
-            if (typeof locale !== 'string') {
-                throw new Error('`metadata.locales` parameter must be an array of strings, an item of a different type was detected');
-            }
-            if (Locale.isValid(locale) === false) {
-                throw new Error('`metadata.locales` parameter must be an array of valid locale codes');
-            }
-        }
-        // The API's rule for a wider region id, after mapping a legacy name to its id
-        // as the API does; whether the region exists, and lists this nation, is the
-        // API's own check (422 on save).
-        const widerRegions = Array.isArray(metadata.wider_regions)
-            ? metadata.wider_regions.map(normalizeWiderRegionKey)
-            : null;
-        if (
-            null === widerRegions
-            || widerRegions.some(id => false === isValidWiderRegionId(id))
-            || new Set(widerRegions).size !== widerRegions.length
-        ) {
-            throw new Error('`metadata.wider_regions` parameter must be an array of distinct wider region ids');
-        }
-        if (false === Array.isArray(metadata.missals)) {
-            throw new Error('`metadata.missals` parameter must be an array');
-        }
-        const re3 = /^[A-Z]{2}_[0-9]{4}$/;
-        for (const missal of metadata.missals) {
-            if (typeof missal !== 'string') {
-                throw new Error('`metadata.missals` parameter must be an array of strings, an item of a different type was detected');
-            }
-            if (false === re3.test(missal)) {
-                throw new Error('`metadata.missals` parameter must be an array of valid Roman Missal identifiers, an item with a different value was detected');
-            }
-        }
+        assertLocales(metadata.locales);
+        const widerRegions = normalizedWiderRegions(metadata.wider_regions);
+        assertMissals(metadata.missals);
         this.nation       = metadata.nation;
         this.locales      = metadata.locales;
         this.wider_regions = widerRegions;
