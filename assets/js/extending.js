@@ -516,9 +516,9 @@ const cldrDataRequest = new Request('https://raw.githubusercontent.com/unicode-o
 const urlParams = new URLSearchParams(window.location.search);
 const choice = urlParams.get('choice');
 
-const fetchRequests = [
-    fetch(missalsRequest)
-];
+// Without a `choice` the page is the particular calendars navigator (#66,
+// particularCalendarsNavigator.js), which has none of the forms these fetches feed.
+const fetchRequests = choice ? [fetch(missalsRequest)] : [];
 
 if (choice === 'diocesan') {
     fetchRequests.push(fetch(tzdataRequest));
@@ -542,7 +542,7 @@ Promise.all(fetchRequests).then(responses => {
         }
     }));
 }).then(data => {
-    if (data[0].hasOwnProperty('litcal_missals')) {
+    if (data[0]?.hasOwnProperty('litcal_missals')) {
         console.log('retrieved /missals metadata:');
         console.log(data[0]);
         MissalsIndex = data[0].litcal_missals;

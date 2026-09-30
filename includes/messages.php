@@ -425,6 +425,50 @@ $messages = [
     'Next'                                            => _('Next'),
     /** translators: aria-label for diocesan calendar definition navigation */
     'Diocesan calendar definition'                    => _('Diocesan calendar definition'),
+
+    // =========================================================================
+    // Particular calendars navigator (extending.php without a choice, #66)
+    // =========================================================================
+    /** translators: navigator view toggle - only the calendars the user holds rights on */
+    'Navigator - My calendars'                        => _('My calendars'),
+    /** translators: navigator view toggle - every wider region, nation and diocese */
+    'Navigator - Show all'                            => _('Show all'),
+    /** translators: placeholder and label of the navigator's text filter on calendar names */
+    'Navigator - Filter'                              => _('Filter'),
+    /** translators: screen reader text of the empty status dot of a calendar that does not exist yet */
+    'Navigator - Not yet created'                     => _('Not yet created'),
+    /** translators: screen reader text of the filled status dot of a calendar that exists */
+    'Navigator - Created'                             => _('Created'),
+    /** translators: navigator action button - open an existing calendar in its form */
+    'Navigator - Edit'                                => _('Edit'),
+    /** translators: navigator action button - create a calendar that does not exist yet */
+    'Navigator - Create'                              => _('Create'),
+    /** translators: navigator action button - translate a wider region into the user's nation's language */
+    'Navigator - Translate'                           => _('Translate'),
+    /** translators: navigator action button - open the nation's Missal edition in the sanctorale editor. %1$s = the Missal ids, e.g. "IT_1983" */
+    'Navigator - Proper of Saints'                    => _('Proper of Saints (%1$s)'),
+    /** translators: navigator action button - ask for rights on a calendar */
+    'Navigator - Request access'                      => _('Request access'),
+    /** translators: note on a nation that has no national Missal edition */
+    'Navigator - No national Missal data'             => _('No national Missal data: the national calendar alone defines it'),
+    /** translators: why a diocese's Create button is disabled */
+    'Navigator - nation-missing'                      => _('Create the national calendar first'),
+    /** translators: navigator group of the nations that belong to no wider region */
+    'Navigator - no-region'                           => _('Nations in no wider region'),
+    /** translators: navigator group of the Ambrosian rite's diocesan calendars */
+    'Navigator - ambrosian'                           => _('Ambrosian rite'),
+    /** translators: error shown under a nation when its list of dioceses could not be fetched */
+    'Navigator - Could not load the dioceses'         => _('Could not load the dioceses'),
+    /** translators: button to fetch the list of dioceses again */
+    'Navigator - Retry'                               => _('Retry'),
+    /** translators: "My calendars" view of a user who holds no rights on any calendar */
+    'Navigator - Empty'                               => _('You have no particular calendars yet'),
+    /** translators: button of the empty "My calendars" view, switching to "Show all" */
+    'Navigator - Browse all calendars'                => _('Browse all calendars'),
+    /** translators: screen reader label of the button that expands a nation. %1$s = the nation's name */
+    'Navigator - Dioceses of'                         => _('Dioceses of %1$s'),
+    /** translators: shown while a nation's dioceses are being fetched */
+    'Navigator - Loading'                             => _('Loading…'),
 ];
 
 // phpcs:enable Generic.Files.LineLength
