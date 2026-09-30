@@ -2,9 +2,11 @@ import { describe, it, expect } from 'vitest';
 import {
     actionUrl,
     buildNavigatorTree,
+    dioceseNation,
     filterMine,
     nationDioceses,
     parseDeepLink,
+    widerRegionOpeningLocale,
 } from '../particularCalendarsTree.js';
 
 // Fixtures shaped like the hub's inputs (see the design doc, Part 1-2): a national IT and NL
@@ -356,6 +358,70 @@ describe('nationDioceses', () => {
     it('returns an empty array when not loaded', () => {
         expect(nationDioceses('NL', new Map())).toEqual([]);
         expect(nationDioceses('NL', undefined)).toEqual([]);
+    });
+});
+
+describe('dioceseNation', () => {
+    const world = new Map([
+        ['IT', [{ id: 'torino_it', name: 'Torino' }, { id: 'roma_it', name: 'Roma' }]],
+        ['CH', [{ id: 'lugano_ch', name: 'Lugano' }]],
+    ]);
+
+    it('reads an existing diocesan calendar\'s nation from the metadata, upper-cased', () => {
+        const metadata = { diocesan_calendars: [{ calendar_id: 'roma_it', nation: 'it', rite: 'roman' }] };
+        expect(dioceseNation('roma_it', metadata, undefined)).toBe('IT');
+    });
+
+    it('prefers the metadata over the world dioceses', () => {
+        const metadata = { diocesan_calendars: [{ calendar_id: 'lugano_ch', nation: 'CH', rite: 'ambrosian' }] };
+        expect(dioceseNation('lugano_ch', metadata, new Map([['IT', [{ id: 'lugano_ch', name: 'x' }]]]))).toBe('CH');
+    });
+
+    it('finds a not-yet-created diocese in the world dioceses', () => {
+        expect(dioceseNation('torino_it', baseMetadata(), world)).toBe('IT');
+    });
+
+    it('returns null for a diocese unknown to both', () => {
+        expect(dioceseNation('atlantis_xx', baseMetadata(), world)).toBeNull();
+        expect(dioceseNation('atlantis_xx', undefined, undefined)).toBeNull();
+    });
+});
+
+describe('widerRegionOpeningLocale', () => {
+    const metadata = {
+        locales: ['de', 'it', 'nl'],
+        wider_regions: [{ id: 'europe', locales: ['bg_BG', 'de_DE', 'it_CH', 'it_IT', 'nl_NL'] }],
+    };
+
+    it('opens the UI locale when the region offers it', () => {
+        expect(widerRegionOpeningLocale('europe', metadata, 'it_IT')).toBe('it_IT');
+    });
+
+    it('falls back to the first locale in the UI language', () => {
+        expect(widerRegionOpeningLocale('europe', metadata, 'it_VA')).toBe('it_CH');
+    });
+
+    it('falls back to the region\'s first official locale', () => {
+        expect(widerRegionOpeningLocale('europe', metadata, 'en_US')).toBe('de_DE');
+    });
+
+    it('never picks an unofficial locale while an official one exists', () => {
+        expect(widerRegionOpeningLocale('europe', metadata, 'bg_BG')).toBe('de_DE');
+    });
+
+    it('falls back to the first locale when none is official', () => {
+        const asia = { locales: ['en'], wider_regions: [{ id: 'asia', locales: ['ja_JP', 'zh_Hans_CN'] }] };
+        expect(widerRegionOpeningLocale('asia', asia, 'en_US')).toBe('ja_JP');
+    });
+
+    it('reads a region an older API names only by `name`', () => {
+        expect(widerRegionOpeningLocale('Europe', { wider_regions: [{ name: 'Europe', locales: ['fr_FR'] }] }, 'en_US')).toBe('fr_FR');
+    });
+
+    it('returns null for a region that does not exist yet, or has no locales', () => {
+        expect(widerRegionOpeningLocale('nordic', metadata, 'en_US')).toBeNull();
+        expect(widerRegionOpeningLocale('europe', { wider_regions: [{ id: 'europe', locales: [] }] }, 'en_US')).toBeNull();
+        expect(widerRegionOpeningLocale('europe', undefined, 'en_US')).toBeNull();
     });
 });
 

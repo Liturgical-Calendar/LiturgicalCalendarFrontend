@@ -246,6 +246,8 @@ $messages = [
     'Wider Region'                                    => _('Wider Region'),
     /** translators: suffix appended to a prospective wider region's option label in the datalist */
     'not yet created'                                 => _('not yet created'),
+    /** translators: error toast when a link from the particular calendars navigator names a calendar the form cannot open */
+    'Calendar not found'                              => _('Calendar not found'),
     /** translators: error message when a wider region id typed by the user does not match the required shape */
     'Invalid wider region name'                       => _('A wider region id is one or more lowercase words (a–z) joined by hyphens, e.g. german-language-area.'),
     /** translators: heading of the wider region's label fields, one per language of the region */

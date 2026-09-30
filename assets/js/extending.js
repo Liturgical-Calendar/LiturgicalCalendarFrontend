@@ -41,6 +41,9 @@ import { widerRegionsForNation } from './widerRegionForNation.js';
 import { eligibleWiderRegions, nationWiderRegions, widerRegionKey, widerRegionLabelById, widerRegionRoster, widerRegionsByNation } from './widerRegions.js';
 import { buildWiderRegionLabelFields, country2flag, labelFieldsFor, labelsToSave, m49Suggestions, readLabelInputs, rebuiltLabelState } from './widerRegionLabels.js';
 import { isOfficialLocale, newNationalCalendarLocaleOptions, unofficialLocales } from './nationalCalendarLocales.js';
+import { dioceseNation, nationDioceses, parseDeepLink, widerRegionOpeningLocale } from './particularCalendarsTree.js';
+import { diocesesByNation } from './dioceseObjectIdPicker.js';
+import { ROMAN_RITE } from './riteScopedObjectId.js';
 import {
     findProspectiveRegion,
     idToWords,
@@ -570,7 +573,117 @@ Promise.all(fetchRequests).then(responses => {
     toastr["error"](error, Messages['Error']);
 }).finally(() => {
     document.querySelector('#overlay').classList.add('hidden');
-});
+}).then(whenDomReady).then(() => openDeepLink(window.location.search));
+
+/**
+ * Particular calendars navigator deep links (#66): `?choice=…&calendar=…[&locale=…][&rite=…]`
+ * (see `actionUrl()` in particularCalendarsTree.js). Each opens the calendar by filling the form's
+ * own controls and dispatching the `change` a user edit dispatches, so the forms' existing
+ * handlers do the loading.
+ */
+
+/**
+ * Resolves once DOMContentLoaded has run (and with it domContentLoadedCallback's multiselects).
+ * @returns {Promise<void>}
+ */
+function whenDomReady() {
+    if (document.readyState !== 'loading') return Promise.resolve();
+    return new Promise((resolve) => document.addEventListener('DOMContentLoaded', () => resolve(), { once: true }));
+}
+
+/**
+ * Sets a control's value and dispatches the bubbling `change` the document-level handlers listen for.
+ * @param {HTMLInputElement|HTMLSelectElement} control
+ * @param {string} value
+ */
+function setValueAsUser(control, value) {
+    control.value = value;
+    control.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
+/**
+ * @param {string} listId - A `<datalist>` or `<select>` id
+ * @param {(value: string) => boolean} matches
+ * @returns {boolean} Whether any of its options' values matches
+ */
+function offersOption(listId, matches) {
+    return Array.from(document.querySelectorAll(`#${listId} > option`)).some((option) => matches(option.value));
+}
+
+/**
+ * An existing region loads one locale at a time, so a link without a locale (see
+ * widerRegionOpeningLocale()) opens one; a prospective region opens by its bare id.
+ * @param {{calendar: string, locale: string|null}} link
+ * @returns {boolean} False when the region is neither an existing nor a prospective one
+ */
+function openWiderRegionDeepLink({ calendar, locale }) {
+    const id = normalizeWiderRegionKey(calendar);
+    if (!offersOption('WiderRegionsList', (value) => value.split(' - ')[0] === id)) return false;
+    const openingLocale = locale ?? widerRegionOpeningLocale(id, LitCalMetadata, Messages.LOCALE_WITH_REGION);
+    setValueAsUser(document.querySelector('#widerRegionCalendarName'), openingLocale ? `${id} - ${openingLocale}` : id);
+    return true;
+}
+
+/**
+ * @param {{calendar: string}} link
+ * @returns {boolean} False when the nation is not one the national form offers
+ */
+function openNationalDeepLink({ calendar }) {
+    const nation = calendar.toUpperCase();
+    if (!offersOption('nationalCalendarsList', (value) => value === nation)) return false;
+    setValueAsUser(document.querySelector('#nationalCalendarName'), nation);
+    return true;
+}
+
+/**
+ * Selects the diocese's nation, then the diocese, as a user would. The form reads and writes
+ * `/data/diocese/{id}`, the Roman rite's path, so it opens Roman-rite dioceses only.
+ * @param {{calendar: string, rite: string}} link
+ * @returns {boolean} False for a diocese the form cannot open: not of the Roman rite (by the link
+ *   or by its existing calendar), unknown to both the metadata and the world's dioceses, or of a
+ *   nation with no national calendar
+ */
+function openDiocesanDeepLink({ calendar, rite }) {
+    const existing = LitCalMetadata.diocesan_calendars.find((entry) => entry.calendar_id === calendar);
+    if (rite !== ROMAN_RITE || (existing && (existing.rite ?? ROMAN_RITE) !== ROMAN_RITE)) return false;
+    const worldDioceses = diocesesByNation({ catholic_dioceses_latin_rite: DiocesesList });
+    const nation = dioceseNation(calendar, LitCalMetadata, worldDioceses);
+    if (nation === null
+        || !offersOption('diocesanCalendarNationalDependency', (value) => value === nation)
+        || !nationDioceses(nation, worldDioceses).some((diocese) => diocese.id === calendar)) {
+        return false;
+    }
+    setValueAsUser(document.querySelector('#diocesanCalendarNationalDependency'), nation);
+    // The nation's `change` rebuilt #DiocesesList; its options carry the id in data-value.
+    const option = Array.from(document.querySelectorAll('#DiocesesList > option'))
+        .find((candidate) => candidate.dataset.value === calendar);
+    if (!option) return false;
+    setValueAsUser(document.querySelector('#diocesanCalendarDioceseName'), option.value);
+    return true;
+}
+
+/**
+ * Opens the calendar a deep link names, or says it cannot. A form page without `calendar`,
+ * `locale` or `rite` in its query string is not a deep link and is left alone.
+ * @param {string} search - `location.search`
+ * @returns {void}
+ */
+function openDeepLink(search) {
+    const params = new URLSearchParams(search);
+    if (!['calendar', 'locale', 'rite'].some((key) => params.has(key))) return;
+
+    const link = parseDeepLink(search);
+    const openers = {
+        widerRegion: openWiderRegionDeepLink,
+        national: openNationalDeepLink,
+        diocesan: openDiocesanDeepLink,
+    };
+    const opened = link !== null && link.choice === choice && openers[link.choice](link);
+    if (!opened) {
+        toastr["error"](Messages['Calendar not found'], Messages['Error']);
+        document.querySelector('#overlay').classList.add('hidden');
+    }
+}
 
 
 /**

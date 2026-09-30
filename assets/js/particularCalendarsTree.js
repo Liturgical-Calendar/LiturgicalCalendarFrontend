@@ -512,6 +512,46 @@ export function nationDioceses(nation, worldDioceses) {
 }
 
 /**
+ * The nation a diocese belongs to, for the diocesan form's national dependency: from its entry
+ * in `/calendars` when its calendar exists, else from the world's dioceses (a not-yet-created one).
+ * @param {string} id - Bare diocese id, e.g. `roma_it`
+ * @param {{diocesan_calendars?: {calendar_id: string, nation: string}[]}|undefined} metadata
+ * @param {Map<string, {id: string, name: string}[]>|undefined} worldDioceses - See
+ *   `diocesesByNation()` in `dioceseObjectIdPicker.js`
+ * @returns {string|null} Upper-case ISO 3166-1 alpha-2 code, or `null` when neither knows it
+ */
+export function dioceseNation(id, metadata, worldDioceses) {
+    const existing = metadata?.diocesan_calendars?.find((calendar) => calendar.calendar_id === id);
+    if (existing?.nation) return String(existing.nation).toUpperCase();
+
+    for (const [nation, dioceses] of worldDioceses ?? []) {
+        if (dioceses.some((diocese) => diocese.id === id)) return nation;
+    }
+    return null;
+}
+
+/**
+ * The locale to open an existing wider region in when a deep link names none: the wider region
+ * form loads a region one locale at a time, and refuses one whose language is not official
+ * (`metadata.locales`). Among the region's official locales (all of them when none is official)
+ * it prefers the UI locale, then the first in the UI language, then the first.
+ * @param {string} id - Region id
+ * @param {{wider_regions?: {id?: string, name?: string, locales?: string[]}[], locales?: string[]}|undefined} metadata
+ * @param {string} uiLocale - e.g. `it_IT`
+ * @returns {string|null} `null` when the region does not exist yet (or has no locales)
+ */
+export function widerRegionOpeningLocale(id, metadata, uiLocale) {
+    const locales = metadata?.wider_regions?.find((region) => regionId(region) === id)?.locales ?? [];
+    const language = (locale) => String(locale ?? '').split('_')[0];
+    const official = locales.filter((locale) => (metadata?.locales ?? []).includes(language(locale)));
+    const candidates = official.length > 0 ? official : locales;
+    if (candidates.length === 0) return null;
+    return candidates.find((locale) => locale === uiLocale)
+        ?? candidates.find((locale) => language(locale) === language(uiLocale))
+        ?? candidates[0];
+}
+
+/**
  * Parses the hub's deep-link query string (`?choice=national&calendar=IT`) into the form
  * `extending.js` uses to prefill a form. Returns `null` on anything invalid: an unknown
  * `choice`, a `calendar` failing `CALENDAR_ID_PATTERN`, an unknown `rite`, or a `locale` failing
