@@ -10,16 +10,32 @@
  * @module widerRegions
  */
 
+import { normalizeWiderRegionKey, regionId, regionLabel } from './prospectiveWiderRegions.js';
+
+/**
+ * A `/calendars` wider region's id, as the national calendar paths compare it: an API older
+ * than #1018 publishes only a legacy `name` (`Europe`), read here as its id (`europe`) so it
+ * matches what nationWiderRegions() reads. The permission pickers keep `regionId()` unmapped,
+ * since the grants an older API stores are keyed by that name.
+ *
+ * @param {{id?: string, name?: string}} region a `/calendars` wider region item
+ * @returns {string}
+ */
+export function widerRegionKey(region) {
+    return normalizeWiderRegionKey(regionId(region));
+}
+
 /**
  * The wider regions a national calendar declares.
  *
  * @param {object|undefined} item a `/calendars` national calendar item, or a calendar's `metadata`
- * @returns {string[]} most general first; empty when it declares none
+ * @returns {string[]} ids, most general first (a legacy name such as `Europe` read as its id,
+ *   `europe`); empty when it declares none
  */
 export function nationWiderRegions(item) {
-    if (Array.isArray(item?.wider_regions)) return [...item.wider_regions];
+    if (Array.isArray(item?.wider_regions)) return item.wider_regions.map(normalizeWiderRegionKey);
     const legacy = item?.wider_region;
-    return typeof legacy === 'string' && legacy !== '' ? [legacy] : [];
+    return typeof legacy === 'string' && legacy !== '' ? [normalizeWiderRegionKey(legacy)] : [];
 }
 
 /**
@@ -33,17 +49,17 @@ export function widerRegionRoster(region) {
 }
 
 /**
- * Wider region names, broadest first: by the length of their roster, then by name;
- * a region with no roster sorts by name after those with one. Overlapping regions
+ * Wider region ids, broadest first: by the length of their roster, then by id;
+ * a region with no roster sorts by id after those with one. Overlapping regions
  * do not redefine the same celebration, so this order only has to be stable.
  *
- * @param {string[]} names
+ * @param {string[]} ids
  * @param {object[]|undefined} regions `/calendars` `wider_regions`
  * @returns {string[]}
  */
-export function orderWiderRegions(names, regions) {
-    const size = new Map((regions ?? []).map(region => [region.name, widerRegionRoster(region)?.length ?? -1]));
-    return [...names].sort((a, b) => ((size.get(b) ?? -1) - (size.get(a) ?? -1)) || a.localeCompare(b));
+export function orderWiderRegions(ids, regions) {
+    const size = new Map((regions ?? []).map(region => [widerRegionKey(region), widerRegionRoster(region)?.length ?? -1]));
+    return [...ids].sort((a, b) => ((size.get(b) ?? -1) - (size.get(a) ?? -1)) || a.localeCompare(b));
 }
 
 /**
@@ -62,7 +78,7 @@ export function eligibleWiderRegions(nation, regions, declared) {
     const withRoster = all.some(region => widerRegionRoster(region) !== null);
     const offered = all
         .filter(region => !withRoster || (widerRegionRoster(region) ?? []).includes(nation))
-        .map(region => region.name);
+        .map(region => widerRegionKey(region));
     return orderWiderRegions([...new Set([...offered, ...declared])], all);
 }
 
@@ -79,18 +95,31 @@ export function eligibleWiderRegions(nation, regions, declared) {
  */
 export function widerRegionsByNation(nationalCalendars, regions) {
     const byNation = {};
-    const add = (nation, name) => {
+    const add = (nation, id) => {
         byNation[nation] ??= [];
-        if (!byNation[nation].includes(name)) byNation[nation].push(name);
+        if (!byNation[nation].includes(id)) byNation[nation].push(id);
     };
     for (const item of nationalCalendars ?? []) {
-        for (const name of nationWiderRegions(item)) add(item.calendar_id, name);
+        for (const id of nationWiderRegions(item)) add(item.calendar_id, id);
     }
     for (const region of regions ?? []) {
-        for (const nation of widerRegionRoster(region) ?? []) add(nation, region.name);
+        for (const nation of widerRegionRoster(region) ?? []) add(nation, widerRegionKey(region));
     }
     for (const nation of Object.keys(byNation)) {
         byNation[nation] = orderWiderRegions(byNation[nation], regions);
     }
     return byNation;
+}
+
+/**
+ * A region's label by id, for a select option built from an id: the label of the
+ * region in `regions` with that id, else the id itself (an unresolved or removed region).
+ *
+ * @param {object[]|undefined} regions `/calendars` `wider_regions`
+ * @param {string} id
+ * @returns {string} the label, or `id` when no region in `regions` has it
+ */
+export function widerRegionLabelById(regions, id) {
+    const region = (regions ?? []).find(candidate => widerRegionKey(candidate) === id);
+    return region ? regionLabel(region) : id;
 }

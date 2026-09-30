@@ -18,9 +18,14 @@ export type RbacRelation = 'admin' | 'editor';
  * is rejected by OpenFGA itself — `type 'general_roman_calendar' not found` —
  * before any API code runs, so there is no fallback that can rescue it.
  *
- * Every calendar in these fixtures is Roman (IT, US, Europe, and the diocese of
+ * Every calendar in these fixtures is Roman (IT, US, europe, and the diocese of
  * Rome). The four Ambrosian dioceses — lugano_ch, milano_it, bergam_it,
  * novara_it — would take `ambrosian/`; none is seeded here.
+ *
+ * A wider region's id is lowercase kebab-case since API #1018 (`europe`, not
+ * `Europe`) — the Router canonicalises the request path, and `grantScope()`
+ * writes the object id verbatim, so a tuple seeded on the old capitalised name
+ * would never match.
  */
 export const ROMAN = 'roman';
 
@@ -48,8 +53,8 @@ export const USERS: Record<string, RbacUser> = {
     'rome-editor': mk('rome-editor', 'calendar_editor', { relation: 'editor', objectType: 'diocesan_calendar', objectId: `${ROMAN}/romamo_it` }),
     'grc-admin': mk('grc-admin', 'calendar_editor', { relation: 'admin', objectType: 'rite_calendar', objectId: `${ROMAN}/temporale` }),
     'grc-editor': mk('grc-editor', 'calendar_editor', { relation: 'editor', objectType: 'rite_calendar', objectId: `${ROMAN}/temporale` }),
-    'europe-admin': mk('europe-admin', 'calendar_editor', { relation: 'admin', objectType: 'wider_region', objectId: `${ROMAN}/Europe` }),
-    'europe-editor': mk('europe-editor', 'calendar_editor', { relation: 'editor', objectType: 'wider_region', objectId: `${ROMAN}/Europe` }),
+    'europe-admin': mk('europe-admin', 'calendar_editor', { relation: 'admin', objectType: 'wider_region', objectId: `${ROMAN}/europe` }),
+    'europe-editor': mk('europe-editor', 'calendar_editor', { relation: 'editor', objectType: 'wider_region', objectId: `${ROMAN}/europe` }),
     'tests-editor': mk('tests-editor', 'test_editor', { relation: 'editor', objectType: 'national_calendar_test', objectId: `${ROMAN}/IT` }),
     'tests-editor-noscope': mk('tests-editor-noscope', 'test_editor', null),
 };

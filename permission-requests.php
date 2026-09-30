@@ -9,6 +9,7 @@
  */
 
 use LiturgicalCalendar\Frontend\CatholicNations;
+use LiturgicalCalendar\Frontend\ProspectiveWiderRegions;
 
 include_once 'includes/common.php';
 include_once 'includes/messages.php';
@@ -204,6 +205,8 @@ if (!$authHelper->emailVerified) {
             userName: <?php echo json_encode($authHelper->name ?? $authHelper->username ?? '', $jsonFlags); ?>,
             <?php // Every nation that can have a national calendar, not only those that already do (API #669). ?>
             nations: <?php echo json_encode((object) CatholicNations::localized($i18n->LOCALE), $jsonFlags); ?>,
+            <?php // Wider regions that do not exist yet but can be created (#591). ?>
+            prospectiveWiderRegions: <?php echo json_encode(ProspectiveWiderRegions::all($i18n->LOCALE), $jsonFlags); ?>,
             i18n: {
                 loading: <?php echo json_encode(_('Loading...'), $jsonFlags); ?>,
                 noRequests: <?php echo json_encode(_('You have not made any access requests yet.'), $jsonFlags); ?>,
@@ -240,6 +243,13 @@ if (!$authHelper->emailVerified) {
                 existingNationalCalendars: <?php echo json_encode(_('Existing national calendars'), $jsonFlags); ?>,
                 /** translators: group of nations whose national calendar has not been created yet; requesting admin access on one is how it gets created */
                 newNationalCalendars: <?php echo json_encode(_('New national calendars (not yet created)'), $jsonFlags); ?>,
+                /** translators: group of wider regions whose calendar already exists */
+                existingWiderRegions: <?php echo json_encode(_('Existing wider regions'), $jsonFlags); ?>,
+                /** translators: group of wider regions whose calendar has not been created yet; requesting admin access on one is how it gets created */
+                newWiderRegions: <?php echo json_encode(_('New wider regions (not yet created)'), $jsonFlags); ?>,
+                /** translators: shown in place of the member nation codes, in parentheses after a wider region's
+                    label, when it has more than 6 member nations; %d is replaced with the number of nations */
+                widerRegionNations: <?php echo json_encode(_('%d nations'), $jsonFlags); ?>,
                 /** translators: placeholder of the nation step of the diocese picker; only nations with a national calendar are listed */
                 selectNation: <?php echo json_encode(_('Select a nation...'), $jsonFlags); ?>,
                 selectDiocese: <?php echo json_encode(_('Select a diocese...'), $jsonFlags); ?>,

@@ -22,7 +22,7 @@
  * @typedef {Object} CalendarEditRights
  * @property {boolean} isGlobalAdmin
  * @property {string[]} nations      ISO codes of the national calendars the user edits, e.g. `CA`
- * @property {string[]} widerRegions names of the wider regions the user edits, e.g. `Americas`
+ * @property {string[]} widerRegions ids of the wider regions the user edits, e.g. `americas`
  */
 
 /**

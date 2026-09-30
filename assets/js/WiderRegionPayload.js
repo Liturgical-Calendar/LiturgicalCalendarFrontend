@@ -7,7 +7,23 @@
  * @prop {Object} metadata
  * @prop {Array<string>} metadata.locales
  * @prop {string} metadata.wider_region
+ * @prop {Object<string, string>} [metadata.labels] - the region's label per language (API #1018)
  */
+
+/** A `metadata.labels` key: a language, optionally with a script (`de`, `zh_Hans`). */
+const LABEL_KEY_PATTERN = /^[a-z]{2,3}(_[A-Z][a-z]{3})?$/;
+
+/**
+ * Whether a `metadata.labels` value is an object of non-empty strings under well-formed keys.
+ * @param {unknown} labels
+ * @returns {boolean}
+ */
+function isValidLabels(labels) {
+    return typeof labels === 'object'
+        && labels !== null
+        && false === Array.isArray(labels)
+        && Object.entries(labels).every(([key, value]) => LABEL_KEY_PATTERN.test(key) && typeof value === 'string' && value !== '');
+}
 
 class WiderRegionPayload {
     constructor( litcal = null, national_calendars = null, metadata = null, i18n = null ) {
@@ -41,6 +57,9 @@ class WiderRegionPayload {
         }
         if (typeof metadata.wider_region !== 'string') {
             throw new Error('`metadata.wider_region` parameter must be a string');
+        }
+        if (metadata.hasOwnProperty('labels') && false === isValidLabels(metadata.labels)) {
+            throw new Error('`metadata.labels` must be an object of non-empty strings keyed by language or language_Script');
         }
         if (metadata.wider_region.includes(' - ')) {
             metadata.wider_region = metadata.wider_region.split(' - ')[0];

@@ -54,7 +54,7 @@ const DECREES_OBJECT = 'rite_calendar:roman/decrees';
 const GRANTS: Array<{ userKey: string; relation: 'viewer' | 'editor' | 'admin' }> = [
     { userKey: 'cei-editor', relation: 'viewer' }, // editor@national_calendar:IT   → decrees viewer
     { userKey: 'usccb-admin', relation: 'editor' }, // admin@national_calendar:US    → decrees editor
-    { userKey: 'europe-editor', relation: 'admin' }, // editor@wider_region:Europe    → decrees admin
+    { userKey: 'europe-editor', relation: 'admin' }, // editor@wider_region:europe    → decrees admin
 ];
 
 /** A seeded calendar_editor with NO decrees relation → must hit the no-access notice. */

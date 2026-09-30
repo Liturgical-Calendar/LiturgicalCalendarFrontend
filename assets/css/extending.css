@@ -94,3 +94,33 @@
     opacity: 0.5;
     user-select: none;
 }
+
+/* Wider region label fields (#1018): one field per language, with member-country flags */
+#widerRegionLabels {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.25rem 1.5rem;
+}
+
+@media (min-width: 768px) {
+    #widerRegionLabels {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.wr-label-row {
+    display: grid;
+    grid-template-columns: 7.5rem 4.5rem 1fr;
+    align-items: center;
+}
+
+.wr-label-flags {
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.wr-label-more {
+    font-size: 0.75rem;
+    margin-left: 0.25rem;
+    vertical-align: middle;
+}

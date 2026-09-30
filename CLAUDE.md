@@ -363,7 +363,13 @@ log line saying nothing was written.
 | Wider Region  | `createNew`, `makePatron` only                                                               |
 | Diocesan      | `createNew`, `makePatron` only                                                               |
 
-WiderRegion names must be: `Americas`, `Europe`, `Asia`, `Africa`, or `Oceania`.
+Wider region **ids** (lowercase kebab-case: `^[a-z]+(-[a-z]+)*$`, API #1018) identify regions; **labels**
+(`metadata.labels`, per language) display them. Prospective regions (all five continents) are curated in
+`assets/data/ProspectiveWiderRegions.json` (read by `src/ProspectiveWiderRegions.php`). The extending page
+edits labels one field per language. M.49 codes (africa `002`, oceania `009`, north-africa `015`,
+southern-africa `018`, americas `019`, asia `142`, europe `150` via `m49_codes`) provide ICU-suggested
+labels for empty language fields, seeded on save. Label fields are editable only by whole-region editors;
+the per-locale save path cannot carry labels.
 
 ## Troubleshooting
 
