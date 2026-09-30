@@ -45,6 +45,7 @@ import {
     findProspectiveRegion,
     idToWords,
     isValidWiderRegionId,
+    membersWithoutOfferedLocale,
     normalizeWiderRegionKey,
     offeredLocales,
     widerRegionNationalCalendars,
@@ -3034,15 +3035,22 @@ const buildWiderRegionPayload = () => {
     const prospective = API.method === 'PUT' ? findProspectiveRegion(ProspectiveWiderRegions, API.key) : undefined;
     // An explicit `labels`, even `{}`, replaces the stored ones (API #1018), so a PATCH
     // always sends them: clearing every field clears the region's labels. A new region
-    // (PUT) has none stored, and omits them when none is filled.
+    // (PUT) has none stored, and omits them when none is filled. Without a mounted
+    // label block (e.g. after a failed load) nothing is known about the labels, so
+    // they are omitted and the API keeps the stored ones.
+    const labelsMounted = document.querySelector('#widerRegionLabels') !== null;
     const labels = widerRegionLabelsToSave();
-    const sendLabels = API.method === 'PATCH' || Object.keys(labels).length > 0;
+    const sendLabels = labelsMounted && (API.method === 'PATCH' || Object.keys(labels).length > 0);
 
     return {
         litcal: [],
-        national_calendars: prospective
-            ? widerRegionNationalCalendars(prospective.roster, nationalCalendars)
-            : nationalCalendars,
+        national_calendars: widerRegionNationalCalendars(
+            prospective
+                ? prospective.roster
+                // An existing region keeps the members no offered locale could select.
+                : membersWithoutOfferedLocale(loadedWiderRegionMembers, Object.keys(AvailableLocalesWithRegion)),
+            nationalCalendars,
+        ),
         metadata: {
             locales: Array.from(selectedLocales).map(({ value }) => value),
             wider_region: API.key,

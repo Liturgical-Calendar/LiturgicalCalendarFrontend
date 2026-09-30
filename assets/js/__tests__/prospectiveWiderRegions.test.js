@@ -13,6 +13,7 @@ import {
     labelKeyForLocale,
     normalizeWiderRegionKey,
     offeredLocales,
+    membersWithoutOfferedLocale,
     regionId,
     regionLabel,
     resolveLabel,
@@ -234,5 +235,17 @@ describe('legacy wider region names (#1018)', () => {
         expect(isAcceptedWiderRegionKey('Guinea-Bissau')).toBe(false);
         expect(isAcceptedWiderRegionKey('')).toBe(false);
         expect(isAcceptedWiderRegionKey(undefined)).toBe(false);
+    });
+});
+
+describe('membersWithoutOfferedLocale', () => {
+    it('keeps only members whose country has no offered locale', () => {
+        expect(membersWithoutOfferedLocale(['IT', 'BN', 'SZ', 'CH'], ['it_IT', 'it_CH', 'de_CH', 'en_SZ'])).toEqual(['BN']);
+    });
+    it('matches scripted locales by their region', () => {
+        expect(membersWithoutOfferedLocale(['CN', 'TW'], ['zh_Hans_CN'])).toEqual(['TW']);
+    });
+    it('is empty when every member has a locale on offer', () => {
+        expect(membersWithoutOfferedLocale(['IT'], ['it_IT'])).toEqual([]);
     });
 });

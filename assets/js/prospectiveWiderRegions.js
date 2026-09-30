@@ -165,41 +165,60 @@ function hasOtherScript(labels, language, script) {
  */
 export function resolveLabel(labels, uiLocale, id, m49 = null) {
     const map = labels ?? {};
+    for (const key of labelCandidates(map, uiLocale)) {
+        if (typeof map[key] === 'string' && map[key] !== '') return map[key];
+    }
+    return (m49 && m49Name(uiLocale, m49)) || idToWords(id);
+}
+
+/**
+ * The script a locale is written in: its own, else the default for its
+ * language and region (`DEFAULT_SCRIPTS`), else ''.
+ * @param {string} uiLocale - e.g. `zh_TW`
+ * @param {string} language - The locale's language
+ * @param {string} explicitScript - The locale's own script, or ''
+ * @returns {string} e.g. `Hant`
+ */
+function inferScript(uiLocale, language, explicitScript) {
+    if (explicitScript !== '') return explicitScript;
+    const defaults = DEFAULT_SCRIPTS[language] ?? {};
+    const region = (new Intl.Locale(String(uiLocale).replaceAll('_', '-')).region ?? '').toUpperCase();
+    return defaults[region] ?? defaults[''] ?? '';
+}
+
+/**
+ * The label keys to try, in the API's order: language plus script, the bare
+ * language (unless the labels hold that language in another script), then `en`.
+ * @param {Object<string, string>} map - `metadata.labels`
+ * @param {string} uiLocale - e.g. `it_IT`
+ * @returns {string[]} The keys, most specific first
+ */
+function labelCandidates(map, uiLocale) {
     const candidates = [];
     if (uiLocale) {
         const [language, explicitScript] = languageAndScript(uiLocale);
-        let script = explicitScript;
-        if (script === '') {
-            const defaults = DEFAULT_SCRIPTS[language] ?? {};
-            const region = (
-                new Intl.Locale(
-                    String(uiLocale).replaceAll('_', '-'),
-                ).region ?? ''
-            ).toUpperCase();
-            script = defaults[region] ?? defaults[''] ?? '';
-        }
+        const script = inferScript(uiLocale, language, explicitScript);
         if (script !== '') candidates.push(`${language}_${script}`);
-        if (script === '' || !hasOtherScript(map, language, script))
-            candidates.push(language);
+        if (script === '' || !hasOtherScript(map, language, script)) candidates.push(language);
     }
     candidates.push('en');
+    return candidates;
+}
 
-    for (const key of candidates) {
-        if (typeof map[key] === 'string' && map[key] !== '') return map[key];
+/**
+ * The CLDR name of a UN M.49 area in a UI locale, capitalised; '' when unknown.
+ * @param {string} uiLocale - e.g. `fr`
+ * @param {string} m49 - e.g. `002`
+ * @returns {string} e.g. `Afrique`
+ */
+function m49Name(uiLocale, m49) {
+    try {
+        const name = new Intl.DisplayNames([String(uiLocale).replaceAll('_', '-')], { type: 'region' }).of(m49);
+        return name && name !== m49 ? name.charAt(0).toUpperCase() + name.slice(1) : '';
+    } catch {
+        // an unknown locale or code falls through to the id words
+        return '';
     }
-    if (m49) {
-        try {
-            const name = new Intl.DisplayNames(
-                [uiLocale.replaceAll('_', '-')],
-                { type: 'region' },
-            ).of(m49);
-            if (name && name !== m49)
-                return name.charAt(0).toUpperCase() + name.slice(1);
-        } catch {
-            // an unknown locale or code falls through to the id words
-        }
-    }
-    return idToWords(id);
 }
 
 /**
@@ -262,4 +281,21 @@ export function widerRegionNationalCalendars(roster, localeMap) {
 export function offeredLocales(locales, available) {
     const offered = new Set(available);
     return locales.filter((locale) => offered.has(locale));
+}
+
+/**
+ * The member nations the Locales list offers no locale for. A region's
+ * `national_calendars` is rebuilt from the selected locales on save, so these
+ * members could never be selected and would otherwise be dropped silently; a
+ * member that does have a locale on offer stays governed by the selection, so
+ * deselecting its locales still removes it.
+ * @param {string[]} members - ISO 3166-1 alpha-2 codes of the loaded region's members
+ * @param {string[]} available - Locales the page offers, e.g. `it_IT`
+ * @returns {string[]} The members without any offered locale, in the given order
+ */
+export function membersWithoutOfferedLocale(members, available) {
+    const offeredRegions = new Set(
+        available.map((locale) => (new Intl.Locale(String(locale).replaceAll('_', '-')).region ?? '').toUpperCase()),
+    );
+    return members.filter((code) => !offeredRegions.has(String(code).toUpperCase()));
 }
