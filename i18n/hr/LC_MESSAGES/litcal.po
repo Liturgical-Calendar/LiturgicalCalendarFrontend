@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-09-30 08:10+0000\n"
-"PO-Revision-Date: 2026-09-30 08:10+0000\n"
+"PO-Revision-Date: 2026-10-01 08:55+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
@@ -2073,10 +2073,8 @@ msgstr ""
 
 #. translators: suffix appended to a prospective wider region's option label in the datalist
 #: includes/messages.php:248
-#, fuzzy
-#| msgid "Decree created."
 msgid "not yet created"
-msgstr "Dekret stvoren."
+msgstr "još nije kreirano"
 
 #. translators: error message when a wider region id typed by the user does not match the required shape
 #: includes/messages.php:250
@@ -2084,28 +2082,30 @@ msgid ""
 "A wider region id is one or more lowercase words (a–z) joined by hyphens, "
 "e.g. german-language-area."
 msgstr ""
+"Širi identifikator regije je jedno ili više malih riječi (a–z) spojene "
+"crticama, npr. german-language-area."
 
 #. translators: heading of the wider region's label fields, one per language of the region
 #: includes/messages.php:252
 msgid "Region name"
-msgstr ""
+msgstr "Naziv regije"
 
 #. translators: hint under the wider region's label fields
 #: includes/messages.php:254
 msgid ""
 "One name per language of the region. Languages without a name show the "
 "English one."
-msgstr ""
+msgstr "Jedno ime po jeziku regije. Jezici bez imena prikazuju englesko ime."
 
 #. translators: tooltip of a wider region label pre-filled from the region's UN M.49 / CLDR name
 #: includes/messages.php:256
 msgid "Suggested from UN M.49 / CLDR"
-msgstr ""
+msgstr "Predloženo iz UN M.49 / CLDR"
 
 #. translators: tooltip of a wider region label field that the user may not change
 #: includes/messages.php:258
 msgid "Only an editor of the whole wider region can change its names."
-msgstr ""
+msgstr "Samo urednik cijele šire regije može promijeniti njezina imena."
 
 #. translators: label of the list of wider regions a national calendar inherits from
 #: includes/messages.php:260
@@ -3465,22 +3465,17 @@ msgid "New national calendars (not yet created)"
 msgstr "Novi nacionalni kalendari (još nisu izrađeni)"
 
 #: admin-permissions.php:442 permission-requests.php:247
-#, fuzzy
-#| msgid "Wider regions"
 msgid "Existing wider regions"
-msgstr "Šire regije"
+msgstr "Postojeće šire regije"
 
 #: admin-permissions.php:444 permission-requests.php:249
-#, fuzzy
-#| msgid "New diocesan calendars (not yet created)"
 msgid "New wider regions (not yet created)"
-msgstr "Novi biskupijski kalendari (još nisu izrađeni)"
+msgstr "Nove šire regije (još nisu kreirane)"
 
 #: admin-permissions.php:447 permission-requests.php:252
-#, fuzzy, php-format
-#| msgid "Add translation"
+#, php-format
 msgid "%d nations"
-msgstr "Dodaj prijevod"
+msgstr "%d nacije"
 
 #: admin-permissions.php:449
 msgid "Nation"
