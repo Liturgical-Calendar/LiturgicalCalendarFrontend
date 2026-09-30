@@ -189,7 +189,8 @@ if (isset($_GET['choice'])) {
                                 <option value=""></option>
                             <?php
                             foreach ($LitCalMetadata['wider_regions'] as $widerRegion) {
-                                // An API older than #1018 publishes only `name`, which is then both the id and the label.
+                                // Display-only fallback for an API older than #1018, which publishes only `name`
+                                // (a capitalised legacy name, which the id check then rejects).
                                 $widerRegionId    = htmlspecialchars($widerRegion['id'] ?? $widerRegion['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                                 $widerRegionLabel = htmlspecialchars($widerRegion['label'] ?? $widerRegion['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                                 foreach ($widerRegion['locales'] as $widerRegionLanguage) {

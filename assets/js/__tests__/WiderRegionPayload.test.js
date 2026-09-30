@@ -14,6 +14,10 @@ describe('WiderRegionPayload metadata.labels', () => {
         expect(payload.metadata.labels).toEqual({ en: 'German Language Area', de: 'Deutsches Sprachgebiet', zh_Hans: '德语区' });
     });
 
+    it('accepts empty labels, which clear the stored ones', () => {
+        expect(build({ labels: {} }).metadata.labels).toEqual({});
+    });
+
     it('accepts a payload without labels', () => {
         expect(build({}).metadata).not.toHaveProperty('labels');
     });

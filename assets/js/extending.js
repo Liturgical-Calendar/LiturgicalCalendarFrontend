@@ -2070,6 +2070,10 @@ const fetchRegionalCalendarData = (headers) => {
                 document.querySelector('.regionalNationalDataForm').innerHTML = '';
             } else {
                 console.error(error);
+                // Whatever was on the page belongs to the previous region, not API.key.
+                if (API.category === 'widerregion') {
+                    clearWiderRegionLabels();
+                }
                 /*error.json().then(json => {
                     console.error(json);
                     //We're taking for granted that the API is sending back a JSON object with status, response and description
@@ -2499,6 +2503,7 @@ const regionalNationalCalendarNameChanged = (ev) => {
         if (false === isValidWiderRegionId(id)) {
             toastr["error"](Messages['Invalid wider region name'], Messages['Error']);
             ev.target.classList.add('is-invalid');
+            clearWiderRegionLabels();
             return;
         }
     }
@@ -3004,8 +3009,11 @@ const buildWiderRegionPayload = () => {
     // A prospective region being created brings its whole roster: some members
     // (Brunei, Eswatini, Mauritania) have no locale in the Locales list.
     const prospective = API.method === 'PUT' ? findProspectiveRegion(ProspectiveWiderRegions, API.key) : undefined;
-    // Omitted when empty: a PATCH without labels keeps the stored ones (API #1018).
+    // An explicit `labels`, even `{}`, replaces the stored ones (API #1018), so a PATCH
+    // always sends them: clearing every field clears the region's labels. A new region
+    // (PUT) has none stored, and omits them when none is filled.
     const labels = widerRegionLabelsToSave();
+    const sendLabels = API.method === 'PATCH' || Object.keys(labels).length > 0;
 
     return {
         litcal: [],
@@ -3015,7 +3023,7 @@ const buildWiderRegionPayload = () => {
         metadata: {
             locales: Array.from(selectedLocales).map(({ value }) => value),
             wider_region: API.key,
-            ...(Object.keys(labels).length > 0 ? { labels } : {}),
+            ...(sendLabels ? { labels } : {}),
         },
         i18n: {}
     };
