@@ -442,6 +442,9 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
                 existingWiderRegions: <?php echo json_encode(_('Existing wider regions')); ?>,
                 /** translators: group of wider regions whose calendar has not been created yet; granting admin access on one is how it gets created */
                 newWiderRegions: <?php echo json_encode(_('New wider regions (not yet created)')); ?>,
+                /** translators: shown in place of the member nation codes, in parentheses after a wider region's
+                    label, when it has more than 6 member nations; %d is replaced with the number of nations */
+                widerRegionNations: <?php echo json_encode(_('%d nations')); ?>,
                 /** translators: label of the nation step of the diocese picker; only nations with a national calendar are listed */
                 nation: <?php echo json_encode(_('Nation')); ?>,
                 selectNation: <?php echo json_encode(_('Select a nation...')); ?>,

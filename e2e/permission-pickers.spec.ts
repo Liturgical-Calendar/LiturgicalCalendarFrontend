@@ -1,4 +1,5 @@
 import { test, expect } from './fixtures';
+import { isValidWiderRegionId } from '../assets/js/prospectiveWiderRegions.js';
 
 /**
  * The Calendar ID pickers of the access-request form (permission-requests.php).
@@ -103,13 +104,15 @@ test.describe('Access request form — diocesan calendar picker', () => {
 });
 
 test.describe('Access request form — wider region picker', () => {
-    test('offers existing wider regions and prospective ones, told apart (#591)', async ({
+    test('offers existing wider regions and prospective ones, told apart, keyed by id (#591, #1018)', async ({
         page,
     }) => {
         const metadata = (
             await (await page.request.get(`${API_BASE_URL}/calendars`)).json()
         ).litcal_metadata;
-        const existingRegions: string[] = metadata.wider_regions_keys;
+        const existingRegions: string[] = (metadata.wider_regions ?? []).map(
+            (r: { id?: string; name?: string }) => r.id ?? r.name,
+        );
 
         await page.goto('/permission-requests.php');
         await page.check(
@@ -126,36 +129,48 @@ test.describe('Access request form — wider region picker', () => {
             .evaluateAll((opts) =>
                 opts.map((o) => ({
                     value: (o as HTMLOptionElement).value,
+                    text: o.textContent ?? '',
                     group: (o.parentElement as HTMLOptGroupElement).label ?? '',
                 })),
             );
-        const offeredNames = offered.map((o) => o.value);
+        const offeredIds = offered.map((o) => o.value);
 
-        for (const name of existingRegions) {
+        for (const id of existingRegions) {
             expect(
-                offered.find((o) => o.value === name)?.group,
-                `${name} exists`,
+                offered.find((o) => o.value === id)?.group,
+                `${id} exists`,
             ).toMatch(/existing/i);
         }
-        expect(offeredNames).toContain('Nordic');
-        if (!existingRegions.includes('Nordic')) {
-            expect(offered.find((o) => o.value === 'Nordic')?.group).toMatch(
-                /not yet created/i,
-            );
+
+        expect(offeredIds, 'nordic is offered').toContain('nordic');
+        const nordic = offered.find((o) => o.value === 'nordic');
+        expect(
+            nordic?.text.startsWith('Nordic Countries'),
+            `nordic's option text ("${nordic?.text}") starts with the resolved English label`,
+        ).toBe(true);
+        if (!existingRegions.includes('nordic')) {
+            expect(nordic?.group).toMatch(/not yet created/i);
         }
-        for (const continent of ['Africa', 'Oceania']) {
-            if (!existingRegions.includes(continent)) {
-                expect(
-                    offeredNames,
-                    `${continent} does not exist and is not prospective`,
-                ).not.toContain(continent);
-            }
+
+        for (const continent of ['africa', 'oceania']) {
+            expect(
+                offeredIds,
+                `${continent} is offered, prospective or existing`,
+            ).toContain(continent);
         }
-        expect(new Set(offeredNames).size, 'no region is listed twice').toBe(
-            offeredNames.length,
+
+        for (const id of offeredIds) {
+            expect(
+                isValidWiderRegionId(id),
+                `option value "${id}" satisfies the wider region id rule`,
+            ).toBe(true);
+        }
+
+        expect(new Set(offeredIds).size, 'no region is listed twice').toBe(
+            offeredIds.length,
         );
 
-        await select.selectOption('Nordic');
-        await expect(select).toHaveValue('Nordic');
+        await select.selectOption('nordic');
+        await expect(select).toHaveValue('nordic');
     });
 });

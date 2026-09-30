@@ -1,5 +1,5 @@
 /**
- * Wider region picker for the `wider_region` permission scope (#591).
+ * Wider region picker for the `wider_region` permission scope (#591, #1018).
  *
  * It used to offer a fixed list of five continents. Since API #1007 a wider
  * region is any region with a source file, so this picker offers the regions
@@ -8,11 +8,15 @@
  * admin can be granted `admin` on a region before creating it — the same
  * reasoning as the nation picker (nationObjectIdSelect.js, API #669).
  *
- * Option values are bare region names; region names are proper nouns and are
- * not localized.
+ * Since API #1018 a wider region is identified by a permanent id; option
+ * values are that id (regionId), and option text is the region's label in
+ * the page's UI locale (regionLabel) — an API older than #1018 publishes
+ * only `name`, which both fall back to.
  *
  * Used by permission-requests.js and admin-permissions.js.
  */
+
+import { regionId, regionLabel } from './prospectiveWiderRegions.js';
 
 /** The permission scope this picker serves. */
 export const WIDER_REGION_TYPE = 'wider_region';
@@ -23,7 +27,7 @@ export const WIDER_REGION_TYPE = 'wider_region';
 
 /**
  * @typedef {object} WiderRegionSelectOptions
- * @property {ProspectiveRegion[]} prospective - The prospective regions, sorted by name
+ * @property {ProspectiveRegion[]} prospective - The prospective regions
  * @property {object[]|null} existing - `litcal_metadata.wider_regions`, or null when metadata failed to load
  *   (the prospective regions are then listed without groups)
  * @property {string} locale - UI locale, for sorting the existing regions
@@ -33,18 +37,36 @@ export const WIDER_REGION_TYPE = 'wider_region';
  * @property {string} i18n.placeholder - Text of the disabled empty option
  * @property {string} i18n.existingGroup - Label of the existing-regions <optgroup>
  * @property {string} i18n.newGroup - Label of the not-yet-created <optgroup>
+ * @property {string} i18n.nations - Template with a `%d` placeholder, used in place of the nation
+ *   code list when a region has more than 6 member nations
  */
 
 /**
- * @param {string} name - Region name
+ * Option text: the label, plus the member nations in parentheses — the codes themselves for up to
+ * 6, else a count rendered through `nationsTemplate` — omitted entirely when there are none.
+ * @param {string} label - Region label
  * @param {string[]} codes - Member nation codes, possibly empty
- * @param {string} [description] - The grouping's full name, shown as a tooltip
+ * @param {string} nationsTemplate - Template with a `%d` placeholder, e.g. `%d nations`
+ * @returns {string} The option text
+ */
+function regionOptionText(label, codes, nationsTemplate) {
+    if (codes.length === 0) return label;
+    if (codes.length <= 6) return `${label} (${codes.join(', ')})`;
+    return `${label} (${nationsTemplate.replace('%d', String(codes.length))})`;
+}
+
+/**
+ * @param {string} value - Region id (the option's value)
+ * @param {string} label - Region label (the option's visible text)
+ * @param {string[]} codes - Member nation codes, possibly empty
+ * @param {string} description - The grouping's full name, shown as a tooltip; '' for none
+ * @param {string} nationsTemplate - Template with a `%d` placeholder, used above 6 nations
  * @returns {HTMLOptionElement} The option
  */
-function regionOption(name, codes, description = '') {
+function regionOption(value, label, codes, description, nationsTemplate) {
     const o = document.createElement('option');
-    o.value = name;
-    o.textContent = codes.length > 0 ? `${name} (${codes.join(', ')})` : name;
+    o.value = value;
+    o.textContent = regionOptionText(label, codes, nationsTemplate);
     if (description !== '') o.title = description;
     return o;
 }
@@ -100,7 +122,13 @@ export function buildWiderRegionObjectIdSelect({
     select.appendChild(placeholder);
 
     const prospectiveOption = (region) =>
-        regionOption(region.name, region.roster, region.description);
+        regionOption(
+            region.id,
+            region.label,
+            region.roster,
+            region.description,
+            i18n.nations,
+        );
 
     if (!Array.isArray(existing)) {
         select.append(...prospective.map(prospectiveOption));
@@ -109,15 +137,23 @@ export function buildWiderRegionObjectIdSelect({
 
     const collator = new Intl.Collator(locale);
     const existingOptions = [...existing]
-        .sort((a, b) => collator.compare(a.name, b.name))
-        .map((region) => regionOption(region.name, existingCodes(region)));
+        .sort((a, b) => collator.compare(regionLabel(a), regionLabel(b)))
+        .map((region) =>
+            regionOption(
+                regionId(region),
+                regionLabel(region),
+                existingCodes(region),
+                '',
+                i18n.nations,
+            ),
+        );
     if (existingOptions.length > 0) {
         select.appendChild(optgroup(i18n.existingGroup, existingOptions));
     }
 
-    const existingNames = new Set(existing.map((region) => region.name));
+    const existingIds = new Set(existing.map(regionId));
     const newOptions = prospective
-        .filter((region) => !existingNames.has(region.name))
+        .filter((region) => !existingIds.has(region.id))
         .map(prospectiveOption);
     if (newOptions.length > 0) {
         select.appendChild(optgroup(i18n.newGroup, newOptions));
@@ -156,6 +192,7 @@ export function buildWiderRegionObjectIdSelectFromConfig(
                 i18n.existingWiderRegions || 'Existing wider regions',
             newGroup:
                 i18n.newWiderRegions || 'New wider regions (not yet created)',
+            nations: i18n.widerRegionNations || '%d nations',
         },
     });
 }

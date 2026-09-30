@@ -247,6 +247,9 @@ if (!$authHelper->emailVerified) {
                 existingWiderRegions: <?php echo json_encode(_('Existing wider regions'), $jsonFlags); ?>,
                 /** translators: group of wider regions whose calendar has not been created yet; requesting admin access on one is how it gets created */
                 newWiderRegions: <?php echo json_encode(_('New wider regions (not yet created)'), $jsonFlags); ?>,
+                /** translators: shown in place of the member nation codes, in parentheses after a wider region's
+                    label, when it has more than 6 member nations; %d is replaced with the number of nations */
+                widerRegionNations: <?php echo json_encode(_('%d nations'), $jsonFlags); ?>,
                 /** translators: placeholder of the nation step of the diocese picker; only nations with a national calendar are listed */
                 selectNation: <?php echo json_encode(_('Select a nation...'), $jsonFlags); ?>,
                 selectDiocese: <?php echo json_encode(_('Select a diocese...'), $jsonFlags); ?>,
