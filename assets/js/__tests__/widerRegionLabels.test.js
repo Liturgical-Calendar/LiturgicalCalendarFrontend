@@ -10,6 +10,8 @@ import {
     country2flag,
     labelFieldsFor,
     m49Suggestions,
+    readLabelInputs,
+    rebuiltLabelState,
 } from '../widerRegionLabels.js';
 
 const COUNTRY_NAMES = {
@@ -208,5 +210,50 @@ describe('collectLabels', () => {
         });
         container.querySelector('#widerRegionLabel_de').value = '   ';
         expect(collectLabels(container)).toEqual({ en: 'Europe', it: 'Europa' });
+    });
+});
+
+describe('rebuiltLabelState', () => {
+    const base = { en: 'Europe', it: 'Europa' };
+    const suggestions = { en: 'Europe', it: 'Europa', fr: 'Europe', de: 'Europa' };
+
+    it('uses the stored labels and all suggestions when no field existed yet', () => {
+        expect(rebuiltLabelState(base, suggestions, [])).toEqual({ values: base, suggestions });
+    });
+
+    it('keeps what a field holds, typed or emptied, over the stored label and the suggestion', () => {
+        const state = rebuiltLabelState(base, suggestions, [
+            { key: 'en', value: ' Old Continent ', suggested: false },
+            { key: 'it', value: '', suggested: false },
+            { key: 'fr', value: '', suggested: false },
+        ]);
+        expect(state.values).toEqual({ en: 'Old Continent', it: '', fr: '' });
+        expect(state.suggestions).toEqual({ de: 'Europa' });
+    });
+
+    it('recomputes an untouched suggestion rather than keeping it as a typed value', () => {
+        const state = rebuiltLabelState({}, { fr: 'Europe' }, [{ key: 'fr', value: 'Europe', suggested: true }]);
+        expect(state.values).toEqual({});
+        expect(state.suggestions).toEqual({ fr: 'Europe' });
+    });
+
+    it('falls back to the stored label for a key that had no field before', () => {
+        const state = rebuiltLabelState(base, {}, [{ key: 'en', value: 'Europe', suggested: false }]);
+        expect(state.values).toEqual({ en: 'Europe', it: 'Europa' });
+    });
+});
+
+describe('readLabelInputs', () => {
+    it('reads each field\'s key, raw value and whether it still holds a suggestion', () => {
+        const container = buildWiderRegionLabelFields({
+            fields: [{ key: 'en', regions: [] }, { key: 'fr', regions: ['FR'] }],
+            values: { en: 'Europe' },
+            suggestions: { fr: 'Europe' },
+            regionName: (code) => code,
+        });
+        expect(readLabelInputs(container)).toEqual([
+            { key: 'en', value: 'Europe', suggested: false },
+            { key: 'fr', value: 'Europe', suggested: true },
+        ]);
     });
 });

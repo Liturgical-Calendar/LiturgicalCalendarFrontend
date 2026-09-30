@@ -214,3 +214,42 @@ export function collectLabels(container) {
     });
     return labels;
 }
+
+/**
+ * Reads every field of a built label-fields container, empty ones included.
+ * @param {ParentNode} container
+ * @returns {Array<{key: string, value: string, suggested: boolean}>} `suggested` while the field
+ *   still holds an untouched suggestion
+ */
+export function readLabelInputs(container) {
+    return Array.from(container.querySelectorAll('[data-label-key]'), (input) => ({
+        key: input.dataset.labelKey,
+        value: input.value,
+        suggested: input.classList.contains('wr-label-suggested'),
+    }));
+}
+
+/**
+ * The values and suggestions to rebuild the label fields with, when the fields change (the
+ * selected locales did). A field that existed before holds the user's current value — typed or
+ * emptied — which wins over both the stored label and the suggestion; a field still holding an
+ * untouched suggestion is recomputed as a suggestion. Only a key with no field before falls back
+ * to the stored label, then to the suggestion.
+ * @param {Object<string, string>} stored - The labels the region was loaded or prefilled with
+ * @param {Object<string, string>} suggestions - Suggestions for the new fields
+ * @param {Array<{key: string, value: string, suggested: boolean}>} current - From `readLabelInputs()`
+ * @returns {{values: Object<string, string>, suggestions: Object<string, string>}}
+ */
+export function rebuiltLabelState(stored, suggestions, current) {
+    const values = { ...stored };
+    const remainingSuggestions = { ...suggestions };
+    for (const { key, value, suggested } of current) {
+        if (suggested) {
+            delete values[key];
+        } else {
+            values[key] = value.trim();
+            delete remainingSuggestions[key];
+        }
+    }
+    return { values, suggestions: remainingSuggestions };
+}

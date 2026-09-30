@@ -39,13 +39,12 @@ import { fetchWithRetry, mapWithConcurrency } from './boundedFetch.js';
 import { editsWholeWiderRegion, editsWiderRegionLocale, localeWrites } from './widerRegionEditRights.js';
 import { widerRegionsForNation } from './widerRegionForNation.js';
 import { eligibleWiderRegions, nationWiderRegions, widerRegionLabelById, widerRegionRoster, widerRegionsByNation } from './widerRegions.js';
-import { buildWiderRegionLabelFields, collectLabels, country2flag, labelFieldsFor, m49Suggestions } from './widerRegionLabels.js';
+import { buildWiderRegionLabelFields, collectLabels, country2flag, labelFieldsFor, m49Suggestions, readLabelInputs, rebuiltLabelState } from './widerRegionLabels.js';
 import { isOfficialLocale, newNationalCalendarLocaleOptions, unofficialLocales } from './nationalCalendarLocales.js';
 import {
     findProspectiveRegion,
     idToWords,
     isValidWiderRegionId,
-    labelKeyForLocale,
     offeredLocales,
     regionId,
     widerRegionNationalCalendars,
@@ -1619,20 +1618,6 @@ const widerRegionM49 = (id) => Messages.WiderRegionM49?.[id]
     ?? null;
 
 /**
- * The values to rebuild the label fields with: the region's own labels, overridden
- * by what the current fields hold. An untouched suggestion is left out, so it is
- * recomputed (and still marked as one) for the new fields.
- * @param {HTMLElement|null} container - The current `#widerRegionLabels`, if any
- * @returns {Object<string, string>}
- */
-const widerRegionLabelValues = (container) => {
-    const current = container ? collectLabels(container) : {};
-    container?.querySelectorAll('.wr-label-suggested[data-label-key]')
-        .forEach(input => delete current[input.dataset.labelKey]);
-    return { ...widerRegionLabelBase.values, ...current };
-};
-
-/**
  * (Re)builds the wider region's label fields for the selected locales, keeping the
  * values already typed. A continent's fields with no label get its UN M.49 name as a
  * suggestion, so a language the API has no label for is seeded on the next save.
@@ -1643,10 +1628,16 @@ const mountWiderRegionLabels = () => {
     const previous = block.querySelector('#widerRegionLabels');
     const fields = labelFieldsFor(selectedWiderRegionLocales());
     const m49 = widerRegionM49(API.key);
+    // What the current fields hold — typed or emptied — wins over the region's labels.
+    const { values, suggestions } = rebuiltLabelState(
+        widerRegionLabelBase.values,
+        m49 ? m49Suggestions(fields.map(({ key }) => key), m49) : {},
+        previous ? readLabelInputs(previous) : [],
+    );
     const container = buildWiderRegionLabelFields({
         fields,
-        values: widerRegionLabelValues(previous),
-        suggestions: m49 ? m49Suggestions(fields.map(({ key }) => key), m49) : {},
+        values,
+        suggestions,
         placeholders: widerRegionLabelBase.placeholders,
         regionName: regionDisplayName,
         i18n: { suggested: Messages['Suggested from UN M.49 / CLDR'] },
@@ -3419,10 +3410,11 @@ const widerRegionMembership = () => {
  * Lock whatever the caller may not change in a wider region: for an editor of a
  * national calendar (rather than of the region, or a global admin), everything
  * except the region's translations into their own nation's locales, and the
- * Locales options of other nations. See widerRegionEditRights.js.
+ * Locales options of other nations. Such an editor cannot change the region's
+ * labels at all (lockWiderRegionLabels()). See widerRegionEditRights.js.
  *
- * Re-applied after every rebuild of the translation inputs, since a rebuild
- * recreates them enabled.
+ * Re-applied after every rebuild of the translation inputs or the label fields,
+ * since a rebuild recreates them enabled.
  */
 const applyWiderRegionEditRights = () => {
     if (API.category !== 'widerregion') return;
@@ -3431,6 +3423,7 @@ const applyWiderRegionEditRights = () => {
         document.querySelector('#widerRegionEditRightsNotice')?.classList.add('d-none');
         return;
     }
+    lockWiderRegionLabels();
 
     const membership = widerRegionMembership();
     const localesSelect = document.querySelector('#widerRegionLocales');
@@ -3456,7 +3449,6 @@ const applyWiderRegionEditRights = () => {
     const own = Array.from(localesSelect?.selectedOptions ?? [])
         .map(({ value }) => value)
         .filter(locale => editsWiderRegionLocale(CalendarEditRights, region, locale, membership));
-    applyWiderRegionLabelRights(own);
     const notice = document.querySelector('#widerRegionEditRightsNotice');
     if (notice) {
         notice.textContent = own.length > 0
@@ -3467,14 +3459,15 @@ const applyWiderRegionEditRights = () => {
 };
 
 /**
- * For an editor who may not edit the whole region: a label field is enabled only if
- * one of the selected locales they may write has that field's language.
- * @param {string[]} ownLocales - The selected locales the caller may write
+ * For an editor who may not edit the whole region, every label field is read-only:
+ * labels are written only by the whole-region PUT/PATCH (`metadata.labels`), and such
+ * an editor saves through saveOwnWiderRegionLocales(), whose per-locale PUTs carry
+ * translations only (API #1018), so a label they typed would be silently dropped.
  */
-const applyWiderRegionLabelRights = (ownLocales) => {
-    const editable = new Set(ownLocales.map(labelKeyForLocale));
+const lockWiderRegionLabels = () => {
     document.querySelectorAll('#widerRegionLabels [data-label-key]').forEach(input => {
-        input.disabled = !editable.has(input.dataset.labelKey);
+        input.disabled = true;
+        input.title = Messages['Wider region labels whole region only'];
     });
 };
 

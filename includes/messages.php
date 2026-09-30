@@ -254,6 +254,8 @@ $messages = [
     'Wider region labels hint'                        => _('One name per language of the region. Languages without a name show the English one.'),
     /** translators: tooltip of a wider region label pre-filled from the region's UN M.49 / CLDR name */
     'Suggested from UN M.49 / CLDR'                   => _('Suggested from UN M.49 / CLDR'),
+    /** translators: tooltip of a wider region label field that the user may not change */
+    'Wider region labels whole region only'           => _('Only an editor of the whole wider region can change its names.'),
     /** translators: label of the list of wider regions a national calendar inherits from */
     'Wider regions'                                   => _('Wider regions'),
     /** translators: label for national calendar name field */
