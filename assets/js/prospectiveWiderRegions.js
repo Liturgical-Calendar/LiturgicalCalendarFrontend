@@ -75,22 +75,88 @@ export function idToWords(id) {
 }
 
 /**
- * A region's label for a UI locale, resolved as the API resolves it: language plus
- * script, language, `en`, then (for a continent) the UN M.49 name in the UI
- * language, then words derived from the id.
+ * The script a locale that names none is written in, by language and then region ('' = any other region).
+ *
+ * Mirrors the API's `WiderRegionLabels::DEFAULT_SCRIPTS`: PHP intl exposes no addLikelySubtags, so this carries
+ * the one CLDR likely-subtags fact `resolveLabel()` needs, for the one multi-script language among the regions'
+ * locales. Chinese is Traditional in Taiwan, Hong Kong and Macao (`zh_TW` → `zh_Hant_TW`) and Simplified elsewhere
+ * (`zh`, `zh_CN` → `zh_Hans_…`).
+ */
+const DEFAULT_SCRIPTS = {
+    zh: { TW: 'Hant', HK: 'Hant', MO: 'Hant', '': 'Hans' },
+};
+
+/**
+ * A locale's language and script, as the API's `WiderRegionLabels::languageAndScript()` reads them: parsed
+ * directly from the locale's own subtags, with no likely-subtags expansion.
+ * @param {string} locale - e.g. `it_IT`, `zh_Hans_SG`, `zh-TW`
+ * @returns {[string, string]} Lowercase language, and title-case script ('' when the locale names none)
+ */
+function languageAndScript(locale) {
+    const parsed = new Intl.Locale(String(locale).replaceAll('_', '-'));
+    const script = parsed.script ?? '';
+    return [
+        parsed.language.toLowerCase(),
+        script
+            ? script.charAt(0).toUpperCase() + script.slice(1).toLowerCase()
+            : '',
+    ];
+}
+
+/**
+ * Whether `labels` has a `{language}_{X}` key for a script X other than `script`.
+ * @param {Object<string, string>} labels
+ * @param {string} language
+ * @param {string} script
+ * @returns {boolean}
+ */
+function hasOtherScript(labels, language, script) {
+    const prefix = `${language}_`;
+    return Object.keys(labels).some(
+        (key) => key.startsWith(prefix) && key !== `${language}_${script}`,
+    );
+}
+
+/**
+ * A region's label for a UI locale. Mirrors the API's `WiderRegionLabels::resolve()`: its language plus script,
+ * then its language, then `en`, then words derived from the id.
+ *
+ * A locale naming no script takes its language's default script (`DEFAULT_SCRIPTS`), so `zh_TW` tries `zh_Hant`
+ * first. The bare-language candidate is skipped when the locale has a script (given or inferred) and the labels
+ * map holds a `{language}_{X}` key for a *different* script X: that other script's text would be a worse guess
+ * than English.
+ *
+ * The UN M.49 tier is a frontend-only addition, not in the API: for a continent whose region has not stored a
+ * label in the UI language yet, it tries before falling back to words derived from the id.
  * @param {Object<string, string>|null|undefined} labels - `metadata.labels`
- * @param {string} uiLocale - e.g. `it_IT`
+ * @param {string} uiLocale - e.g. `it_IT`, `zh_TW`
  * @param {string} id - The region id
  * @param {string|null} [m49] - UN M.49 area code, e.g. `002`
  * @returns {string} The label
  */
 export function resolveLabel(labels, uiLocale, id, m49 = null) {
     const map = labels ?? {};
-    const key = labelKeyForLocale(uiLocale);
-    const language = key.split('_')[0];
-    for (const candidate of [key, language, 'en']) {
-        if (typeof map[candidate] === 'string' && map[candidate] !== '')
-            return map[candidate];
+    const candidates = [];
+    if (uiLocale) {
+        const [language, explicitScript] = languageAndScript(uiLocale);
+        let script = explicitScript;
+        if (script === '') {
+            const defaults = DEFAULT_SCRIPTS[language] ?? {};
+            const region = (
+                new Intl.Locale(
+                    String(uiLocale).replaceAll('_', '-'),
+                ).region ?? ''
+            ).toUpperCase();
+            script = defaults[region] ?? defaults[''] ?? '';
+        }
+        if (script !== '') candidates.push(`${language}_${script}`);
+        if (script === '' || !hasOtherScript(map, language, script))
+            candidates.push(language);
+    }
+    candidates.push('en');
+
+    for (const key of candidates) {
+        if (typeof map[key] === 'string' && map[key] !== '') return map[key];
     }
     if (m49) {
         try {

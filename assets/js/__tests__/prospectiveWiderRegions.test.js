@@ -114,6 +114,26 @@ describe('resolveLabel', () => {
     it('falls back to words from the id', () => {
         expect(resolveLabel(null, 'it', 'north-africa')).toBe('North Africa');
     });
+    it('infers the default script for a scriptless Chinese locale', () => {
+        const chineseLabels = { zh_Hant: '中華地區', zh_Hans: '简体地区' };
+        expect(resolveLabel(chineseLabels, 'zh_TW', 'id')).toBe('中華地區');
+        expect(resolveLabel(chineseLabels, 'zh_CN', 'id')).toBe('简体地区');
+        expect(resolveLabel(chineseLabels, 'zh', 'id')).toBe('简体地区');
+    });
+    it('skips the bare-language key when the labels hold another script', () => {
+        expect(
+            resolveLabel(
+                { zh: 'Simplified-only', zh_Hans: '简体', en: 'X' },
+                'zh_Hant_TW',
+                'id',
+            ),
+        ).toBe('X');
+    });
+    it('leaves a script-less non-Chinese locale unaffected', () => {
+        expect(resolveLabel({ it: 'Etichetta' }, 'it_IT', 'id')).toBe(
+            'Etichetta',
+        );
+    });
 });
 
 describe('findProspectiveRegion', () => {
