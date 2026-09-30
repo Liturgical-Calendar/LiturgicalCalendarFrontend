@@ -3,7 +3,8 @@
  */
 
 /**
- * The API's shape rule for a wider region name (`WiderRegionName`, API #1007).
- * Whether a region exists is a runtime check against `/calendars`.
+ * The API's shape rule for a wider region id (`WiderRegionId`, API #1018): lowercase
+ * kebab-case, permanent once the region exists. Whether a region exists is a runtime
+ * check against `/calendars`.
  */
-export const WIDER_REGION_NAME_PATTERN = /^[A-Z][A-Za-z]*( [A-Z][A-Za-z]*)*$/;
+export const WIDER_REGION_ID_PATTERN = /^[a-z]+(-[a-z]+)*$/;

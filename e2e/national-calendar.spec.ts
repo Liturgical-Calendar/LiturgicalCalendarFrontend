@@ -528,7 +528,7 @@ test.describe('National Calendar Form', () => {
             .evaluate((el: HTMLSelectElement) => Array.from(el.selectedOptions, o => o.value));
 
         await extendingPage.selectCalendar('#nationalCalendarName', 'IE');
-        await expect.poll(selected, { timeout: 15000 }).toEqual(['Europe']);
+        await expect.poll(selected, { timeout: 15000 }).toEqual(['europe']);
 
         // No wider region lists Australia, so nothing is selected, and Ireland's regions do not linger.
         await extendingPage.selectCalendar('#nationalCalendarName', 'AU');
