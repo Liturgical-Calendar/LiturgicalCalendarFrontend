@@ -52,6 +52,7 @@ const DEFAULT_MESSAGES = {
     'Navigator - Browse all calendars': 'Browse all calendars',
     'Navigator - Dioceses of': 'Dioceses of %1$s',
     'Navigator - Loading': 'Loading…',
+    'Navigator - No match': 'No calendars match the filter',
 };
 
 /** The label key of each action button (`sanctorale` takes the Missal ids as `%1$s`). */
@@ -280,8 +281,9 @@ function nationItem(node, parentId, options) {
     const key = `n:${parentId}/${node.id}`;
     const pending = view === VIEW_ALL && node.childrenPending === true;
     const expandable = node.children.length > 0 || pending;
-    const defaultOpen = node.filterAncestor === true || (view === VIEW_MINE && node.children.length > 0);
-    const open = expandable && isExpanded(expanded, key, defaultOpen);
+    // While filtering, the way to a match is always open, whatever the user closed before.
+    const defaultOpen = view === VIEW_MINE && node.children.length > 0;
+    const open = expandable && (node.filterAncestor === true || isExpanded(expanded, key, defaultOpen));
     const listId = domId(key);
 
     const item = el('li', {
@@ -362,8 +364,10 @@ function accordionItem(node, options) {
     const key = `r:${node.id}`;
     const collapseId = domId(key);
     const headerId = `${collapseId}-header`;
-    const defaultOpen = view === VIEW_MINE || String(filter ?? '').trim() !== '';
-    const open = isExpanded(expanded, key, defaultOpen);
+    const filterActive = String(filter ?? '').trim() !== '';
+    // While filtering, the way to a match is always open, whatever the user closed before.
+    const open = (filterActive && node.filterAncestor === true)
+        || isExpanded(expanded, key, view === VIEW_MINE || filterActive);
     const isGroup = node.kind === 'group';
     const label = isGroup ? t(messages, `Navigator - ${node.id}`) : node.label;
 
@@ -482,6 +486,8 @@ export function renderNavigator(container, options) {
         });
         browse.addEventListener('click', () => opts.onToggleView(VIEW_ALL));
         content.push(el('div', { class: 'pcn-empty' }, [el('p', { text: t(messages, 'Navigator - Empty') }), browse]));
+    } else if (nodes.length === 0) {
+        content.push(el('p', { class: 'pcn-no-match', role: 'status', text: t(messages, 'Navigator - No match') }));
     } else {
         content.push(el('div', { class: 'accordion pcn-accordion' }, nodes.map((node) => accordionItem(node, opts))));
     }

@@ -3,7 +3,7 @@
  * `particularCalendarsTree.js` tree, with its "My calendars" / "Show all" views, its filter,
  * its per-item actions, and its on-demand diocese loading.
  */
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { buildNavigatorTree } from '../particularCalendarsTree.js';
 import {
     defaultView,
@@ -56,6 +56,7 @@ const MESSAGES = {
     'Navigator - Browse all calendars': 'Browse all calendars',
     'Navigator - Dioceses of': 'Dioceses of %1$s',
     'Navigator - Loading': 'Loading…',
+    'Navigator - No match': 'No calendars match the filter',
 };
 
 function rights({ isGlobalAdmin = false, admin = {}, editor = {} } = {}) {
@@ -355,5 +356,83 @@ describe('translateLocales', () => {
             metadata, prospectiveRegions: [], nations: NATIONS, missals: MISSALS, rights: IT_EDITOR, uiLocale: 'en',
         });
         expect(translateLocales(t, metadata, IT_EDITOR)).toEqual({ europe: 'it_IT' });
+    });
+});
+
+describe('renderNavigator — the Vatican', () => {
+    it('never lists VA, even when the metadata, a roster and the nations name it', () => {
+        const metadata = {
+            ...METADATA,
+            national_calendars: [...METADATA.national_calendars, { calendar_id: 'VA', wider_regions: ['europe'] }],
+            wider_regions: [{ ...METADATA.wider_regions[0], roster: ['IT', 'NL', 'SE', 'VA'] }],
+        };
+        const t = buildNavigatorTree({
+            metadata,
+            prospectiveRegions: PROSPECTIVE_REGIONS,
+            nations: { ...NATIONS, VA: 'Vatican City' },
+            missals: MISSALS,
+            rights: rights({ isGlobalAdmin: true }),
+            uiLocale: 'en',
+        });
+        const container = render({ tree: t });
+        expect(container.querySelectorAll('[data-kind="nation"][data-id="VA"]')).toHaveLength(0);
+    });
+});
+
+describe('renderNavigator — filter against earlier toggles', () => {
+    it('opens the ancestors of a match even when the user closed them before', () => {
+        const expanded = new Map([['r:europe', false], ['n:europe/IT', false]]);
+        const container = render({ tree: tree(rights({ isGlobalAdmin: true })), filter: 'roma', expanded });
+        const [europe] = rows(container, 'region', 'europe');
+        expect(europe.querySelector('.accordion-collapse').classList.contains('show')).toBe(true);
+        const [italy] = rows(container, 'nation', 'IT');
+        expect(italy.querySelector('.pcn-toggle').getAttribute('aria-expanded')).toBe('true');
+        expect(italy.querySelector('.pcn-dioceses').hidden).toBe(false);
+    });
+
+    it('says so when nothing matches', () => {
+        const container = render({ tree: tree(rights({ isGlobalAdmin: true })), filter: 'zzz' });
+        expect(container.querySelector('.pcn-accordion')).toBeNull();
+        expect(container.textContent).toContain('No calendars match the filter');
+    });
+});
+
+describe('the page wiring — sessionStorage unavailable', () => {
+    const original = Object.getOwnPropertyDescriptor(window, 'sessionStorage');
+
+    afterEach(() => {
+        if (original) Object.defineProperty(window, 'sessionStorage', original);
+        delete window.ParticularCalendarsConfig;
+        vi.resetModules();
+    });
+
+    it('still renders and toggles the view', async () => {
+        Object.defineProperty(window, 'sessionStorage', {
+            configurable: true,
+            get() { throw new DOMException('blocked', 'SecurityError'); },
+        });
+        const container = document.createElement('div');
+        container.id = 'particularCalendarsNavigator';
+        document.body.append(container);
+        window.ParticularCalendarsConfig = {
+            metadata: METADATA,
+            prospectiveRegions: PROSPECTIVE_REGIONS,
+            nations: NATIONS,
+            missals: MISSALS,
+            rights: IT_EDITOR,
+            uiLocale: 'en',
+            messages: MESSAGES,
+        };
+
+        vi.resetModules();
+        await import('../particularCalendarsNavigator.js');
+
+        const pressed = () => container.querySelector('.pcn-view-toggle [aria-pressed="true"]').textContent;
+        expect(pressed()).toBe('My calendars');
+        expect(rows(container, 'nation', 'IT')).toHaveLength(1);
+
+        container.querySelectorAll('.pcn-view-toggle button')[1].click();
+        expect(pressed()).toBe('Show all');
+        expect(rows(container, 'nation', 'FR')).toHaveLength(1);
     });
 });

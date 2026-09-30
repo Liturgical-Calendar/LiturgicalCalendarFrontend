@@ -54,7 +54,7 @@ try {
 
 // Without a `choice` the page is the particular calendars navigator (#66), which needs no events
 // but the national Missal editions, the catalogued nations and the user's calendar rights.
-$isNavigatorHub = !isset($_GET['choice']);
+$isNavigatorHub = empty($_GET['choice']);
 
 if ($isNavigatorHub) {
     $LiturgicalEventCollection = [];
@@ -172,7 +172,7 @@ $DioceseGroupHelp    = $messages['DioceseGroupHelp'];
 $WiderRegionHeading = $messages['Particular Calendars wider region heading'];
 $NationalHeading    = $messages['Particular Calendars national heading'];
 $DiocesanHeading    = $messages['Particular Calendars diocesan heading'];
-$PageHeading        = isset($_GET['choice'])
+$PageHeading        = !$isNavigatorHub
     ? match ($_GET['choice']) {
         'widerRegion' => $WiderRegionHeading,
         'national'    => $NationalHeading,
@@ -210,7 +210,7 @@ $buttonGroup = '<hr><div class="d-flex justify-content-around">'
         ?></h1>
         <p class="mb-1 lh-sm"><small><i><?php echo $API_EXTEND_HOWTO_A0 . ' ' . $API_EXTEND_HOWTO_A1 . ' ' . $API_EXTEND_HOWTO_A2; ?></i></small></p>
 <?php
-if (isset($_GET['choice'])) {
+if (!$isNavigatorHub) {
     switch ($_GET['choice']) {
         case 'widerRegion':
             //FormControls::$settings["untilYearField"] = true;

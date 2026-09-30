@@ -358,3 +358,25 @@ describe('nationDioceses', () => {
         expect(nationDioceses('NL', undefined)).toEqual([]);
     });
 });
+
+describe('buildNavigatorTree — the Vatican', () => {
+    it('leaves VA out everywhere, even when a roster, a declaration or the nations list names it', () => {
+        const metadata = baseMetadata();
+        metadata.national_calendars = [
+            ...metadata.national_calendars,
+            { calendar_id: 'VA', wider_regions: ['europe'] },
+        ];
+        metadata.wider_regions = [{ id: 'europe', label: 'Europe', roster: ['IT', 'NL', 'SE', 'DE', 'VA'] }];
+        const tree = buildNavigatorTree({
+            metadata,
+            prospectiveRegions: [...PROSPECTIVE_REGIONS, { id: 'holy-see', label: 'Holy See', roster: ['VA', 'IT'] }],
+            nations: { ...NATIONS, VA: 'Vatican City' },
+            missals: MISSALS,
+            rights: rights({ isGlobalAdmin: true }),
+            dioceses: new Map(),
+            uiLocale: 'en',
+        });
+        expect(findAll(tree, (n) => n.id === 'VA')).toEqual([]);
+        expect(tree.find((n) => n.id === 'holy-see').children.map((n) => n.id)).toEqual(['IT']);
+    });
+});

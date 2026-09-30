@@ -59,6 +59,12 @@ const DIOCESAN_CALENDAR_TYPE = 'diocesan_calendar';
 const NO_REGION_GROUP_ID = 'no-region';
 const AMBROSIAN_GROUP_ID = 'ambrosian';
 
+/**
+ * The Vatican: it has a national calendar, but it is the Roman rite's own (Editio Typica), not a
+ * particular calendar a curator maintains; extending.php's national form leaves it out too.
+ */
+const VATICAN_ISO = 'VA';
+
 /** `?choice=` values `parseDeepLink()` accepts. */
 const DEEP_LINK_CHOICES = ['widerRegion', 'national', 'diocesan'];
 
@@ -385,7 +391,7 @@ function buildRegionNode(region, rights, buildNation, uiLocale) {
 /**
  * Builds the whole navigator tree: regions (existing, then prospective, each sorted by label),
  * then a `no-region` group of nations belonging to none, then an `ambrosian` group of the
- * Ambrosian diocesan calendars. See docs/superpowers/specs/
+ * Ambrosian diocesan calendars. The Vatican (`VA`) is left out everywhere. See docs/superpowers/specs/
  * 2026-09-30-particular-calendars-navigator-design.md Part 2 for the full rules.
  *
  * @param {object} params
@@ -402,7 +408,7 @@ function buildRegionNode(region, rights, buildNation, uiLocale) {
  * @returns {NavigatorNode[]} The navigator tree
  */
 export function buildNavigatorTree({ metadata, prospectiveRegions, nations, missals, rights, dioceses, uiLocale }) {
-    const nationalCalendars = metadata?.national_calendars ?? [];
+    const nationalCalendars = (metadata?.national_calendars ?? []).filter((item) => item.calendar_id !== VATICAN_ISO);
     const diocesanCalendars = metadata?.diocesan_calendars ?? [];
     const existingRegions = metadata?.wider_regions ?? [];
 
@@ -428,10 +434,11 @@ export function buildNavigatorTree({ metadata, prospectiveRegions, nations, miss
         }));
 
     const regionDescriptors = [...existingRegionDescriptors, ...prospectiveRegionDescriptors];
+    for (const region of regionDescriptors) region.members.delete(VATICAN_ISO);
 
     const existingNationIsoSet = new Set(nationalCalendars.map((item) => item.calendar_id));
     const nationIsoSet = new Set([
-        ...Object.keys(nations ?? {}),
+        ...Object.keys(nations ?? {}).filter((iso) => iso !== VATICAN_ISO),
         ...existingNationIsoSet,
         ...regionDescriptors.flatMap((region) => [...region.members]),
     ]);

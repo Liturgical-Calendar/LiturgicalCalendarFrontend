@@ -469,6 +469,8 @@ $messages = [
     'Navigator - Dioceses of'                         => _('Dioceses of %1$s'),
     /** translators: shown while a nation's dioceses are being fetched */
     'Navigator - Loading'                             => _('Loading…'),
+    /** translators: shown when no calendar name matches the navigator's text filter */
+    'Navigator - No match'                            => _('No calendars match the filter'),
 ];
 
 // phpcs:enable Generic.Files.LineLength
