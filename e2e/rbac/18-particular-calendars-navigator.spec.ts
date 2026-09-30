@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import type { Page } from '@playwright/test';
 import { actingAs } from './support/actingAs';
 import { grantScope, revokeScope } from './support/grant';
 import { settleCleanup } from './support/cleanup';
@@ -20,7 +21,23 @@ import { settleCleanup } from './support/cleanup';
  * calendar yet and cei-editor holds no rights on it, so it offers only `request` — and it is
  * on europe's `roster` (confirmed against the live stack), so it appears under Europe in
  * "Show all".
+ *
+ * Assertions that depend on which calendars/editions/regions happen to exist on a given
+ * stack are guarded with `test.skip()`, mirroring e2e/permission-pickers.spec.ts:21-22.
  */
+
+const API_BASE_URL = `${process.env.API_PROTOCOL || 'http'}://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || '8000'}`;
+
+/** `litcal_metadata` from `GET /calendars`. */
+async function litcalMetadata(page: Page): Promise<Record<string, unknown>> {
+    return (await (await page.request.get(`${API_BASE_URL}/calendars`)).json()).litcal_metadata ?? {};
+}
+
+/** The `region` codes with a published edition in `GET /missals/roman`. */
+async function missalRegions(page: Page): Promise<string[]> {
+    const missals = (await (await page.request.get(`${API_BASE_URL}/missals/roman`)).json()).litcal_missals ?? [];
+    return missals.map((m: { region: string }) => m.region);
+}
 
 test.describe('particular calendars navigator — national calendar editor', () => {
     test.beforeAll(async () => {
@@ -31,10 +48,15 @@ test.describe('particular calendars navigator — national calendar editor', () 
         await settleCleanup('scenario 18', [revokeScope('cei-editor')]);
     });
 
-    test('My calendars lists Italy (Edit, Proper of Saints) and Europe (Translate)', async ({ browser }) => {
+    test('My calendars lists Italy with Edit and Proper of Saints, and drops the Netherlands', async ({ browser }) => {
         const cei = await actingAs(browser, 'cei-editor');
         const { page } = cei;
         try {
+            const [metadata, missalRegionList] = await Promise.all([litcalMetadata(page), missalRegions(page)]);
+            const nationalKeys = (metadata.national_calendars_keys as string[] | undefined) ?? [];
+            test.skip(!nationalKeys.includes('IT'), 'Italy has no national calendar on this stack');
+            test.skip(!missalRegionList.includes('IT'), '/missals/roman lists no edition for IT on this stack');
+
             await page.goto('/extending.php');
             await page.waitForLoadState('networkidle');
             await page.waitForSelector('#particularCalendarsNavigator .pcn-accordion, #particularCalendarsNavigator .pcn-empty', { timeout: 15000 });
@@ -44,8 +66,6 @@ test.describe('particular calendars navigator — national calendar editor', () 
 
             const europe = page.locator('.accordion-item[data-kind="region"][data-id="europe"]');
             await expect(europe).toBeVisible();
-            // "My calendars" opens an accordion holding a `mine` node by default.
-            await expect(europe.getByRole('link', { name: 'Translate' })).toBeVisible({ timeout: 15000 });
 
             const italy = europe.locator('[data-kind="nation"][data-id="IT"]').first();
             await expect(italy).toBeVisible();
@@ -60,10 +80,39 @@ test.describe('particular calendars navigator — national calendar editor', () 
         }
     });
 
+    test('My calendars lists Europe with Translate', async ({ browser }) => {
+        const cei = await actingAs(browser, 'cei-editor');
+        const { page } = cei;
+        try {
+            const metadata = await litcalMetadata(page);
+            const regions = (metadata.wider_regions as Array<{ id?: string; name?: string; national_calendars?: string[]; roster?: string[] }> | undefined) ?? [];
+            const europeMeta = regions.find((r) => (r.id ?? r.name) === 'europe');
+            test.skip(!europeMeta, 'The europe wider region does not exist on this stack');
+
+            const europeMembers = [...(europeMeta?.national_calendars ?? []), ...(europeMeta?.roster ?? [])];
+            test.skip(!europeMembers.includes('IT'), 'Italy does not declare the europe wider region on this stack');
+
+            await page.goto('/extending.php');
+            await page.waitForLoadState('networkidle');
+            await page.waitForSelector('#particularCalendarsNavigator .pcn-accordion, #particularCalendarsNavigator .pcn-empty', { timeout: 15000 });
+
+            const europe = page.locator('.accordion-item[data-kind="region"][data-id="europe"]');
+            await expect(europe).toBeVisible();
+            // "My calendars" opens an accordion holding a `mine` node by default.
+            await expect(europe.getByRole('link', { name: 'Translate' })).toBeVisible({ timeout: 15000 });
+        } finally {
+            await cei.context.close();
+        }
+    });
+
     test('Show all lists France with Request access, and it lands on the prefilled form', async ({ browser }) => {
         const cei = await actingAs(browser, 'cei-editor');
         const { page } = cei;
         try {
+            const metadata = await litcalMetadata(page);
+            const nationalKeys = (metadata.national_calendars_keys as string[] | undefined) ?? [];
+            test.skip(nationalKeys.includes('FR'), 'France already has a national calendar on this stack');
+
             await page.goto('/extending.php');
             await page.waitForLoadState('networkidle');
             await page.waitForSelector('#particularCalendarsNavigator .pcn-accordion, #particularCalendarsNavigator .pcn-empty', { timeout: 15000 });
