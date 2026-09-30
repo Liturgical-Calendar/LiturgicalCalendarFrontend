@@ -8,9 +8,12 @@
  * three calendar-scoped types the `calendar_editor` role allows and a
  * rite-qualified id in the form `qualifyObjectId()` composes
  * (`riteScopedObjectId.js`: `<roman|ambrosian>/<calendarId>`). Anything else
- * — an unknown `object_type`, a missing/empty `object_id`, or an id that
- * doesn't look rite-qualified — is treated as "no prefill" rather than an
- * error: the form simply opens untouched.
+ * — an unknown `object_type`, a missing/empty `object_id`, an id that
+ * doesn't look rite-qualified, or a non-Roman rite on a Roman-only type
+ * (`national_calendar`, `wider_region` — mirrors `ROMAN_ONLY_OBJECT_TYPES` in
+ * `riteScopedObjectId.js`) — is treated as "no prefill" rather than an error:
+ * the form simply opens untouched. No coercion: an invalid rite is rejected,
+ * never silently rewritten to `roman`.
  *
  * Dependency-free (no `@liturgical-calendar/components-js` import) like
  * `riteScopedObjectId.js`, so it can be unit-tested without the browser
@@ -35,12 +38,23 @@ export const PREFILLABLE_OBJECT_TYPES = Object.freeze([
 ]);
 
 /**
+ * Of `PREFILLABLE_OBJECT_TYPES`, the ones that exist under the Roman rite
+ * only. Mirrors `ROMAN_ONLY_OBJECT_TYPES` in `riteScopedObjectId.js` (minus
+ * `national_calendar_test`, which this module never prefills). The Ambrosian
+ * rite has no national tier and no wider regions, so an id qualified with any
+ * other rite for one of these types names nothing the API would accept.
+ * @type {ReadonlyArray<string>}
+ */
+const ROMAN_ONLY_OBJECT_TYPES = Object.freeze(['national_calendar', 'wider_region']);
+
+/**
  * A rite-qualified object id: `<roman|ambrosian>/<calendarId>`. Mirrors the
  * id shape `qualifyObjectId()` composes and `parseRiteQualifiedId()` accepts
- * in `riteScopedObjectId.js`.
+ * in `riteScopedObjectId.js`. The rite is captured so it can be checked
+ * against `ROMAN_ONLY_OBJECT_TYPES` below.
  * @type {RegExp}
  */
-const OBJECT_ID_PATTERN = /^(roman|ambrosian)\/[A-Za-z0-9_-]{1,64}$/;
+const OBJECT_ID_PATTERN = /^(roman|ambrosian)\/([A-Za-z0-9_-]{1,64})$/;
 
 /**
  * @param {string} search - `location.search`, with or without its leading `?`
@@ -54,7 +68,11 @@ export function parseAccessRequestPrefill(search) {
     if (!PREFILLABLE_OBJECT_TYPES.includes(objectType)) return null;
 
     const objectId = params.get('object_id');
-    if (typeof objectId !== 'string' || !OBJECT_ID_PATTERN.test(objectId)) return null;
+    const match = typeof objectId === 'string' ? OBJECT_ID_PATTERN.exec(objectId) : null;
+    if (!match) return null;
+
+    const [, rite] = match;
+    if (ROMAN_ONLY_OBJECT_TYPES.includes(objectType) && rite !== 'roman') return null;
 
     return { object_type: objectType, object_id: objectId };
 }

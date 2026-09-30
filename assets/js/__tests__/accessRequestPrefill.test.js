@@ -13,8 +13,8 @@ describe('parseAccessRequestPrefill', () => {
     });
 
     it('parses a diocesan calendar deep link, including an Ambrosian rite', () => {
-        expect(parseAccessRequestPrefill('?object_type=diocesan_calendar&object_id=roman/roma_it'))
-            .toEqual({ object_type: 'diocesan_calendar', object_id: 'roman/roma_it' });
+        expect(parseAccessRequestPrefill('?object_type=diocesan_calendar&object_id=roman/romamo_it'))
+            .toEqual({ object_type: 'diocesan_calendar', object_id: 'roman/romamo_it' });
         expect(parseAccessRequestPrefill('?object_type=diocesan_calendar&object_id=ambrosian/lugano_ch'))
             .toEqual({ object_type: 'diocesan_calendar', object_id: 'ambrosian/lugano_ch' });
     });
@@ -51,5 +51,20 @@ describe('parseAccessRequestPrefill', () => {
     it('returns null for an empty query string', () => {
         expect(parseAccessRequestPrefill('')).toBeNull();
         expect(parseAccessRequestPrefill(undefined)).toBeNull();
+    });
+
+    it('rejects a non-Roman rite for the Roman-only national_calendar type', () => {
+        expect(parseAccessRequestPrefill('?object_type=national_calendar&object_id=ambrosian/FR')).toBeNull();
+    });
+
+    it('rejects a non-Roman rite for the Roman-only wider_region type', () => {
+        expect(parseAccessRequestPrefill('?object_type=wider_region&object_id=ambrosian/europe')).toBeNull();
+    });
+
+    it('accepts either rite for diocesan_calendar, which is not Roman-only', () => {
+        expect(parseAccessRequestPrefill('?object_type=diocesan_calendar&object_id=roman/romamo_it'))
+            .toEqual({ object_type: 'diocesan_calendar', object_id: 'roman/romamo_it' });
+        expect(parseAccessRequestPrefill('?object_type=diocesan_calendar&object_id=ambrosian/lugano_ch'))
+            .toEqual({ object_type: 'diocesan_calendar', object_id: 'ambrosian/lugano_ch' });
     });
 });

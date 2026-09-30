@@ -1006,10 +1006,15 @@ document.addEventListener('DOMContentLoaded', async function() {
      * Prefill the form from a navigator "Request access" deep link
      * (`?object_type=...&object_id=...`, built by `actionUrl()` in
      * particularCalendarsTree.js). Only the three calendar scopes the
-     * `calendar_editor` role allows are recognized; anything else — or a
-     * resubmit already in progress (`openResubmitForm()`, triggered by the
-     * user clicking a "Resubmit" button on an existing rejected request) —
-     * leaves the form untouched.
+     * `calendar_editor` role allows are recognized; anything else leaves the
+     * form untouched.
+     *
+     * Called (see bottom of this handler) only after `loadExistingRequests()`
+     * has resolved, so `resubmitRequestId` cannot yet be non-null when this
+     * starts — `openResubmitForm()` only runs from a user's later click on a
+     * "Resubmit" button that rendering puts in the DOM. The guard below is
+     * therefore defensive/unreachable under the current call order, kept in
+     * case that order ever changes.
      */
     async function applyAccessRequestPrefill() {
         if (resubmitRequestId !== null) return;
@@ -1151,9 +1156,22 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     });
 
-    // Prefill from a navigator "Request access" deep link, if present.
-    await applyAccessRequestPrefill();
-
-    // Load existing requests on page load
+    // Load existing requests first. This must never be blocked or aborted by
+    // the prefill below: awaiting it here, before the prefill even starts,
+    // guarantees the "My requests" table loads and its Resubmit buttons are
+    // bound regardless of whether the prefill succeeds, fails, or is slow
+    // (its CalendarSelect/diocese-picker mounts do their own network calls).
+    // It also closes the race a concurrent load would open between a
+    // Resubmit click and the prefill's own async row restore both mutating
+    // #permissionRows.
     await loadExistingRequests();
+
+    // Prefill from a navigator "Request access" deep link, if present. Wrapped
+    // so a failure here (e.g. a picker mount throwing) can never propagate out
+    // of this handler.
+    try {
+        await applyAccessRequestPrefill();
+    } catch (err) {
+        console.error('[permission-requests] Access-request prefill failed:', err);
+    }
 });
