@@ -323,7 +323,7 @@ Replace each entry's `name` with `id` + `labels` + `m49` per the spec's table, k
 }
 ```
 
-`southern-africa` gets `"m49": "018"`. Then **prune** every roster code (in all entries) that is not a
+`southern-africa` gets `"m49": "018"` and `north-africa` gets `"m49": "015"` (curated labels still win). Then **prune** every roster code (in all entries) that is not a
 `country_iso` in `assets/data/WorldDiocesesByNation.json` (the Step 2 test enforces it; list the removed codes in the
 report).
 
@@ -341,7 +341,7 @@ Cover, with temp-file fixtures like the existing test:
 - `all('en')` is sorted by label;
 - dropped: bad id (`Europe`, `german language`), duplicate id, empty roster, bad roster code, label key `DE` or
   `de_de`, empty label value, `m49` `"2"`; a non-object entry;
-- `m49Codes()` returns `americas` 019, `asia` 142, `europe` 150, `africa` 002, `oceania` 009, `southern-africa` 018;
+- `m49Codes()` returns `americas` 019, `asia` 142, `europe` 150, `africa` 002, `oceania` 009, `north-africa` 015, `southern-africa` 018;
   a fixture with a bad id or code in `m49_codes` drops that pair;
 - a region with no labels and no m49 resolves to the id words (`north-africa` fixture with `labels: {}` → `North Africa`);
 - unreadable file and missing `wider_regions` throw `\RuntimeException`.

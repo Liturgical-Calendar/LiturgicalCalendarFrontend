@@ -34,7 +34,7 @@ that predates #1018.
 3. **All five continents are prospective.** `africa` and `oceania` join the list even without a known patron decree;
    `americas`, `asia` and `europe` exist and come from `/calendars`.
 4. **M.49 suggestions for any region with an M.49 code.** Europe (`150`), the Americas (`019`), Asia (`142`),
-   Africa (`002`), Oceania (`009`) and Southern Africa (`018`) have UN M.49 codes; ICU/CLDR names them in most
+   Africa (`002`), Oceania (`009`), North Africa (`015`) and Southern Africa (`018`) have UN M.49 codes; ICU/CLDR names them in most
    languages. An empty label field of such a region, existing or prospective, is pre-filled with the ICU name and
    marked as suggested (italic, tooltip "Suggested from UN M.49 / CLDR") until edited; saving stores it, so the
    frontend seeds the languages the API has no label for yet. A stored label always wins over a suggestion.
@@ -76,7 +76,7 @@ that predates #1018.
 | `german-language-area`                        | en German Language Area; de Deutsches Sprachgebiet                                                                                                         | —     |
 | `malaysia-singapore-brunei`                   | en Malaysia, Singapore and Brunei; ms Malaysia, Singapura dan Brunei                                                                                       | —     |
 | `nordic`                                      | en Nordic Countries; da Norden; sv Norden; nb Norden; fi Pohjoismaat; is Norðurlönd                                                                        | —     |
-| `north-africa`                                | en North Africa; fr Afrique du Nord                                                                                                                        | —     |
+| `north-africa`                                | en North Africa; fr Afrique du Nord                                                                                                                        | `015` |
 | `oceania`                                     | —                                                                                                                                                          | `009` |
 | `senegal-mauritania-cabo-verde-guinea-bissau` | en Senegal, Mauritania, Cabo Verde and Guinea-Bissau; fr Sénégal, Mauritanie, Cap-Vert et Guinée-Bissau; pt Senegal, Mauritânia, Cabo Verde e Guiné-Bissau | —     |
 | `southern-africa`                             | en Southern Africa                                                                                                                                         | `018` |
