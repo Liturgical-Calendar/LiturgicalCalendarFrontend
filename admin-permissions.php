@@ -382,7 +382,7 @@ if (!$isGlobalAdmin && !$isResourceAdmin) {
             <?php // Every nation that can have a national calendar, not only those that already do (API #669). ?>
             nations: <?php echo json_encode((object) CatholicNations::localized($i18n->LOCALE), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>,
             <?php // Wider regions that do not exist yet but can be created (#591). ?>
-            prospectiveWiderRegions: <?php echo json_encode(ProspectiveWiderRegions::all(), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>,
+            prospectiveWiderRegions: <?php echo json_encode(ProspectiveWiderRegions::all($i18n->LOCALE), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>,
             i18n: {
                 loading: <?php echo json_encode(_('Loading...')); ?>,
                 noPermissions: <?php echo json_encode(_('No permissions found.')); ?>,

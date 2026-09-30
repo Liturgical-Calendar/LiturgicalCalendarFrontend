@@ -1,8 +1,28 @@
 {
-    "$comment": "Prospective wider regions: groupings of three or more nations that share a calendar, from the Notitiae survey (LiturgicalCalendarAPI docs/decrees/notitiae-register.json; see Frontend #66, #591). `name` must match ^[A-Z][A-Za-z]*( [A-Z][A-Za-z]*)*$. `roster` = nations eligible to join; `locales` = suggested locales pre-selected on create; `sources` = register entry ids. Names may change freely until the region is created.",
+    "$comment": "Prospective wider regions: groupings of three or more nations that share a calendar, from the Notitiae survey (LiturgicalCalendarAPI docs/decrees/notitiae-register.json; see Frontend #66, #591) plus the five continents (#1018). `id` must match ^[a-z]+(-[a-z]+)*$, permanent once the region is created. `labels` maps a label key (`en`, or a language/language_Script derived from `locales`) matching ^[a-z]{2,3}(_[A-Z][a-z]{3})?$ to a non-empty string; a continent with no curated label yet is `{}` and resolves via `m49`. `m49` is the UN M.49 area code (`^\\d{3}$`) for a continent, else null. `roster` = nations eligible to join; `locales` = suggested locales pre-selected on create; `sources` = register entry ids. Ids and labels may change freely until the region is created.",
+    "m49_codes": {
+        "americas": "019",
+        "asia": "142",
+        "europe": "150"
+    },
     "wider_regions": [
         {
-            "name": "German Language Area",
+            "id": "africa",
+            "labels": {},
+            "m49": "002",
+            "description": "Africa (UN M.49 002)",
+            "roster": ["DZ", "AO", "BJ", "BW", "BF", "BI", "CV", "CM", "CF", "TD", "KM", "CD", "CG", "CI", "DJ", "EG", "GQ", "SZ", "ET", "GA", "GM", "GH", "GN", "GW", "KE", "LS", "LR", "LY", "MG", "MW", "ML", "MR", "MU", "MA", "MZ", "NA", "NE", "NG", "RE", "RW", "ST", "SN", "SC", "SL", "SO", "ZA", "SS", "SD", "TZ", "TG", "TN", "UG", "ZM", "ZW"],
+            "locales": [],
+            "sources": [],
+            "note": "Prospective continent: no continent-wide patron or celebration appears in the Notitiae survey. Eritrea (ER) is a UN M.49 002 member but is pruned: it has no entry in WorldDiocesesByNation.json."
+        },
+        {
+            "id": "german-language-area",
+            "labels": {
+                "en": "German Language Area",
+                "de": "Deutsches Sprachgebiet"
+            },
+            "m49": null,
             "description": "Regionalkalender für das deutsche Sprachgebiet",
             "roster": ["DE", "AT", "CH", "LU"],
             "locales": ["de_DE", "de_AT", "de_CH", "de_LU"],
@@ -10,7 +30,12 @@
             "note": "The diocese of Bolzano-Bressanone (IT) follows this regional calendar, but a roster can only list whole nations."
         },
         {
-            "name": "Malaysia Singapore Brunei",
+            "id": "malaysia-singapore-brunei",
+            "labels": {
+                "en": "Malaysia, Singapore and Brunei",
+                "ms": "Malaysia, Singapura dan Brunei"
+            },
+            "m49": null,
             "description": "Catholic Bishops' Conference of Malaysia, Singapore and Brunei",
             "roster": ["MY", "SG", "BN"],
             "locales": ["en_MY", "ms_MY", "en_SG", "ms_BN"],
@@ -18,7 +43,16 @@
             "note": null
         },
         {
-            "name": "Nordic",
+            "id": "nordic",
+            "labels": {
+                "en": "Nordic Countries",
+                "da": "Norden",
+                "sv": "Norden",
+                "nb": "Norden",
+                "fi": "Pohjoismaat",
+                "is": "Norðurlönd"
+            },
+            "m49": null,
             "description": "Nordic Episcopal Conference",
             "roster": ["DK", "SE", "NO", "FI", "IS"],
             "locales": ["da_DK", "sv_SE", "nb_NO", "fi_FI", "is_IS"],
@@ -26,7 +60,12 @@
             "note": null
         },
         {
-            "name": "North Africa",
+            "id": "north-africa",
+            "labels": {
+                "en": "North Africa",
+                "fr": "Afrique du Nord"
+            },
+            "m49": "015",
             "description": "Regional Episcopal Conference of North Africa",
             "roster": ["DZ", "TN", "MA", "LY"],
             "locales": ["fr_DZ", "fr_TN", "fr_MA"],
@@ -34,7 +73,23 @@
             "note": null
         },
         {
-            "name": "Senegal Mauritania Cabo Verde Guinea Bissau",
+            "id": "oceania",
+            "labels": {},
+            "m49": "009",
+            "description": "Oceania (UN M.49 009)",
+            "roster": ["AU", "NZ", "PG", "SB", "FJ", "VU", "NC", "PF", "WS", "TO", "KI", "FM", "MH", "GU", "MP", "AS", "CK", "WF", "TK"],
+            "locales": [],
+            "sources": [],
+            "note": "Prospective continent: no continent-wide patron or celebration appears in the Notitiae survey. Palau (PW), Nauru (NR) and Niue (NU) are UN M.49 009 members but are pruned: they have no entry in WorldDiocesesByNation.json."
+        },
+        {
+            "id": "senegal-mauritania-cabo-verde-guinea-bissau",
+            "labels": {
+                "en": "Senegal, Mauritania, Cabo Verde and Guinea-Bissau",
+                "fr": "Sénégal, Mauritanie, Cap-Vert et Guinée-Bissau",
+                "pt": "Senegal, Mauritânia, Cabo Verde e Guiné-Bissau"
+            },
+            "m49": null,
             "description": "Episcopal Conference of Senegal, Mauritania, Cabo Verde and Guinea-Bissau",
             "roster": ["SN", "MR", "CV", "GW"],
             "locales": ["fr_SN", "fr_MR", "pt_CV", "pt_GW"],
@@ -42,7 +97,11 @@
             "note": null
         },
         {
-            "name": "Southern Africa",
+            "id": "southern-africa",
+            "labels": {
+                "en": "Southern Africa"
+            },
+            "m49": "018",
             "description": "Southern African Catholic Bishops' Conference",
             "roster": ["ZA", "BW", "SZ"],
             "locales": ["en_ZA", "af_ZA", "zu_ZA", "en_BW", "en_SZ"],

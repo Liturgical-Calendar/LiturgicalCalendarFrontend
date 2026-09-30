@@ -195,17 +195,17 @@ if (isset($_GET['choice'])) {
                                     echo "<option value=\"{$widerRegionName} - {$widerRegionLanguageSafe}\">{$widerRegionName}</option>";
                                 }
                             }
-                            foreach (ProspectiveWiderRegions::all() as $prospectiveRegion) {
-                                if (in_array($prospectiveRegion['name'], $LitCalMetadata['wider_regions_keys'] ?? [], true)) {
+                            foreach (ProspectiveWiderRegions::all($i18n->LOCALE) as $prospectiveRegion) {
+                                if (in_array($prospectiveRegion['id'], $LitCalMetadata['wider_regions_keys'] ?? [], true)) {
                                     continue;
                                 }
-                                $prospectiveName  = htmlspecialchars($prospectiveRegion['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                $prospectiveId    = htmlspecialchars($prospectiveRegion['id'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                                 $prospectiveLabel = htmlspecialchars(
-                                    $prospectiveRegion['name'] . ' (' . implode(', ', $prospectiveRegion['roster']) . ') — ' . $messages['not yet created'],
+                                    $prospectiveRegion['label'] . ' (' . implode(', ', $prospectiveRegion['roster']) . ') — ' . $messages['not yet created'],
                                     ENT_QUOTES | ENT_SUBSTITUTE,
                                     'UTF-8'
                                 );
-                                echo "<option value=\"{$prospectiveName}\" label=\"{$prospectiveLabel}\">{$prospectiveLabel}</option>";
+                                echo "<option value=\"{$prospectiveId}\" label=\"{$prospectiveLabel}\">{$prospectiveLabel}</option>";
                             }
                             ?>
                             </datalist>
@@ -757,7 +757,7 @@ $messages = array_merge($messages, [
     'AvailableLocalesWithRegion'    => $SystemLocalesWithRegion,
     'CountriesWithCatholicDioceses' => $CountriesWithCatholicDioceses,
     'DiocesesList'                  => $CatholicDiocesesByNation,
-    'ProspectiveWiderRegions'       => ProspectiveWiderRegions::all(),
+    'ProspectiveWiderRegions'       => ProspectiveWiderRegions::all($i18n->LOCALE),
 ]);
 
 ?>

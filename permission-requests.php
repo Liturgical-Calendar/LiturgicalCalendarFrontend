@@ -206,7 +206,7 @@ if (!$authHelper->emailVerified) {
             <?php // Every nation that can have a national calendar, not only those that already do (API #669). ?>
             nations: <?php echo json_encode((object) CatholicNations::localized($i18n->LOCALE), $jsonFlags); ?>,
             <?php // Wider regions that do not exist yet but can be created (#591). ?>
-            prospectiveWiderRegions: <?php echo json_encode(ProspectiveWiderRegions::all(), $jsonFlags); ?>,
+            prospectiveWiderRegions: <?php echo json_encode(ProspectiveWiderRegions::all($i18n->LOCALE), $jsonFlags); ?>,
             i18n: {
                 loading: <?php echo json_encode(_('Loading...'), $jsonFlags); ?>,
                 noRequests: <?php echo json_encode(_('You have not made any access requests yet.'), $jsonFlags); ?>,
