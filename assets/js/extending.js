@@ -41,9 +41,9 @@ import { widerRegionsForNation } from './widerRegionForNation.js';
 import { eligibleWiderRegions, nationWiderRegions, widerRegionKey, widerRegionLabelById, widerRegionRoster, widerRegionsByNation } from './widerRegions.js';
 import { buildWiderRegionLabelFields, country2flag, labelFieldsFor, labelsToSave, m49Suggestions, readLabelInputs, rebuiltLabelState } from './widerRegionLabels.js';
 import { isOfficialLocale, newNationalCalendarLocaleOptions, unofficialLocales } from './nationalCalendarLocales.js';
-import { dioceseNation, nationDioceses, parseDeepLink, widerRegionOpeningLocale } from './particularCalendarsTree.js';
+import { breadcrumbSegments, dioceseNation, nationDioceses, parseDeepLink, widerRegionOpeningLocale } from './particularCalendarsTree.js';
 import { diocesesByNation } from './dioceseObjectIdPicker.js';
-import { ROMAN_RITE } from './riteScopedObjectId.js';
+import { AMBROSIAN_RITE, ROMAN_RITE } from './riteScopedObjectId.js';
 import {
     findProspectiveRegion,
     idToWords,
@@ -687,6 +687,72 @@ function openDeepLink(search) {
     }
 }
 
+/**
+ * Renders the `#particularCalendarsBreadcrumb` nav from `breadcrumbSegments()`'s output (#66
+ * Part 5): a Bootstrap `<ol class="breadcrumb">`, real `<a>` elements for every segment but the
+ * last, which is plain text with `aria-current="page"`. Built with createElement/textContent,
+ * since segment labels come from calendar data. An empty list (no calendar loaded, or the hub
+ * itself) leaves the nav empty.
+ * @param {import('./particularCalendarsTree.js').BreadcrumbSegment[]} segments
+ * @returns {void}
+ */
+function renderBreadcrumb(segments) {
+    const nav = document.querySelector('#particularCalendarsBreadcrumb');
+    if (!nav) return;
+
+    const list = document.createElement('ol');
+    list.className = 'breadcrumb';
+    segments.forEach((segment) => {
+        const item = document.createElement('li');
+        item.className = 'breadcrumb-item';
+        if (segment.href === null) {
+            item.classList.add('active');
+            item.setAttribute('aria-current', 'page');
+            item.textContent = segment.label;
+        } else {
+            const link = document.createElement('a');
+            link.href = segment.href;
+            link.textContent = segment.label;
+            item.append(link);
+        }
+        list.append(item);
+    });
+    nav.replaceChildren(...(segments.length > 0 ? [list] : []));
+}
+
+/**
+ * Rebuilds the breadcrumb above the current form for the calendar it just loaded (or is about
+ * to create). Called from the same handlers that set `API.key` (#66 Part 5): the shared
+ * region/national name-change handler, and the diocesan name-change handler. `breadcrumbSegments()`
+ * returns English placeholder labels for the hub and, on an Ambrosian diocese, the rite segment
+ * (the same convention the navigator's group labels use); this localizes them via `Messages`
+ * before rendering.
+ * @param {string} calendarKey - `API.key`; a falsy value clears the breadcrumb
+ * @param {string} [rite] - `roman` (default) or `ambrosian`; diocesan only
+ * @returns {void}
+ */
+function updateBreadcrumb(calendarKey, rite = ROMAN_RITE) {
+    if (!calendarKey) {
+        renderBreadcrumb([]);
+        return;
+    }
+    const worldDioceses = choice === 'diocesan'
+        ? diocesesByNation({ catholic_dioceses_latin_rite: DiocesesList })
+        : undefined;
+    const segments = breadcrumbSegments({
+        choice,
+        calendar: calendarKey,
+        rite,
+        metadata: LitCalMetadata,
+        uiLocale: Messages.LOCALE_WITH_REGION,
+        worldDioceses,
+    });
+    segments[0].label = Messages['Breadcrumb - Particular Calendars'] ?? segments[0].label;
+    if (choice === 'diocesan' && rite === AMBROSIAN_RITE && segments.length === 3) {
+        segments[1].label = Messages['Navigator - ambrosian'] ?? segments[1].label;
+    }
+    renderBreadcrumb(segments);
+}
 
 /**
  * Build the RegionalData API path from the current category and key.
@@ -2626,6 +2692,7 @@ const regionalNationalCalendarNameChanged = (ev) => {
         // Clear API state so downstream auth/UI logic treats this as "no calendar selected"
         // Use API.clear() to bypass Proxy validation which rejects empty strings
         API.clear();
+        updateBreadcrumb('');
 
         return;
     }
@@ -2652,6 +2719,7 @@ const regionalNationalCalendarNameChanged = (ev) => {
     API.category = category;
     // our proxy will take care of splitting locale from wider region, when we are setting a wider region key
     API.key = ev.target.value;
+    updateBreadcrumb(API.key);
     console.log(`regionalNationalCalendarNameChanged called, API.category set to ${API.category} and API.key set to ${API.key}. Proceeding to call fetchEventsAndCalendarData...`);
     fetchEventsAndCalendarData();
 }
@@ -4355,6 +4423,7 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
         }
         API.category = 'diocese';
         API.key = selectedOption.getAttribute('data-value');
+        updateBreadcrumb(API.key);
         console.log('selected diocese with key = ' + API.key);
         if (LitCalMetadata.diocesan_calendars_keys.includes(API.key)) {
             API.method = 'PATCH';
@@ -4398,6 +4467,7 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
         // Disable save button when no valid diocese is selected
         const saveBtnInvalid = document.getElementById('saveDiocesanCalendar_btn');
         if (saveBtnInvalid) saveBtnInvalid.disabled = true;
+        updateBreadcrumb('');
     }
 }
 

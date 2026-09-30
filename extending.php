@@ -211,6 +211,12 @@ $buttonGroup = '<hr><div class="d-flex justify-content-around">'
         <p class="mb-1 lh-sm"><small><i><?php echo $API_EXTEND_HOWTO_A0 . ' ' . $API_EXTEND_HOWTO_A1 . ' ' . $API_EXTEND_HOWTO_A2; ?></i></small></p>
 <?php
 if (!$isNavigatorHub) {
+    // Populated by assets/js/extending.js (particularCalendarsTree.js's breadcrumbSegments())
+    // whenever the form's loaded calendar changes (#66 Part 5). Shared by the three forms:
+    // whichever one the switch below renders is the only one on the page.
+    ?>
+        <nav aria-label="breadcrumb" id="particularCalendarsBreadcrumb"></nav>
+    <?php
     switch ($_GET['choice']) {
         case 'widerRegion':
             //FormControls::$settings["untilYearField"] = true;

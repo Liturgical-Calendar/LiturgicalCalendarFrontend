@@ -18,7 +18,7 @@
  * @module particularCalendarsTree
  */
 
-import { regionId, regionLabel } from './prospectiveWiderRegions.js';
+import { idToWords, regionId, regionLabel } from './prospectiveWiderRegions.js';
 import { nationWiderRegions } from './widerRegions.js';
 import { AMBROSIAN_RITE, ROMAN_RITE, qualifyObjectId } from './riteScopedObjectId.js';
 
@@ -651,4 +651,107 @@ export function actionUrl(node, action, context = {}) {
     }
 
     throw new Error(`particularCalendarsTree: no URL for action "${action}" on node kind "${node.kind}"`);
+}
+
+/**
+ * @typedef {Object} BreadcrumbSegment
+ * @property {string} label
+ * @property {string|null} href - `null` for the last segment: the form's loaded (or
+ *   about-to-be-created) calendar itself
+ */
+
+/** The hub's own breadcrumb segment: first on every form. */
+const HUB_HREF = 'extending.php';
+
+/**
+ * The hub and Ambrosian-rite segment labels `breadcrumbSegments()` returns, in English: the same
+ * convention `buildGroupNode()` uses for its own group labels ('No Region', 'Ambrosian Rite').
+ * The caller — `extending.js` — localizes them via `Messages` before rendering.
+ */
+const HUB_LABEL = 'Particular Calendars';
+const AMBROSIAN_RITE_LABEL = 'Ambrosian Rite';
+
+/**
+ * @param {string} id - Region id
+ * @param {{wider_regions?: object[]}|undefined} metadata - `/calendars` `litcal_metadata`
+ * @returns {string} The region's label from metadata, else words derived from its id (a
+ *   prospective region, not yet in metadata)
+ */
+function regionLabelForId(id, metadata) {
+    const region = (metadata?.wider_regions ?? []).find((candidate) => regionId(candidate) === id);
+    return region ? regionLabel(region) : idToWords(id);
+}
+
+/**
+ * The breadcrumb above one of the three particular calendar forms (#66 Part 5): the hub, then
+ * the loaded (or about-to-be-created) calendar's ancestors, ending with the calendar itself
+ * (no link). Every non-final segment's link is the same URL `actionUrl()`'s `edit` action would
+ * produce for that ancestor, so a region or nation segment opens correctly whether or not it
+ * exists yet.
+ *
+ * - `widerRegion`: the hub, then the region itself (no parent to link to).
+ * - `national`: the hub, then one segment per region the nation declares (`wider_regions` on
+ *   its `/calendars` entry — empty for a nation not yet created, or one that declares none),
+ *   then the nation itself.
+ * - `diocesan`: the hub, then the diocese's nation (from `metadata` when the diocese's calendar
+ *   exists, else from `worldDioceses`, a not-yet-created one), then the diocese; for the
+ *   Ambrosian rite, which has no national tier, the middle segment is the rite itself (linked to
+ *   the hub) instead of a nation.
+ *
+ * @param {object} params
+ * @param {'widerRegion'|'national'|'diocesan'} params.choice
+ * @param {string} params.calendar - The loaded (or about-to-be-created) calendar's id: a wider
+ *   region id, an ISO 3166-1 alpha-2 nation code, or a bare diocese id
+ * @param {string} [params.rite] - `roman` (default) or `ambrosian`; only meaningful for
+ *   `diocesan`
+ * @param {object} [params.metadata] - `/calendars` `litcal_metadata`
+ * @param {string} [params.uiLocale]
+ * @param {Map<string, {id: string, name: string}[]>} [params.worldDioceses] - See
+ *   `diocesesByNation()` in `dioceseObjectIdPicker.js`; resolves a not-yet-created diocese's
+ *   nation and name
+ * @returns {BreadcrumbSegment[]} Always starts with the hub segment
+ */
+export function breadcrumbSegments({ choice, calendar, rite = ROMAN_RITE, metadata, uiLocale, worldDioceses }) {
+    const hub = { label: HUB_LABEL, href: HUB_HREF };
+
+    if (choice === 'widerRegion') {
+        return [hub, { label: regionLabelForId(calendar, metadata), href: null }];
+    }
+
+    if (choice === 'national') {
+        const declared = metadata?.national_calendars?.find((item) => item.calendar_id === calendar);
+        const regionSegments = nationWiderRegions(declared ?? {}).map((id) => ({
+            label: regionLabelForId(id, metadata),
+            href: actionUrl({ kind: 'region', id, rite: ROMAN_RITE }, 'edit'),
+        }));
+        return [hub, ...regionSegments, { label: nationLabel(calendar, undefined, uiLocale), href: null }];
+    }
+
+    if (choice === 'diocesan') {
+        const existing = metadata?.diocesan_calendars?.find((c) => c.calendar_id === calendar);
+
+        if (rite === AMBROSIAN_RITE) {
+            return [
+                hub,
+                { label: AMBROSIAN_RITE_LABEL, href: HUB_HREF },
+                { label: existing?.diocese ?? calendar, href: null },
+            ];
+        }
+
+        const nation = dioceseNation(calendar, metadata, worldDioceses);
+        const dioceseLabel = existing?.diocese
+            ?? nationDioceses(nation ?? '', worldDioceses).find((d) => d.id === calendar)?.name
+            ?? calendar;
+        if (nation === null) return [hub, { label: dioceseLabel, href: null }];
+        return [
+            hub,
+            {
+                label: nationLabel(nation, undefined, uiLocale),
+                href: actionUrl({ kind: 'nation', id: nation, rite: ROMAN_RITE }, 'edit'),
+            },
+            { label: dioceseLabel, href: null },
+        ];
+    }
+
+    return [hub];
 }

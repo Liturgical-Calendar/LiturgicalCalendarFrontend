@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
     actionUrl,
+    breadcrumbSegments,
     buildNavigatorTree,
     dioceseNation,
     filterMine,
@@ -469,5 +470,93 @@ describe('buildNavigatorTree — the Vatican', () => {
         });
         expect(findAll(tree, (n) => n.id === 'VA')).toEqual([]);
         expect(tree.find((n) => n.id === 'holy-see').children.map((n) => n.id)).toEqual(['IT']);
+    });
+});
+
+describe('breadcrumbSegments', () => {
+    const world = new Map([
+        ['IT', [{ id: 'torino_it', name: 'Torino' }]],
+    ]);
+
+    it('region form: the hub, then the region itself, unlinked', () => {
+        expect(breadcrumbSegments({ choice: 'widerRegion', calendar: 'europe', metadata: baseMetadata() })).toEqual([
+            { label: 'Particular Calendars', href: 'extending.php' },
+            { label: 'Europe', href: null },
+        ]);
+    });
+
+    it('region form: a prospective region not yet in metadata is labelled from its id', () => {
+        expect(breadcrumbSegments({ choice: 'widerRegion', calendar: 'nordic', metadata: baseMetadata() })).toEqual([
+            { label: 'Particular Calendars', href: 'extending.php' },
+            { label: 'Nordic', href: null },
+        ]);
+    });
+
+    it('national form: the hub, one link per region the nation declares, then the nation', () => {
+        expect(breadcrumbSegments({ choice: 'national', calendar: 'IT', metadata: baseMetadata(), uiLocale: 'en' })).toEqual([
+            { label: 'Particular Calendars', href: 'extending.php' },
+            { label: 'Europe', href: 'extending.php?choice=widerRegion&calendar=europe' },
+            { label: 'Italy', href: null },
+        ]);
+    });
+
+    it('national form: a nation declaring no region gets just the hub and the nation', () => {
+        const metadata = baseMetadata();
+        metadata.national_calendars = [...metadata.national_calendars, { calendar_id: 'NO', wider_regions: [] }];
+        expect(breadcrumbSegments({ choice: 'national', calendar: 'NO', metadata, uiLocale: 'en' })).toEqual([
+            { label: 'Particular Calendars', href: 'extending.php' },
+            { label: 'Norway', href: null },
+        ]);
+    });
+
+    it('national form: a nation not yet created gets just the hub and the nation', () => {
+        expect(breadcrumbSegments({ choice: 'national', calendar: 'SE', metadata: baseMetadata(), uiLocale: 'en' })).toEqual([
+            { label: 'Particular Calendars', href: 'extending.php' },
+            { label: 'Sweden', href: null },
+        ]);
+    });
+
+    it('diocesan form (Roman, existing): the hub, the nation, then the diocese', () => {
+        expect(breadcrumbSegments({
+            choice: 'diocesan', calendar: 'roma_it', metadata: baseMetadata(), uiLocale: 'en',
+        })).toEqual([
+            { label: 'Particular Calendars', href: 'extending.php' },
+            { label: 'Italy', href: 'extending.php?choice=national&calendar=IT' },
+            { label: 'Roma', href: null },
+        ]);
+    });
+
+    it('diocesan form (Roman, not yet created): the nation and diocese resolve from worldDioceses', () => {
+        expect(breadcrumbSegments({
+            choice: 'diocesan', calendar: 'torino_it', metadata: baseMetadata(), uiLocale: 'en', worldDioceses: world,
+        })).toEqual([
+            { label: 'Particular Calendars', href: 'extending.php' },
+            { label: 'Italy', href: 'extending.php?choice=national&calendar=IT' },
+            { label: 'Torino', href: null },
+        ]);
+    });
+
+    it('diocesan form: a diocese unknown to both metadata and worldDioceses falls back to its id', () => {
+        expect(breadcrumbSegments({
+            choice: 'diocesan', calendar: 'atlantis_xx', metadata: baseMetadata(), uiLocale: 'en', worldDioceses: world,
+        })).toEqual([
+            { label: 'Particular Calendars', href: 'extending.php' },
+            { label: 'atlantis_xx', href: null },
+        ]);
+    });
+
+    it('diocesan form (Ambrosian): the hub, the rite (linked to the hub), then the diocese', () => {
+        expect(breadcrumbSegments({
+            choice: 'diocesan', calendar: 'lugano_ch', rite: 'ambrosian', metadata: baseMetadata(), uiLocale: 'en',
+        })).toEqual([
+            { label: 'Particular Calendars', href: 'extending.php' },
+            { label: 'Ambrosian Rite', href: 'extending.php' },
+            { label: 'Lugano', href: null },
+        ]);
+    });
+
+    it('defaults to the Roman rite when none is given', () => {
+        const segments = breadcrumbSegments({ choice: 'diocesan', calendar: 'roma_it', metadata: baseMetadata(), uiLocale: 'en' });
+        expect(segments[1]).toEqual({ label: 'Italy', href: 'extending.php?choice=national&calendar=IT' });
     });
 });

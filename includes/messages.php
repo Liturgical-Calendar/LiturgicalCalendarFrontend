@@ -475,6 +475,12 @@ $messages = [
     'Navigator - Loading'                             => _('Loading…'),
     /** translators: shown when no calendar name matches the navigator's text filter */
     'Navigator - No match'                            => _('No calendars match the filter'),
+
+    // =========================================================================
+    // Breadcrumb above each particular calendar form (#66 Part 5)
+    // =========================================================================
+    /** translators: first, linked item of the breadcrumb above a particular calendar form; points back to the navigator hub */
+    'Breadcrumb - Particular Calendars'               => _('Particular Calendars'),
 ];
 
 // phpcs:enable Generic.Files.LineLength
