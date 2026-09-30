@@ -146,5 +146,20 @@ test.describe('Particular Calendars Navigator — Request access deep link', () 
         await expect(row.locator('.perm-object-type')).toHaveValue('national_calendar', { timeout: 15000 });
         await expect(row.locator('.perm-object-id')).toBeVisible({ timeout: 15000 });
         await expect(row.locator('.perm-object-id')).toHaveValue('FR');
+        await expect(row.locator('.perm-relation')).toHaveValue('editor');
+    });
+
+    test('relation=admin (a calendar not yet created) preselects the admin relation', async ({ page }) => {
+        const nationalKeys = await nationalCalendarKeys(page);
+        test.skip(nationalKeys.includes('FR'), 'France already has a national calendar on this stack');
+
+        await page.goto('/permission-requests.php?object_type=national_calendar&object_id=roman/FR&relation=admin');
+        await page.waitForLoadState('networkidle');
+
+        await expect(page.locator('input[name="requested_role"][value="calendar_editor"]')).toBeChecked({ timeout: 15000 });
+
+        const row = page.locator('#permissionRows .card').first();
+        await expect(row.locator('.perm-object-id')).toHaveValue('FR', { timeout: 15000 });
+        await expect(row.locator('.perm-relation')).toHaveValue('admin');
     });
 });

@@ -135,10 +135,14 @@ describe('renderNavigator — My calendars vs Show all, for an IT editor', () =>
 
         const [france] = rows(container, 'nation', 'FR');
         expect(actionLabels(france)).toEqual(['Request access']);
+        // France has no calendar yet, and creating one needs admin.
         expect(france.querySelector('a').getAttribute('href'))
-            .toBe('permission-requests.php?object_type=national_calendar&object_id=roman%2FFR');
+            .toBe('permission-requests.php?object_type=national_calendar&object_id=roman%2FFR&relation=admin');
 
+        const [netherlands] = rows(container, 'nation', 'NL');
         expect(rows(container, 'nation', 'NL')).toHaveLength(1);
+        expect(netherlands.querySelector('.pcn-actions a').getAttribute('href'))
+            .toBe('permission-requests.php?object_type=national_calendar&object_id=roman%2FNL');
     });
 
     it('marks the pressed view button', () => {
@@ -212,6 +216,29 @@ describe('renderNavigator — a disabled Create', () => {
         expect(create.getAttribute('aria-disabled')).toBe('true');
         expect(create.getAttribute('title')).toBe('Create the national calendar first');
         expect(create.querySelector('.visually-hidden').textContent).toContain('Create the national calendar first');
+    });
+});
+
+describe('renderNavigator — a diocese of a nation without a calendar, for a user without rights', () => {
+    it('offers no action, and shows the reason as text', () => {
+        const dioceses = new Map([['SE', [{ id: 'stockh_se', name: 'Stockholm' }]]]);
+        const container = render({ tree: tree(rights(), dioceses), view: 'all' });
+
+        const [stockholm] = rows(container, 'diocese', 'stockh_se');
+        expect(stockholm.querySelectorAll('.pcn-actions a')).toHaveLength(0);
+        expect(stockholm.querySelector('.pcn-note').textContent).toBe('Create the national calendar first');
+    });
+});
+
+describe('renderNavigator — an Ambrosian diocese', () => {
+    it('offers Request access, with the note, to a user without rights on it', () => {
+        const container = render({ tree: tree(rights()), view: 'all' });
+        const [lugano] = rows(container, 'diocese', 'lugano_ch');
+        expect(actionLabels(lugano)).toEqual(['Request access']);
+        expect(lugano.querySelector('.pcn-actions a').getAttribute('href'))
+            .toBe('permission-requests.php?object_type=diocesan_calendar&object_id=ambrosian%2Flugano_ch');
+        expect(lugano.querySelector('.pcn-note').textContent)
+            .toBe('Ambrosian diocesan calendars cannot be edited here yet');
     });
 });
 
@@ -348,7 +375,7 @@ describe('translateLocales', () => {
         expect(translateLocales(tree(IT_EDITOR), METADATA, IT_EDITOR)).toEqual({ europe: 'it_IT' });
     });
 
-    it('falls back to the nation\'s own calendar locale when the region has none of its locales yet', () => {
+    it('leaves the region out when it has none of the user\'s nations\' locales yet', () => {
         const metadata = {
             ...METADATA,
             wider_regions: [{ ...METADATA.wider_regions[0], locales: ['en_IE'] }],
@@ -356,7 +383,12 @@ describe('translateLocales', () => {
         const t = buildNavigatorTree({
             metadata, prospectiveRegions: [], nations: NATIONS, missals: MISSALS, rights: IT_EDITOR, uiLocale: 'en',
         });
-        expect(translateLocales(t, metadata, IT_EDITOR)).toEqual({ europe: 'it_IT' });
+        expect(translateLocales(t, metadata, IT_EDITOR)).toEqual({});
+        // …so its Translate link names no locale: the deep link picks one the region offers.
+        const container = render({ tree: t, translateLocales: translateLocales(t, metadata, IT_EDITOR) });
+        const [europe] = rows(container, 'region', 'europe');
+        expect(europe.querySelector('.pcn-actions a').getAttribute('href'))
+            .toBe('extending.php?choice=widerRegion&calendar=europe');
     });
 });
 

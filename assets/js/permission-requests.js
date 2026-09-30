@@ -1004,10 +1004,11 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     /**
      * Prefill the form from a navigator "Request access" deep link
-     * (`?object_type=...&object_id=...`, built by `actionUrl()` in
-     * particularCalendarsTree.js). Only the three calendar scopes the
-     * `calendar_editor` role allows are recognized; anything else leaves the
-     * form untouched.
+     * (`?object_type=...&object_id=...[&relation=admin]`, built by
+     * `actionUrl()` in particularCalendarsTree.js: `admin` on a calendar not
+     * yet created, since creating one needs it). Only the three calendar
+     * scopes the `calendar_editor` role allows, and the `editor`/`admin`
+     * relations, are recognized; anything else leaves the form untouched.
      *
      * Called (see bottom of this handler) only after `loadExistingRequests()`
      * has resolved, so `resubmitRequestId` cannot yet be non-null when this
@@ -1043,7 +1044,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         await restorePermissionRow(row, {
             object_type: prefill.object_type,
             object_id:   prefill.object_id,
-            relation:    'editor'
+            relation:    prefill.relation
         });
     }
 
@@ -1161,9 +1162,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     // guarantees the "My requests" table loads and its Resubmit buttons are
     // bound regardless of whether the prefill succeeds, fails, or is slow
     // (its CalendarSelect/diocese-picker mounts do their own network calls).
-    // It also closes the race a concurrent load would open between a
-    // Resubmit click and the prefill's own async row restore both mutating
-    // #permissionRows.
+    //
+    // The ordering does not by itself stop a Resubmit click from landing
+    // while the prefill's row restore is still awaiting those mounts. What
+    // protects that case is openResubmitForm(): it synchronously clears
+    // #permissionRows, detaching the prefill's row, so the prefill's awaited
+    // writes then land on a row no longer in the form and cannot leak into
+    // the resubmission.
     await loadExistingRequests();
 
     // Prefill from a navigator "Request access" deep link, if present. Wrapped

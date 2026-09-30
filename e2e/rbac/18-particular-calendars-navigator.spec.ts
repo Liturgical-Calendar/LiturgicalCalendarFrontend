@@ -129,6 +129,9 @@ test.describe('particular calendars navigator — national calendar editor', () 
             const requestLink = france.getByRole('link', { name: 'Request access' });
             await expect(requestLink).toBeVisible();
 
+            // France has no calendar yet, and creating one needs admin (API #669).
+            await expect(requestLink).toHaveAttribute('href', /[?&]relation=admin(&|$)/);
+
             await requestLink.click();
             await page.waitForURL(/permission-requests\.php\?/);
             await page.waitForLoadState('networkidle');
@@ -138,6 +141,7 @@ test.describe('particular calendars navigator — national calendar editor', () 
             await expect(row.locator('.perm-object-type')).toHaveValue('national_calendar', { timeout: 15000 });
             await expect(row.locator('.perm-object-id')).toBeVisible({ timeout: 15000 });
             await expect(row.locator('.perm-object-id')).toHaveValue('FR');
+            await expect(row.locator('.perm-relation')).toHaveValue('admin');
         } finally {
             await cei.context.close();
         }

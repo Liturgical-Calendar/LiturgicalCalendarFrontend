@@ -74,13 +74,19 @@ if ($isNavigatorHub) {
         $navigatorNations = [];
     }
 
+    // A Zitadel admin is a global admin even when /auth/dashboard-scopes fails closed (no scopes,
+    // is_global_admin false): OR the role in here rather than in NavigatorData::rights(), which
+    // stays a pure mapping of the scopes response.
+    $navigatorRights                  = NavigatorData::rights($authHelper->dashboardScopes());
+    $navigatorRights['isGlobalAdmin'] = $authHelper->hasRole('admin') || $navigatorRights['isGlobalAdmin'];
+
     $navigatorConfig = [
         'metadata'           => $LitCalMetadata,
         'prospectiveRegions' => ProspectiveWiderRegions::all($i18n->LOCALE),
         // Objects, not lists, even when empty: the navigator looks nations and Missals up by ISO code.
         'nations'            => (object) $navigatorNations,
         'missals'            => (object) $navigatorMissals,
-        'rights'             => NavigatorData::rights($authHelper->dashboardScopes()),
+        'rights'             => $navigatorRights,
         'uiLocale'           => $i18n->LOCALE,
         'messages'           => [],
     ];

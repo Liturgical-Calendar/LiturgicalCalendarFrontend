@@ -188,10 +188,18 @@ describe('buildNavigatorTree — Ambrosian dioceses', () => {
         expect(findNode(mine, (n) => n.id === 'lugano_ch')).toBeTruthy();
     });
 
-    it('is not mine, and offers no Request access, for a user without rights on it', () => {
+    it('is not mine, and offers Request access with the note, for a user without rights on it', () => {
         const node = lugano(rights());
-        expect(node.actions).toEqual([]);
+        expect(node.actions).toEqual(['request']);
+        expect(node.note).toBe('ambrosian-unsupported');
         expect(node.mine).toBe(false);
+    });
+
+    it('offers no action to an editor of it (no form can load it)', () => {
+        const node = lugano(rights({ editor: { diocesan_calendar: ['ambrosian/lugano_ch'] } }));
+        expect(node.actions).toEqual([]);
+        expect(node.note).toBe('ambrosian-unsupported');
+        expect(node.mine).toBe(true);
     });
 });
 
@@ -235,6 +243,22 @@ describe('buildNavigatorTree — diocese admin, nation missing', () => {
         const torino = findNode(tree, (n) => n.id === 'torino_it');
         expect(torino.actions).toEqual(['create']);
         expect(torino.disabledReason).toBe('nation-missing');
+    });
+
+    it('offers no Request access, only the nation-missing reason, to a user without rights on it', () => {
+        const dioceses = new Map([['IT', [{ id: 'torino_it', name: 'Torino' }]]]);
+        const tree = buildTree({ metadata: metadataWithoutIT(), rights: rights(), dioceses });
+        const torino = findNode(tree, (n) => n.id === 'torino_it');
+        expect(torino.actions).toEqual([]);
+        expect(torino.disabledReason).toBe('nation-missing');
+        expect(torino.mine).toBe(false);
+    });
+
+    it('still offers Request access on a Roman diocese of a nation that has a calendar', () => {
+        const dioceses = new Map([['IT', [{ id: 'torino_it', name: 'Torino' }]]]);
+        const torino = findNode(buildTree({ rights: rights(), dioceses }), (n) => n.id === 'torino_it');
+        expect(torino.actions).toEqual(['request']);
+        expect(torino.disabledReason).toBeUndefined();
     });
 
     it('never sets nation-missing on an Ambrosian diocese', () => {
@@ -337,9 +361,9 @@ describe('parseDeepLink', () => {
 });
 
 describe('actionUrl', () => {
-    const europeNode = { kind: 'region', id: 'europe', rite: 'roman', label: 'Europe' };
-    const nationNode = { kind: 'nation', id: 'IT', rite: 'roman', label: 'Italy' };
-    const dioceseNode = { kind: 'diocese', id: 'lugano_ch', rite: 'ambrosian', label: 'Lugano' };
+    const europeNode = { kind: 'region', id: 'europe', rite: 'roman', label: 'Europe', exists: true };
+    const nationNode = { kind: 'nation', id: 'IT', rite: 'roman', label: 'Italy', exists: true };
+    const dioceseNode = { kind: 'diocese', id: 'lugano_ch', rite: 'ambrosian', label: 'Lugano', exists: true };
 
     it('edit or create a region', () => {
         expect(actionUrl(europeNode, 'edit')).toBe('extending.php?choice=widerRegion&calendar=europe');
@@ -363,6 +387,20 @@ describe('actionUrl', () => {
     it('edit or create a diocese', () => {
         expect(actionUrl(dioceseNode, 'edit')).toBe('extending.php?choice=diocesan&calendar=lugano_ch&rite=ambrosian');
         expect(actionUrl(dioceseNode, 'create')).toBe('extending.php?choice=diocesan&calendar=lugano_ch&rite=ambrosian');
+    });
+
+    it('requests admin on a calendar not yet created (creating one needs admin)', () => {
+        expect(actionUrl({ ...nationNode, id: 'SE', exists: false }, 'request'))
+            .toBe('permission-requests.php?object_type=national_calendar&object_id=roman%2FSE&relation=admin');
+        expect(actionUrl({ ...europeNode, id: 'nordic', exists: false }, 'request'))
+            .toBe('permission-requests.php?object_type=wider_region&object_id=roman%2Fnordic&relation=admin');
+        expect(actionUrl({ kind: 'diocese', id: 'torino_it', rite: 'roman', exists: false }, 'request'))
+            .toBe('permission-requests.php?object_type=diocesan_calendar&object_id=roman%2Ftorino_it&relation=admin');
+    });
+
+    it('names no relation when requesting access on an existing calendar', () => {
+        expect(actionUrl({ ...nationNode, exists: true }, 'request'))
+            .toBe('permission-requests.php?object_type=national_calendar&object_id=roman%2FIT');
     });
 
     it('requests access, URL-encoding the rite-qualified object id', () => {
@@ -509,9 +547,40 @@ describe('breadcrumbSegments', () => {
         ]);
     });
 
-    it('national form: a nation not yet created gets just the hub and the nation', () => {
+    it('national form: a nation in no region\'s roster and not yet created gets just the hub and the nation', () => {
+        expect(breadcrumbSegments({ choice: 'national', calendar: 'FR', metadata: baseMetadata(), uiLocale: 'en' })).toEqual([
+            { label: 'Particular Calendars', href: 'extending.php' },
+            { label: 'France', href: null },
+        ]);
+    });
+
+    it('national form: a nation a region\'s roster lists, not yet created, links that region', () => {
         expect(breadcrumbSegments({ choice: 'national', calendar: 'SE', metadata: baseMetadata(), uiLocale: 'en' })).toEqual([
             { label: 'Particular Calendars', href: 'extending.php' },
+            { label: 'Europe', href: 'extending.php?choice=widerRegion&calendar=europe' },
+            { label: 'Sweden', href: null },
+        ]);
+    });
+
+    it('national form: every region by roster or declaration, deduplicated, broadest first', () => {
+        const metadata = baseMetadata();
+        metadata.wider_regions = [
+            { id: 'americas', label: 'Americas', roster: [] },
+            ...metadata.wider_regions,
+            { id: 'nordic', label: 'Nordic', roster: ['SE'] },
+        ];
+        // SE is on europe's and nordic's rosters, and declares americas, nordic and a region
+        // not (yet) in metadata.
+        metadata.national_calendars = [
+            ...metadata.national_calendars,
+            { calendar_id: 'SE', wider_regions: ['nordic', 'americas', 'baltic'] },
+        ];
+        expect(breadcrumbSegments({ choice: 'national', calendar: 'SE', metadata, uiLocale: 'en' })).toEqual([
+            { label: 'Particular Calendars', href: 'extending.php' },
+            { label: 'Europe', href: 'extending.php?choice=widerRegion&calendar=europe' },
+            { label: 'Nordic', href: 'extending.php?choice=widerRegion&calendar=nordic' },
+            { label: 'Americas', href: 'extending.php?choice=widerRegion&calendar=americas' },
+            { label: 'Baltic', href: 'extending.php?choice=widerRegion&calendar=baltic' },
             { label: 'Sweden', href: null },
         ]);
     });

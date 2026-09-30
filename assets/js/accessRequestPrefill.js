@@ -1,7 +1,7 @@
 /**
  * Parses the access-request form's deep-link query string
- * (`?object_type=...&object_id=...`) into a prefill for its first permission
- * row.
+ * (`?object_type=...&object_id=...[&relation=admin]`) into a prefill for its
+ * first permission row.
  *
  * The link is built by `actionUrl()` in `particularCalendarsTree.js` (the
  * navigator hub's "Request access" action), which only ever names one of the
@@ -11,7 +11,8 @@
  * — an unknown `object_type`, a missing/empty `object_id`, an id that
  * doesn't look rite-qualified, or a non-Roman rite on a Roman-only type
  * (`national_calendar`, `wider_region` — mirrors `ROMAN_ONLY_OBJECT_TYPES` in
- * `riteScopedObjectId.js`) — is treated as "no prefill" rather than an error:
+ * `riteScopedObjectId.js`), or a `relation` other than `editor`/`admin` — is
+ * treated as "no prefill" rather than an error:
  * the form simply opens untouched. No coercion: an invalid rite is rejected,
  * never silently rewritten to `roman`.
  *
@@ -57,9 +58,20 @@ const ROMAN_ONLY_OBJECT_TYPES = Object.freeze(['national_calendar', 'wider_regio
 const OBJECT_ID_PATTERN = /^(roman|ambrosian)\/([A-Za-z0-9_-]{1,64})$/;
 
 /**
+ * The relations a prefill may request. `actionUrl()` names `admin` on a
+ * calendar not yet created (creating one needs admin, API #669) and no
+ * relation otherwise, which means `editor`.
+ * @type {ReadonlyArray<string>}
+ */
+const PREFILLABLE_RELATIONS = Object.freeze(['editor', 'admin']);
+
+/** The relation a prefill requests when the query names none. */
+const DEFAULT_RELATION = 'editor';
+
+/**
  * @param {string} search - `location.search`, with or without its leading `?`
- * @returns {{object_type: string, object_id: string}|null} The prefill, or
- *   `null` when the query names no valid prefill.
+ * @returns {{object_type: string, object_id: string, relation: string}|null}
+ *   The prefill, or `null` when the query names no valid prefill.
  */
 export function parseAccessRequestPrefill(search) {
     const params = new URLSearchParams(search ?? '');
@@ -74,5 +86,8 @@ export function parseAccessRequestPrefill(search) {
     const [, rite] = match;
     if (ROMAN_ONLY_OBJECT_TYPES.includes(objectType) && rite !== 'roman') return null;
 
-    return { object_type: objectType, object_id: objectId };
+    const relation = params.get('relation') ?? DEFAULT_RELATION;
+    if (!PREFILLABLE_RELATIONS.includes(relation)) return null;
+
+    return { object_type: objectType, object_id: objectId, relation };
 }

@@ -4,24 +4,24 @@ import { parseAccessRequestPrefill } from '../accessRequestPrefill.js';
 describe('parseAccessRequestPrefill', () => {
     it('parses a national calendar deep link', () => {
         expect(parseAccessRequestPrefill('?object_type=national_calendar&object_id=roman/FR'))
-            .toEqual({ object_type: 'national_calendar', object_id: 'roman/FR' });
+            .toEqual({ object_type: 'national_calendar', object_id: 'roman/FR', relation: 'editor' });
     });
 
     it('parses a wider region deep link', () => {
         expect(parseAccessRequestPrefill('?object_type=wider_region&object_id=roman/europe'))
-            .toEqual({ object_type: 'wider_region', object_id: 'roman/europe' });
+            .toEqual({ object_type: 'wider_region', object_id: 'roman/europe', relation: 'editor' });
     });
 
     it('parses a diocesan calendar deep link, including an Ambrosian rite', () => {
         expect(parseAccessRequestPrefill('?object_type=diocesan_calendar&object_id=roman/romamo_it'))
-            .toEqual({ object_type: 'diocesan_calendar', object_id: 'roman/romamo_it' });
+            .toEqual({ object_type: 'diocesan_calendar', object_id: 'roman/romamo_it', relation: 'editor' });
         expect(parseAccessRequestPrefill('?object_type=diocesan_calendar&object_id=ambrosian/lugano_ch'))
-            .toEqual({ object_type: 'diocesan_calendar', object_id: 'ambrosian/lugano_ch' });
+            .toEqual({ object_type: 'diocesan_calendar', object_id: 'ambrosian/lugano_ch', relation: 'editor' });
     });
 
     it('accepts the query string with or without a leading "?"', () => {
         expect(parseAccessRequestPrefill('object_type=national_calendar&object_id=roman/FR'))
-            .toEqual({ object_type: 'national_calendar', object_id: 'roman/FR' });
+            .toEqual({ object_type: 'national_calendar', object_id: 'roman/FR', relation: 'editor' });
     });
 
     it('rejects an unknown object_type', () => {
@@ -63,8 +63,25 @@ describe('parseAccessRequestPrefill', () => {
 
     it('accepts either rite for diocesan_calendar, which is not Roman-only', () => {
         expect(parseAccessRequestPrefill('?object_type=diocesan_calendar&object_id=roman/romamo_it'))
-            .toEqual({ object_type: 'diocesan_calendar', object_id: 'roman/romamo_it' });
+            .toEqual({ object_type: 'diocesan_calendar', object_id: 'roman/romamo_it', relation: 'editor' });
         expect(parseAccessRequestPrefill('?object_type=diocesan_calendar&object_id=ambrosian/lugano_ch'))
-            .toEqual({ object_type: 'diocesan_calendar', object_id: 'ambrosian/lugano_ch' });
+            .toEqual({ object_type: 'diocesan_calendar', object_id: 'ambrosian/lugano_ch', relation: 'editor' });
+    });
+
+    it('defaults the relation to editor', () => {
+        expect(parseAccessRequestPrefill('?object_type=national_calendar&object_id=roman/FR').relation).toBe('editor');
+    });
+
+    it('accepts relation=editor and relation=admin', () => {
+        expect(parseAccessRequestPrefill('?object_type=national_calendar&object_id=roman/SE&relation=admin'))
+            .toEqual({ object_type: 'national_calendar', object_id: 'roman/SE', relation: 'admin' });
+        expect(parseAccessRequestPrefill('?object_type=wider_region&object_id=roman/nordic&relation=editor'))
+            .toEqual({ object_type: 'wider_region', object_id: 'roman/nordic', relation: 'editor' });
+    });
+
+    it('ignores the whole prefill on any other relation, rather than coercing it', () => {
+        expect(parseAccessRequestPrefill('?object_type=national_calendar&object_id=roman/SE&relation=owner')).toBeNull();
+        expect(parseAccessRequestPrefill('?object_type=national_calendar&object_id=roman/SE&relation=')).toBeNull();
+        expect(parseAccessRequestPrefill('?object_type=national_calendar&object_id=roman/SE&relation=Admin')).toBeNull();
     });
 });

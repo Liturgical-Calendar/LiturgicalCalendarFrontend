@@ -122,9 +122,9 @@ export function defaultView(rights, remembered) {
 
 /**
  * The locale each region's Translate action opens: the region's first locale of a member
- * nation whose calendar the user edits, else the first locale of that nation's own calendar
- * (a national editor may add it to the region). A region with neither is left out, and its
- * Translate action opens the region without a locale.
+ * nation whose calendar the user edits. A region offering none of those is left out, and its
+ * Translate action opens the region without a locale (the deep link then picks one the region
+ * offers: `widerRegionOpeningLocale()`); a locale the region does not offer would not open.
  * @param {NavigatorNode[]} tree - The full tree (not a filtered one), for the region members
  * @param {object} metadata - `/calendars` `litcal_metadata`
  * @param {NavigatorRights|undefined} rights
@@ -139,16 +139,12 @@ export function translateLocales(tree, metadata, rights) {
     const regionLocales = new Map(
         (metadata?.wider_regions ?? []).map((region) => [region.id ?? region.name, region.locales ?? []]),
     );
-    const nationLocales = new Map(
-        (metadata?.national_calendars ?? []).map((calendar) => [calendar.calendar_id, calendar.locales ?? []]),
-    );
 
     const result = {};
     for (const node of tree ?? []) {
         if (node.kind !== 'region' || !node.actions.includes('translate')) continue;
         const members = node.children.map((child) => child.id).filter((iso) => edited.has(iso));
-        const locale = (regionLocales.get(node.id) ?? []).find((l) => members.includes(nationOfLocale(l)))
-            ?? members.map((iso) => nationLocales.get(iso)?.[0]).find(Boolean);
+        const locale = (regionLocales.get(node.id) ?? []).find((l) => members.includes(nationOfLocale(l)));
         if (locale) result[node.id] = locale;
     }
     return result;
@@ -257,11 +253,17 @@ function isExpanded(expanded, key, fallback) {
 /**
  * @param {NavigatorNode} node
  * @param {Object<string,string>} messages
- * @returns {HTMLElement[]} The node's note, as a one-element list, or none
+ * @returns {HTMLElement[]} The node's note, and the reason it offers no action when it has a
+ *   `disabledReason` but no (disabled) Create to carry it
  */
 function noteElements(node, messages) {
+    const notes = [];
     const key = NOTE_KEYS[node.note];
-    return key ? [el('small', { class: 'pcn-note', text: t(messages, key) })] : [];
+    if (key) notes.push(el('small', { class: 'pcn-note', text: t(messages, key) }));
+    if (node.disabledReason && !node.actions.includes('create')) {
+        notes.push(el('small', { class: 'pcn-note', text: t(messages, `Navigator - ${node.disabledReason}`) }));
+    }
+    return notes;
 }
 
 /**

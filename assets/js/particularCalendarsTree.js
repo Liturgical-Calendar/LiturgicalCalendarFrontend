@@ -19,7 +19,7 @@
  */
 
 import { idToWords, regionId, regionLabel } from './prospectiveWiderRegions.js';
-import { nationWiderRegions } from './widerRegions.js';
+import { nationWiderRegions, widerRegionsByNation } from './widerRegions.js';
 import { AMBROSIAN_RITE, ROMAN_RITE, qualifyObjectId } from './riteScopedObjectId.js';
 
 /**
@@ -39,11 +39,12 @@ import { AMBROSIAN_RITE, ROMAN_RITE, qualifyObjectId } from './riteScopedObjectI
  * @property {boolean} exists
  * @property {Array<'edit'|'create'|'sanctorale'|'translate'|'request'>} actions
  * @property {string} [disabledReason] - e.g. `nation-missing` for a Roman diocese whose nation
- *   has no calendar
+ *   has no calendar: its Create is disabled, or, for a user without rights on it, it has no action
  * @property {string[]} [missals] - Nation nodes only: the national Missal editions `/missals`
  *   lists for it, when it has any
  * @property {string} [note] - `no-missal` on a nation without Missal editions;
- *   `ambrosian-unsupported` on an Ambrosian diocese, which no form can load yet (it has no actions)
+ *   `ambrosian-unsupported` on an Ambrosian diocese, which no form can load yet (it has no actions
+ *   but `request`, offered only to a user without rights on it)
  * @property {boolean} mine - Whether the user holds rights on this node (any action but `request`)
  * @property {boolean} [context] - Set by `filterMine()` on an ancestor kept only to reach a `mine` node
  * @property {NavigatorNode[]} children
@@ -216,15 +217,25 @@ function buildGroupNode(id, label, children) {
  * @returns {NavigatorNode} A diocese node
  */
 function buildDioceseNode({ id, label, rite, exists, nationExists, rights }) {
+    const nationMissing = rite === ROMAN_RITE && !nationExists;
     const actions = [];
     let disabledReason;
     if (exists) {
         if (canEdit(rights, DIOCESAN_CALENDAR_TYPE, rite, id)) actions.push('edit');
     } else if (canCreate(rights, DIOCESAN_CALENDAR_TYPE, rite, id)) {
         actions.push('create');
-        if (rite === ROMAN_RITE && !nationExists) disabledReason = 'nation-missing';
+        if (nationMissing) disabledReason = 'nation-missing';
     }
-    if (actions.length === 0) actions.push('request');
+    if (actions.length === 0) {
+        // The access-request diocese picker offers only nations that have a national calendar,
+        // so a request on a Roman diocese of a nation without one could not be selected there:
+        // offer none, and show why instead.
+        if (nationMissing) {
+            disabledReason = 'nation-missing';
+        } else {
+            actions.push('request');
+        }
+    }
 
     const node = {
         kind: 'diocese',
@@ -238,9 +249,11 @@ function buildDioceseNode({ id, label, rite, exists, nationExists, rights }) {
     };
     if (disabledReason) node.disabledReason = disabledReason;
     // The diocesan form reads and writes the Roman rite's `/data/diocese/{id}` only, so it
-    // cannot open an Ambrosian diocese: offer no action, but keep `mine` driven by the rights.
+    // cannot open an Ambrosian diocese: offer a user who holds rights on it no action (but keep
+    // `mine` driven by the rights); a user without rights keeps Request access, which the
+    // access-request picker handles for `ambrosian/…`.
     if (rite === AMBROSIAN_RITE) {
-        node.actions = [];
+        if (node.mine) node.actions = [];
         node.note = 'ambrosian-unsupported';
     }
     return node;
@@ -589,10 +602,13 @@ export function parseDeepLink(search) {
  * @param {string} type - An OpenFGA object type (`national_calendar`, `diocesan_calendar`, `wider_region`)
  * @param {string} id - The bare calendar id
  * @param {string} rite
- * @returns {string} `permission-requests.php?object_type=…&object_id=…`, URL-encoded
+ * @param {boolean} exists - Whether the calendar exists: creating one needs `admin` (API #669),
+ *   so a request on one not yet created asks for it; otherwise no relation is named (`editor`)
+ * @returns {string} `permission-requests.php?object_type=…&object_id=…[&relation=admin]`, URL-encoded
  */
-function requestUrl(type, id, rite) {
+function requestUrl(type, id, rite, exists) {
     const params = new URLSearchParams({ object_type: type, object_id: qualifyObjectId(type, id, rite) });
+    if (!exists) params.set('relation', 'admin');
     return `permission-requests.php?${params.toString()}`;
 }
 
@@ -621,7 +637,7 @@ export function actionUrl(node, action, context = {}) {
                 params.set('locale', context.locale ?? '');
                 return `extending.php?${params.toString()}`;
             }
-            if (action === 'request') return requestUrl(WIDER_REGION_TYPE, node.id, ROMAN_RITE);
+            if (action === 'request') return requestUrl(WIDER_REGION_TYPE, node.id, ROMAN_RITE, node.exists);
             break;
 
         case 'nation':
@@ -633,7 +649,7 @@ export function actionUrl(node, action, context = {}) {
             if (action === 'sanctorale') {
                 return `sanctorale.php#${new URLSearchParams({ rite: node.rite, calendar: node.id }).toString()}`;
             }
-            if (action === 'request') return requestUrl(NATIONAL_CALENDAR_TYPE, node.id, ROMAN_RITE);
+            if (action === 'request') return requestUrl(NATIONAL_CALENDAR_TYPE, node.id, ROMAN_RITE, node.exists);
             break;
 
         case 'diocese':
@@ -643,7 +659,7 @@ export function actionUrl(node, action, context = {}) {
                 params.set('rite', node.rite);
                 return `extending.php?${params.toString()}`;
             }
-            if (action === 'request') return requestUrl(DIOCESAN_CALENDAR_TYPE, node.id, node.rite);
+            if (action === 'request') return requestUrl(DIOCESAN_CALENDAR_TYPE, node.id, node.rite, node.exists);
             break;
 
         default:
@@ -690,9 +706,9 @@ function regionLabelForId(id, metadata) {
  * exists yet.
  *
  * - `widerRegion`: the hub, then the region itself (no parent to link to).
- * - `national`: the hub, then one segment per region the nation declares (`wider_regions` on
- *   its `/calendars` entry — empty for a nation not yet created, or one that declares none),
- *   then the nation itself.
+ * - `national`: the hub, then one segment per region the nation belongs to — those its
+ *   `/calendars` entry declares and those whose roster lists it, calendar or not (the tree's
+ *   membership), deduplicated, broadest first (`widerRegionsByNation()`) — then the nation itself.
  * - `diocesan`: the hub, then the diocese's nation (from `metadata` when the diocese's calendar
  *   exists, else from `worldDioceses`, a not-yet-created one), then the diocese; for the
  *   Ambrosian rite, which has no national tier, the middle segment is the rite itself (linked to
@@ -719,8 +735,8 @@ export function breadcrumbSegments({ choice, calendar, rite = ROMAN_RITE, metada
     }
 
     if (choice === 'national') {
-        const declared = metadata?.national_calendars?.find((item) => item.calendar_id === calendar);
-        const regionSegments = nationWiderRegions(declared ?? {}).map((id) => ({
+        const memberships = widerRegionsByNation(metadata?.national_calendars, metadata?.wider_regions);
+        const regionSegments = (memberships[calendar] ?? []).map((id) => ({
             label: regionLabelForId(id, metadata),
             href: actionUrl({ kind: 'region', id, rite: ROMAN_RITE }, 'edit'),
         }));
