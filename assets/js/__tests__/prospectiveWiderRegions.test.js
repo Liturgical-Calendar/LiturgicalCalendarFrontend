@@ -1,70 +1,132 @@
 /**
- * Tests for the wider region name rule and the prospective-region helpers
- * shared by the permission pickers and the extending page (#591, #66).
+ * Tests for the wider region id/label rules and the prospective-region helpers
+ * shared by the permission pickers and the extending page (#591, #66, #1018).
  */
 import { describe, it, expect } from 'vitest';
 import {
-    WIDER_REGION_NAME_PATTERN,
+    WIDER_REGION_ID_PATTERN,
     findProspectiveRegion,
-    isValidWiderRegionName,
+    idToWords,
+    isValidWiderRegionId,
+    labelKeyForLocale,
     offeredLocales,
+    regionId,
+    regionLabel,
+    resolveLabel,
     rosterToNationalCalendars,
     widerRegionNationalCalendars,
 } from '../prospectiveWiderRegions.js';
 
 const prospective = [
     {
-        name: 'Nordic',
+        id: 'nordic',
         description: 'Nordic Episcopal Conference',
         roster: ['DK', 'SE'],
         locales: ['da_DK'],
     },
     {
-        name: 'Southern Africa',
+        id: 'southern-africa',
         description: '',
         roster: ['ZA', 'BW', 'SZ'],
         locales: [],
     },
 ];
 
-describe('isValidWiderRegionName', () => {
+describe('isValidWiderRegionId', () => {
     it.each([
-        'Europe',
-        'Southern Africa',
-        'Senegal Mauritania Cabo Verde Guinea Bissau',
-    ])('accepts %s', (name) => {
-        expect(isValidWiderRegionName(name)).toBe(true);
+        'europe',
+        'german-language-area',
+        'senegal-mauritania-cabo-verde-guinea-bissau',
+    ])('accepts %s', (id) => {
+        expect(isValidWiderRegionId(id)).toBe(true);
     });
     it.each([
         '',
-        'europe',
-        'Guinea-Bissau',
-        'São Tomé',
-        'Two  Spaces',
-        'Trailing ',
+        'Europe',
+        'german language area',
+        'german--area',
+        '-europe',
+        'europe-',
+        'são-tomé',
+        'area1',
         42,
         null,
-    ])('rejects %s', (name) => {
-        expect(isValidWiderRegionName(name)).toBe(false);
+    ])('rejects %s', (id) => {
+        expect(isValidWiderRegionId(id)).toBe(false);
     });
-    it('exposes the same pattern', () => {
-        expect(WIDER_REGION_NAME_PATTERN.source).toBe(
-            '^[A-Z][A-Za-z]*( [A-Z][A-Za-z]*)*$',
+    it('exposes the pattern', () => {
+        expect(WIDER_REGION_ID_PATTERN.source).toBe('^[a-z]+(-[a-z]+)*$');
+    });
+});
+
+describe('regionId / regionLabel', () => {
+    it('prefer id and label', () => {
+        const region = { id: 'europe', label: 'Europa', name: 'europe' };
+        expect(regionId(region)).toBe('europe');
+        expect(regionLabel(region)).toBe('Europa');
+    });
+    it('fall back to name on an older API', () => {
+        expect(regionId({ name: 'Europe' })).toBe('Europe');
+        expect(regionLabel({ name: 'Europe' })).toBe('Europe');
+    });
+});
+
+describe('labelKeyForLocale', () => {
+    it.each([
+        ['it_IT', 'it'],
+        ['it_CH', 'it'],
+        ['de', 'de'],
+        ['zh_Hans_SG', 'zh_Hans'],
+        ['zh-Hant-TW', 'zh_Hant'],
+        ['sr_Latn_RS', 'sr_Latn'],
+    ])('%s → %s', (locale, key) => {
+        expect(labelKeyForLocale(locale)).toBe(key);
+    });
+});
+
+describe('idToWords', () => {
+    it('title-cases each word', () => {
+        expect(idToWords('german-language-area')).toBe('German Language Area');
+        expect(idToWords('europe')).toBe('Europe');
+    });
+});
+
+describe('resolveLabel', () => {
+    const labels = { en: 'Chinese Area', zh_Hans: '华语区', it: 'Area cinese' };
+    it('tries language plus script, then language, then en', () => {
+        expect(resolveLabel(labels, 'zh_Hans_CN', 'chinese-area')).toBe(
+            '华语区',
         );
+        expect(resolveLabel(labels, 'it_IT', 'chinese-area')).toBe(
+            'Area cinese',
+        );
+        expect(resolveLabel(labels, 'zh_Hant_TW', 'chinese-area')).toBe(
+            'Chinese Area',
+        );
+        expect(resolveLabel(labels, 'fr', 'chinese-area')).toBe('Chinese Area');
+    });
+    it('uses the M.49 name before the id words', () => {
+        expect(resolveLabel({}, 'fr', 'africa', '002')).toBe('Afrique');
+        expect(
+            resolveLabel({ fr: 'Continent africain' }, 'fr', 'africa', '002'),
+        ).toBe('Continent africain');
+    });
+    it('falls back to words from the id', () => {
+        expect(resolveLabel(null, 'it', 'north-africa')).toBe('North Africa');
     });
 });
 
 describe('findProspectiveRegion', () => {
-    it('finds by exact name', () => {
-        expect(findProspectiveRegion(prospective, 'Nordic')?.roster).toEqual([
+    it('finds by exact id', () => {
+        expect(findProspectiveRegion(prospective, 'nordic')?.roster).toEqual([
             'DK',
             'SE',
         ]);
     });
-    it('is undefined for an unknown name, a different case, or no list', () => {
-        expect(findProspectiveRegion(prospective, 'Europe')).toBeUndefined();
-        expect(findProspectiveRegion(prospective, 'nordic')).toBeUndefined();
-        expect(findProspectiveRegion(null, 'Nordic')).toBeUndefined();
+    it('is undefined for an unknown id, a different case, or no list', () => {
+        expect(findProspectiveRegion(prospective, 'europe')).toBeUndefined();
+        expect(findProspectiveRegion(prospective, 'Nordic')).toBeUndefined();
+        expect(findProspectiveRegion(null, 'nordic')).toBeUndefined();
     });
 });
 

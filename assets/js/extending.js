@@ -42,7 +42,7 @@ import { eligibleWiderRegions, nationWiderRegions, widerRegionRoster, widerRegio
 import { isOfficialLocale, newNationalCalendarLocaleOptions, unofficialLocales } from './nationalCalendarLocales.js';
 import {
     findProspectiveRegion,
-    isValidWiderRegionName,
+    isValidWiderRegionId,
     offeredLocales,
     widerRegionNationalCalendars,
 } from './prospectiveWiderRegions.js';
@@ -637,7 +637,7 @@ const sanitizeProxiedAPI = {
                     }
                     // Since API #1007 any name of the right shape can be a wider region;
                     // whether it exists is a runtime check (wider_regions_keys).
-                    if (false === isValidWiderRegionName(value)) {
+                    if (false === isValidWiderRegionId(value)) {
                         console.error(`property 'key=${value}' of this object is not a valid wider region name: each word must start with an uppercase letter and contain only letters`);
                         return;
                     }
@@ -2400,7 +2400,7 @@ const regionalNationalCalendarNameChanged = (ev) => {
         // Strip a ' - locale' suffix the same way the API Proxy's set trap does, so we
         // validate the name the proxy will actually check.
         const [name] = ev.target.value.split(' - ');
-        if (false === isValidWiderRegionName(name)) {
+        if (false === isValidWiderRegionId(name)) {
             toastr["error"](Messages['Invalid wider region name'], Messages['Error']);
             ev.target.classList.add('is-invalid');
             return;

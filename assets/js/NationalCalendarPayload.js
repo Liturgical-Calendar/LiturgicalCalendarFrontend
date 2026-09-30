@@ -36,7 +36,7 @@
 
 import { CalendarSettings, Locale } from './Settings.js';
 import { getMonthMaxDay } from './FormControls.js';
-import { WIDER_REGION_NAME_PATTERN } from './prospectiveWiderRegions.js';
+import { WIDER_REGION_ID_PATTERN } from './prospectiveWiderRegions.js';
 
 /**
  * Checks if a given day value is valid for a given month.
@@ -701,15 +701,15 @@ class NationalCalendarPayloadMetadata {
                 throw new Error('`metadata.locales` parameter must be an array of valid locale codes');
             }
         }
-        // The API's shape for a wider region name; whether the region exists, and
+        // The API's rule for a wider region id; whether the region exists, and
         // lists this nation, is the API's own check (422 on save).
-        const widerRegionName = WIDER_REGION_NAME_PATTERN;
+        const widerRegionId = WIDER_REGION_ID_PATTERN;
         if (
             false === Array.isArray(metadata.wider_regions)
-            || metadata.wider_regions.some(name => typeof name !== 'string' || false === widerRegionName.test(name))
+            || metadata.wider_regions.some(id => typeof id !== 'string' || false === widerRegionId.test(id))
             || new Set(metadata.wider_regions).size !== metadata.wider_regions.length
         ) {
-            throw new Error('`metadata.wider_regions` parameter must be an array of distinct wider region names');
+            throw new Error('`metadata.wider_regions` parameter must be an array of distinct wider region ids');
         }
         if (false === Array.isArray(metadata.missals)) {
             throw new Error('`metadata.missals` parameter must be an array');
