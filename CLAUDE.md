@@ -363,10 +363,13 @@ log line saying nothing was written.
 | Wider Region  | `createNew`, `makePatron` only                                                               |
 | Diocesan      | `createNew`, `makePatron` only                                                               |
 
-A WiderRegion name must match the API's shape rule `^[A-Z][A-Za-z]*( [A-Z][A-Za-z]*)*$` (API #1007); whether the region
-exists is a runtime check against `/calendars` `wider_regions_keys`. The regions that do not exist yet but can be
-created — the multinational groupings of the Notitiae survey — are curated in `assets/data/ProspectiveWiderRegions.json`
-(read by `src/ProspectiveWiderRegions.php`), and both the permission pickers and the extending page offer them.
+Wider region **ids** (lowercase kebab-case: `^[a-z]+(-[a-z]+)*$`, API #1018) identify regions; **labels**
+(`metadata.labels`, per language) display them. Prospective regions (all five continents) are curated in
+`assets/data/ProspectiveWiderRegions.json` (read by `src/ProspectiveWiderRegions.php`). The extending page
+edits labels one field per language. M.49 codes (africa `002`, oceania `009`, north-africa `015`,
+southern-africa `018`, americas `019`, asia `142`, europe `150` via `m49_codes`) provide ICU-suggested
+labels for empty language fields, seeded on save. Label fields are editable only by whole-region editors;
+the per-locale save path cannot carry labels.
 
 ## Troubleshooting
 

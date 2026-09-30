@@ -4,6 +4,7 @@
   wider regions, nations, dioceses)
 - **Depends on:** LiturgicalCalendarAPI #1007 (merged): wider region names are a shape rule, `/calendars` publishes
   each region's `roster` and `national_calendars`
+- **Amended by:** `docs/superpowers/specs/2026-09-30-wider-region-ids-and-labels-frontend-design.md` — IDs and labels
 - **Branch:** `feat/prospective-wider-regions` → `development`
 
 ## Goal

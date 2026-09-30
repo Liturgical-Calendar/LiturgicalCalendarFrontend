@@ -626,9 +626,9 @@ OpenFGA script applied; `/calendars` returns `id`/`label`.
       header with a one-line "Amended by …ids-and-labels-frontend-design.md".
 - [ ] **Step 2:** Run the full suite, then revert fixer changes to files this branch never touched:
 
-  ```bash
-  composer parallel-lint && composer lint:fix && composer analyse && composer test && composer lint:md:fix
-  yarn typecheck && node_modules/.bin/eslint . && yarn test:unit && yarn format:md
-  ```
+    ```bash
+    composer parallel-lint && composer lint:fix && composer analyse && composer test && composer lint:md:fix
+    yarn typecheck && node_modules/.bin/eslint . && yarn test:unit && yarn format:md
+    ```
 
 - [ ] **Step 3: Commit** — `docs: wider region ids and labels (#1018)`
