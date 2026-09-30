@@ -3,19 +3,8 @@
  */
 
 /**
- * Valid wider region names as defined by the Liturgical Calendar API.
- * These represent geographical/cultural regions that can share liturgical events
- * across multiple national calendars.
- *
- * IMPORTANT: These values must match the enum in the API schema:
- * LiturgicalCalendarAPI/jsondata/schemas/WiderRegionCalendar.json#/definitions/CalendarMetadata/properties/wider_region
+ * The API's shape rule for a wider region id (`WiderRegionId`, API #1018): lowercase
+ * kebab-case, permanent once the region exists. Whether a region exists is a runtime
+ * check against `/calendars`.
  */
-export const VALID_WIDER_REGIONS = [
-    'Africa',
-    'Americas',
-    'Asia',
-    'Europe',
-    'Oceania'
-] as const;
-
-export type WiderRegion = typeof VALID_WIDER_REGIONS[number];
+export const WIDER_REGION_ID_PATTERN = /^[a-z]+(-[a-z]+)*$/;

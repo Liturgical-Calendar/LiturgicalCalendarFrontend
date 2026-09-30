@@ -20,6 +20,10 @@ import {
 } from './riteScopedObjectId.js';
 import { buildNationObjectIdSelectFromConfig, NATIONAL_CALENDAR_TYPE } from './nationObjectIdSelect.js';
 import { DIOCESAN_CALENDAR_TYPE, loadWorldDioceses, mountDioceseObjectIdPicker } from './dioceseObjectIdPicker.js';
+import {
+    buildWiderRegionObjectIdSelectFromConfig,
+    WIDER_REGION_TYPE,
+} from './widerRegionObjectIdSelect.js';
 
 // Initialize the API client once; CalendarSelect requires this to have resolved.
 // Since components-js 2.0.0 init() rejects on failure rather than resolving to
@@ -148,10 +152,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     ];
 
-    // The five wider-region names (object_id for the wider_region scope).
-    // Keep in sync with the API; these are not localized (proper nouns).
-    const WIDER_REGIONS = ['Americas', 'Europe', 'Asia', 'Africa', 'Oceania'];
-
     // Object types allowed per role, mirroring AccessRequestRepository::ROLE_OBJECT_TYPES
     // (the API validates the SET, not the order; display order puts the
     // rite-level scope first).
@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     /**
      * Build a native <select class="form-select form-select-sm perm-object-id">
-     * for the non-calendar scopes (wider_region / rite calendar / GRC / GRC test).
+     * for the non-calendar scopes (rite calendar / GRC / GRC test).
      * @param {string} objectType - The currently selected object type
      * @returns {HTMLSelectElement} The built select element
      */
@@ -282,9 +282,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
 
         let entries = [];
-        if (objectType === 'wider_region') {
-            entries = WIDER_REGIONS.map(function(name) { return { value: name, label: name }; });
-        } else if (objectType === 'rite_calendar_test') {
+        if (objectType === 'rite_calendar_test') {
             // The test tier's id IS the rite, bare — `roman`, `ambrosian` — which
             // is why it is not rite-QUALIFIED like the data types. Mirrors
             // AccessRequestRepository, which validates it against Rite::cases().
@@ -328,6 +326,31 @@ document.addEventListener('DOMContentLoaded', async function() {
             locale:    LITCAL_LOCALE,
             className: 'form-select form-select-sm perm-object-id'
         }));
+    }
+
+    /**
+     * Mount the wider region picker for the `wider_region` scope (#591).
+     *
+     * Offers the regions that exist and the prospective ones not yet created, so
+     * a region's admin can be requested before the region exists. Metadata only
+     * sorts the list into existing / to-be-created; if it failed to load, the
+     * prospective regions are still offered, ungrouped.
+     * @param {HTMLElement} row - The permission row (.card element)
+     * @param {HTMLElement} mount - The row's `.perm-objid-mount`
+     */
+    async function mountWiderRegionObjectIdSelect(row, mount) {
+        const client = await apiClientReady;
+        if (
+            !row.isConnected ||
+            row.querySelector('.perm-object-type').value !== WIDER_REGION_TYPE
+        )
+            return;
+        mount.replaceChildren(
+            buildWiderRegionObjectIdSelectFromConfig(config, client, {
+                locale: LITCAL_LOCALE,
+                className: 'form-select form-select-sm perm-object-id',
+            }),
+        );
     }
 
     /**
@@ -411,6 +434,11 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         if (objectType === DIOCESAN_CALENDAR_TYPE) {
             await mountDioceseObjectIdSelect(row, mount);
+            return;
+        }
+
+        if (objectType === WIDER_REGION_TYPE) {
+            await mountWiderRegionObjectIdSelect(row, mount);
             return;
         }
 

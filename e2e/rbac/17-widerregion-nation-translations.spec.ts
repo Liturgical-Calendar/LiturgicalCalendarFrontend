@@ -11,9 +11,9 @@ import { expectWriteApplied } from '../support/writeMode';
  * translations of a wider region, and nothing else of it.
  *
  * A wider region is shared by several nations, and its translations are per
- * nation: Europe's `it_IT` is Italy's. So an editor of `national_calendar:roman/IT`
- * (cei-editor) may write Europe's `it_IT` through
- * `PUT /data/widerregion/Europe/it_IT` — authorized by
+ * nation: europe's `it_IT` is Italy's. So an editor of `national_calendar:roman/IT`
+ * (cei-editor) may write europe's `it_IT` through
+ * `PUT /data/widerregion/europe/it_IT` — authorized by
  * `OpenFgaAuthorizationMiddleware::forWiderRegionLocale()`, editor on the wider
  * region OR on the locale's nation — but not `fr_FR`, and not the whole-region
  * PATCH. The page shows the same rule (assets/js/widerRegionEditRights.js): every
@@ -27,7 +27,7 @@ import { expectWriteApplied } from '../support/writeMode';
 
 const API_BASE = `${process.env.API_PROTOCOL || 'http'}://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || '8000'}`;
 const API_REPO = process.env.API_REPO_PATH || path.resolve(__dirname, '../../../LiturgicalCalendarAPI');
-const EUROPE_DIR = path.join(API_REPO, 'jsondata', 'sourcedata', 'rite', 'roman', 'calendars', 'wider_regions', 'Europe');
+const EUROPE_DIR = path.join(API_REPO, 'jsondata', 'sourcedata', 'rite', 'roman', 'calendars', 'wider_regions', 'europe');
 
 const europeTranslations = (locale: string): Record<string, string> =>
     JSON.parse(fs.readFileSync(path.join(EUROPE_DIR, 'i18n', `${locale}.json`), 'utf8'));
@@ -41,45 +41,45 @@ test.describe('wider region translations by nation', () => {
         await settleCleanup('scenario 17', [revokeScope('cei-editor'), gitRestoreApiData()]);
     });
 
-    test('the API lets an editor of Italy write Europe\'s it_IT and nothing else', async ({ browser }) => {
+    test('the API lets an editor of Italy write europe\'s it_IT and nothing else', async ({ browser }) => {
         const headers = { Accept: 'application/json', 'Content-Type': 'application/json' };
         const cei = await actingAs(browser, 'cei-editor');
         try {
-            const own = await cei.page.request.put(`${API_BASE}/data/widerregion/Europe/it_IT`, {
+            const own = await cei.page.request.put(`${API_BASE}/data/widerregion/europe/it_IT`, {
                 headers, data: europeTranslations('it_IT')
             });
-            await expectWriteApplied(own, 'PUT /data/widerregion/Europe/it_IT for an editor of IT');
+            await expectWriteApplied(own, 'PUT /data/widerregion/europe/it_IT for an editor of IT');
 
-            const other = await cei.page.request.put(`${API_BASE}/data/widerregion/Europe/fr_FR`, {
+            const other = await cei.page.request.put(`${API_BASE}/data/widerregion/europe/fr_FR`, {
                 headers, data: europeTranslations('fr_FR')
             });
             expect(other.status(), `PUT fr_FR should be 403 for an editor of IT; got ${other.status()}: ${await other.text()}`).toBe(403);
 
             // The whole region is not theirs: the PATCH still needs editor on the wider region.
-            const whole = await cei.page.request.patch(`${API_BASE}/data/widerregion/Europe`, {
+            const whole = await cei.page.request.patch(`${API_BASE}/data/widerregion/europe`, {
                 headers: { ...headers, 'Accept-Language': 'it-IT' }, data: {}
             });
-            expect(whole.status(), `PATCH /data/widerregion/Europe should be 403; got ${whole.status()}`).toBe(403);
+            expect(whole.status(), `PATCH /data/widerregion/europe should be 403; got ${whole.status()}`).toBe(403);
         } finally {
             await cei.context.close();
         }
     });
 
     test('an editor of Italy, a European nation, may not write into the Americas', async ({ browser }) => {
-        // Membership, not just the nation grant: Italy belongs to Europe, so the fallback
-        // that lets a national editor write their own locale does not reach the Americas.
+        // Membership, not just the nation grant: Italy belongs to europe, so the fallback
+        // that lets a national editor write their own locale does not reach americas.
         const cei = await actingAs(browser, 'cei-editor');
         const { page } = cei;
         try {
-            const put = await page.request.put(`${API_BASE}/data/widerregion/Americas/it_IT`, {
+            const put = await page.request.put(`${API_BASE}/data/widerregion/americas/it_IT`, {
                 headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
                 data: { OurLadyOfGuadalupe: 'Nostra Signora di Guadalupe' }
             });
-            expect(put.status(), `PUT Americas/it_IT should be 403; got ${put.status()}: ${await put.text()}`).toBe(403);
+            expect(put.status(), `PUT americas/it_IT should be 403; got ${put.status()}: ${await put.text()}`).toBe(403);
 
             await page.goto('/extending.php?choice=widerRegion');
             const regionInput = page.locator('#widerRegionCalendarName');
-            await regionInput.fill('Americas - en_US');
+            await regionInput.fill('americas - en_US');
             await regionInput.press('Enter');
             await regionInput.blur();
             await expect(page.locator('#widerRegionEditRightsNotice')).toBeVisible({ timeout: 20000 });
@@ -99,7 +99,7 @@ test.describe('wider region translations by nation', () => {
         try {
             await page.goto('/extending.php?choice=widerRegion');
             const regionInput = page.locator('#widerRegionCalendarName');
-            await regionInput.fill('Europe - it_IT');
+            await regionInput.fill('europe - it_IT');
             await regionInput.press('Enter');
             await regionInput.blur();
 
@@ -121,17 +121,26 @@ test.describe('wider region translations by nation', () => {
                 await expect(button).toBeDisabled();
             }
 
+            // The region's labels are written only by the whole-region save, which is not
+            // theirs: every label field is locked, and says why.
+            const labelInputs = page.locator('#widerRegionLabels [data-label-key]');
+            expect(await labelInputs.count()).toBeGreaterThan(0);
+            for (const input of await labelInputs.all()) {
+                await expect(input).toBeDisabled();
+                await expect(input).toHaveAttribute('title', 'Only an editor of the whole wider region can change its names.');
+            }
+
             let patchSent = false;
             page.on('request', (r) => {
                 if (r.method() === 'PATCH' && r.url().includes('/data/widerregion/')) patchSent = true;
             });
-            // Save is enabled once every one of Europe's 30-odd locales has loaded; a
+            // Save is enabled once every one of europe's 30-odd locales has loaded; a
             // toast from that load can sit over it, so clear them before clicking.
             const save = page.locator('#serializeWiderRegionData');
             await expect(save).toBeEnabled({ timeout: 20000 });
             await page.evaluate(() => document.querySelectorAll('#toast-container').forEach((t) => t.remove()));
             const put = page.waitForResponse((r) =>
-                r.url().endsWith('/data/widerregion/Europe/it_IT') && r.request().method() === 'PUT');
+                r.url().endsWith('/data/widerregion/europe/it_IT') && r.request().method() === 'PUT');
             await save.click();
             const response = await put;
             expect(response.status(), await response.text()).toBe(200);

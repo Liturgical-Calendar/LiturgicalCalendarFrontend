@@ -19,6 +19,10 @@ import {
 } from './riteScopedObjectId.js';
 import { buildNationObjectIdSelectFromConfig, NATIONAL_CALENDAR_TYPE } from './nationObjectIdSelect.js';
 import { DIOCESAN_CALENDAR_TYPE, loadWorldDioceses, mountDioceseObjectIdPicker } from './dioceseObjectIdPicker.js';
+import {
+    buildWiderRegionObjectIdSelectFromConfig,
+    WIDER_REGION_TYPE,
+} from './widerRegionObjectIdSelect.js';
 
 // Initialize the API client once; CalendarSelect requires this to have resolved.
 // Since components-js 2.0.0 init() rejects on failure rather than resolving to
@@ -93,16 +97,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     ];
 
-    // The five wider-region names (object_id for the wider_region scope).
-    // Keep in sync with the API; these are not localized (proper nouns).
-    const WIDER_REGIONS = ['Americas', 'Europe', 'Asia', 'Africa', 'Oceania'];
-
     const NATIONAL_FILTER_TYPES = ['national_calendar', 'national_calendar_test'];
     const DIOCESAN_FILTER_TYPES = ['diocesan_calendar', 'diocesan_calendar_test'];
 
     /**
      * Build a native <select class="form-select" id="grantObjectId"> for the
-     * non-calendar scopes (wider_region / rite calendar / GRC / GRC test).
+     * non-calendar scopes (rite calendar / GRC / GRC test).
      *
      * `rite_calendar` gets an <optgroup> per rite, and its option values are the
      * FULL rite-qualified ids: the grant modal mounts a RiteSelect only for the
@@ -139,9 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         let entries = [];
-        if (objectType === 'wider_region') {
-            entries = WIDER_REGIONS.map(function(name) { return { value: name, label: name }; });
-        } else if (objectType === 'rite_calendar_test') {
+        if (objectType === 'rite_calendar_test') {
             // The test tier's id IS the rite, bare — `roman`, `ambrosian` — not
             // rite-qualified like the data types. Mirrors AccessRequestRepository,
             // which validates it against Rite::cases().
@@ -177,6 +175,25 @@ document.addEventListener('DOMContentLoaded', function() {
             className: 'form-select',
             id:        'grantObjectId'
         }));
+    }
+
+    /**
+     * Mount the wider region picker for the `wider_region` scope (#591).
+     *
+     * See permission-requests.js: offers existing and prospective regions, so
+     * `admin` can be granted on a region before it is created.
+     * @param {HTMLElement} mount - #grantObjectIdMount
+     */
+    async function mountWiderRegionObjectIdSelect(mount) {
+        const client = await apiClientReady;
+        if (grantObjectType.value !== WIDER_REGION_TYPE) return; // scope changed again meanwhile
+        mount.replaceChildren(
+            buildWiderRegionObjectIdSelectFromConfig(config, client, {
+                locale: LITCAL_LOCALE,
+                className: 'form-select',
+                id: 'grantObjectId',
+            }),
+        );
     }
 
     /**
@@ -264,6 +281,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (objectType === DIOCESAN_CALENDAR_TYPE) {
             await mountDioceseObjectIdSelect(mount);
+            return;
+        }
+        if (objectType === WIDER_REGION_TYPE) {
+            await mountWiderRegionObjectIdSelect(mount);
             return;
         }
         if (

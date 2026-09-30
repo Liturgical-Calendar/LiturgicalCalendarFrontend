@@ -244,6 +244,18 @@ $messages = [
     // =========================================================================
     /** translators: label for wider region calendar name field */
     'Wider Region'                                    => _('Wider Region'),
+    /** translators: suffix appended to a prospective wider region's option label in the datalist */
+    'not yet created'                                 => _('not yet created'),
+    /** translators: error message when a wider region id typed by the user does not match the required shape */
+    'Invalid wider region name'                       => _('A wider region id is one or more lowercase words (a–z) joined by hyphens, e.g. german-language-area.'),
+    /** translators: heading of the wider region's label fields, one per language of the region */
+    'Region name'                                     => _('Region name'),
+    /** translators: hint under the wider region's label fields */
+    'Wider region labels hint'                        => _('One name per language of the region. Languages without a name show the English one.'),
+    /** translators: tooltip of a wider region label pre-filled from the region's UN M.49 / CLDR name */
+    'Suggested from UN M.49 / CLDR'                   => _('Suggested from UN M.49 / CLDR'),
+    /** translators: tooltip of a wider region label field that the user may not change */
+    'Wider region labels whole region only'           => _('Only an editor of the whole wider region can change its names.'),
     /** translators: label of the list of wider regions a national calendar inherits from */
     'Wider regions'                                   => _('Wider regions'),
     /** translators: label for national calendar name field */

@@ -55,7 +55,7 @@ import { USERS } from './support/users';
  *   server-side `/auth/dashboard-scopes` endpoint (AuthHelper::dashboardScopes()) now
  *   narrows Temporale and Decrees specifically: a calendar_editor whose only FGA
  *   relation is on a national/diocesan/wider_region object (e.g. cei-admin on IT,
- *   usccb-admin on US, europe-admin on Europe) holds no viewer-or-above relation on
+ *   usccb-admin on US, europe-admin on europe) holds no viewer-or-above relation on
  *   general_roman_calendar, so temporale and decrees are both hidden for them. Only
  *   grc-admin (admin@general_roman_calendar:temporale) satisfies the Temporale gate —
  *   an `admin` relation on an FGA object also satisfies viewer-or-above self-checks —

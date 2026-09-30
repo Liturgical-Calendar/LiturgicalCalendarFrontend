@@ -527,7 +527,7 @@ export class ExtendingPageHelper {
      * - No need for Authorization header or localStorage/sessionStorage access
      *
      * @param type - Calendar type: 'nation', 'diocese', or 'widerregion'
-     * @param key - The calendar identifier (e.g., 'US', 'boston_us', 'Americas')
+     * @param key - The calendar identifier (e.g., 'US', 'boston_us', 'americas')
      * @returns Object with status, body, and success flag
      */
     async deleteCalendar(type: 'nation' | 'diocese' | 'widerregion', key: string): Promise<{

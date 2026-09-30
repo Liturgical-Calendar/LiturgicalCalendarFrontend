@@ -1,6 +1,34 @@
 import { test, expect, gitRestoreApiData } from './fixtures';
-import { VALID_WIDER_REGIONS } from './constants';
+import { WIDER_REGION_ID_PATTERN } from './constants';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import { expectApplied } from './support/writeMode';
+
+type ProspectiveRegion = {
+    id: string;
+    labels: Record<string, string>;
+    roster: string[];
+    locales: string[];
+};
+
+/** The prospective wider regions the extending page offers (assets/data/ProspectiveWiderRegions.json). */
+function prospectiveWiderRegions(): ProspectiveRegion[] {
+    const file = path.resolve(
+        __dirname,
+        '../assets/data/ProspectiveWiderRegions.json',
+    );
+    return JSON.parse(readFileSync(file, 'utf8')).wider_regions;
+}
+
+/**
+ * A pattern-valid region id no stack will have, e.g. `testregion-kqbx`.
+ */
+function generatedRegionId(): string {
+    const suffix = Array.from({ length: 4 }, () =>
+        String.fromCharCode(97 + Math.floor(Math.random() * 26)),
+    ).join('');
+    return `testregion-${suffix}`;
+}
 
 /**
  * Tests for the Wider Region Calendar form on extending.php
@@ -52,7 +80,7 @@ test.describe('Wider Region Calendar Form', () => {
 
     test('should load an existing wider region calendar', async ({ page, extendingPage }) => {
         // Select Americas region from the datalist
-        await extendingPage.selectCalendar('#widerRegionCalendarName', 'Americas');
+        await extendingPage.selectCalendar('#widerRegionCalendarName', 'americas');
 
         // Wait for data to load and locales to be populated
         await extendingPage.waitForCalendarDataLoad('#widerRegionLocales');
@@ -79,8 +107,32 @@ test.describe('Wider Region Calendar Form', () => {
         let responseBody: any = null;
 
         // Load an existing wider region calendar (UPDATE scenario - should use PATCH)
-        await extendingPage.selectCalendar('#widerRegionCalendarName', 'Americas');
+        await extendingPage.selectCalendar('#widerRegionCalendarName', 'americas');
         await extendingPage.waitForCalendarDataLoad('#widerRegionLocales');
+
+        // The label block shows the region's stored labels (metadata.labels). Fetched
+        // independently here so the assertion tracks whatever the stack actually stores,
+        // rather than a hard-coded snapshot of americas's labels.
+        const apiBaseUrl = await page.evaluate(() => {
+            // @ts-ignore - BaseUrl is a global variable set by the frontend
+            return typeof BaseUrl !== 'undefined' ? BaseUrl : 'http://localhost:8000';
+        });
+        const americasMetadata = (
+            await (await page.request.get(`${apiBaseUrl}/calendars`)).json()
+        ).litcal_metadata.wider_regions.find(
+            (r: { id?: string; name?: string }) => (r.id ?? r.name) === 'americas',
+        );
+        const storedLabelsResponse = await page.request.get(
+            `${apiBaseUrl}/data/widerregion/americas?locale=${americasMetadata.locales[0]}`,
+        );
+        const storedLabels: Record<string, string> = (await storedLabelsResponse.json()).metadata?.labels ?? {};
+        expect(
+            Object.keys(storedLabels).length,
+            'americas has stored labels to assert the label block against',
+        ).toBeGreaterThan(0);
+        for (const [key, value] of Object.entries(storedLabels)) {
+            await expect(page.locator(`[data-label-key="${key}"]`)).toHaveValue(value);
+        }
 
         // Dismiss any toast messages that might be blocking
         await extendingPage.dismissToasts();
@@ -258,13 +310,21 @@ test.describe('Wider Region Calendar Form', () => {
         const existingRegionIds: string[] = calendarsData.litcal_metadata?.wider_regions_keys || [];
         console.log(`Found ${existingRegionIds.length} existing wider regions: ${existingRegionIds.join(', ')}`);
 
-        // Find a valid wider region that doesn't have calendar data yet
-        const regionToCreate = VALID_WIDER_REGIONS.find(r => !existingRegionIds.includes(r));
-
-        if (!regionToCreate) {
-            test.skip(true, `All valid wider regions already have calendar data`);
-            return;
-        }
+        // Create a prospective region that does not exist yet, so the pre-fill path runs;
+        // if every one already exists, a generated id still exercises CREATE. Ids are
+        // always a single hyphenated word (WIDER_REGION_ID_PATTERN), so — unlike the old
+        // capitalised names — nothing here needs to avoid spaces for the API's path
+        // segment to match the payload's `wider_region`.
+        //
+        // Preferring an entry with curated `labels` (not just the two prospective
+        // continents, whose `labels` are `{}` and resolve only via `m49`) makes the label
+        // editor assertions below meaningful: `german-language-area` is the first such
+        // entry, and its roster is exactly the four nations of its `de` locales, so its
+        // flag cell fills to (not past) FLAG_LIMIT.
+        const prospective = prospectiveWiderRegions().find(
+            (r) => Object.keys(r.labels).length > 0 && !existingRegionIds.includes(r.id),
+        );
+        const regionToCreate = prospective?.id ?? generatedRegionId();
 
         console.log(`Selected region for CREATE test: ${regionToCreate}`);
 
@@ -329,6 +389,50 @@ test.describe('Wider Region Calendar Form', () => {
         }, { timeout: 10000 });
         console.log('Locales dropdown populated');
 
+        if (prospective) {
+            // The region's suggested locales that this page offers are pre-selected.
+            // selectedOptions come back in DOM order (sorted by display name), not the
+            // JSON file's order, so compare as sorted arrays (controller ruling).
+            const preselected = await page.evaluate(() =>
+                Array.from(
+                    (document.querySelector('#widerRegionLocales') as HTMLSelectElement)
+                        .selectedOptions,
+                    (o) => o.value,
+                ),
+            );
+            const offered = await page.evaluate(() =>
+                Array.from(
+                    (document.querySelector('#widerRegionLocales') as HTMLSelectElement)
+                        .options,
+                    (o) => o.value,
+                ),
+            );
+            expect([...preselected].sort()).toEqual(
+                prospective.locales.filter((l) => offered.includes(l)).sort(),
+            );
+        }
+
+        if (prospective?.id === 'german-language-area') {
+            // The label editor mounts one field per label key the preselected locales
+            // imply (widerRegionLabels.js's labelFieldsFor): `en` always first, then `de`
+            // for the four German-speaking member nations (DE, AT, CH, LU) — exactly at
+            // FLAG_LIMIT, so every flag shows with no `+N` overflow.
+            const deRow = page.locator('.wr-label-row', {
+                has: page.locator('[data-label-key="de"]'),
+            });
+            await expect(deRow.locator('[data-label-key="de"]')).toHaveCount(1);
+            await expect(deRow.locator('[data-label-key="de"]')).toHaveValue('Deutsches Sprachgebiet');
+
+            const flagsText = await deRow.locator('.wr-label-flags').textContent();
+            const flagCount = (flagsText?.match(/[\u{1F1E6}-\u{1F1FF}]{2}/gu) ?? []).length;
+            expect(
+                flagCount,
+                `the de row's flag cell ("${flagsText}") shows one flag per member nation`,
+            ).toBe(4);
+
+            await expect(page.locator('[data-label-key="en"]')).toHaveValue('German Language Area');
+        }
+
         // STEP 1: Select locales BEFORE creating the liturgical event
         // Use bootstrap-multiselect plugin - click button to open, then check items
         console.log('Selecting locales using bootstrap-multiselect...');
@@ -337,18 +441,27 @@ test.describe('Wider Region Calendar Form', () => {
         await page.click('#widerRegionLocales + .btn-group button.multiselect');
         await page.waitForSelector('.multiselect-container.dropdown-menu.show', { timeout: 5000 });
 
-        // Select the first 3 locale checkboxes
+        // A prospective region's suggested locales are already checked (prepareNewWiderRegion
+        // preselects them before this dropdown ever opens). Keep them as-is instead of adding
+        // more, so the label fields asserted above stay exactly what was asserted. Only when
+        // nothing is preselected — a continent with no suggested locales, or the
+        // generated-id fallback — does this pick the first 3 to exercise CREATE at all.
         const selectedLocales = await page.evaluate(() => {
             const container = document.querySelector('.multiselect-container.dropdown-menu.show');
             if (!container) return [];
 
-            const checkboxes = container.querySelectorAll('input[type="checkbox"]:not(.multiselect-all)');
+            const checkboxes = Array.from(
+                container.querySelectorAll('input[type="checkbox"]:not(.multiselect-all)'),
+            ) as HTMLInputElement[];
+            const alreadyChecked = checkboxes.filter((cb) => cb.checked).map((cb) => cb.value);
+            if (alreadyChecked.length > 0) return alreadyChecked;
+
             const selected: string[] = [];
 
             // Select up to 3 locales
             const maxToSelect = Math.min(3, checkboxes.length);
             for (let i = 0; i < maxToSelect; i++) {
-                const checkbox = checkboxes[i] as HTMLInputElement;
+                const checkbox = checkboxes[i];
                 if (!checkbox.checked) {
                     checkbox.click();
                 }
@@ -661,8 +774,27 @@ test.describe('Wider Region Calendar Form', () => {
         expect(Array.isArray(capturedPayload.metadata.locales)).toBe(true);
         expect(capturedPayload.metadata.locales.length).toBeGreaterThan(0);
 
-        // Validate wider_region is one of the valid values
-        expect(VALID_WIDER_REGIONS).toContain(capturedPayload.metadata.wider_region);
+        // The id follows the API's shape rule, and is the region we chose
+        expect(capturedPayload.metadata.wider_region).toMatch(
+            WIDER_REGION_ID_PATTERN,
+        );
+        expect(capturedPayload.metadata.wider_region).toBe(regionToCreate);
+
+        // A prospective region sends its whole roster, even nations with no selected locale
+        if (prospective) {
+            const members = Object.values(capturedPayload.national_calendars ?? {});
+            for (const code of prospective.roster) {
+                expect(
+                    members,
+                    `${code} is on the ${prospective.id} roster`,
+                ).toContain(code);
+            }
+        }
+
+        if (prospective?.id === 'german-language-area') {
+            expect(capturedPayload.metadata.wider_region).toBe('german-language-area');
+            expect(capturedPayload.metadata.labels?.de).toBe('Deutsches Sprachgebiet');
+        }
 
         // Validate i18n structure against metadata.locales
         const hasI18n = capturedPayload.i18n && typeof capturedPayload.i18n === 'object';
@@ -702,6 +834,40 @@ test.describe('Wider Region Calendar Form', () => {
         const regionNameInput = page.locator('#widerRegionCalendarName');
         await expect(regionNameInput).toHaveAttribute('required', '');
     });
+
+    test('should show an error toast and not get stuck under the overlay for an invalid wider region id', async ({ page }) => {
+        // "german language" is neither an id (API #1018's WiderRegionId shape rule) nor a
+        // legacy capitalised name the page maps to one. Before the fix, the API Proxy's
+        // `set` trap rejected such a key AFTER the overlay had already been shown, and
+        // since extending.js is a strict-mode ES module, the Proxy's falsish return from
+        // `set` threw a TypeError at the assignment site — leaving the overlay stuck with
+        // no feedback to the user.
+        const regionNameInput = page.locator('#widerRegionCalendarName');
+        await regionNameInput.fill('german language');
+        await regionNameInput.blur();
+
+        // An error toast should appear...
+        await expect(page.locator('.toast-error, .toast.bg-danger')).toBeVisible({ timeout: 5000 });
+
+        // ...the input should be marked invalid...
+        await expect(regionNameInput).toHaveClass(/is-invalid/);
+
+        // ...and the loading overlay must never have been left stuck open.
+        await expect(page.locator('#overlay')).toBeHidden({ timeout: 5000 });
+    });
+
+    test('should open the id of a legacy capitalised name, as the API maps it', async ({ page }) => {
+        // An API older than #1018 named regions `German Language Area`; the page maps such a
+        // name to its id (lowercase, hyphen-joined) instead of rejecting it.
+        const regionNameInput = page.locator('#widerRegionCalendarName');
+        await regionNameInput.fill('German Language Area');
+        await regionNameInput.blur();
+
+        await expect(regionNameInput).toHaveValue('german-language-area');
+        await expect(regionNameInput).not.toHaveClass(/is-invalid/);
+        await expect(page.locator('.toast-error, .toast.bg-danger')).toHaveCount(0);
+        await expect(page.locator('#overlay')).toBeHidden({ timeout: 20000 });
+    });
 });
 
 test.describe('Wider Region Calendar Form - National Calendar Association', () => {
@@ -711,7 +877,7 @@ test.describe('Wider Region Calendar Form - National Calendar Association', () =
 
     test('should show associated national calendars', async ({ page, extendingPage }) => {
         // Load Americas region
-        await extendingPage.selectCalendar('#widerRegionCalendarName', 'Americas');
+        await extendingPage.selectCalendar('#widerRegionCalendarName', 'americas');
         await extendingPage.waitForCalendarDataLoad('#widerRegionLocales');
 
         // The form should show which national calendars are associated with this wider region
