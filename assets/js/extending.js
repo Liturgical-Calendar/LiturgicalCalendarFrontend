@@ -38,12 +38,13 @@ import { holydaysOfObligationSetting } from './Settings.js';
 import { fetchWithRetry, mapWithConcurrency } from './boundedFetch.js';
 import { editsWholeWiderRegion, editsWiderRegionLocale, localeWrites } from './widerRegionEditRights.js';
 import { widerRegionsForNation } from './widerRegionForNation.js';
-import { eligibleWiderRegions, nationWiderRegions, widerRegionRoster, widerRegionsByNation } from './widerRegions.js';
+import { eligibleWiderRegions, nationWiderRegions, widerRegionLabelById, widerRegionRoster, widerRegionsByNation } from './widerRegions.js';
 import { isOfficialLocale, newNationalCalendarLocaleOptions, unofficialLocales } from './nationalCalendarLocales.js';
 import {
     findProspectiveRegion,
     isValidWiderRegionId,
     offeredLocales,
+    regionId,
     widerRegionNationalCalendars,
 } from './prospectiveWiderRegions.js';
 
@@ -89,13 +90,13 @@ const enableSerializeButton = () => {
  * regions never carry over to the next.
  *
  * @param {string} nation ISO 3166-1 alpha-2 code
- * @param {string[]} selected the regions to select
+ * @param {string[]} selected ids of the regions to select
  */
 const fillWiderRegionsControl = (nation, selected) => {
     const select = document.querySelector('#associatedWiderRegions');
     if (!select) return;
-    const names = eligibleWiderRegions(nation, LitCalMetadata.wider_regions, selected);
-    select.replaceChildren(...names.map(name => new Option(name, name, false, selected.includes(name))));
+    const ids = eligibleWiderRegions(nation, LitCalMetadata.wider_regions, selected);
+    select.replaceChildren(...ids.map(id => new Option(widerRegionLabelById(LitCalMetadata.wider_regions, id), id, false, selected.includes(id))));
     $(select).multiselect('rebuild');
 };
 
@@ -2803,7 +2804,7 @@ const deleteCalendarConfirmClicked = () => {
         }).then(response => handleDeleteResponse(response, () => {
             switch ( API.category ) {
                 case 'widerregion':
-                    LitCalMetadata.wider_regions = LitCalMetadata.wider_regions.filter(el => el.name !== API.key);
+                    LitCalMetadata.wider_regions = LitCalMetadata.wider_regions.filter(el => regionId(el) !== API.key);
                     LitCalMetadata.wider_regions_keys = LitCalMetadata.wider_regions_keys.filter(el => el !== API.key);
                     break;
                 case 'nation': {
@@ -3299,7 +3300,7 @@ let loadedWiderRegionMembers = [];
  * @returns {import('./widerRegionEditRights.js').WiderRegionMembership}
  */
 const widerRegionMembership = () => {
-    const region = (LitCalMetadata.wider_regions ?? []).find(({ name }) => name === currentWiderRegion());
+    const region = (LitCalMetadata.wider_regions ?? []).find(candidate => regionId(candidate) === currentWiderRegion());
     return {
         members: widerRegionRoster(region) ?? loadedWiderRegionMembers,
         declaredRegions: widerRegionsByNation(LitCalMetadata.national_calendars, LitCalMetadata.wider_regions)
