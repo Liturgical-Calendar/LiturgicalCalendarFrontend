@@ -17,6 +17,16 @@ translate, or request access. Two constraints shape it:
 - **The hierarchy is not a tree.** A nation can belong to several wider regions (Sweden: Europe and Nordic) or to
   none. The Ambrosian rite has diocesan calendars but no national tier and no regions. A diocesan calendar requires
   its nation's calendar to exist.
+- **Two editors per nation.** The sanctorale editor and the national calendar editor have not been unified. A
+  nation's data lives in up to two places, edited by two pages, and both are authorised by the same
+  `national_calendar:{rite}/{ISO}` grant:
+    - its **national calendar** (`extending.php?choice=national`): operations over the calendar, such as `moveEvent`,
+      `createNew` and `makePatron`;
+    - its **national Missal edition**, the Proper of Saints (`sanctorale.php`): fixed-date entries. It exists only
+      where `/missals/{rite}` lists an edition for that nation. Today that is `IT_1983` and `US_2011`.
+
+    Where no Missal data is available, a national calendar is created and maintained with the national calendar editor
+    alone, as for the Netherlands.
 
 ## Decisions
 
@@ -41,6 +51,7 @@ The hub needs no new API endpoint. Its inputs are:
 | Prospective regions               | `ProspectiveWiderRegions::all($uiLocale)`                                            | page load                      |
 | Nations that can have a calendar  | `CatholicNations::localized($uiLocale)`                                              | page load                      |
 | Dioceses that can have a calendar | `assets/data/WorldDiocesesByNation.json` via `loadWorldDioceses()`                   | on first expansion of a nation |
+| National Missal editions          | `/missals/{rite}` (`region` = nation code, `missal_id`), fetched server-side         | page load                      |
 | The user's rights                 | `AuthHelper::dashboardScopes()` (`is_global_admin`, `admin_scopes`, `editor_scopes`) | page load                      |
 
 The rights are passed to the page as `NavigatorRights`:
@@ -48,16 +59,19 @@ The rights are passed to the page as `NavigatorRights`:
 ```js
 {
     isGlobalAdmin: false,
-    admin:  { national_calendar: ['IT'], diocesan_calendar: ['roman/torino_it'], wider_region: [] },
-    editor: { national_calendar: ['IT'], diocesan_calendar: ['roman/roma_it'],   wider_region: [] }
+    admin:  { national_calendar: ['roman/IT'], diocesan_calendar: ['roman/torino_it'], wider_region: [] },
+    editor: { national_calendar: ['roman/IT'], diocesan_calendar: ['roman/roma_it'],   wider_region: ['roman/europe'] }
 }
 ```
 
-- Ids are kept as the API scopes them: diocesan ids are rite-qualified (`roman/…`, `ambrosian/…`); national and
-  region ids are bare.
+- Ids are kept as the API scopes them: rite-qualified (`roman/IT`, `roman/roma_it`, `ambrosian/lugano_ch`,
+  `roman/europe`). `AuthHelper::editableObjectIds()` strips the prefix the same way.
 - The server passes only the three calendar object types. The rest of the dashboard scopes (tests, decrees,
   missals…) stay out of the page.
 - Admin implies editor, as in the OpenFGA model (`editor` includes `admin`).
+- The same national grant covers the nation's Missal edition. The sanctorale editor gates each action: `PATCH`
+  requires editor, and `PUT`/`DELETE` require admin (`OpenFgaAuthorizationMiddleware::forMissals()`, see the
+  sanctorale editor phase 4 spec).
 - A national editor may **translate** a region their nation belongs to (declared in `wider_regions` or listed in
   the region's roster). `widerRegionEditRights.js` already decides this; the navigator reuses it.
 
@@ -77,6 +91,7 @@ A pure module with no DOM and no fetching, fully unit-tested.
      *   actions: Array<'edit'|'create'|'translate'|'request'>,
      *   disabledReason?: string, // e.g. 'nation-missing' for a diocese whose nation has no calendar
      *   mine: boolean,         // the user holds rights on this node
+     *   missals?: string[],  // nation nodes: the national Missal editions `/missals` lists for it (e.g. ['IT_1983'])
      *   children: NavigatorNode[],
      *   childrenPending?: boolean // dioceses not loaded yet
      * }} NavigatorNode */
@@ -92,12 +107,13 @@ A pure module with no DOM and no fetching, fully unit-tested.
     - A nation belonging to several regions appears under each of them.
 - **Actions, per node:**
 
-    | Action      | When it is offered                                                                                                                                                                                     |
-    | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-    | `edit`      | the calendar exists and the user is editor or admin on it, or is a global admin                                                                                                                        |
-    | `create`    | the calendar does not exist and the user is admin on it, or is a global admin. A diocese whose nation has no national calendar gets `create` with `disabledReason: 'nation-missing'` (Roman rite only) |
-    | `translate` | an existing region the user may not edit as a whole, but whose member nation they edit                                                                                                                 |
-    | `request`   | an authenticated user who has none of the above                                                                                                                                                        |
+    | Action       | When it is offered                                                                                                                                                                                            |
+    | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+    | `edit`       | the calendar exists and the user is editor or admin on it, or is a global admin                                                                                                                               |
+    | `create`     | the calendar does not exist and the user is admin on it, or is a global admin. A diocese whose nation has no national calendar gets `create` with `disabledReason: 'nation-missing'` (Roman rite only)        |
+    | `sanctorale` | a nation with at least one national Missal edition, when the user is editor or admin on its `national_calendar`, or is a global admin. The nation's calendar need not exist: the edition is edited on its own |
+    | `translate`  | an existing region the user may not edit as a whole, but whose member nation they edit                                                                                                                        |
+    | `request`    | an authenticated user who has none of the above                                                                                                                                                               |
 
     An anonymous user gets no actions: the hub is read-only for them, and points to the login.
 
@@ -120,14 +136,19 @@ A pure module with no DOM and no fetching, fully unit-tested.
     - a status dot on every item (● created, ○ not yet created) and its action buttons.
 - **Where each action goes:**
 
-    | Action                   | URL                                                                                                                    |
-    | ------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
-    | Edit or create a region  | `extending.php?choice=widerRegion&calendar={id}`                                                                       |
-    | Translate a region       | `extending.php?choice=widerRegion&calendar={id}&locale={locale}`, with the user's first editable locale of that region |
-    | Edit or create a nation  | `extending.php?choice=national&calendar={ISO}`                                                                         |
-    | Edit or create a diocese | `extending.php?choice=diocesan&calendar={bare diocese id}&rite={rite}`                                                 |
-    | Request access           | `permission-requests.php?object_type={type}&object_id={qualified id}`                                                  |
+    | Action                    | URL                                                                                                                    |
+    | ------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+    | Edit or create a region   | `extending.php?choice=widerRegion&calendar={id}`                                                                       |
+    | Translate a region        | `extending.php?choice=widerRegion&calendar={id}&locale={locale}`, with the user's first editable locale of that region |
+    | Edit or create a nation   | `extending.php?choice=national&calendar={ISO}`                                                                         |
+    | Proper of Saints (nation) | `sanctorale.php#rite={rite}&calendar={ISO}` (the sanctorale page's existing hash state)                                |
+    | Edit or create a diocese  | `extending.php?choice=diocesan&calendar={bare diocese id}&rite={rite}`                                                 |
+    | Request access            | `permission-requests.php?object_type={type}&object_id={qualified id}`                                                  |
 
+- **A nation's two editors are shown together.** A nation row shows its national calendar action, and, when the
+  nation has a Missal edition, a "Proper of Saints ({missal ids})" action beside it. A nation without Missal data
+  carries a short note, "No national Missal data: the national calendar alone defines it". So a curator sees that
+  the Netherlands is complete with the calendar alone, while Italy has two parts to maintain.
 - **Empty state:** "My calendars" with no rights shows a message and a button that switches to "Show all".
 - **Accessibility:** buttons are real `<button>`/`<a>` elements, the accordion uses Bootstrap's ARIA attributes,
   and the status dots have text alternatives.
@@ -169,23 +190,28 @@ Every segment except the last links to the hub or to that calendar's deep link.
 ## Part 7: tests
 
 - **Unit (Vitest)**, for `buildNavigatorTree`:
+    - a nation with a Missal edition (IT: `sanctorale` offered) and without one (NL: national calendar only, with the
+      "no Missal data" note);
     - each kind of user: global admin, national editor (IT), diocese-only admin, admin on a prospective region,
       authenticated user with no rights, anonymous;
-    - `filterMine`, including context ancestors;
-    - `nationDioceses`;
-    - `parseDeepLink`.
+        - `filterMine`, including context ancestors;
+        - `nationDioceses`;
+        - `parseDeepLink`.
 - **E2E (chromium):**
     - The hub as an admin shows "Show all" with Europe › Italy.
     - A deep link to `?choice=national&calendar=IT` loads IT's form.
     - A deep link to a region with a locale loads that localization.
     - "Request access" opens the access-request form preselected.
     - The sidebar shows the single entry.
-- **E2E (rbac):** a national editor of IT sees "My calendars" with Italy, whose action is Edit, and Europe with
+- **E2E (rbac):** a national editor of IT sees "My calendars" with Italy, whose actions are Edit and Proper of Saints
+  (IT_1983), and Europe with
   Translate. France, under "Show all", offers Request access.
 
 ## Out of scope
 
 - Changing what the three forms do.
+- Unifying the sanctorale editor with the national calendar editor, or creating a new national Missal edition. The
+  navigator only links to the sanctorale editor where an edition already exists.
 - Any change to the permission model.
 - A server-side tree endpoint.
 - Moving any of the per-calendar editing into the hub itself.
