@@ -189,10 +189,12 @@ if (isset($_GET['choice'])) {
                                 <option value=""></option>
                             <?php
                             foreach ($LitCalMetadata['wider_regions'] as $widerRegion) {
+                                // An API older than #1018 publishes only `name`, which is then both the id and the label.
+                                $widerRegionId    = htmlspecialchars($widerRegion['id'] ?? $widerRegion['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+                                $widerRegionLabel = htmlspecialchars($widerRegion['label'] ?? $widerRegion['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                                 foreach ($widerRegion['locales'] as $widerRegionLanguage) {
-                                    $widerRegionName         = htmlspecialchars($widerRegion['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
                                     $widerRegionLanguageSafe = htmlspecialchars($widerRegionLanguage, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
-                                    echo "<option value=\"{$widerRegionName} - {$widerRegionLanguageSafe}\">{$widerRegionName}</option>";
+                                    echo "<option value=\"{$widerRegionId} - {$widerRegionLanguageSafe}\" label=\"{$widerRegionLabel}\">{$widerRegionLabel}</option>";
                                 }
                             }
                             foreach (ProspectiveWiderRegions::all($i18n->LOCALE) as $prospectiveRegion) {
@@ -237,6 +239,11 @@ if (isset($_GET['choice'])) {
                                 <i class="far fa-trash-alt me-2"></i>
                                 <?php echo $messages['RemoveDataButton']; ?>
                             </button>
+                        </div>
+                        <?php // Filled by assets/js/extending.js (widerRegionLabels.js) once a region is chosen. ?>
+                        <div class="col-12 mt-3 d-none" id="widerRegionLabelsBlock">
+                            <h6 class="fw-bold mb-1"><?php echo $messages['Region name']; ?></h6>
+                            <p class="form-text mt-0 mb-2"><?php echo $messages['Wider region labels hint']; ?></p>
                         </div>
                     </form>
                     <div class="card border-4 border-top-0 border-bottom-0 border-end-0 border-primary rounded-3 m-4">
@@ -758,6 +765,7 @@ $messages = array_merge($messages, [
     'CountriesWithCatholicDioceses' => $CountriesWithCatholicDioceses,
     'DiocesesList'                  => $CatholicDiocesesByNation,
     'ProspectiveWiderRegions'       => ProspectiveWiderRegions::all($i18n->LOCALE),
+    'WiderRegionM49'                => ProspectiveWiderRegions::m49Codes(),
 ]);
 
 ?>
