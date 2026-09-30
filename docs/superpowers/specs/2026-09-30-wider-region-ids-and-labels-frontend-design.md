@@ -47,6 +47,9 @@ that predates #1018.
 - `WIDER_REGION_ID_PATTERN = /^[a-z]+(-[a-z]+)*$/` and `isValidWiderRegionId(id)` replace the name pattern and
   `isValidWiderRegionName`. `NationalCalendarPayload.js` validates `wider_regions` with the id pattern.
 - `regionId(region)` → `region.id ?? region.name`; `regionLabel(region)` → `region.label ?? region.name`.
+- Amendment: legacy names are accepted and normalized as the API does (`Middle East` → `middle-east`) by
+  `normalizeWiderRegionKey()` / `isAcceptedWiderRegionKey()`, on the national-calendar paths and the region chooser;
+  `regionId()` stays unmapped, since an older API keys its grants by name.
 - `labelKeyForLocale(locale)` → `zh_Hans_SG` → `zh_Hans`, `it_CH` → `it`, `de` → `de`.
 - `idToWords(id)` → `german-language-area` → `German Language Area`.
 - `resolveLabel(labels, uiLocale, id, m49)` → language plus script, then language, then `en`, then the M.49 name in
@@ -114,7 +117,8 @@ must appear in `assets/data/WorldDiocesesByNation.json`); they suggest no locale
       `<input class="form-control" data-label-key="{key}">` pre-filled from `values[key]`. Reuses the emoji-flag
       technique of `country2flag`, moved into this module and imported by `extending.js`.
     - `collectLabels(container)` → `{ key: trimmed value }` for non-empty inputs.
-- CSS (`assets/css/extending.css`): a grid `grid-template-columns: 7.5rem 3.5rem 1fr` per row, rows in two columns
+- CSS (`assets/css/extending.css`): a grid `grid-template-columns: 7.5rem 4.5rem 1fr` per row (amended: the key column
+  is 4.5rem), rows in two columns
   from `md` up, the flag cell `overflow: hidden; white-space: nowrap`.
 - Placement: a full-width `col-12` block at the end of the wider-region settings row in `extending.php`, with a
   heading "Region name" (translatable) and a hint that the English label is used when a language has none.
@@ -127,7 +131,8 @@ must appear in `assets/data/WorldDiocesesByNation.json`); they suggest no locale
     - **save**: `metadata.labels = collectLabels(…)` (omitted when empty), `metadata.wider_region = id`.
 - Edit rights: a whole-region editor edits every label; a national editor with translation-only rights edits a label
   only if they may edit some selected locale of that language (`editsWiderRegionLocale`), never `en` unless English
-  is one of those.
+  is one of those. Amendment: labels are locked for non-whole-region editors, since the per-locale PUT cannot carry
+  labels (an API follow-up).
 - The region chooser: datalist values are ids (`{id} - {locale}` for existing regions, `{id}` for prospective), with
   the label in the option's `label`. The up-front check and the `API` key trap use `isValidWiderRegionId`; the error
   message states the id rule. `WiderRegionPayload` accepts an optional `metadata.labels` object of strings.

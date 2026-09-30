@@ -9,6 +9,7 @@ import {
     collectLabels,
     country2flag,
     labelFieldsFor,
+    labelsToSave,
     m49Suggestions,
     readLabelInputs,
     rebuiltLabelState,
@@ -255,5 +256,42 @@ describe('readLabelInputs', () => {
             { key: 'en', value: 'Europe', suggested: false },
             { key: 'fr', value: 'Europe', suggested: true },
         ]);
+    });
+});
+
+describe('labelsToSave', () => {
+    // asia (#1018): stored with a bare `zh` no field is rendered for.
+    const stored = { en: 'Asia', zh: '亚洲', zh_Hans: '亚洲', ja: 'アジア' };
+    const locales = ['ja_JP', 'zh_Hans_CN'];
+
+    it('carries over a stored label that has no field but is still allowed', () => {
+        const fields = [
+            { key: 'en', value: 'Asia', suggested: false },
+            { key: 'ja', value: 'アジア', suggested: false },
+            { key: 'zh_Hans', value: '亚洲', suggested: false },
+        ];
+        expect(labelsToSave(fields, stored, locales)).toEqual(stored);
+    });
+
+    it('drops a stored label no selected locale allows any more', () => {
+        const fields = [
+            { key: 'en', value: 'Asia', suggested: false },
+            { key: 'zh_Hans', value: '亚洲', suggested: false },
+        ];
+        expect(labelsToSave(fields, stored, ['zh_Hans_CN'])).toEqual({ en: 'Asia', zh: '亚洲', zh_Hans: '亚洲' });
+    });
+
+    it('drops a key whose field was emptied, rather than carrying the stored label over', () => {
+        const fields = [
+            { key: 'en', value: 'Asia', suggested: false },
+            { key: 'ja', value: '  ', suggested: false },
+            { key: 'zh_Hans', value: ' 亚洲 ', suggested: false },
+        ];
+        expect(labelsToSave(fields, stored, locales)).toEqual({ en: 'Asia', zh: '亚洲', zh_Hans: '亚洲' });
+    });
+
+    it('saves a field still holding a suggestion, as collectLabels does', () => {
+        const fields = [{ key: 'en', value: 'Asia', suggested: true }];
+        expect(labelsToSave(fields, {}, [])).toEqual({ en: 'Asia' });
     });
 });

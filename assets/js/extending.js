@@ -38,15 +38,15 @@ import { holydaysOfObligationSetting } from './Settings.js';
 import { fetchWithRetry, mapWithConcurrency } from './boundedFetch.js';
 import { editsWholeWiderRegion, editsWiderRegionLocale, localeWrites } from './widerRegionEditRights.js';
 import { widerRegionsForNation } from './widerRegionForNation.js';
-import { eligibleWiderRegions, nationWiderRegions, widerRegionLabelById, widerRegionRoster, widerRegionsByNation } from './widerRegions.js';
-import { buildWiderRegionLabelFields, collectLabels, country2flag, labelFieldsFor, m49Suggestions, readLabelInputs, rebuiltLabelState } from './widerRegionLabels.js';
+import { eligibleWiderRegions, nationWiderRegions, widerRegionKey, widerRegionLabelById, widerRegionRoster, widerRegionsByNation } from './widerRegions.js';
+import { buildWiderRegionLabelFields, country2flag, labelFieldsFor, labelsToSave, m49Suggestions, readLabelInputs, rebuiltLabelState } from './widerRegionLabels.js';
 import { isOfficialLocale, newNationalCalendarLocaleOptions, unofficialLocales } from './nationalCalendarLocales.js';
 import {
     findProspectiveRegion,
     idToWords,
     isValidWiderRegionId,
+    normalizeWiderRegionKey,
     offeredLocales,
-    regionId,
     widerRegionNationalCalendars,
 } from './prospectiveWiderRegions.js';
 
@@ -638,6 +638,8 @@ const sanitizeProxiedAPI = {
                     if (value.includes(' - ')) {
                         ([value, target['locale']] = value.split(' - '));
                     }
+                    // A legacy name (`Europe`, `Middle East`) opens its id, as the API maps it (#1018).
+                    value = normalizeWiderRegionKey(value);
                     // Since API #1007 any id of the right shape (#1018) can be a wider region;
                     // whether it exists is a runtime check (wider_regions_keys).
                     if (false === isValidWiderRegionId(value)) {
@@ -1581,8 +1583,17 @@ const prepareNewWiderRegion = () => {
     document.querySelector('.currentLocalizationChoices').value = locales[0];
 };
 
-/** Country names in the page's language, for the flag tooltips of the wider region label fields. */
-const regionDisplayNames = new Intl.DisplayNames([jsLocale], { type: 'region' });
+/**
+ * Country names in the page's language, for the flag tooltips of the wider region label fields;
+ * in English when the page's locale is one `Intl.DisplayNames` rejects.
+ */
+const regionDisplayNames = (() => {
+    try {
+        return new Intl.DisplayNames([jsLocale], { type: 'region' });
+    } catch {
+        return new Intl.DisplayNames(['en'], { type: 'region' });
+    }
+})();
 
 /**
  * @param {string} code - ISO 3166-1 alpha-2 code
@@ -1671,10 +1682,17 @@ const clearWiderRegionLabels = () => {
     document.querySelector('#widerRegionLabelsBlock')?.classList.add('d-none');
 };
 
-/** @returns {Object<string, string>} The labels to save, keyed by label key; empty when none is filled */
+/**
+ * The labels to save, keyed by label key; empty when none is filled. A loaded label whose key has
+ * no field (`zh` beside a `zh_Hans` field) is kept while the selected locales still allow it, since
+ * `metadata.labels` replaces the stored map.
+ * @returns {Object<string, string>}
+ */
 const widerRegionLabelsToSave = () => {
     const container = document.querySelector('#widerRegionLabels');
-    return container ? collectLabels(container) : {};
+    return container
+        ? labelsToSave(readLabelInputs(container), widerRegionLabelBase.values, selectedWiderRegionLocales())
+        : {};
 };
 
 /**
@@ -2497,14 +2515,19 @@ const regionalNationalCalendarNameChanged = (ev) => {
     }
 
     if (category === 'widerregion') {
-        // Strip a ' - locale' suffix the same way the API Proxy's set trap does, so we
-        // validate the id the proxy will actually check.
-        const [id] = ev.target.value.split(' - ');
+        // Strip a ' - locale' suffix and map a legacy name to its id the same way the
+        // API Proxy's set trap does, so we validate the id the proxy will actually check.
+        const [name, ...suffix] = ev.target.value.split(' - ');
+        const id = normalizeWiderRegionKey(name);
         if (false === isValidWiderRegionId(id)) {
             toastr["error"](Messages['Invalid wider region name'], Messages['Error']);
             ev.target.classList.add('is-invalid');
             clearWiderRegionLabels();
             return;
+        }
+        // Typing `Europe` opens `europe`: the input shows the id every later read of it expects.
+        if (id !== name) {
+            ev.target.value = [id, ...suffix].join(' - ');
         }
     }
     ev.target.classList.remove('is-invalid');
@@ -2904,7 +2927,7 @@ const deleteCalendarConfirmClicked = () => {
         }).then(response => handleDeleteResponse(response, () => {
             switch ( API.category ) {
                 case 'widerregion':
-                    LitCalMetadata.wider_regions = LitCalMetadata.wider_regions.filter(el => regionId(el) !== API.key);
+                    LitCalMetadata.wider_regions = LitCalMetadata.wider_regions.filter(el => widerRegionKey(el) !== API.key);
                     LitCalMetadata.wider_regions_keys = LitCalMetadata.wider_regions_keys.filter(el => el !== API.key);
                     clearWiderRegionLabels();
                     break;
@@ -3407,7 +3430,7 @@ let loadedWiderRegionMembers = [];
  * @returns {import('./widerRegionEditRights.js').WiderRegionMembership}
  */
 const widerRegionMembership = () => {
-    const region = (LitCalMetadata.wider_regions ?? []).find(candidate => regionId(candidate) === currentWiderRegion());
+    const region = (LitCalMetadata.wider_regions ?? []).find(candidate => widerRegionKey(candidate) === currentWiderRegion());
     return {
         members: widerRegionRoster(region) ?? loadedWiderRegionMembers,
         declaredRegions: widerRegionsByNation(LitCalMetadata.national_calendars, LitCalMetadata.wider_regions)

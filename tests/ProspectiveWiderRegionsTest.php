@@ -147,6 +147,17 @@ final class ProspectiveWiderRegionsTest extends TestCase
         $this->assertSame('North Africa', $regions[0]['label']);
     }
 
+    public function testLabelsJsonEncodeAsAnObjectEvenWhenEmpty(): void
+    {
+        $file    = $this->fixture(json_encode(['wider_regions' => [
+            ['id' => 'north-africa', 'roster' => ['AA'], 'labels' => []],
+            ['id' => 'my-region', 'roster' => ['AA'], 'labels' => ['en' => 'My Region']],
+        ]], JSON_THROW_ON_ERROR));
+        $encoded = json_encode(ProspectiveWiderRegions::all('en', $file), JSON_THROW_ON_ERROR);
+        $this->assertStringContainsString('"labels":{}', $encoded);
+        $this->assertStringContainsString('"labels":{"en":"My Region"}', $encoded);
+    }
+
     public function testM49TierResolvesLabelWhenNoStoredLabelMatches(): void
     {
         $file    = $this->fixture(json_encode(['wider_regions' => [

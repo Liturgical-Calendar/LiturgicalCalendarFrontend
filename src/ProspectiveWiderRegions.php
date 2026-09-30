@@ -57,9 +57,12 @@ final class ProspectiveWiderRegions
      * an uppercase ISO 3166-1 alpha-2 code, or a `labels`/`m49` that fails validation is dropped entirely (never
      * partially kept).
      *
+     * `labels` is an object (label key => label), so that it JSON-encodes as `{}` even when empty, as the
+     * page reads it: an empty PHP array would encode as `[]`.
+     *
      * @param string $uiLocale The locale to resolve each region's `label` for
      * @param string $source Path to the ProspectiveWiderRegions JSON data
-     * @return list<array{id: string, label: string, labels: array<string, string>, m49: ?string, description: string, roster: list<string>, locales: list<string>}>
+     * @return list<array{id: string, label: string, labels: \stdClass, m49: ?string, description: string, roster: list<string>, locales: list<string>}>
      * @throws \RuntimeException When the source cannot be read or has the wrong shape
      */
     public static function all(string $uiLocale, string $source = self::DEFAULT_SOURCE): array
@@ -72,7 +75,7 @@ final class ProspectiveWiderRegions
             $regions[] = [
                 'id'          => $entry['id'],
                 'label'       => self::resolveLabel($entry['labels'], $uiLocale, $entry['id'], $entry['m49']),
-                'labels'      => $entry['labels'],
+                'labels'      => (object) $entry['labels'],
                 'm49'         => $entry['m49'],
                 'description' => $entry['description'],
                 'roster'      => $entry['roster'],
@@ -210,7 +213,8 @@ final class ProspectiveWiderRegions
 
     /**
      * @param mixed $labels The entry's `labels`
-     * @return array<string, string>|null Trimmed to a string map, or null when malformed
+     * @return array<string, string>|null The map, its values as given, or null when malformed (a key that is not a
+     *   label key, or a value that is not a non-empty string)
      */
     private static function labels(mixed $labels): ?array
     {

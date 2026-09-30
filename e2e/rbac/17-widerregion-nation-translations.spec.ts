@@ -121,6 +121,15 @@ test.describe('wider region translations by nation', () => {
                 await expect(button).toBeDisabled();
             }
 
+            // The region's labels are written only by the whole-region save, which is not
+            // theirs: every label field is locked, and says why.
+            const labelInputs = page.locator('#widerRegionLabels [data-label-key]');
+            expect(await labelInputs.count()).toBeGreaterThan(0);
+            for (const input of await labelInputs.all()) {
+                await expect(input).toBeDisabled();
+                await expect(input).toHaveAttribute('title', 'Only an editor of the whole wider region can change its names.');
+            }
+
             let patchSent = false;
             page.on('request', (r) => {
                 if (r.method() === 'PATCH' && r.url().includes('/data/widerregion/')) patchSent = true;

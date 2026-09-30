@@ -36,7 +36,7 @@
 
 import { CalendarSettings, Locale } from './Settings.js';
 import { getMonthMaxDay } from './FormControls.js';
-import { WIDER_REGION_ID_PATTERN } from './prospectiveWiderRegions.js';
+import { isValidWiderRegionId, normalizeWiderRegionKey } from './prospectiveWiderRegions.js';
 
 /**
  * Checks if a given day value is valid for a given month.
@@ -670,6 +670,7 @@ class NationalCalendarPayloadMetadata {
      * @param {string} metadata.nation A two-letter country ISO code (capital letters).
      * @param {string[]} metadata.locales An array of valid locale codes, must not be empty.
      * @param {string[]} metadata.wider_regions The wider regions the calendar inherits from, most general first; may be empty.
+     *   Each is an id, or a legacy name (`Europe`, `Middle East`) that is sent as its id.
      * @param {string[]} metadata.missals An array of valid Roman Missal identifiers.
      *
      * @throws {Error} If any parameter does not meet the specified criteria.
@@ -701,13 +702,16 @@ class NationalCalendarPayloadMetadata {
                 throw new Error('`metadata.locales` parameter must be an array of valid locale codes');
             }
         }
-        // The API's rule for a wider region id; whether the region exists, and
-        // lists this nation, is the API's own check (422 on save).
-        const widerRegionId = WIDER_REGION_ID_PATTERN;
+        // The API's rule for a wider region id, after mapping a legacy name to its id
+        // as the API does; whether the region exists, and lists this nation, is the
+        // API's own check (422 on save).
+        const widerRegions = Array.isArray(metadata.wider_regions)
+            ? metadata.wider_regions.map(normalizeWiderRegionKey)
+            : null;
         if (
-            false === Array.isArray(metadata.wider_regions)
-            || metadata.wider_regions.some(id => typeof id !== 'string' || false === widerRegionId.test(id))
-            || new Set(metadata.wider_regions).size !== metadata.wider_regions.length
+            null === widerRegions
+            || widerRegions.some(id => false === isValidWiderRegionId(id))
+            || new Set(widerRegions).size !== widerRegions.length
         ) {
             throw new Error('`metadata.wider_regions` parameter must be an array of distinct wider region ids');
         }
@@ -725,7 +729,7 @@ class NationalCalendarPayloadMetadata {
         }
         this.nation       = metadata.nation;
         this.locales      = metadata.locales;
-        this.wider_regions = [...metadata.wider_regions];
+        this.wider_regions = widerRegions;
         this.missals      = metadata.missals;
         Object.freeze(this);
     }

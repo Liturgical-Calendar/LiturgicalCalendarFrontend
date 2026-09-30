@@ -836,14 +836,14 @@ test.describe('Wider Region Calendar Form', () => {
     });
 
     test('should show an error toast and not get stuck under the overlay for an invalid wider region id', async ({ page }) => {
-        // A human-readable label like "German Language Area" (spaces, capitals) fails the
-        // API's WiderRegionId shape rule (isValidWiderRegionId, API #1018) — it is a label,
-        // not an id. Before the fix, the API Proxy's `set` trap rejected it AFTER the
-        // overlay had already been shown, and since extending.js is a strict-mode ES
-        // module, the Proxy's falsish return from `set` threw a TypeError at the
-        // assignment site — leaving the overlay stuck with no feedback to the user.
+        // "german language" is neither an id (API #1018's WiderRegionId shape rule) nor a
+        // legacy capitalised name the page maps to one. Before the fix, the API Proxy's
+        // `set` trap rejected such a key AFTER the overlay had already been shown, and
+        // since extending.js is a strict-mode ES module, the Proxy's falsish return from
+        // `set` threw a TypeError at the assignment site — leaving the overlay stuck with
+        // no feedback to the user.
         const regionNameInput = page.locator('#widerRegionCalendarName');
-        await regionNameInput.fill('German Language Area');
+        await regionNameInput.fill('german language');
         await regionNameInput.blur();
 
         // An error toast should appear...
@@ -854,6 +854,19 @@ test.describe('Wider Region Calendar Form', () => {
 
         // ...and the loading overlay must never have been left stuck open.
         await expect(page.locator('#overlay')).toBeHidden({ timeout: 5000 });
+    });
+
+    test('should open the id of a legacy capitalised name, as the API maps it', async ({ page }) => {
+        // An API older than #1018 named regions `German Language Area`; the page maps such a
+        // name to its id (lowercase, hyphen-joined) instead of rejecting it.
+        const regionNameInput = page.locator('#widerRegionCalendarName');
+        await regionNameInput.fill('German Language Area');
+        await regionNameInput.blur();
+
+        await expect(regionNameInput).toHaveValue('german-language-area');
+        await expect(regionNameInput).not.toHaveClass(/is-invalid/);
+        await expect(page.locator('.toast-error, .toast.bg-danger')).toHaveCount(0);
+        await expect(page.locator('#overlay')).toBeHidden({ timeout: 20000 });
     });
 });
 

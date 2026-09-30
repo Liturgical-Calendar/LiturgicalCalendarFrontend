@@ -253,3 +253,47 @@ export function rebuiltLabelState(stored, suggestions, current) {
     }
     return { values, suggestions: remainingSuggestions };
 }
+
+/**
+ * The label keys the API accepts for a region with these locales (`WiderRegionLabels::allowedKeys()`):
+ * `en`, and for each locale its language plus, when it names a script, its language and script.
+ * @param {string[]} locales - e.g. `['ja_JP', 'zh_Hans_CN']`
+ * @returns {Set<string>} e.g. `en`, `ja`, `zh`, `zh_Hans`
+ */
+function allowedLabelKeys(locales) {
+    const keys = new Set(['en']);
+    for (const locale of locales ?? []) {
+        const key = labelKeyForLocale(locale);
+        keys.add(key.split('_')[0]);
+        keys.add(key);
+    }
+    return keys;
+}
+
+/**
+ * The labels a whole-region save sends. `metadata.labels` replaces the stored map, and the page
+ * renders one field per `labelFieldsFor()` key, so a stored label under a key with no field (a
+ * bare `zh` beside a `zh_Hans` field) would be deleted by a save that sent only the fields. Such
+ * a label is carried over while the selected locales still allow its key, and dropped once they
+ * do not (the API would reject it). A key that has a field takes the field's trimmed value, and
+ * an emptied field drops its key.
+ * @param {Array<{key: string, value: string}>} fieldValues - From `readLabelInputs()`
+ * @param {Object<string, string>} storedLabels - The labels the region was loaded with
+ * @param {string[]} locales - The selected locales
+ * @returns {Object<string, string>} Non-empty labels, keyed by label key
+ */
+export function labelsToSave(fieldValues, storedLabels, locales) {
+    const allowed = allowedLabelKeys(locales);
+    const withField = new Set(fieldValues.map(({ key }) => key));
+    const labels = {};
+    for (const [key, value] of Object.entries(storedLabels ?? {})) {
+        if (!withField.has(key) && allowed.has(key) && typeof value === 'string' && value.trim() !== '') {
+            labels[key] = value.trim();
+        }
+    }
+    for (const { key, value } of fieldValues) {
+        const trimmed = value.trim();
+        if (trimmed !== '') labels[key] = trimmed;
+    }
+    return labels;
+}

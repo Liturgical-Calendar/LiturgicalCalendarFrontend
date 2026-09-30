@@ -19,6 +19,15 @@ describe('NationalCalendarPayloadMetadata wider_regions', () => {
             .toEqual(['middle-east']);
     });
 
+    it('accepts a legacy name and sends its id', () => {
+        expect(new NationalCalendarPayloadMetadata({ ...base, wider_regions: ['Europe', 'Middle East'] }).wider_regions)
+            .toEqual(['europe', 'middle-east']);
+    });
+
+    it('rejects a legacy name and its id together as a duplicate', () => {
+        expect(() => new NationalCalendarPayloadMetadata({ ...base, wider_regions: ['Europe', 'europe'] })).toThrow(/wider_regions/);
+    });
+
     it('requires the list', () => {
         expect(() => new NationalCalendarPayloadMetadata(base)).toThrow(/wider_regions/);
         expect(() => new NationalCalendarPayloadMetadata({ ...base, wider_regions: 'europe' })).toThrow(/wider_regions/);
@@ -26,7 +35,8 @@ describe('NationalCalendarPayloadMetadata wider_regions', () => {
 
     it('rejects a duplicate or a malformed id', () => {
         expect(() => new NationalCalendarPayloadMetadata({ ...base, wider_regions: ['europe', 'europe'] })).toThrow(/wider_regions/);
-        expect(() => new NationalCalendarPayloadMetadata({ ...base, wider_regions: ['Europe'] })).toThrow(/wider_regions/);
+        expect(() => new NationalCalendarPayloadMetadata({ ...base, wider_regions: ['german language'] })).toThrow(/wider_regions/);
+        expect(() => new NationalCalendarPayloadMetadata({ ...base, wider_regions: ['Guinea-Bissau'] })).toThrow(/wider_regions/);
         expect(() => new NationalCalendarPayloadMetadata({ ...base, wider_regions: ['middle--east'] })).toThrow(/wider_regions/);
     });
 });

@@ -5,10 +5,13 @@
 import { describe, it, expect } from 'vitest';
 import {
     WIDER_REGION_ID_PATTERN,
+    WIDER_REGION_LEGACY_NAME_PATTERN,
     findProspectiveRegion,
     idToWords,
+    isAcceptedWiderRegionKey,
     isValidWiderRegionId,
     labelKeyForLocale,
+    normalizeWiderRegionKey,
     offeredLocales,
     regionId,
     regionLabel,
@@ -193,5 +196,43 @@ describe('offeredLocales', () => {
                 ['ms_BN', 'en_SG', 'it_IT'],
             ),
         ).toEqual(['en_SG', 'ms_BN']);
+    });
+});
+
+describe('legacy wider region names (#1018)', () => {
+    it('matches capitalised words joined by single spaces', () => {
+        expect(WIDER_REGION_LEGACY_NAME_PATTERN.test('Europe')).toBe(true);
+        expect(WIDER_REGION_LEGACY_NAME_PATTERN.test('Middle East')).toBe(true);
+        expect(WIDER_REGION_LEGACY_NAME_PATTERN.test('german language')).toBe(false);
+        expect(WIDER_REGION_LEGACY_NAME_PATTERN.test('Guinea-Bissau')).toBe(false);
+        expect(WIDER_REGION_LEGACY_NAME_PATTERN.test('Middle  East')).toBe(false);
+        expect(WIDER_REGION_LEGACY_NAME_PATTERN.test('')).toBe(false);
+    });
+
+    it('normalizes a legacy name to its id, as the API does', () => {
+        expect(normalizeWiderRegionKey('Europe')).toBe('europe');
+        expect(normalizeWiderRegionKey('Middle East')).toBe('middle-east');
+    });
+
+    it('returns an id unchanged', () => {
+        expect(normalizeWiderRegionKey('europe')).toBe('europe');
+        expect(normalizeWiderRegionKey('middle-east')).toBe('middle-east');
+    });
+
+    it('returns any other string unchanged', () => {
+        expect(normalizeWiderRegionKey('german language')).toBe('german language');
+        expect(normalizeWiderRegionKey('Guinea-Bissau')).toBe('Guinea-Bissau');
+        expect(normalizeWiderRegionKey('')).toBe('');
+    });
+
+    it('accepts an id or a legacy name, and nothing else', () => {
+        expect(isAcceptedWiderRegionKey('europe')).toBe(true);
+        expect(isAcceptedWiderRegionKey('middle-east')).toBe(true);
+        expect(isAcceptedWiderRegionKey('Europe')).toBe(true);
+        expect(isAcceptedWiderRegionKey('Middle East')).toBe(true);
+        expect(isAcceptedWiderRegionKey('german language')).toBe(false);
+        expect(isAcceptedWiderRegionKey('Guinea-Bissau')).toBe(false);
+        expect(isAcceptedWiderRegionKey('')).toBe(false);
+        expect(isAcceptedWiderRegionKey(undefined)).toBe(false);
     });
 });

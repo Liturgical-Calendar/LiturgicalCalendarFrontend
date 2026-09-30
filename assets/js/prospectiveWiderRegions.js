@@ -33,6 +33,35 @@ export function isValidWiderRegionId(id) {
 }
 
 /**
+ * A wider region name as an API older than #1018 stored it: capitalised words joined by
+ * single spaces, e.g. `Europe`, `Middle East`.
+ */
+export const WIDER_REGION_LEGACY_NAME_PATTERN = /^[A-Z][A-Za-z]*( [A-Z][A-Za-z]*)*$/;
+
+/**
+ * A wider region key as an id. Mirrors the API's mapping of a legacy name (#1018):
+ * lowercase it and join its words with hyphens, so `Middle East` → `middle-east`.
+ * An id is returned unchanged, and so is any other string, which callers still reject.
+ * @param {string} value - An id, or a legacy name
+ * @returns {string} The id, or `value` when it is neither shape
+ */
+export function normalizeWiderRegionKey(value) {
+    if (typeof value === 'string' && WIDER_REGION_LEGACY_NAME_PATTERN.test(value)) {
+        return value.toLowerCase().replaceAll(' ', '-');
+    }
+    return value;
+}
+
+/**
+ * @param {unknown} value - Candidate wider region key
+ * @returns {boolean} Whether it is an id or a legacy name (see normalizeWiderRegionKey)
+ */
+export function isAcceptedWiderRegionKey(value) {
+    return typeof value === 'string'
+        && (WIDER_REGION_ID_PATTERN.test(value) || WIDER_REGION_LEGACY_NAME_PATTERN.test(value));
+}
+
+/**
  * A region's id; an API older than #1018 publishes only `name`.
  * @param {{id?: string, name?: string}} region - A `litcal_metadata.wider_regions` item
  * @returns {string} The id

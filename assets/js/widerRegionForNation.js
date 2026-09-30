@@ -11,8 +11,7 @@
  * @module widerRegionForNation
  */
 
-import { orderWiderRegions, widerRegionRoster } from './widerRegions.js';
-import { regionId } from './prospectiveWiderRegions.js';
+import { orderWiderRegions, widerRegionKey, widerRegionRoster } from './widerRegions.js';
 
 /**
  * @param {Array<{id?: string, name?: string, locales?: string[], roster?: string[]}>} widerRegions `litcal_metadata.wider_regions`
@@ -27,6 +26,6 @@ export function widerRegionsForNation(widerRegions, nation) {
     const matches = regions.filter(region => withRoster
         ? (widerRegionRoster(region) ?? []).includes(target)
         : (region.locales ?? []).some(locale => locale.split(/[_-]/).pop().toUpperCase() === target));
-    return orderWiderRegions(matches.map(region => regionId(region)), regions);
+    return orderWiderRegions(matches.map(region => widerRegionKey(region)), regions);
 }
 

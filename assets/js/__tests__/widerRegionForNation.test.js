@@ -51,8 +51,8 @@ it('suggests nothing without a nation or without metadata', () => {
 });
 
 describe('widerRegionsForNation, older API with no id', () => {
-    it('falls back to name for a region an API older than #1018 publishes without an id', () => {
+    it('falls back to name, read as its id, for a region an API older than #1018 publishes without an id', () => {
         const legacy = [{ name: 'Europe', locales: ['it_IT'], roster: ['IT'] }];
-        expect(widerRegionsForNation(legacy, 'IT')).toEqual(['Europe']);
+        expect(widerRegionsForNation(legacy, 'IT')).toEqual(['europe']);
     });
 });
