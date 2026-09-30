@@ -18,6 +18,7 @@ import {
     ROMAN_RITE,
     splitObjectId,
 } from './riteScopedObjectId.js';
+import { parseAccessRequestPrefill } from './accessRequestPrefill.js';
 import { buildNationObjectIdSelectFromConfig, NATIONAL_CALENDAR_TYPE } from './nationObjectIdSelect.js';
 import { DIOCESAN_CALENDAR_TYPE, loadWorldDioceses, mountDioceseObjectIdPicker } from './dioceseObjectIdPicker.js';
 import {
@@ -1001,6 +1002,46 @@ document.addEventListener('DOMContentLoaded', async function() {
         document.getElementById('accessRequestForm').scrollIntoView({ behavior: 'smooth' });
     }
 
+    /**
+     * Prefill the form from a navigator "Request access" deep link
+     * (`?object_type=...&object_id=...`, built by `actionUrl()` in
+     * particularCalendarsTree.js). Only the three calendar scopes the
+     * `calendar_editor` role allows are recognized; anything else — or a
+     * resubmit already in progress (`openResubmitForm()`, triggered by the
+     * user clicking a "Resubmit" button on an existing rejected request) —
+     * leaves the form untouched.
+     */
+    async function applyAccessRequestPrefill() {
+        if (resubmitRequestId !== null) return;
+
+        const prefill = parseAccessRequestPrefill(window.location.search);
+        if (!prefill) return;
+
+        // roleObjectTypes.calendar_editor is the source of truth for which
+        // scopes that role allows; parseAccessRequestPrefill() already
+        // restricts to the same three, but this keeps the two in sync
+        // rather than assuming it.
+        if (!roleObjectTypes['calendar_editor'].includes(prefill.object_type)) return;
+
+        // Check the role radio the way a user clicking it would, so the
+        // existing 'change' listener (updatePermissionsSection) reveals the
+        // form body and adds the first empty permission row.
+        const roleRadio = Array.from(requestedRoleRadios).find(function(r) {
+            return r.value === 'calendar_editor';
+        });
+        if (!roleRadio) return;
+        roleRadio.checked = true;
+        roleRadio.dispatchEvent(new Event('change', { bubbles: true }));
+
+        const row = permissionRows.lastElementChild;
+        if (!row) return;
+        await restorePermissionRow(row, {
+            object_type: prefill.object_type,
+            object_id:   prefill.object_id,
+            relation:    'editor'
+        });
+    }
+
     // ========================================================================
     // Form submission
     // ========================================================================
@@ -1109,6 +1150,9 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
         }
     });
+
+    // Prefill from a navigator "Request access" deep link, if present.
+    await applyAccessRequestPrefill();
 
     // Load existing requests on page load
     await loadExistingRequests();
