@@ -246,6 +246,13 @@ A nation without Missal data (e.g. the Netherlands) is edited by the national ca
 | `translate`  | Region exists, user cannot edit whole region, but can edit a member nation              |
 | `request`    | Authenticated user with none of the above                                               |
 
+The `request` action links to `permission-requests.php?object_type=…&object_id=…` and preselects role
+`calendar_editor` and the first permission row. `assets/js/accessRequestPrefill.js` parses the query string
+and validates: non-Roman rite on Roman-only types (`national_calendar`, `wider_region`), an unknown type, or
+a malformed id leaves the form untouched. Nothing is submitted automatically. Cross-checks against
+`roleObjectTypes.calendar_editor` happen in `assets/js/permission-requests.js` after the user's existing
+requests have loaded.
+
 **Implementation:**
 
 - **Tree model:** `assets/js/particularCalendarsTree.js` — pure module (no DOM, no fetching) that
@@ -258,8 +265,9 @@ A nation without Missal data (e.g. the Netherlands) is edited by the national ca
   into the `rights` and national missal `missals` objects the tree expects.
 - **Vatican excluded:** The Vatican (`VA`) is the Roman rite's own calendar, not a particular one,
   and does not appear in the navigator.
-- **Ambrosian:** Ambrosian dioceses show no actions (the diocesan form cannot load them yet) and
-  are grouped under an `ambrosian` group node, not under regions (the rite has no national tier).
+- **Groups:** Nations belonging to no wider region are grouped under `no-region`. The Ambrosian rite has
+  diocesan calendars but no national tier or regions, so they are grouped under `ambrosian`; these dioceses
+  show no actions (the diocesan form cannot load them yet).
 
 ### Rite awareness
 
