@@ -39,6 +39,6 @@
     "vitest": "^5.0.1"
   },
   "resolutions": {
-    "markdown-it": "^14.2.0"
+    "markdown-it": "^14.3.2"
   }
 }
