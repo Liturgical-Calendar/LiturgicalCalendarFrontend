@@ -27,16 +27,16 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.63.0",
-    "@types/node": "^26.6.3",
-    "dotenv": "^18.0.4",
+    "@types/node": "^26.6.4",
+    "dotenv": "^18.0.6",
     "eslint": "^10.12.0",
-    "globals": "^17.12.0",
-    "jsdom": "^30.1.1",
+    "globals": "^17.13.0",
+    "jsdom": "^30.1.2",
     "markdownlint-cli2": "^0.23.3",
     "prettier": "^3.9.9",
     "typescript": "^6.0.3",
-    "vite": "^8.3.1",
-    "vitest": "^5.0.2"
+    "vite": "^8.3.3",
+    "vitest": "^5.0.3"
   },
   "resolutions": {
     "markdown-it": "^14.3.2"
