@@ -1029,6 +1029,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         // rather than assuming it.
         if (!roleObjectTypes['calendar_editor'].includes(prefill.object_type)) return;
 
+        // The prefill only runs once loadExistingRequests() has resolved, and the
+        // user may have picked a role or started a row while that was in flight:
+        // their choices win, and the prefill steps aside entirely.
+        if (getRequestedRole() !== '' || permissionRows.children.length > 0) return;
+
         // Check the role radio the way a user clicking it would, so the
         // existing 'change' listener (updatePermissionsSection) reveals the
         // form body and adds the first empty permission row.
