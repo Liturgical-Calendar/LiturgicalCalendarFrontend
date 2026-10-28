@@ -39,13 +39,16 @@ can hold permissions without the role: today a direct grant from the admin permi
 a revoke can cascade the role away while other tuples remain. So the redundancy rule never makes a request impossible
 for a user who lacks the requested role:
 
-- The API looks up the user's roles (`ZitadelService::getUserRoles()`).
+- The API reads the user's roles from the token (`oidc_user.roles`), the same source `AuthorizationMiddleware` gates
+  routes on, so "has the role" means exactly what the rest of the API treats as having it. The global `admin` role
+  counts as holding every role, as it does in the middleware. *(Changed during planning from a
+  `ZitadelService::getUserRoles()` lookup: the token is authoritative for access already and needs no external call.)*
 - **User has the role:** the rule above applies as written.
 - **User lacks the role:** the permissions are filtered the same way. If none is left, the request is still created,
   with the de-duplicated permissions as submitted (the API requires at least one, and writing a tuple that already
   exists on approval is harmless), so a reviewer can grant the role.
-- **Role lookup fails** (Zitadel unreachable or not configured): treat the role as missing. That errs toward creating
-  the request, in line with the anti-goal below.
+- **No `roles` claim in the token:** treat the role as missing. That errs toward creating the request, in line with
+  the anti-goal below.
 
 Only a request for a strictly higher tier than anything held or pending on that object goes through. For example,
 holding `editor` and asking for `admin` is allowed; holding `editor` and asking for `viewer` is not.
