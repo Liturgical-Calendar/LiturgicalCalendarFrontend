@@ -115,7 +115,8 @@ A pure module with no DOM and no fetching, fully unit-tested.
     | `translate`  | an existing region the user may not edit as a whole, but whose member nation they edit                                                                                                                        |
     | `request`    | an authenticated user who has none of the above                                                                                                                                                               |
 
-    An anonymous user gets no actions: the hub is read-only for them, and points to the login.
+    The hub is part of the admin backend, which requires login like the rest of `extending.php`: anonymous visitors
+    are redirected to the home page and never see it. Every tree is therefore built for an authenticated user.
 
 - `filterMine(tree)` returns the nodes with `mine: true` plus the ancestors needed to reach them; those ancestors are
   marked `context: true`.
@@ -193,7 +194,7 @@ Every segment except the last links to the hub or to that calendar's deep link.
     - a nation with a Missal edition (IT: `sanctorale` offered) and without one (NL: national calendar only, with the
       "no Missal data" note);
     - each kind of user: global admin, national editor (IT), diocese-only admin, admin on a prospective region,
-      authenticated user with no rights, anonymous;
+      authenticated user with no rights;
         - `filterMine`, including context ancestors;
         - `nationDioceses`;
         - `parseDeepLink`.
