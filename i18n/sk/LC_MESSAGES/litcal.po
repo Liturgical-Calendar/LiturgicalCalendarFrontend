@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-29 10:06+0000\n"
-"PO-Revision-Date: 2026-10-01 08:55+0000\n"
+"PO-Revision-Date: 2026-10-29 11:32+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
@@ -2075,10 +2075,8 @@ msgstr "ešte nevytvorené"
 
 #. translators: error toast when a link from the particular calendars navigator names a calendar the form cannot open
 #: includes/messages.php:250
-#, fuzzy
-#| msgid "Calendar Editor"
 msgid "Calendar not found"
-msgstr "Editor kalendára"
+msgstr "Kalendár nebol nájdený"
 
 #. translators: error message when a wider region id typed by the user does not match the required shape
 #: includes/messages.php:252
@@ -2471,31 +2469,23 @@ msgstr "Definícia diecézneho kalendára"
 
 #. translators: navigator view toggle - only the calendars the user holds rights on
 #: includes/messages.php:435
-#, fuzzy
-#| msgid "Web calendar"
 msgid "My calendars"
-msgstr "Webový kalendár"
+msgstr "Moje kalendáre"
 
 #. translators: navigator view toggle - every wider region, nation and diocese
 #: includes/messages.php:437
-#, fuzzy
-#| msgid "Show no rank"
 msgid "Show all"
-msgstr "Nezobrazovať stupeň"
+msgstr "Zobraziť všetko"
 
 #. translators: placeholder and label of the navigator's text filter on calendar names
 #: includes/messages.php:439
-#, fuzzy
-#| msgid "Filters"
 msgid "Filter"
-msgstr "Filtre"
+msgstr "Filter"
 
 #. translators: screen reader text of the empty status dot of a calendar that does not exist yet
 #: includes/messages.php:441
-#, fuzzy
-#| msgid "not yet created"
 msgid "Not yet created"
-msgstr "ešte nevytvorené"
+msgstr "Ešte nevytvorené"
 
 #. translators: screen reader text of the filled status dot of a calendar that exists
 #: includes/messages.php:443 admin-applications.php:242
@@ -2512,70 +2502,56 @@ msgstr "Upraviť"
 
 #. translators: navigator action button - create a calendar that does not exist yet
 #: includes/messages.php:447
-#, fuzzy
-#| msgid "Created"
 msgid "Create"
-msgstr "Vytvorené"
+msgstr "Vytvoriť"
 
 #. translators: navigator action button - translate a wider region into the user's nation's language
 #: includes/messages.php:449
-#, fuzzy
-#| msgid "translated"
 msgid "Translate"
-msgstr "Preložené"
+msgstr "Preložiť"
 
 #. translators: navigator action button - open the nation's Missal edition in the sanctorale editor. %1$s = the Missal ids, e.g. "IT_1983"
 #: includes/messages.php:451
 #, php-format
 msgid "Proper of Saints (%1$s)"
-msgstr ""
+msgstr "Proprium svätých (%1$s)"
 
 #. translators: navigator action button - ask for rights on a calendar
 #: includes/messages.php:453
-#, fuzzy
-#| msgid "Requested access"
 msgid "Request access"
-msgstr "Požadovaný prístup"
+msgstr "Požiadať o prístup"
 
 #. translators: note on a nation that has no national Missal edition
 #: includes/messages.php:455
 msgid "No national Missal data: the national calendar alone defines it"
 msgstr ""
+"Nie sú k dispozícii údaje o národnom Missáli: samotný národný kalendár ho "
+"definuje."
 
 #. translators: note on an Ambrosian rite diocese in the navigator, which offers no Edit button for it
 #: includes/messages.php:457
-#, fuzzy
-#| msgid "New diocesan calendars (not yet created)"
 msgid "Ambrosian diocesan calendars cannot be edited here yet"
-msgstr "Nové diecézne kalendáre (ešte nevytvorené)"
+msgstr "Ambroziánske diecézne kalendáre sa tu ešte nedajú upravovať"
 
 #. translators: why a diocese's Create button is disabled
 #: includes/messages.php:459
-#, fuzzy
-#| msgid "National calendar test"
 msgid "Create the national calendar first"
-msgstr "Test národného kalendára"
+msgstr "Vytvorte najprv národný kalendár"
 
 #. translators: navigator group of the nations that belong to no wider region
 #: includes/messages.php:461
-#, fuzzy
-#| msgid "Existing wider regions"
 msgid "Nations in no wider region"
-msgstr "Existujúce širšie regióny"
+msgstr "Národy v žiadnom širšom regióne"
 
 #. translators: navigator group of the Ambrosian rite's diocesan calendars
 #: includes/messages.php:463
-#, fuzzy
-#| msgid "Ambrosian Rite"
 msgid "Ambrosian rite"
-msgstr "Ambroziánsky rítus"
+msgstr "Ambroziánsky ritus"
 
 #. translators: error shown under a nation when its list of dioceses could not be fetched
 #: includes/messages.php:465
-#, fuzzy
-#| msgid "Could not load locales: %s"
 msgid "Could not load the dioceses"
-msgstr "Nepodarilo sa načítať lokality: %s"
+msgstr "Nepodarilo sa načítať diecézy"
 
 #. translators: button to fetch the list of dioceses again
 #: includes/messages.php:467 admin-permissions.php:458
@@ -2585,24 +2561,19 @@ msgstr "Skúsiť znovu"
 
 #. translators: "My calendars" view of a user who holds no rights on any calendar
 #: includes/messages.php:469
-#, fuzzy
-#| msgid "Particular Calendars"
 msgid "You have no particular calendars yet"
-msgstr "Partikulárne kalendáre"
+msgstr "Zatiaľ nemáte žiadne konkrétne kalendáre."
 
 #. translators: button of the empty "My calendars" view, switching to "Show all"
 #: includes/messages.php:471
-#, fuzzy
-#| msgid "National calendar"
 msgid "Browse all calendars"
-msgstr "Národný kalendár"
+msgstr "Prehliadať všetky kalendáre"
 
 #. translators: screen reader label of the button that expands a nation. %1$s = the nation's name
 #: includes/messages.php:473
-#, fuzzy, php-format
-#| msgid "Diocese"
+#, php-format
 msgid "Dioceses of %1$s"
-msgstr "Diecéza"
+msgstr "Diecézy %1$s"
 
 #. translators: shown while a nation's dioceses are being fetched
 #: includes/messages.php:475 admin-decrees.php:627 admin-locales.php:112
@@ -2613,7 +2584,7 @@ msgstr "Načítavam…"
 #. translators: shown when no calendar name matches the navigator's text filter
 #: includes/messages.php:477
 msgid "No calendars match the filter"
-msgstr ""
+msgstr "Žiadne kalendáre nezodpovedajú filtru."
 
 #: includes/admin-blocks.php:20
 msgid "Proprium de Tempore - temporal cycle events"
