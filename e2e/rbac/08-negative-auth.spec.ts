@@ -19,6 +19,11 @@ import { seedAndLogin } from './support/seed';
  *       branch that the pending-revoke 400 cannot exercise
  *   (b) see the USA-scoped request in their own review list
  *
+ * A second test covers the `viewer` relation retired for people (LiturgicalCalendarAPI #1049):
+ * it can no longer be requested or granted. The UI no longer offers it (support/requestAccess.ts
+ * asserts the option is absent on every request it submits), so only a direct API call can still
+ * try — and the API must refuse both with 400, writing nothing.
+ *
  * Note (c): extending.php USA-edit denial (the plan's scope-c action-layer check) is
  *   the dedicated focus of scenario 10. The denied mutating actions above satisfy the
  *   "denied mutating action" requirement for this spec.
@@ -191,6 +196,46 @@ test('08 — cei-admin cannot act on (403) or see USA-scoped access request', as
     } finally {
         await ceiadm3.context.close();
     }
+});
+
+test('08 — viewer can be neither requested nor granted (API #1049)', async ({ browser }) => {
+    const grcEditorId = await new ZitadelAdmin().findUserIdByEmail(USERS['grc-editor'].email);
+    expect(grcEditorId, 'grc-editor must be seeded in Zitadel').not.toBeNull();
+    const headers = { Accept: 'application/json', 'Content-Type': 'application/json' };
+    // Rite-qualified, as permission-requests.js sends it (qualifyObjectId()).
+    const viewerOnIt = { object_type: 'national_calendar', object_id: 'roman/IT', relation: 'viewer' };
+
+    // ── Request: grc-editor asks for viewer@national_calendar:IT through the API the form uses ──
+    const grced = await actingAs(browser, 'grc-editor');
+    try {
+        const resp = await grced.page.request.post(`${API_BASE}/auth/access-requests`, {
+            headers,
+            data: { requested_role: 'calendar_editor', permissions: [viewerOnIt] },
+        });
+        const body = await resp.text();
+        expect(resp.status(), `a viewer access request must be refused with 400; got ${resp.status()}: ${body}`).toBe(400);
+        // Pin the reason, so a 400 for some other validation failure cannot pass for this one.
+        expect(body).toContain('viewer relation can no longer be requested');
+    } finally {
+        await grced.context.close();
+    }
+
+    // ── Grant: even a global admin cannot write viewer for a person ──
+    const sa = await actingAs(browser, 'super-admin');
+    try {
+        const resp = await sa.page.request.post(`${API_BASE}/admin/permissions`, {
+            headers,
+            data: { user: grcEditorId, ...viewerOnIt },
+        });
+        const body = await resp.text();
+        expect(resp.status(), `a viewer grant must be refused with 400; got ${resp.status()}: ${body}`).toBe(400);
+        expect(body).toContain('viewer relation can no longer be granted');
+    } finally {
+        await sa.context.close();
+    }
+
+    // Nothing was written: no viewer (nor anything above it) on IT for grc-editor.
+    expect(await new Fga().check(`user:${grcEditorId}`, 'viewer', 'national_calendar:roman/IT')).toBe(false);
 });
 
 test.afterEach(async () => {

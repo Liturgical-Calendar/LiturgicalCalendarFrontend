@@ -1,15 +1,23 @@
 /**
- * Scenario 15 — dashboard Tests-card matrix (test_editor role x FGA test scope)
+ * Scenario 15 — dashboard Tests-card matrix (role x FGA test scope)
  *
- * Issue #399: the Tests card renders for non-admins only when the user holds the
- * test_editor role AND a viewer-or-above relation on at least one *_test object
- * (checked server-side via GET /auth/dashboard-scopes).
+ * Reading comes from the role (LiturgicalCalendarAPI #1049): for non-admins the Tests card
+ * renders when a role they hold reads the test types — test_editor or developer
+ * (AuthHelper::ROLE_READABLE_TYPES). A tuple on a *_test object neither grants nor is
+ * needed for it. (Before #1049, issue #399 also required a viewer-or-above tuple.)
+ *
+ * Matrix:
+ *   - tests-editor (test_editor + editor@national_calendar_test:IT)  → card visible
+ *   - tests-editor-noscope (test_editor, no tuple)                    → card visible
+ *   - cei-editor (calendar_editor, no tuple: its role does not read
+ *     the test types)                                                 → card hidden
  *
  * Preconditions (seeded by rbac-setup):
  *   - tests-editor: Zitadel test_editor role, no FGA tuple at seed time; this spec
  *     grants editor@national_calendar_test:IT at runtime (FGA is evaluated live,
  *     unlike Zitadel roles which are baked into the login token).
  *   - tests-editor-noscope: Zitadel test_editor role, never granted any tuple.
+ *   - cei-editor: Zitadel calendar_editor role, no FGA tuple at seed time.
  */
 
 import { test, expect } from '@playwright/test';
@@ -25,7 +33,8 @@ const HEADING = '.admin-dashboard-heading';
 
 test.describe.serial('15 — dashboard Tests-card matrix', () => {
     test.beforeAll(async () => {
-        // editor@national_calendar_test:IT — editor satisfies the viewer-or-above gate.
+        // editor@national_calendar_test:IT — the tuple is not what shows the card (the role
+        // is); granting it proves a scoped test_editor still sees it.
         await grantScope('tests-editor', { role: false });
     });
 
@@ -44,8 +53,19 @@ test.describe.serial('15 — dashboard Tests-card matrix', () => {
         }
     });
 
-    test('test_editor WITHOUT a test scope does NOT see the Tests card', async ({ browser }) => {
+    test('test_editor WITHOUT a test scope sees the Tests card through the role', async ({ browser }) => {
         const { context, page } = await actingAs(browser, 'tests-editor-noscope');
+        try {
+            await page.goto('/admin-dashboard.php');
+            await expect(page.locator(HEADING)).toBeVisible();
+            await expect(page.locator(TESTS_CARD_LINK)).toBeVisible();
+        } finally {
+            await context.close();
+        }
+    });
+
+    test('calendar_editor (role does not read the test types) does NOT see the Tests card', async ({ browser }) => {
+        const { context, page } = await actingAs(browser, 'cei-editor');
         try {
             await page.goto('/admin-dashboard.php');
             await expect(page.locator(HEADING)).toBeVisible();

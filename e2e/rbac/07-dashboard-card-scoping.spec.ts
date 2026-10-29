@@ -39,33 +39,26 @@ import { USERS } from './support/users';
  *   - L150 !$isAdmin && dashboardScopes()['is_resource_admin'] → "Access Requests to
  *          Review" card
  *
- *   admin-blocks.php (#399, relation-aware gating): sanctorale/widerregion/national/
- *   diocesan render unconditionally for any calendar-role holder. temporale and decrees,
- *   however, are each independently narrowed to:
- *       $isAdmin || ($authHelper->hasRole('calendar_editor') && canViewResource(...))
- *   i.e. non-admins additionally need viewer-or-above on
- *   general_roman_calendar:temporale (for the Temporale card) and
- *   general_roman_calendar:decrees (for the Decrees card). `isResourceAdmin()`
+ *   admin-blocks.php: sanctorale/widerregion/national/diocesan render unconditionally for
+ *   any calendar-role holder. temporale and decrees are each narrowed to:
+ *       $isAdmin || $authHelper->canViewRiteCalendarResource('roman', ...)
+ *   and reading comes from the role (LiturgicalCalendarAPI #1049): that call is true for
+ *   every role whose scope includes rite_calendar (AuthHelper::ROLE_READABLE_TYPES —
+ *   calendar_editor and developer), whatever tuples the user holds. `isResourceAdmin()`
  *   (src/AuthHelper.php, via dashboardScopes()) is true when the user holds an `admin`
- *   FGA tuple on ANY resource (national/diocesan/general_roman/wider_region).
+ *   FGA tuple on ANY resource (national/diocesan/rite_calendar/wider_region).
  *
- * ── NOTE on scope narrowing (issue #399) ──
- *   Prior to #399, the dashboard did not narrow calendar-CARD visibility by scope at
- *   all — all six cards rendered unconditionally for every calendar-role holder. The
- *   server-side `/auth/dashboard-scopes` endpoint (AuthHelper::dashboardScopes()) now
- *   narrows Temporale and Decrees specifically: a calendar_editor whose only FGA
- *   relation is on a national/diocesan/wider_region object (e.g. cei-admin on IT,
- *   usccb-admin on US, europe-admin on europe) holds no viewer-or-above relation on
- *   general_roman_calendar, so temporale and decrees are both hidden for them. Only
- *   grc-admin (admin@general_roman_calendar:temporale) satisfies the Temporale gate —
- *   an `admin` relation on an FGA object also satisfies viewer-or-above self-checks —
- *   but even grc-admin's tuple is scoped to the `temporale` object id, not `decrees`,
- *   so decrees remains hidden for grc-admin too. The remaining four blocks
- *   (sanctorale/widerregion/national/diocesan) are unaffected by #399 and stay
- *   role-gated only, so they render for every user in the matrix below.
+ * ── NOTE on read access (issue #399, then API #1049) ──
+ *   #399 narrowed Temporale and Decrees to users holding a viewer-or-above tuple on the
+ *   rite-level object. #1049 retired `viewer` for people: every calendar_editor now sees
+ *   both cards through the role alone — including cei-editor, usccb-admin and
+ *   europe-admin, none of whom holds a tuple on rite_calendar:roman/decrees. The
+ *   negative case is a calendar-role holder whose role does NOT read rite_calendar:
+ *   tests-editor-noscope (test_editor, no tuple) lands on the dashboard but sees
+ *   neither card.
  *
  * Preconditions (seeded by rbac-setup): super-admin, cei-editor, usccb-admin,
- *   grc-admin, europe-admin (.auth/<id>.json each).
+ *   grc-admin, europe-admin, tests-editor-noscope (.auth/<id>.json each).
  * Precondition (created on-demand): cei-admin is a REGISTRATION_USER — not seeded by
  *   rbac-setup; seedAndLogin provisions it (Zitadel account + admin@IT tuple + .auth),
  *   and afterAll purges it.
@@ -88,16 +81,22 @@ interface Expected {
 
 const ALWAYS_VISIBLE = ['sanctorale', 'widerregion', 'national', 'diocesan'] as const;
 
+const ALL_CALENDAR_BLOCKS = [...ALWAYS_VISIBLE, 'temporale', 'decrees'] as const;
+
 const MATRIX: Record<string, Expected> = {
     // Global admin: role bypasses all FGA gates — all six blocks.
-    'super-admin': { visibleBlocks: [...ALWAYS_VISIBLE, 'temporale', 'decrees'], hiddenBlocks: [], globalAdminSection: true, reviewCard: false },
-    // calendar_editors WITHOUT any general_roman_calendar relation: temporale + decrees hidden.
-    'cei-admin': { visibleBlocks: [...ALWAYS_VISIBLE], hiddenBlocks: ['temporale', 'decrees'], globalAdminSection: false, reviewCard: true },
-    'cei-editor': { visibleBlocks: [...ALWAYS_VISIBLE], hiddenBlocks: ['temporale', 'decrees'], globalAdminSection: false, reviewCard: false },
-    'usccb-admin': { visibleBlocks: [...ALWAYS_VISIBLE], hiddenBlocks: ['temporale', 'decrees'], globalAdminSection: false, reviewCard: true },
-    // admin@general_roman_calendar:temporale → temporale visible (viewer via admin), decrees still hidden.
-    'grc-admin': { visibleBlocks: [...ALWAYS_VISIBLE, 'temporale'], hiddenBlocks: ['decrees'], globalAdminSection: false, reviewCard: true },
-    'europe-admin': { visibleBlocks: [...ALWAYS_VISIBLE], hiddenBlocks: ['temporale', 'decrees'], globalAdminSection: false, reviewCard: true },
+    'super-admin': { visibleBlocks: [...ALL_CALENDAR_BLOCKS], hiddenBlocks: [], globalAdminSection: true, reviewCard: false },
+    // calendar_editors read rite_calendar through the role (API #1049): all six blocks,
+    // although none of them holds a tuple on rite_calendar:roman/decrees (and only
+    // grc-admin holds one on rite_calendar:roman/temporale).
+    'cei-admin': { visibleBlocks: [...ALL_CALENDAR_BLOCKS], hiddenBlocks: [], globalAdminSection: false, reviewCard: true },
+    'cei-editor': { visibleBlocks: [...ALL_CALENDAR_BLOCKS], hiddenBlocks: [], globalAdminSection: false, reviewCard: false },
+    'usccb-admin': { visibleBlocks: [...ALL_CALENDAR_BLOCKS], hiddenBlocks: [], globalAdminSection: false, reviewCard: true },
+    'grc-admin': { visibleBlocks: [...ALL_CALENDAR_BLOCKS], hiddenBlocks: [], globalAdminSection: false, reviewCard: true },
+    'europe-admin': { visibleBlocks: [...ALL_CALENDAR_BLOCKS], hiddenBlocks: [], globalAdminSection: false, reviewCard: true },
+    // test_editor, no tuple: reaches the dashboard, but its role does not read rite_calendar,
+    // so temporale + decrees stay hidden.
+    'tests-editor-noscope': { visibleBlocks: [...ALWAYS_VISIBLE], hiddenBlocks: ['temporale', 'decrees'], globalAdminSection: false, reviewCard: false },
 };
 
 async function assertMatrix(page: Page, expected: Expected): Promise<void> {

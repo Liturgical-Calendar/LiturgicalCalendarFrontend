@@ -9,6 +9,10 @@
  *   - partly redundant → the request is created with the remaining permissions, and a warning
  *                      (`skippedHeading` + the skipped list) names each dropped permission and why.
  *
+ * `viewer` is no longer offered (LiturgicalCalendarAPI #1049: reading comes with the role), so both
+ * cases are built from `editor` alone: the user already holds editor@IT, so asking for it again is
+ * redundant (case 1), and asking for it beside admin@IT makes it a duplicate of the admin row (case 2).
+ *
  * Preconditions:
  *   - cei-editor is seeded by rbac-setup with the `calendar_editor` role and NO FGA tuple; beforeAll
  *     grants it editor@national_calendar:roman/IT, and afterAll takes that tuple away again.
@@ -49,7 +53,7 @@ async function settledRequestRows(page: Page): Promise<Locator> {
  * ./support/requestAccess: object type first, so the object-id control is populated before
  * we select from it.
  */
-async function fillNationalRow(row: Locator, nation: string, relation: 'viewer' | 'editor' | 'admin'): Promise<void> {
+async function fillNationalRow(row: Locator, nation: string, relation: 'editor' | 'admin'): Promise<void> {
     await expect(row).toBeVisible();
     await row.locator('.perm-object-type').selectOption('national_calendar');
     const objectIdControl = row.locator('.perm-object-id');
@@ -82,7 +86,7 @@ test.describe('19 — redundant access requests', () => {
         ]);
     });
 
-    test('requesting viewer on a calendar you edit is refused', async ({ browser }) => {
+    test('requesting editor on a calendar you already edit is refused', async ({ browser }) => {
         const { context, page } = await actingAs(browser, 'cei-editor');
         try {
             await page.goto('/permission-requests.php');
@@ -90,7 +94,7 @@ test.describe('19 — redundant access requests', () => {
 
             // Not submitAccessRequest(): it waits for a new request row, and none must appear.
             await page.check('input[name="requested_role"][value="calendar_editor"]');
-            await fillNationalRow(page.locator('#permissionRows .card').first(), 'IT', 'viewer');
+            await fillNationalRow(page.locator('#permissionRows .card').first(), 'IT', 'editor');
 
             const requestRows = await settledRequestRows(page);
             const rowsBefore = await requestRows.count();
@@ -125,7 +129,7 @@ test.describe('19 — redundant access requests', () => {
 
             // Selecting the role auto-adds the first row; the second one is added by hand.
             await page.check('input[name="requested_role"][value="calendar_editor"]');
-            await fillNationalRow(page.locator('#permissionRows .card').nth(0), 'IT', 'viewer');
+            await fillNationalRow(page.locator('#permissionRows .card').nth(0), 'IT', 'editor');
             await page.click('#addPermissionBtn');
             await fillNationalRow(page.locator('#permissionRows .card').nth(1), 'IT', 'admin');
 
@@ -144,14 +148,15 @@ test.describe('19 — redundant access requests', () => {
             await expect(permissionsCell.locator('code')).toHaveCount(1);
             await expect(permissionsCell.locator('code')).toContainText('IT');
 
-            // The dropped viewer row is listed as a duplicate of the admin one (the API checks
-            // duplicates before grants, so it is not reported as already granted).
+            // The dropped editor row is listed as a duplicate of the admin one (the API checks
+            // duplicates before grants, so it is not reported as already granted, although
+            // cei-editor does hold editor@IT).
             const warning = page.locator('#formAlerts .alert-warning');
             await expect(warning).toHaveCount(1);
             await expect(warning).toContainText(i18n.skippedHeading);
             await expect(warning).toContainText(i18n.skipDuplicate);
             await expect(warning.locator('li')).toHaveCount(1);
-            await expect(warning.locator('li .badge')).toHaveText(i18n.viewer);
+            await expect(warning.locator('li .badge')).toHaveText(i18n.editor);
             await expect(warning.locator('li code')).toContainText('IT');
         } finally {
             await context.close();
