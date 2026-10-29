@@ -22,7 +22,10 @@ the grant page and the review queue with requests that change nothing anyone can
    table that already decides which role a request needs, which role a direct grant assigns, and which role a revoke
    cascades:
     - `calendar_editor` reads the calendar types: `national_calendar`, `diocesan_calendar`, `wider_region` and
-      `rite_calendar` (temporale, sanctorale, decrees, supported locales).
+      `rite_calendar` (temporale, sanctorale, decrees, supported locales). That is every resource that contributes to
+      calendar data. A `calendar_editor` with write access on a single diocese can view the temporale, the sanctorale
+      editions, the decrees, every national, diocesan and wider-region calendar, and the supported locales, all
+      read-only.
     - `test_editor` reads the test types: `national_calendar_test`, `diocesan_calendar_test` and `rite_calendar_test`.
     - `developer` reads every type, since its scope already covers them all.
     - The global `admin` role reads everything, as today.
