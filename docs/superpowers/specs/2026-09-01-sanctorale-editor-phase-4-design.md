@@ -78,10 +78,10 @@ is explicitly out of scope in the parent design, and it is RBAC-critical code co
 `OpenFgaAuthorizationMiddleware::forMissals()` authorizes a sanctorale write against the Missal, not
 against the page:
 
-| Missal                            | FGA object                             |
-| --------------------------------- | -------------------------------------- |
-| Editio typica (`region === base`) | `general_roman_calendar:{MISSAL_ID}`   |
-| National edition                  | `national_calendar:{rite}/{region}`    |
+| Missal                            | FGA object                           |
+| --------------------------------- | ------------------------------------ |
+| Editio typica (`region === base`) | `general_roman_calendar:{MISSAL_ID}` |
+| National edition                  | `national_calendar:{rite}/{region}`  |
 
 The separator is `/` (`RiteScopedObjectId::SEPARATOR`), so the object id needs encoding in the check
 query. Relations follow `OpenFgaAuthorizationMiddleware::DEFAULT_RELATION_MAP` verbatim, because
@@ -151,11 +151,11 @@ already reads and which is false for a rite with no corpus, and the `missal` / `
 selects an advisory note — it is read off the `tier.tier` badge the lectionary response already
 carries for the tier holding the entry.
 
-| Tier     | Meaning                                   | Panel                                            |
-| -------- | ----------------------------------------- | ------------------------------------------------ |
-| `missal` | The edition has its own lectionary folder | Editable; writes to that edition                 |
-| `rite`   | Falls back to the rite `sanctorum` corpus | Editable, with a note that the corpus is shared  |
-| `none`   | No corpus at all (Ambrosian, API #957)    | Read-only note; the payload omits `readings`     |
+| Tier     | Meaning                                   | Panel                                           |
+| -------- | ----------------------------------------- | ----------------------------------------------- |
+| `missal` | The edition has its own lectionary folder | Editable; writes to that edition                |
+| `rite`   | Falls back to the rite `sanctorum` corpus | Editable, with a note that the corpus is shared |
+| `none`   | No corpus at all (Ambrosian, API #957)    | Read-only note; the payload omits `readings`    |
 
 The `rite` note is not decoration: that corpus is shared by every Roman Missal, so editing readings
 on a 1970 row edits data the 2002 and 2008 editions also read. The handler rejects a payload

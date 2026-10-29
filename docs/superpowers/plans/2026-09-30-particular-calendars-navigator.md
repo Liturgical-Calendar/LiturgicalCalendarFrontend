@@ -59,12 +59,12 @@ scope.
 
 - `buildNavigatorTree({ metadata, prospectiveRegions, nations, missals, rights, dioceses, uiLocale }): NavigatorNode[]`
     - `metadata`: `/calendars` `litcal_metadata` (`national_calendars[{calendar_id, wider_regions?, wider_region?}]`,
-    `diocesan_calendars[{calendar_id, diocese, nation, rite}]`, `wider_regions[{id?, name, label?, roster?, national_calendars?, locales}]`)
+      `diocesan_calendars[{calendar_id, diocese, nation, rite}]`, `wider_regions[{id?, name, label?, roster?, national_calendars?, locales}]`)
     - `prospectiveRegions`: `[{ id, label, roster }]` (from `ProspectiveWiderRegions::all()`)
     - `nations`: `{ ISO: display name }` (from `CatholicNations::localized()`)
     - `missals`: `{ ISO: string[] }` national Missal editions by nation (from `NavigatorData::nationalMissals()`)
     - `rights`: `NavigatorRights` `{ isGlobalAdmin, admin: {national_calendar, diocesan_calendar, wider_region}, editor: {…} }`
-    (arrays of rite-qualified ids)
+      (arrays of rite-qualified ids)
     - `dioceses`: `Map<ISO, {id, name}[]>` of loaded not-yet-created candidates (may be empty)
     - `uiLocale`: for sorting and `Intl.DisplayNames` fallbacks
 - `filterMine(nodes): NavigatorNode[]`
@@ -77,46 +77,46 @@ scope.
     - `note`: `'no-missal'` on a nation without Missal editions
 
 - [ ] **Step 1: Write the failing tests** — fixtures: metadata with national IT (wider_regions ['europe']), NL
-  (['europe']), SE absent; regions `europe` (roster IT NL SE DE), prospective `nordic` (roster SE DK) and `africa`
-  (roster KE); diocesan calendars `roma_it` (IT, roman), `lugano_ch` (CH, ambrosian); nations map incl. IT NL SE DK
-  DE KE FR CH; missals `{ IT: ['IT_1983'] }`. Cases:
+      (['europe']), SE absent; regions `europe` (roster IT NL SE DE), prospective `nordic` (roster SE DK) and `africa`
+      (roster KE); diocesan calendars `roma_it` (IT, roman), `lugano_ch` (CH, ambrosian); nations map incl. IT NL SE DK
+      DE KE FR CH; missals `{ IT: ['IT_1983'] }`. Cases:
     - structure: regions sorted by label (existing then prospective); SE appears under europe and nordic with the same
-    actions; FR (in no roster) is in `no-region`; `lugano_ch` is under `ambrosian`; `roma_it` is under IT; a Map entry
-    `IT → [{id:'torino_it',name:'Torino'}]` adds `torino_it` (exists false) under IT, and a created id is never
-    duplicated;
+      actions; FR (in no roster) is in `no-region`; `lugano_ch` is under `ambrosian`; `roma_it` is under IT; a Map entry
+      `IT → [{id:'torino_it',name:'Torino'}]` adds `torino_it` (exists false) under IT, and a created id is never
+      duplicated;
     - global admin: every existing node has `edit`, every missing one `create`; IT also `sanctorale`; NL has
-    `note: 'no-missal'` and no `sanctorale`;
+      `note: 'no-missal'` and no `sanctorale`;
     - national editor of IT (`editor.national_calendar: ['roman/IT']`): IT `['edit','sanctorale']`; europe
-    `['translate']`; NL `['request']`; `roma_it` `['request']`;
+      `['translate']`; NL `['request']`; `roma_it` `['request']`;
     - national admin of a missing nation (`admin.national_calendar: ['roman/DK']`): DK `['create']`;
     - diocese admin `roman/torino_it` with IT missing from national_calendars (use a fixture without IT): `torino_it`
-    `create` with `disabledReason: 'nation-missing'`; Ambrosian dioceses never get `nation-missing`;
+      `create` with `disabledReason: 'nation-missing'`; Ambrosian dioceses never get `nation-missing`;
     - admin on prospective region `roman/nordic`: nordic `['create']`;
     - `mine` true exactly on nodes with an action other than `request`; `filterMine` keeps them and their ancestors,
-    ancestors marked `context: true`, and drops empty groups;
+      ancestors marked `context: true`, and drops empty groups;
     - `parseDeepLink`: `?choice=national&calendar=IT` → `{choice:'national', calendar:'IT', locale:null, rite:'roman'}`;
-    region with locale; diocesan with `rite=ambrosian`; invalid choice, calendar failing `^[A-Za-z0-9_-]{1,64}$`, or
-    unknown rite → `null`;
+      region with locale; diocesan with `rite=ambrosian`; invalid choice, calendar failing `^[A-Za-z0-9_-]{1,64}$`, or
+      unknown rite → `null`;
     - `actionUrl`: each row of the spec's action→URL table, URL-encoded; `request` →
-    `permission-requests.php?object_type=national_calendar&object_id=roman%2FIT` (region → `wider_region`, diocese →
-    `diocesan_calendar` with its rite).
+      `permission-requests.php?object_type=national_calendar&object_id=roman%2FIT` (region → `wider_region`, diocese →
+      `diocesan_calendar` with its rite).
 - [ ] **Step 2:** Run → FAIL.
 - [ ] **Step 3: Implement.** Rules (write small named helpers, JSDoc on exports):
     - `has(list, rite, id)` → `list?.includes(`${rite}/${id}`)`; `canEdit` = global || editor || admin; `canCreate` =
-    global || admin.
+      global || admin.
     - Region members: `roster ?? national_calendars ?? []`; region id `id ?? name`, label `label ?? name`; prospective
-    regions whose id already exists are skipped.
+      regions whose id already exists are skipped.
     - Nation label: `nations[ISO]` else `Intl.DisplayNames([uiLocale],{type:'region'}).of(ISO)` else ISO.
     - Nation exists: `national_calendars` has `calendar_id === ISO`. Actions: exists → `edit` if canEdit; missing →
-    `create` if canCreate; `sanctorale` if `missals[ISO]?.length` and canEdit; none of these → `request`.
+      `create` if canCreate; `sanctorale` if `missals[ISO]?.length` and canEdit; none of these → `request`.
     - Region actions: exists → `edit` if canEdit on `wider_region`; else `translate` if the user edits (editor/admin
-    national) any member nation, or any nation whose `wider_regions`/`wider_region` declares it; missing → `create` if
-    canCreate; else `request`.
+      national) any member nation, or any nation whose `wider_regions`/`wider_region` declares it; missing → `create` if
+      canCreate; else `request`.
     - Diocese (Roman): exists = in `diocesan_calendars` for that nation; `create` gets `disabledReason:'nation-missing'`
-    when the nation has no calendar. Ambrosian dioceses come from `diocesan_calendars` with `rite === 'ambrosian'`.
+      when the nation has no calendar. Ambrosian dioceses come from `diocesan_calendars` with `rite === 'ambrosian'`.
     - `childrenPending: true` on a nation whose dioceses Map entry is absent.
     - `parseDeepLink` accepts `choice ∈ {widerRegion, national, diocesan}`, `rite ∈ {roman, ambrosian}` (default
-    `roman`), `locale` matching `^[a-z]{2,3}(_[A-Za-z]{4})?(_[A-Z]{2})?$` or absent.
+      `roman`), `locale` matching `^[a-z]{2,3}(_[A-Za-z]{4})?(_[A-Z]{2})?$` or absent.
 - [ ] **Step 4:** `node_modules/.bin/vitest run assets/js/__tests__/particularCalendarsTree.test.js && node_modules/.bin/eslint .` → PASS.
 - [ ] **Step 5: Commit** — `feat: particular calendars navigator tree model (#66)`
 
@@ -140,8 +140,8 @@ scope.
   `litcal_missals[]`: `region` matching `^[A-Z]{2}$` and not `VA` → `missal_id`s, sorted.
 
 - [ ] **Step 1:** PHPUnit: rights with admin+editor overlap, other object types dropped, non-string ids dropped,
-  empty/unauthenticated scopes; missals from a fixture with VA/IT/US/AMBROSIAN regions → `['IT' => ['IT_1983'], 'US' => ['US_2011']]`;
-  malformed entries skipped.
+      empty/unauthenticated scopes; missals from a fixture with VA/IT/US/AMBROSIAN regions → `['IT' => ['IT_1983'], 'US' => ['US_2011']]`;
+      malformed entries skipped.
 - [ ] **Step 2:** Run → FAIL. **Step 3:** Implement (final class, static methods, PHPStan-typed arrays).
 - [ ] **Step 4:** `vendor/bin/phpunit tests/NavigatorDataTest.php && composer lint && composer analyse` → PASS.
 - [ ] **Step 5: Commit** — `feat: navigator rights and national Missal editions (#66)`
@@ -173,18 +173,18 @@ Requirements:
    absent (cache-busted with `filemtime` like the other page scripts). If `extending.js` throws or logs errors on the
    hub (check the browser console with the stack up), guard its form-only initialisation behind `if (choice)`.
 3. **Renderer**:
-   - toolbar: a two-button group "My calendars" / "Show all" (default: global admin → Show all, else My calendars;
-     choice remembered in `sessionStorage`, wrapped in try/catch) and a text filter (case-insensitive on labels,
-     keeping ancestors of matches);
-   - a Bootstrap accordion per region/group; inside, a list of nations; each nation row: status dot (● exists /
-     ○ not yet created, with visually-hidden text), label, ISO code, the "no national Missal data" note when
-     `note === 'no-missal'`, and action buttons (`<a class="btn btn-sm">` with `actionUrl`); a disabled Create shows
-     the `disabledReason` message as `title` and visually-hidden text;
-   - a nation is expandable to its dioceses; on first expansion call `loadWorldDioceses()`, rebuild the tree with the
-     nation's `nationDioceses`, re-render; on failure show "Could not load the dioceses" with a Retry button, still
-     listing the created dioceses;
-   - empty "My calendars": a message and a button that switches to Show all;
-   - labels for actions: Edit, Create, Translate, Proper of Saints ({missal ids}), Request access.
+    - toolbar: a two-button group "My calendars" / "Show all" (default: global admin → Show all, else My calendars;
+      choice remembered in `sessionStorage`, wrapped in try/catch) and a text filter (case-insensitive on labels,
+      keeping ancestors of matches);
+    - a Bootstrap accordion per region/group; inside, a list of nations; each nation row: status dot (● exists /
+      ○ not yet created, with visually-hidden text), label, ISO code, the "no national Missal data" note when
+      `note === 'no-missal'`, and action buttons (`<a class="btn btn-sm">` with `actionUrl`); a disabled Create shows
+      the `disabledReason` message as `title` and visually-hidden text;
+    - a nation is expandable to its dioceses; on first expansion call `loadWorldDioceses()`, rebuild the tree with the
+      nation's `nationDioceses`, re-render; on failure show "Could not load the dioceses" with a Retry button, still
+      listing the created dioceses;
+    - empty "My calendars": a message and a button that switches to Show all;
+    - labels for actions: Edit, Create, Translate, Proper of Saints ({missal ids}), Request access.
 4. **Strings** (`includes/messages.php`, translators comments like siblings): My calendars, Show all, Filter,
    Not yet created, Created, Edit, Create, Translate, Proper of Saints (%s), Request access, No national Missal data:
    the national calendar alone defines it, Create the national calendar first, Nations in no wider region,
@@ -192,13 +192,13 @@ Requirements:
 5. **CSS**: status dots, compact rows, action buttons aligned right; wraps on small screens.
 
 - [ ] **Step 1:** jsdom tests for `renderNavigator`: My calendars vs Show all output for an IT editor; Proper of
-  Saints button only on IT; NL note; disabled Create has its reason; filter keeps ancestors; empty state button calls
-  `onToggleView`; expansion failure shows Retry. Run → FAIL.
+      Saints button only on IT; NL note; disabled Create has its reason; filter keeps ancestors; empty state button calls
+      `onToggleView`; expansion failure shows Retry. Run → FAIL.
 - [ ] **Step 2:** Implement renderer + page wiring + PHP + footer + CSS + strings.
 - [ ] **Step 3:** `node_modules/.bin/vitest run && node_modules/.bin/eslint . && node --check assets/js/extending.js && composer lint && composer analyse && composer parallel-lint`;
-  recreate `litcal-frontend`. The page needs an OIDC login, so the browser check is Task 7's E2E; here, confirm
-  the emitted config by rendering the branch's JSON-building code in isolation (e.g. a PHPUnit-free `php -r` call of
-  `NavigatorData` on fixtures) and report what you checked.
+      recreate `litcal-frontend`. The page needs an OIDC login, so the browser check is Task 7's E2E; here, confirm
+      the emitted config by rendering the branch's JSON-building code in isolation (e.g. a PHPUnit-free `php -r` call of
+      `NavigatorData` on fixtures) and report what you checked.
 - [ ] **Step 4: Commit** — `feat: particular calendars navigator hub (#66)`
 
 ---
@@ -212,11 +212,11 @@ Requirements:
 
 - On load, if `parseDeepLink(location.search)` returns a value whose `choice` matches the page's `choice`:
     - `widerRegion`: set `#widerRegionCalendarName` to `{calendar}` (or `{calendar} - {locale}`) and dispatch `change`
-    exactly as a user edit does (reuse the path `regionalNationalCalendarNameChanged` takes);
+      exactly as a user edit does (reuse the path `regionalNationalCalendarNameChanged` takes);
     - `national`: select the nation in the national form's calendar control and dispatch `change`;
     - `diocesan`: select the rite (`rite`), then the national dependency select to the diocese's nation (from
-    `LitCalMetadata.diocesan_calendars`, or for a not-yet-created diocese from `loadWorldDioceses()`'s Map), then
-    the diocese input, dispatching the same events as the UI.
+      `LitCalMetadata.diocesan_calendars`, or for a not-yet-created diocese from `loadWorldDioceses()`'s Map), then
+      the diocese input, dispatching the same events as the UI.
 - The deep link runs only after the form's own initial data (metadata, controls) is ready; find the existing
   readiness point (e.g. after the multiselects are initialised) and hook there.
 - A `null` parse (invalid), a choice mismatch, or a calendar not found for that choice (and not creatable, e.g. a
@@ -226,7 +226,7 @@ Requirements:
   `particularCalendarsTree.js` with unit tests.
 
 - [ ] Steps: failing tests for the pure helpers → implement → `vitest`, `eslint`, `node --check` → commit
-  `feat: deep links into the particular calendar forms (#66)`.
+      `feat: deep links into the particular calendar forms (#66)`.
 
 ---
 
@@ -242,7 +242,7 @@ to `particularCalendarsTree.js` with tests.
 - Rebuilt whenever the loaded calendar changes (hook the same place the form learns its new `API.key`).
 
 - [ ] Steps: failing tests for `breadcrumbSegments` → implement → checks → commit
-  `feat: breadcrumb on the particular calendar forms (#66)`.
+      `feat: breadcrumb on the particular calendar forms (#66)`.
 
 ---
 
@@ -260,7 +260,7 @@ to `particularCalendarsTree.js` with tests.
   are ignored. Extract the query parsing into a small exported pure function with a unit test.
 
 - [ ] Steps: unit test for the parser → implement → `vitest`, `eslint`, `composer lint`, `composer analyse` → recreate
-  `litcal-frontend` → commit `feat: one Particular Calendars entry; prefilled access requests (#66)`.
+      `litcal-frontend` → commit `feat: one Particular Calendars entry; prefilled access requests (#66)`.
 
 ---
 
@@ -287,8 +287,8 @@ to `particularCalendarsTree.js` with tests.
 ### Task 8: Docs and full verification
 
 - [ ] CLAUDE.md: a short "Particular calendars navigator" subsection (hub, deep-link parameters, the two editors per
-  nation, rights are per calendar), and update any sidebar/entry-point mentions of the three `choice` links.
+      nation, rights are per calendar), and update any sidebar/entry-point mentions of the three `choice` links.
 - [ ] Full suite: `composer parallel-lint && composer lint:fix && composer analyse && composer test && composer lint:md:fix`,
-  `yarn typecheck && node_modules/.bin/eslint . && node_modules/.bin/vitest run`; revert fixer changes to files this
-  branch never touched.
+      `yarn typecheck && node_modules/.bin/eslint . && node_modules/.bin/vitest run`; revert fixer changes to files this
+      branch never touched.
 - [ ] Commit `docs: particular calendars navigator (#66)`.

@@ -8,8 +8,8 @@
 > source, principally `assets/js/sanctorale.js`.
 >
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or
-  superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for
-  tracking.
+> superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for
+> tracking.
 
 **Goal:** Turn the read-only sanctorale viewer into an editor — structure, names and readings per entry, plus create and delete — and retire `missals-editor.php`.
 
@@ -42,7 +42,7 @@ moves into another (`capabilities.js`). `sanctorale.js` keeps the DOM, the loade
   does **not** apply here. Create affordances gate on `admin`, not on `editor`.
 - **`sanctorale` is in neither the toastr nor the bootstrap-multiselect page list** in `layout/head.php` and
   `layout/footer.php`. Use the global `window.showToast` from `assets/js/toast.js` and plain `<select
-  multiple>`. Do not add the page to those lists.
+multiple>`. Do not add the page to those lists.
 - **JS globals are declared in `eslint.config.mjs`,** not in inline comments.
 - **Numbered gettext placeholders** in PHP: `sprintf(_('… %1$d … %2$s'), …)`.
 
@@ -61,7 +61,7 @@ moves into another (`capabilities.js`). `sanctorale.js` keeps the DOM, the loade
 - Produces: `missalFgaObject(missal, rite, baseRegion) -> {objectType: string, objectId: string}`;
   `capabilityCheckPath({userSub, objectType, objectId, relation}) -> string`;
   `detectMissalCapabilities({missals, rite, baseRegion, userSub, isGlobalAdmin, checkAllowed}) ->
-  Promise<Map<string, {canEdit: boolean, canCreate: boolean, canDelete: boolean}>>` — `canEdit` is `PATCH`,
+Promise<Map<string, {canEdit: boolean, canCreate: boolean, canDelete: boolean}>>` — `canEdit` is `PATCH`,
   `canCreate` is `PUT`, `canDelete` is `DELETE`; constants `RELATION_EDITOR`, `RELATION_ADMIN`.
 
 - [ ] **Step 1: Write the failing test**
@@ -588,7 +588,7 @@ git commit -m "feat(sanctorale): model grade_display as three states, not two"
 - Consumes: Task 2's `PayloadError`, `diffStructure`, `CREATE_REQUIRED`.
 - Produces: `diffLocaleMap(original, next) -> object`; `buildPatch({original, next, readingsTier}) -> object`;
   `buildCreate({eventKey, next, readingsTier}) -> object`. `next` is always `{structure: object, i18n: object,
-  readings?: object}`. Both throw `PayloadError`.
+readings?: object}`. Both throw `PayloadError`.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -1245,7 +1245,7 @@ git commit -m "feat(sanctorale): add the editor's markup, config and strings"
 
 - Consumes: Task 1's `detectMissalCapabilities`; Task 5's `#newEntryBtn`, `config.userSub`, `config.isGlobalAdmin`.
 - Produces: `state.capabilities` (a `Map<string, {canEdit, canCreate, canDelete}>`); `capabilityFor(missalId) ->
-  {canEdit, canCreate, canDelete}`; an Edit button per row carrying `data-edit-key` and `data-missal`.
+{canEdit, canCreate, canDelete}`; an Edit button per row carrying `data-edit-key` and `data-missal`.
 
 - [ ] **Step 1: Wire detection into the catalogue load**
 
@@ -1343,7 +1343,7 @@ git commit -m "feat(sanctorale): gate edit affordances per Missal, per row"
 - Consumes: Tasks 2–4 (`gradeDisplayMode`, `gradeDisplayValue`, `buildPatch`, `writeJson`, `entryPath`, `ApiWriteError`), Task 6 (`capabilityFor`), Task 5's footer ids.
 - Produces: `editState` module-level object `{eventKey, missalId, editing, readingsTier, original, capability}`;
   `readStructureForm() -> object`; `renderStructureForm(row) -> string`; `saveEntry()`; `reportWrite(data,
-  appliedMessage) -> WriteOutcome`.
+appliedMessage) -> WriteOutcome`.
 
 - [ ] **Step 1: Add the disposition reporter and the edit state**
 
