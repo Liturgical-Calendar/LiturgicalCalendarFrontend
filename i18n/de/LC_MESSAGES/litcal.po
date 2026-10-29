@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-29 10:06+0000\n"
-"PO-Revision-Date: 2026-10-01 08:55+0000\n"
+"PO-Revision-Date: 2026-10-29 11:32+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -2111,10 +2111,8 @@ msgstr "noch nicht erstellt"
 
 #. translators: error toast when a link from the particular calendars navigator names a calendar the form cannot open
 #: includes/messages.php:250
-#, fuzzy
-#| msgid "Calendar Editor"
 msgid "Calendar not found"
-msgstr "Kalender-Editor"
+msgstr "Kalender nicht gefunden"
 
 #. translators: error message when a wider region id typed by the user does not match the required shape
 #: includes/messages.php:252
@@ -2517,31 +2515,23 @@ msgstr "Definition des Diözesankalenders"
 
 #. translators: navigator view toggle - only the calendars the user holds rights on
 #: includes/messages.php:435
-#, fuzzy
-#| msgid "Web calendar"
 msgid "My calendars"
-msgstr "Webkalender"
+msgstr "Meine Kalender"
 
 #. translators: navigator view toggle - every wider region, nation and diocese
 #: includes/messages.php:437
-#, fuzzy
-#| msgid "Show no rank"
 msgid "Show all"
-msgstr "Keinen Rang anzeigen."
+msgstr "Alle anzeigen"
 
 #. translators: placeholder and label of the navigator's text filter on calendar names
 #: includes/messages.php:439
-#, fuzzy
-#| msgid "Filters"
 msgid "Filter"
 msgstr "Filter"
 
 #. translators: screen reader text of the empty status dot of a calendar that does not exist yet
 #: includes/messages.php:441
-#, fuzzy
-#| msgid "not yet created"
 msgid "Not yet created"
-msgstr "noch nicht erstellt"
+msgstr "Noch nicht erstellt"
 
 #. translators: screen reader text of the filled status dot of a calendar that exists
 #: includes/messages.php:443 admin-applications.php:242
@@ -2558,70 +2548,56 @@ msgstr "Bearbeiten"
 
 #. translators: navigator action button - create a calendar that does not exist yet
 #: includes/messages.php:447
-#, fuzzy
-#| msgid "Created"
 msgid "Create"
-msgstr "Erstellt"
+msgstr "Erstellen"
 
 #. translators: navigator action button - translate a wider region into the user's nation's language
 #: includes/messages.php:449
-#, fuzzy
-#| msgid "translated"
 msgid "Translate"
-msgstr "übersetzt"
+msgstr "Übersetzen"
 
 #. translators: navigator action button - open the nation's Missal edition in the sanctorale editor. %1$s = the Missal ids, e.g. "IT_1983"
 #: includes/messages.php:451
 #, php-format
 msgid "Proper of Saints (%1$s)"
-msgstr ""
+msgstr "Propers der Heiligen (%1$s)"
 
 #. translators: navigator action button - ask for rights on a calendar
 #: includes/messages.php:453
-#, fuzzy
-#| msgid "Requested access"
 msgid "Request access"
-msgstr "Zugriff angefordert"
+msgstr "Zugriff beantragen"
 
 #. translators: note on a nation that has no national Missal edition
 #: includes/messages.php:455
 msgid "No national Missal data: the national calendar alone defines it"
 msgstr ""
+"Keine nationalen Missaldaten: Der nationale Kalender definiert es allein."
 
 #. translators: note on an Ambrosian rite diocese in the navigator, which offers no Edit button for it
 #: includes/messages.php:457
-#, fuzzy
-#| msgid "New diocesan calendars (not yet created)"
 msgid "Ambrosian diocesan calendars cannot be edited here yet"
-msgstr "Neue Diözesankalender (noch nicht erstellt)"
+msgstr ""
+"Ambrosianische Diözesankalender können hier noch nicht bearbeitet werden."
 
 #. translators: why a diocese's Create button is disabled
 #: includes/messages.php:459
-#, fuzzy
-#| msgid "National calendar test"
 msgid "Create the national calendar first"
-msgstr "Nationalkalender-Test"
+msgstr "Erstelle zuerst den nationalen Kalender"
 
 #. translators: navigator group of the nations that belong to no wider region
 #: includes/messages.php:461
-#, fuzzy
-#| msgid "Existing wider regions"
 msgid "Nations in no wider region"
-msgstr "Bestehende breitere Regionen"
+msgstr "Nationen in keiner größeren Region"
 
 #. translators: navigator group of the Ambrosian rite's diocesan calendars
 #: includes/messages.php:463
-#, fuzzy
-#| msgid "Ambrosian Rite"
 msgid "Ambrosian rite"
 msgstr "Ambrosianischer Ritus"
 
 #. translators: error shown under a nation when its list of dioceses could not be fetched
 #: includes/messages.php:465
-#, fuzzy
-#| msgid "Could not load locales: %s"
 msgid "Could not load the dioceses"
-msgstr "Locales konnten nicht geladen werden: %s"
+msgstr "Konnte die Diözesen nicht laden."
 
 #. translators: button to fetch the list of dioceses again
 #: includes/messages.php:467 admin-permissions.php:458
@@ -2631,24 +2607,19 @@ msgstr "Wiederholen"
 
 #. translators: "My calendars" view of a user who holds no rights on any calendar
 #: includes/messages.php:469
-#, fuzzy
-#| msgid "Particular Calendars"
 msgid "You have no particular calendars yet"
-msgstr "Partikularkalender"
+msgstr "Sie haben noch keine eigenen Kalender"
 
 #. translators: button of the empty "My calendars" view, switching to "Show all"
 #: includes/messages.php:471
-#, fuzzy
-#| msgid "National calendar"
 msgid "Browse all calendars"
-msgstr "Nationalkalender"
+msgstr "Alle Kalender durchsuchen"
 
 #. translators: screen reader label of the button that expands a nation. %1$s = the nation's name
 #: includes/messages.php:473
-#, fuzzy, php-format
-#| msgid "Diocese"
+#, php-format
 msgid "Dioceses of %1$s"
-msgstr "Diözese"
+msgstr "Diözesen von %1$s"
 
 #. translators: shown while a nation's dioceses are being fetched
 #: includes/messages.php:475 admin-decrees.php:627 admin-locales.php:112
@@ -2659,7 +2630,7 @@ msgstr "Wird geladen…"
 #. translators: shown when no calendar name matches the navigator's text filter
 #: includes/messages.php:477
 msgid "No calendars match the filter"
-msgstr ""
+msgstr "Keine Kalender entsprechen dem Filter"
 
 #: includes/admin-blocks.php:20
 msgid "Proprium de Tempore - temporal cycle events"
