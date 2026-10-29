@@ -216,6 +216,23 @@ test('08 — viewer can be neither requested nor granted (API #1049)', async ({ 
         expect(resp.status(), `a viewer access request must be refused with 400; got ${resp.status()}: ${body}`).toBe(400);
         // Pin the reason, so a 400 for some other validation failure cannot pass for this one.
         expect(body).toContain('viewer relation can no longer be requested');
+
+        // And nothing was stored: grc-editor's own list loads, and no request in it asks for
+        // viewer on IT (checked on the request's permissions, not just on the requester).
+        const listResp = await grced.page.request.get(`${API_BASE}/auth/access-requests`, { headers });
+        expect(listResp.ok(), `GET /auth/access-requests must succeed; got ${listResp.status()}`).toBe(true);
+        const list = (await listResp.json()) as {
+            requests?: Array<{ permissions?: Array<{ object_type: string; object_id: string; relation: string }> }>;
+        };
+        expect(Array.isArray(list.requests), 'the access-request list must be an array').toBe(true);
+        const storedViewerOnIt = (list.requests ?? []).filter((request) =>
+            (request.permissions ?? []).some((permission) =>
+                permission.relation === viewerOnIt.relation
+                && permission.object_type === viewerOnIt.object_type
+                && permission.object_id === viewerOnIt.object_id,
+            ),
+        );
+        expect(storedViewerOnIt, 'the refused viewer request must not have been stored').toEqual([]);
     } finally {
         await grced.context.close();
     }

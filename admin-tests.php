@@ -21,14 +21,20 @@ if (!$authHelper->isAuthenticated) {
 
 // This is an admin page. Reading comes from the role (LiturgicalCalendarAPI #1049):
 // global admins and every role whose scope includes a test type (test_editor,
-// developer) may enter, as may resource-admins. The same rule gates the
-// dashboard's Tests card. Per-row gating (below, in JS) governs what each user may change.
+// developer) may enter — the same rule that gates the dashboard's Tests card. So may an
+// admin of a test scope, whatever their role. Being admin of some other resource (a
+// calendar) is not a path to the tests. Per-row gating (below, in JS) governs what each
+// user may change.
 $isGlobalAdmin   = $authHelper->hasRole('admin');
 $hasTestEditor   = $authHelper->hasRole('test_editor');
-$isResourceAdmin = $authHelper->isResourceAdmin();
-$canViewTests    = $authHelper->canViewAnyResourceOfType('national_calendar_test', 'diocesan_calendar_test', 'rite_calendar_test');
+$testTypes       = ['national_calendar_test', 'diocesan_calendar_test', 'rite_calendar_test'];
+$canViewTests    = $authHelper->canViewAnyResourceOfType(...$testTypes);
+$adminsTestScope = array_filter(
+    $authHelper->adminScopes(),
+    fn (array $scope): bool => in_array($scope['object_type'], $testTypes, true)
+) !== [];
 
-if (!$canViewTests && !$isResourceAdmin) {
+if (!$canViewTests && !$adminsTestScope) {
     header('Location: admin-dashboard.php');
     exit;
 }
