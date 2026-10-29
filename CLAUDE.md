@@ -19,6 +19,25 @@ gh pr create --base main
 `composer lint:md` to enforce code standards. If a hook fails, fix the issue and create a new commit — do not
 bypass the hook.
 
+**Push once per batch, then check CodeRabbit's rate limit.** CodeRabbit reviews every push to a PR and is
+rate-limited, so pushing fixes one at a time can use up the limit. No push request is needed. Instead:
+
+1. Commit all the fixes and changes for the current round first, then push them together in one push.
+2. After pushing, check whether CodeRabbit reports a rate limit on the PR. Match its HTML marker rather than the
+   wording, which varies:
+
+    ```bash
+    gh api repos/{owner}/{repo}/issues/<PR>/comments --paginate \
+      --jq '.[] | select(.user.login == "coderabbitai[bot]")
+            | select(.body | contains("rate limited by coderabbit.ai")) | {updated_at, body}'
+    ```
+
+3. If there is one, read the wait it states. It is phrased either as "Please wait **9 minutes and 12 seconds**
+   before requesting another review" or as "More reviews will be available in 44 minutes and 10 seconds". Add the
+   wait to the comment's `updated_at`, not its `created_at`. CodeRabbit writes the notice by editing its summary
+   comment in place, so `updated_at` is when the wait started.
+4. Once that moment has passed, ask for the review again by commenting `@coderabbitai review` on the PR.
+
 ## Project Overview
 
 The **LiturgicalCalendarFrontend** is a PHP-based website frontend that presents liturgical calendar data from the
@@ -235,13 +254,13 @@ A nation without Missal data (e.g. the Netherlands) is edited by the national ca
 
 **Rights and actions** (no cascade; each item's actions are decided on its own rights):
 
-| Action       | Offered when                                                                            |
-|--------------|-----------------------------------------------------------------------------------------|
-| `edit`       | Calendar exists AND user is editor/admin on it OR is global admin                       |
-| `create`     | Calendar does not exist AND user is admin on it OR is global admin                      |
-| `sanctorale` | Nation has Missal edition AND user is editor/admin on `national_calendar:{rite}/{ISO}`  |
-| `translate`  | Region exists, user cannot edit whole region, but can edit a member nation              |
-| `request`    | Authenticated user with none of the above                                               |
+| Action       | Offered when                                                                           |
+| ------------ | -------------------------------------------------------------------------------------- |
+| `edit`       | Calendar exists AND user is editor/admin on it OR is global admin                      |
+| `create`     | Calendar does not exist AND user is admin on it OR is global admin                     |
+| `sanctorale` | Nation has Missal edition AND user is editor/admin on `national_calendar:{rite}/{ISO}` |
+| `translate`  | Region exists, user cannot edit whole region, but can edit a member nation             |
+| `request`    | Authenticated user with none of the above                                              |
 
 The `request` action links to `permission-requests.php?object_type=…&object_id=…` and preselects role
 `calendar_editor` and the first permission row. `assets/js/accessRequestPrefill.js` parses the query string
