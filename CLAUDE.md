@@ -303,7 +303,7 @@ People read admin data through the role they hold, not through a `viewer` tuple 
 `canView*` methods answer from it, so the object id no longer matters for reading, and pages pass it to JS through
 their config. `viewer` is neither offered nor accepted for people: the request and grant forms offer `editor` and
 `admin` only, and a resubmit drops stored `viewer` rows. It stays in the model for applications (API #1050), and the
-display maps keep it so history still renders.
+display maps and the permissions page's relation filter keep it, so history renders and leftover tuples stay findable.
 
 ### Rite awareness
 

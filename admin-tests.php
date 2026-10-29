@@ -3,8 +3,9 @@
 /**
  * Admin Tests Management Page
  *
- * Allows test_editor / admin users to create, edit, delete, and view
- * liturgical test definitions via the /tests API. Per-row edit/delete are
+ * Global admins, resource admins, and users whose role reads the test types
+ * (test_editor, developer) view liturgical test definitions via the /tests API;
+ * holders of the matching editor/admin scopes also create, edit and delete them. Per-row edit/delete are
  * gated against the caller's scopes from GET /auth/test-scopes; the API is
  * the hard backstop.
  */
@@ -18,13 +19,16 @@ if (!$authHelper->isAuthenticated) {
     exit;
 }
 
-// This is an admin page: test editors, global admins, and resource-admins may
-// enter. Per-row gating (below, in JS) governs what each user may change.
+// This is an admin page. Reading comes from the role (LiturgicalCalendarAPI #1049):
+// global admins and every role whose scope includes a test type (test_editor,
+// developer) may enter, as may resource-admins. The same rule gates the
+// dashboard's Tests card. Per-row gating (below, in JS) governs what each user may change.
 $isGlobalAdmin   = $authHelper->hasRole('admin');
 $hasTestEditor   = $authHelper->hasRole('test_editor');
 $isResourceAdmin = $authHelper->isResourceAdmin();
+$canViewTests    = $authHelper->canViewAnyResourceOfType('national_calendar_test', 'diocesan_calendar_test', 'rite_calendar_test');
 
-if (!$isGlobalAdmin && !$hasTestEditor && !$isResourceAdmin) {
+if (!$canViewTests && !$isResourceAdmin) {
     header('Location: admin-dashboard.php');
     exit;
 }
