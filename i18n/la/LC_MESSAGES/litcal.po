@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-29 11:32+0000\n"
-"PO-Revision-Date: 2026-10-29 11:32+0000\n"
+"PO-Revision-Date: 2026-10-29 11:43+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Latin <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/la/>\n"
@@ -4027,32 +4027,30 @@ msgstr "Error ignotus"
 
 #: permission-requests.php:225
 msgid "You already have this access (or higher)."
-msgstr ""
+msgstr "Iam hunc accessum habes (vel maiorem)."
 
 #: permission-requests.php:226
 msgid "Already covered by another permission in this request."
-msgstr ""
+msgstr "Iam aliae permissiones in hac petitione tractatae sunt."
 
 #: permission-requests.php:227
-#, fuzzy
-#| msgid "Not yet created"
 msgid "Not needed."
-msgstr "Nondum creatum."
+msgstr "Non opus est."
 
 #: permission-requests.php:228
 msgid "These permissions were left out of your request:"
-msgstr ""
+msgstr "Haec permissiones in tua petitione neglectae sunt."
 
 #: permission-requests.php:229
 msgid ""
 "You already have, or have already requested, all of these permissions. "
 "Nothing was submitted."
-msgstr ""
+msgstr "Iam habes permissiones istas; iam petisti eas. Nihil submittum est."
 
 #: permission-requests.php:230
 msgid ""
 "You already have these permissions; your request asks for the role only."
-msgstr ""
+msgstr "Iam habes permissiones istas; tua petitio solum munus petit."
 
 #: permission-requests.php:238
 msgid "Reviewed"
