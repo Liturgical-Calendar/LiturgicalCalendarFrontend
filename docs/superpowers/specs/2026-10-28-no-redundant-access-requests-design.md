@@ -12,7 +12,8 @@ already holds, and the API only refuses a second *pending* request for the same 
 (`AccessRequestRepository::hasPendingRequest()`), not one for permissions already granted.
 
 Unnecessary requests cost reviewers time and make the queue misleading. A request is only meaningful when it asks
-for more than the user has, or will have once their pending requests are approved.
+for more than the user has. *(Originally "…or will have once their pending requests are approved"; superseded
+2026-10-29: pending requests under other roles are not consulted.)*
 
 ## The rule
 
@@ -29,8 +30,9 @@ Relations are ranked `viewer` < `editor` < `admin`. A requested permission (obje
    defining "viewer" as anyone given viewer, editor or admin, and "editor" as anyone given editor or admin.) So one
    global ranking is valid for every type, and asking OpenFGA whether the user has the requested tier is exactly
    `OpenFgaClient::check("user:{sub}", relation, "{object_type}:{object_id}") === true`.
-2. **pending** — another of the user's requests with `status = 'pending'` (any role) contains a permission on the
-   same object_type + object_id with a relation of equal or higher rank.
+2. ~~**pending**~~ — *superseded 2026-10-29, see the note above: other pending requests are no longer consulted.*
+   Originally: another of the user's requests with `status = 'pending'` (any role) contains a permission on the same
+   object_type + object_id with a relation of equal or higher rank.
 3. **duplicate** — another permission in the same submission targets the same object with a higher relation, or
    is the identical triple appearing earlier. Within one submission, a given object keeps only its
    highest-ranked relation (first occurrence when tied).
@@ -53,7 +55,8 @@ for a user who lacks the requested role:
 - **No `roles` claim in the token:** treat the role as missing. That errs toward creating the request, in line with
   the anti-goal below.
 
-Only a request for a strictly higher tier than anything held or pending on that object goes through. For example,
+Only a request for a strictly higher tier than anything held on that object goes through (originally "held or
+pending"; superseded 2026-10-29). For example,
 holding `editor` and asking for `admin` is allowed; holding `editor` and asking for `viewer` is not.
 
 ## Goals
@@ -72,7 +75,8 @@ holding `editor` and asking for `admin` is allowed; holding `editor` and asking 
 - Cleaning up redundant pending requests that already exist (for example the second `roman/FR` admin request). The
   reviewer rejects those by hand.
 - Changing the existing "one pending request per role" rule. It stays as it is. The new rule covers what it
-  misses: permissions already granted, and overlap with pending requests under a *different* role.
+  misses: permissions already granted. *(Originally also overlap with pending requests under a different role;
+  superseded 2026-10-29: requests under different roles never block each other.)*
 
 ## Anti-goals
 
@@ -90,11 +94,14 @@ in both `createRequest()` and `resubmitRequest()`, run one shared filter over `$
 in a small, unit-testable service (suggested: `Services/AccessRequestRedundancyFilter`), constructed with an
 `OpenFgaClient` (via the existing `ResolvesFgaClient` concern) and the `AccessRequestRepository`.
 
-Order of checks: **duplicate** first (collapse within the submission), then **pending**, then **granted**. The first
-reason that applies is the one reported, so a pending permission is reported as `pending` even if a later check
-would also have matched.
+Order of checks: **duplicate** first (collapse within the submission), then **granted**. The first reason that
+applies is the one reported. *(Originally duplicate, then pending, then granted; the pending check was removed
+2026-10-29.)*
 
-### Pending lookup
+### Pending lookup (superseded 2026-10-29)
+
+*Removed with the `pending` reason: the filter no longer reads other pending requests, and
+`getPendingPermissions()` was not kept. The original design follows.*
 
 Add a repository method returning the permissions of the user's pending requests, for example
 `getPendingPermissions(string $userId, ?string $excludeRequestId = null): array`. It decodes the `permissions` JSON
@@ -121,7 +128,7 @@ Each skipped permission is reported as:
 { "object_type": "national_calendar", "object_id": "roman/FR", "relation": "admin", "reason": "granted" }
 ```
 
-`reason` is one of `granted` | `pending` | `duplicate`.
+`reason` is one of `granted` | `duplicate`. *(Originally also `pending`; removed 2026-10-29.)*
 
 - **Some kept:** `201 Created`, the request is created with the kept permissions only, and the body gains
   `"skipped_permissions": [ … ]`. The field is present (possibly empty) on every 201.
@@ -150,7 +157,8 @@ In `assets/js/permission-requests.js`:
   each skipped permission. Use the badge/type/id rendering `summarizePermissions()` already produces, followed by a
   translated reason:
     - `granted` → "You already have this access (or higher)."
-    - `pending` → "This access (or higher) is already in one of your pending requests."
+    - ~~`pending` → "This access (or higher) is already in one of your pending requests."~~ *Removed 2026-10-29
+      with the `pending` reason; an unknown reason falls back to "Not needed."*
     - `duplicate` → "Already covered by another permission in this request."
 
   The form resets as it does today.
@@ -191,6 +199,9 @@ permissions page) must also give the user the matching Zitadel role, so permissi
   reported).
 
 ## Follow-up (issue, not this PR)
+
+*Superseded by LiturgicalCalendarFrontend#617 (2026-10-29): Relation is pruned by what the user holds only, and a role
+that already has a pending request is disabled in the form, pointing to that request. The original text follows.*
 
 Reorder each permission row to **Calendar scope → Calendar ID → Relation** (Relation is first today). Keep
 Relation disabled until both scope and ID are chosen, then prune it to the relations still meaningful for that
