@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-29 11:32+0000\n"
-"PO-Revision-Date: 2026-10-29 11:32+0000\n"
+"PO-Revision-Date: 2026-10-29 11:43+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Croatian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hr/>\n"
@@ -4029,32 +4029,31 @@ msgstr "Nepoznata pogreška"
 
 #: permission-requests.php:225
 msgid "You already have this access (or higher)."
-msgstr ""
+msgstr "Već imate ovaj pristup (ili viši)."
 
 #: permission-requests.php:226
 msgid "Already covered by another permission in this request."
-msgstr ""
+msgstr "Već je pokriveno drugim dopuštenjem u ovom zahtjevu."
 
 #: permission-requests.php:227
-#, fuzzy
-#| msgid "Not yet created"
 msgid "Not needed."
-msgstr "Još nije kreirano"
+msgstr "Nije potrebno."
 
 #: permission-requests.php:228
 msgid "These permissions were left out of your request:"
-msgstr ""
+msgstr "Ove dozvole su izostavljene iz vašeg zahtjeva:"
 
 #: permission-requests.php:229
 msgid ""
 "You already have, or have already requested, all of these permissions. "
 "Nothing was submitted."
 msgstr ""
+"Već imate, ili ste već zatražili, sva ova dopuštenja. Ništa nije predano."
 
 #: permission-requests.php:230
 msgid ""
 "You already have these permissions; your request asks for the role only."
-msgstr ""
+msgstr "Već imate ove dozvole; vaš zahtjev traži samo ulogu."
 
 #: permission-requests.php:238
 msgid "Reviewed"
