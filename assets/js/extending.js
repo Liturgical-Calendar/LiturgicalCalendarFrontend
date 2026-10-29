@@ -35,6 +35,7 @@ import {
 } from './writeDisposition.js';
 
 import { holydaysOfObligationSetting } from './Settings.js';
+import { emptyTranslations } from './calendarTranslations.js';
 import { fetchWithRetry, mapWithConcurrency } from './boundedFetch.js';
 import { editsWholeWiderRegion, editsWiderRegionLocale, localeWrites } from './widerRegionEditRights.js';
 import { widerRegionsForNation } from './widerRegionForNation.js';
@@ -3249,7 +3250,11 @@ const buildWiderRegionPayload = () => {
  * @returns {Object} Updated payload with litcal array and i18n data
  */
 const buildLitcalDataFromRows = (payload) => {
-    payload.i18n[API.locale] = {};
+    // One entry per declared locale, not just the current localization: the rows below only add
+    // the locales they carry a name input for, so a calendar with no event rows would otherwise
+    // send fewer locales than metadata.locales and be refused.
+    payload.i18n = emptyTranslations(payload.metadata.locales);
+    payload.i18n[API.locale] ??= {};
 
     const rows = document.querySelectorAll('.regionalNationalDataForm .row');
     rows.forEach(row => {
