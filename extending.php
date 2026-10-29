@@ -318,6 +318,7 @@ if (!$isNavigatorHub) {
                                 <i class="fas fa-save me-2"></i>
                                 <?php echo $messages['Save Wider Region Calendar Data']; ?>
                             </button>
+                            <p class="missingEventsNote text-muted small mb-0" hidden><?php echo $messages['Add at least one liturgical event before saving']; ?></p>
                         </div>
                     </div>
                 </div>
@@ -796,6 +797,7 @@ if (!$isNavigatorHub) {
                                 <i class="fas fa-save me-2"></i>
                                 <?php echo $messages['Save Diocesan Calendar Data']; ?>
                             </button>
+                            <p class="missingEventsNote text-muted small mb-0" hidden><?php echo $messages['Add at least one liturgical event before saving']; ?></p>
                         </div>
                     </div>
                 </div>
