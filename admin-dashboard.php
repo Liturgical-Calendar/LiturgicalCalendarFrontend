@@ -142,9 +142,9 @@ if (!$hasCalendarRole) {
     </div>
     <?php endif; ?>
 
-    <?php // canViewRiteCalendarResource() checks rite_calendar:roman/decrees and, for the
-          // migration window, its legacy general_roman_calendar:decrees counterpart. ?>
-    <?php if (!$isAdmin && $authHelper->hasRole('calendar_editor') && $authHelper->canViewRiteCalendarResource('roman', 'decrees')) : ?>
+    <?php // The Administration Decrees card is for editing. Readers are served by the Decrees block in the grid above.
+          // Editing is editor or admin on rite_calendar:roman/decrees. ?>
+    <?php if (!$isAdmin && in_array('decrees', $authHelper->editableObjectIds('rite_calendar'), true)) : ?>
     <hr class="my-4">
     <h4 class="mb-3 text-black" style="--bs-text-opacity: .6;">
         <i class="fas fa-user-shield me-2"></i><?php echo htmlspecialchars(_('Administration'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>
@@ -156,12 +156,9 @@ if (!$hasCalendarRole) {
 
     <?php if (
     !$isAdmin
-    && $authHelper->hasRole('test_editor')
-    // `rite_calendar_test` generalises `general_roman_calendar_test` (API #785): its id is the
-    // rite itself, so `rite_calendar_test:ambrosian` is a scope only it can express. The older
-    // type is no longer asked about: it was removed from the FGA model at the #955 prune
-    // milestone (CatholicOS/cdcf-infra#44), so `/auth/dashboard-scopes` cannot report a scope
-    // under it and the extra name could only ever match nothing.
+    // Reading comes from the role (API #1049): true for test_editor and developer, whose
+    // scopes include the test types. `rite_calendar_test` generalises the removed
+    // `general_roman_calendar_test` (API #785, CatholicOS/cdcf-infra#44).
     && $authHelper->canViewAnyResourceOfType('national_calendar_test', 'diocesan_calendar_test', 'rite_calendar_test')
 ) : ?>
     <hr class="my-4">

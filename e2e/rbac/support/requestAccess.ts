@@ -9,7 +9,8 @@ import { expect, type Page } from '@playwright/test';
  *   - Role: radios `input[name="requested_role"]`; checking one reveals
  *     `#permissionsSection` and auto-adds one permission row when none exist.
  *   - Permission row: `#permissionRows .card`, with `.perm-object-type` (select),
- *     `.perm-object-id` (always a <select>), and `.perm-relation` (select). Set
+ *     `.perm-object-id` (always a <select>), and `.perm-relation` (select: editor or
+ *     admin — `viewer` is no longer offered, API #1049). Set
  *     object-type FIRST so the object-id control is populated before we select from it.
  *   - Justification: `#justification` (optional). Submit: `#submitBtn`.
  *   - Success: `#formAlerts .alert-success`; the new pending request also appears in
@@ -38,7 +39,9 @@ export interface AccessRequestOptions {
         // Bare, as the option values are; a `diocesan_calendar` id must be a Roman-rite
         // diocese, its nation read from its country suffix.
         objectId: string;
-        relation: 'viewer' | 'editor' | 'admin';
+        // `viewer` is no longer offered (LiturgicalCalendarAPI #1049): people read admin
+        // data through the role they hold, and the API refuses a viewer request with 400.
+        relation: 'editor' | 'admin';
     };
     justification?: string;
 }
@@ -69,6 +72,9 @@ export async function submitAccessRequest(page: Page, opts: AccessRequestOptions
     await objectIdControl.waitFor({ state: 'visible' });
     await objectIdControl.selectOption(opts.permission.objectId);
 
+    // The relation select offers editor/admin only (API #1049). Asserted on every request
+    // this helper submits, so each request-flow spec also guards against viewer returning.
+    await expect(row.locator('.perm-relation option[value="viewer"]')).toHaveCount(0);
     await row.locator('.perm-relation').selectOption(opts.permission.relation);
 
     if (opts.justification) {

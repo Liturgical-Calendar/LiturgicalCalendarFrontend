@@ -2,13 +2,13 @@
 
 /**
  * "Decrees" dashboard card.
- * Rendered from admin-dashboard.php for scoped calendar_editors in their own Administration section.
+ * Rendered from admin-dashboard.php for non-admins who can edit decrees, in their own Administration section.
  * The markup lives here instead of being duplicated per branch.
  *
- * Visibility is decided server-side in admin-dashboard.php via
- * AuthHelper::canViewRiteCalendarResource('roman', 'decrees') — which checks
- * `rite_calendar:roman/decrees` and, until the API's tuple migration has run, the
- * legacy `general_roman_calendar:decrees` it supersedes.
+ * Visibility is decided server-side in admin-dashboard.php: a non-admin sees this card only when
+ * AuthHelper::editableObjectIds('rite_calendar') contains `decrees`, i.e. they hold editor or admin on
+ * rite_calendar:roman/decrees. Read-only access is served by the Decrees block in the dashboard grid
+ * (LiturgicalCalendarAPI #1049).
  */
 
 ?>

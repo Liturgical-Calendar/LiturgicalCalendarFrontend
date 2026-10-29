@@ -295,6 +295,16 @@ The API drops permissions that are already granted or duplicated within the same
 a second pending request for the same role is refused, as before. A user lacking the role still gets a `role_only` request, and an all-redundant request is a 409,
 which `permission-requests.js` shows as a warning without resetting the form or leaving resubmit mode.
 
+### Read access by role
+
+People read admin data through the role they hold, not through a `viewer` tuple (LiturgicalCalendarAPI #1049).
+`AuthHelper::canViewType()` is the rule: a global `admin` reads everything, and any other role reads the types
+`AuthHelper::ROLE_READABLE_TYPES` lists for it, a copy of the API's `AccessRequestRepository::ROLE_OBJECT_TYPES`. The
+`canView*` methods answer from it, so the object id no longer matters for reading, and pages pass it to JS through
+their config. `viewer` is neither offered nor accepted for people: the request and grant forms offer `editor` and
+`admin` only, and a resubmit drops stored `viewer` rows. It stays in the model for applications (API #1050), and the
+display maps and the permissions page's relation filter keep it, so history renders and leftover tuples stay findable.
+
 ### Rite awareness
 
 The API routes a rite as a bare path segment between `calendar` and any nation or diocese pair —

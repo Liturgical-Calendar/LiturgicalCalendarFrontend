@@ -3,7 +3,8 @@
 /**
  * "Test Definitions" dashboard card.
  * Rendered from admin-dashboard.php for both global admins (inside the admin
- * blocks grid) and scoped test_editors (in their own Administration section),
+ * blocks grid) and non-admins whose role reads the test types — test_editor or
+ * developer (LiturgicalCalendarAPI #1049) — in their own Administration section,
  * so the markup lives here once instead of being duplicated per branch.
  */
 
