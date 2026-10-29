@@ -54,6 +54,7 @@ import {
     offeredLocales,
     widerRegionNationalCalendars,
 } from './prospectiveWiderRegions.js';
+import { saveBlockedForMissingEvents } from './saveRequirements.js';
 
 /**
  * How many translation files load at once. Fired all together, a wider region's
@@ -86,8 +87,63 @@ let unofficialLocalesSelected = [];
  * or a new national calendar declares a locale that is not officially supported.
  */
 const enableSerializeButton = () => {
-    if (translationsIncomplete || unofficialLocalesSelected.length > 0) return;
+    if (translationsIncomplete || unofficialLocalesSelected.length > 0 || regionalSaveBlockedForMissingEvents()) return;
     document.querySelector('.serializeRegionalNationalData')?.removeAttribute('disabled');
+};
+
+/**
+ * True when the wider region form has no event rows: the API refuses such a calendar.
+ * Computed from the DOM on every call, so it can never be stale.
+ */
+const regionalSaveBlockedForMissingEvents = () => {
+    const button = document.querySelector('.serializeRegionalNationalData');
+    return saveBlockedForMissingEvents(
+        button?.dataset.category,
+        document.querySelectorAll('.regionalNationalDataForm .row').length
+    );
+};
+
+/** How many named event rows the diocesan form has. */
+const diocesanEventCount = () =>
+    Array.from(document.querySelectorAll('.carousel-item form .litEventName')).filter(el => el.value !== '').length;
+
+/**
+ * Re-evaluate "a diocesan or wider region calendar needs at least one event" and show the
+ * note accordingly. When it blocks, Save is disabled. When it stops blocking, Save is
+ * re-enabled only if this rule was what disabled it, and only through the path that honours
+ * every other rule (auth, translations, unofficial locales, a valid diocese).
+ */
+const refreshMissingEventsRule = () => {
+    const note = document.querySelector('.missingEventsNote');
+    const regionalButton = document.querySelector('.serializeRegionalNationalData');
+    const diocesanButton = document.getElementById('saveDiocesanCalendar_btn');
+    const authenticated = typeof Auth !== 'undefined' && Auth.isAuthenticated();
+    let blocked = false;
+
+    if (regionalButton && regionalButton.dataset.category === 'widerregion') {
+        blocked = regionalSaveBlockedForMissingEvents();
+        const wasBlocking = regionalButton.dataset.missingEvents === '1';
+        regionalButton.dataset.missingEvents = blocked ? '1' : '';
+        if (blocked) {
+            regionalButton.setAttribute('disabled', 'disabled');
+        } else if (wasBlocking && authenticated) {
+            enableSerializeButton();
+        }
+    }
+    if (diocesanButton) {
+        blocked = saveBlockedForMissingEvents('diocese', diocesanEventCount());
+        const wasBlocking = diocesanButton.dataset.missingEvents === '1';
+        diocesanButton.dataset.missingEvents = blocked ? '1' : '';
+        if (blocked) {
+            diocesanButton.disabled = true;
+        } else if (wasBlocking && authenticated && findDioceseOption(document.getElementById('diocesanCalendarDioceseName')?.value ?? '')) {
+            diocesanButton.disabled = false;
+        }
+    }
+    if (note) {
+        // Only once a calendar is chosen: before that the whole form is inert anyway.
+        note.hidden = !(blocked && (API.key || diocesanButton));
+    }
 };
 
 /**
@@ -3498,6 +3554,13 @@ const serializeRegionalNationalDataClicked = (ev) => {
         }
     }
 
+    // Last guard: the API answers 422 to a wider region calendar without events.
+    if (saveBlockedForMissingEvents(ev.target.dataset.category, document.querySelectorAll('.regionalNationalDataForm .row').length)) {
+        refreshMissingEventsRule();
+        toastr['error'](Messages['Add at least one liturgical event before saving'], Messages['Error']);
+        return;
+    }
+
     document.querySelector('#overlay').classList.remove('hidden');
 
     try {
@@ -4035,6 +4098,7 @@ const loadDiocesanCalendarData = () => {
             }
         }
         fillDiocesanFormWithData(data);
+        refreshMissingEventsRule();
         // The secondary-locale fetches MUST stay in the outer chain. The `.finally()`
         // below hides #overlay, and the save handler builds `payload.i18n` by reading
         // the `input[data-locale]` fields that refreshOtherLocalizationInputs() adds
@@ -4426,6 +4490,7 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
         if (saveBtn && typeof Auth !== 'undefined' && Auth.isAuthenticated()) {
             saveBtn.disabled = false;
         }
+        refreshMissingEventsRule();
         API.category = 'diocese';
         API.key = selectedOption.getAttribute('data-value');
         updateBreadcrumb(API.key);
@@ -4589,6 +4654,13 @@ const deleteDiocesanCalendarConfirmClicked = () => {
 const saveDiocesanCalendar_btnClicked = () => {
     // Check authentication before allowing write operations
     if (!requireAuth(saveDiocesanCalendar_btnClicked)) {
+        return;
+    }
+
+    // Last guard: the API answers 422 to a diocesan calendar without events.
+    if (saveBlockedForMissingEvents('diocese', diocesanEventCount())) {
+        refreshMissingEventsRule();
+        toastr['error'](Messages['Add at least one liturgical event before saving'], Messages['Error']);
         return;
     }
 
@@ -5169,6 +5241,7 @@ document.addEventListener('auth:login', () => {
     if (saveDiocesanBtn && dioceseNameInput?.value.trim()) {
         saveDiocesanBtn.disabled = false;
     }
+    refreshMissingEventsRule();
 
     // Enable action buttons only if a calendar is selected
     if (API.key) {
@@ -5184,3 +5257,22 @@ document.addEventListener('auth:login', () => {
     // Re-validate action prompt buttons based on current input values
     revalidateActionPromptButtons();
 });
+
+// Re-evaluate the "at least one event" rule whenever event rows come, go or are named.
+// Rows are added, removed and reset through many paths, so watch the forms themselves.
+{
+    const rowObserver = new MutationObserver(() => refreshMissingEventsRule());
+    document.querySelectorAll('.regionalNationalDataForm, #carouselExampleIndicators')
+        .forEach(el => rowObserver.observe(el, { childList: true, subtree: true }));
+    document.addEventListener('input', ev => {
+        if (ev.target.closest?.('.carousel-item form') && ev.target.classList.contains('litEventName')) {
+            refreshMissingEventsRule();
+        }
+    });
+    document.addEventListener('change', ev => {
+        if (ev.target.closest?.('.carousel-item form') && ev.target.classList.contains('litEventName')) {
+            refreshMissingEventsRule();
+        }
+    });
+    refreshMissingEventsRule();
+}

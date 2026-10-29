@@ -593,7 +593,7 @@ test.describe('Diocesan Calendar Form - Validation', () => {
         await extendingPage.goToDiocesanCalendar();
     });
 
-    test('should reject CREATE (PUT) with empty litcal array', async ({ page, extendingPage }) => {
+    test('should keep Save disabled for a new diocesan calendar with no events', async ({ page, extendingPage }) => {
         // This test verifies that the backend rejects diocesan calendar payloads
         // with empty litcal arrays. A diocesan calendar MUST have at least one
         // liturgical event defined.
@@ -691,98 +691,14 @@ test.describe('Diocesan Calendar Form - Validation', () => {
             }
         }
 
-        // Set up request interception to capture the payload
-        const { getPayload, getMethod } = await extendingPage.interceptDataRequests();
-
-        // Dismiss any toast messages that might be blocking
-        await page.locator('.toast-container, #toast-container').evaluate(el => el?.remove()).catch(() => {});
-
-        // Click the save button (this should send a payload with empty litcal)
+        // The client now refuses to send it: Save stays disabled, with a note saying why.
+        // (The API still answers 422 to an empty litcal; that is covered by its own tests.)
         const saveButton = page.locator('#saveDiocesanCalendar_btn');
         await expect(saveButton).toBeVisible({ timeout: 10000 });
-
-        // Check if save button is enabled, skip if it remains disabled
-        try {
-            await expect(saveButton).toBeEnabled({ timeout: 15000 });
-        } catch {
-            // Save button remained disabled - check if translations issue
-            const hasMissingTranslations = await extendingPage.hasMissingTranslationsToast();
-            if (hasMissingTranslations) {
-                test.skip(true, `Translations missing for ${selectedNation} - save button disabled`);
-                return;
-            }
-            // Save button disabled for other reasons (form validation)
-            test.skip(true, 'Save button remains disabled - form may have validation issues');
-            return;
-        }
-        await saveButton.click({ force: true });
-
-        // Wait for either a response OR an error toast (network failure)
-        const result = await Promise.race([
-            page.waitForResponse(
-                response => response.url().includes('/data/') && ['PUT', 'PATCH'].includes(response.request().method()),
-                { timeout: 15000 }
-            ).then(response => ({ type: 'response' as const, response })),
-            page.waitForSelector('.toast-error, .toast.bg-danger', { timeout: 15000 })
-                .then(() => ({ type: 'error-toast' as const }))
-        ]).catch(() => ({ type: 'timeout' as const }));
-
-        if (result.type === 'error-toast') {
-            // Check if it's a network/CORS error - skip these as they indicate infrastructure issues
-            // "Failed to fetch" is a standard browser Fetch API TypeError message (stable across browsers)
-            // "NetworkError" and "TypeError" are also common network failure indicators
-            const errorText = await page.locator('.toast-error, .toast.bg-danger').textContent();
-            const isNetworkError = errorText && (
-                errorText.includes('Failed to fetch') ||
-                errorText.includes('NetworkError') ||
-                errorText.includes('Network request failed')
-            );
-            if (isNetworkError) {
-                // This occurs when the API returns an error response without proper CORS headers
-                // for credentialed requests. The API's error handling middleware needs to include
-                // Access-Control-Allow-Credentials: true and specific origin (not *) on error responses.
-                test.skip(true, 'Network error - API CORS headers missing on error response');
-                return;
-            }
-            // For other error toasts, fail the test to surface backend regressions
-            throw new Error(`Unexpected error toast: ${errorText}`);
-        }
-
-        if (result.type === 'timeout') {
-            test.skip(true, 'No response received - request may have failed silently');
-            return;
-        }
-
-        const response = result.response;
-        const responseStatus = response.status();
-        let responseBody: any = null;
-        try {
-            responseBody = await response.json();
-        } catch {
-            responseBody = await response.text();
-        }
-
-        // Verify the HTTP method is PUT (CREATE attempt)
-        expect(getMethod()).toBe('PUT');
-        console.log(`HTTP method used: ${getMethod()}`);
-
-        // Verify the payload has an empty litcal array
-        const capturedPayload = getPayload();
-        expect(capturedPayload).not.toBeNull();
-        expect(capturedPayload).toHaveProperty('litcal');
-        expect(Array.isArray(capturedPayload.litcal)).toBe(true);
-        expect(capturedPayload.litcal.length).toBe(0);
-        console.log(`Payload litcal length: ${capturedPayload.litcal.length}`);
-
-        // Verify the backend REJECTS this payload (should be 422 Unprocessable Entity or 400 Bad Request)
-        expect([400, 422]).toContain(responseStatus);
-        console.log(`Backend correctly rejected empty litcal with status: ${responseStatus}`);
-        console.log(`Response body: ${JSON.stringify(responseBody)}`);
-
-        // Verify the response contains an error message (RFC 9110 format uses 'detail', legacy uses 'error')
-        const hasErrorMessage = responseBody.hasOwnProperty('error') || responseBody.hasOwnProperty('detail');
-        expect(hasErrorMessage).toBe(true);
+        await expect(saveButton).toBeDisabled();
+        await expect(page.locator('.missingEventsNote')).toBeVisible();
     });
+
 
     test('should show validation error when submitting without required fields', async ({ page }) => {
         // Wait for page to fully load
