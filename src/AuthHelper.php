@@ -419,25 +419,12 @@ class AuthHelper
         if ($this->hasRole('admin')) {
             return true;
         }
-        return in_array($objectType, $this->readableTypes(), true);
-    }
-
-    /**
-     * The object types the caller can read, for pages that pass the rule to JS.
-     * A global admin gets every type a role lists (and, through canViewType(),
-     * reads any other type as well).
-     *
-     * @return list<string>
-     */
-    public function readableTypes(): array
-    {
-        $types = [];
         foreach (self::ROLE_READABLE_TYPES as $role => $roleTypes) {
-            if ($this->hasRole('admin') || $this->hasRole($role)) {
-                $types = array_merge($types, $roleTypes);
+            if ($this->hasRole($role) && in_array($objectType, $roleTypes, true)) {
+                return true;
             }
         }
-        return array_values(array_unique($types));
+        return false;
     }
 
     /**

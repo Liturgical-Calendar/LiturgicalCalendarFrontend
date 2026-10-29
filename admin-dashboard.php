@@ -142,9 +142,9 @@ if (!$hasCalendarRole) {
     </div>
     <?php endif; ?>
 
-    <?php // Reading comes from the role (API #1049): canViewRiteCalendarResource() is true for
-          // every role whose scope includes rite_calendar — calendar_editor and developer. ?>
-    <?php if (!$isAdmin && $authHelper->canViewRiteCalendarResource('roman', 'decrees')) : ?>
+    <?php // The Administration Decrees card is for editing. Readers are served by the Decrees block in the grid above.
+          // Editing is editor or admin on rite_calendar:roman/decrees. ?>
+    <?php if (!$isAdmin && in_array('decrees', $authHelper->editableObjectIds('rite_calendar'), true)) : ?>
     <hr class="my-4">
     <h4 class="mb-3 text-black" style="--bs-text-opacity: .6;">
         <i class="fas fa-user-shield me-2"></i><?php echo htmlspecialchars(_('Administration'), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); ?>

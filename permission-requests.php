@@ -233,7 +233,10 @@ if (!$authHelper->emailVerified) {
                 allRedundant: <?php echo json_encode(_('You already have, or have already requested, all of these permissions. Nothing was submitted.'), $jsonFlags); ?>,
                 roleOnly: <?php echo json_encode(_('You already have these permissions; your request asks for the role only.'), $jsonFlags); ?>,
                 <?php // Shown on resubmit when a rejected request's viewer rows were dropped (API #1049). ?>
-                viewerDropped: <?php echo json_encode(_('Viewer access is no longer requested: your role gives read access. The viewer rows were removed.'), $jsonFlags); ?>,
+                viewerDropped: <?php echo json_encode(
+                    _('Viewer access can no longer be requested: read access comes with the role. The viewer rows were removed; request editor or admin on the calendars you want to work on.'),
+                    $jsonFlags
+                ); ?>,
                 // Table headers
                 role: <?php echo json_encode(_('Role'), $jsonFlags); ?>,
                 permissions: <?php echo json_encode(_('Permissions'), $jsonFlags); ?>,

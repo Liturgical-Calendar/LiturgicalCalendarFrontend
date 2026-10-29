@@ -24,8 +24,9 @@ the grant page and the review queue with requests that change nothing anyone can
     - `calendar_editor` reads the calendar types: `national_calendar`, `diocesan_calendar`, `wider_region` and
       `rite_calendar` (temporale, sanctorale, decrees, supported locales). That is every resource that contributes to
       calendar data. A `calendar_editor` with write access on a single diocese can view the temporale, the sanctorale
-      editions, the decrees, every national, diocesan and wider-region calendar, and the supported locales, all
-      read-only.
+      editions, the decrees and every national, diocesan and wider-region calendar, all read-only. The
+      `rite_calendar:roman/supported_locales` object is readable by role too, but the locales admin page
+      (`admin-locales.php`) remains global-admin-only. Opening it to readers is a follow-up.
     - `test_editor` reads the test types: `national_calendar_test`, `diocesan_calendar_test` and `rite_calendar_test`.
     - `developer` reads every type, since its scope already covers them all.
     - The global `admin` role reads everything, as today.
@@ -170,6 +171,9 @@ hide `editor` when the user already holds it. Note this on #617 when this ships.
 
 ## Settled during review
 
+- **The locales admin page stays global-admin-only.** Decision 1 makes `rite_calendar:roman/supported_locales` readable by
+  role, but the plan limited its scope to checks that used `viewer`, and `admin-locales.php` never did. Opening the page
+  to readers is a follow-up.
 - **The complete list of read checks that use `viewer`:** `AuthHelper::canViewResource()`,
   `canViewRiteCalendarResource()` and `canViewAnyResourceOfType()`, plus `admin-decrees.js`'s `canView`. Checked: the
   Sanctorale page's `capabilities.js` decides edit, create and delete only, and no other page reads `viewer_scopes` or

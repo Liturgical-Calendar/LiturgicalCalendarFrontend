@@ -133,7 +133,6 @@ final class AuthHelperDashboardScopesTest extends TestCase
             self::assertSame([], $auth->dashboardScopes()['viewer_scopes']);
             self::assertFalse($auth->canViewType('rite_calendar'));
             self::assertFalse($auth->canViewResource('rite_calendar', 'roman/decrees'));
-            self::assertSame([], $auth->readableTypes());
             self::assertFalse($auth->canViewRiteCalendarResource('roman', 'decrees'));
             self::assertFalse($auth->canViewAnyResourceOfType('national_calendar_test', 'diocesan_calendar_test'));
         } finally {
@@ -260,19 +259,6 @@ final class AuthHelperDashboardScopesTest extends TestCase
         self::assertSame('rite_calendar', AuthHelper::ROLE_READABLE_TYPES['calendar_editor'][0]);
         self::assertSame('rite_calendar_test', AuthHelper::ROLE_READABLE_TYPES['test_editor'][0]);
         self::assertSame('rite_calendar', AuthHelper::ROLE_READABLE_TYPES['developer'][0]);
-    }
-
-    public function testReadableTypesListsWhatTheHeldRolesRead(): void
-    {
-        self::assertSame(AuthHelper::ROLE_READABLE_TYPES['calendar_editor'], $this->authWithRoles('calendar_editor')->readableTypes());
-        self::assertSame([], $this->authWithRoles()->readableTypes());
-        self::assertSame([], $this->authWithRoles('translator')->readableTypes());
-
-        $both = $this->authWithRoles('calendar_editor', 'developer')->readableTypes();
-        self::assertSame($both, array_values(array_unique($both)), 'No duplicates');
-        self::assertEqualsCanonicalizing(AuthHelper::ROLE_READABLE_TYPES['developer'], $both);
-
-        self::assertEqualsCanonicalizing(AuthHelper::ROLE_READABLE_TYPES['developer'], $this->authWithRoles('admin')->readableTypes());
     }
 
     public function testFetchDashboardScopesParsesEditorScopes(): void
