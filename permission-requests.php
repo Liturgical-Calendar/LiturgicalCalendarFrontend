@@ -8,6 +8,7 @@
  * their request status.
  */
 
+use LiturgicalCalendar\Frontend\AuthHelper;
 use LiturgicalCalendar\Frontend\CatholicNations;
 use LiturgicalCalendar\Frontend\ProspectiveWiderRegions;
 
@@ -207,6 +208,9 @@ if (!$authHelper->emailVerified) {
             nations: <?php echo json_encode((object) CatholicNations::localized($i18n->LOCALE), $jsonFlags); ?>,
             <?php // Wider regions that do not exist yet but can be created (#591). ?>
             prospectiveWiderRegions: <?php echo json_encode(ProspectiveWiderRegions::all($i18n->LOCALE), $jsonFlags); ?>,
+            <?php // The object types each role covers, in display order; one PHP copy of the API's
+                  // ROLE_OBJECT_TYPES (API #1049). ?>
+            roleObjectTypes: <?php echo json_encode(AuthHelper::ROLE_READABLE_TYPES, $jsonFlags); ?>,
             i18n: {
                 loading: <?php echo json_encode(_('Loading...'), $jsonFlags); ?>,
                 noRequests: <?php echo json_encode(_('You have not made any access requests yet.'), $jsonFlags); ?>,
@@ -228,6 +232,11 @@ if (!$authHelper->emailVerified) {
                 skippedHeading: <?php echo json_encode(_('These permissions were left out of your request:'), $jsonFlags); ?>,
                 allRedundant: <?php echo json_encode(_('You already have, or have already requested, all of these permissions. Nothing was submitted.'), $jsonFlags); ?>,
                 roleOnly: <?php echo json_encode(_('You already have these permissions; your request asks for the role only.'), $jsonFlags); ?>,
+                <?php // Shown on resubmit when a rejected request's viewer rows were dropped (API #1049). ?>
+                viewerDropped: <?php echo json_encode(
+                    _('Viewer access can no longer be requested: read access comes with the role. The viewer rows were removed; request editor or admin on the calendars you want to work on.'),
+                    $jsonFlags
+                ); ?>,
                 // Table headers
                 role: <?php echo json_encode(_('Role'), $jsonFlags); ?>,
                 permissions: <?php echo json_encode(_('Permissions'), $jsonFlags); ?>,
@@ -299,7 +308,7 @@ if (!$authHelper->emailVerified) {
                 calendarEditor: <?php echo json_encode(_('Calendar Editor'), $jsonFlags); ?>,
                 testEditor: <?php echo json_encode(_('Accuracy Test Editor'), $jsonFlags); ?>,
                 developer: <?php echo json_encode(_('Developer'), $jsonFlags); ?>,
-                // Relation display names
+                // Relation display names (`viewer` is no longer offered, but still names history rows)
                 viewer: <?php echo json_encode(_('Viewer'), $jsonFlags); ?>,
                 editor: <?php echo json_encode(_('Editor'), $jsonFlags); ?>,
                 admin: <?php echo json_encode(pgettext('permission relation', 'Admin'), $jsonFlags); ?>,

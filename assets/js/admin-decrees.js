@@ -94,8 +94,11 @@ export const DECREES_OBJECTS = Object.freeze([
 /**
  * Detect the current user's capabilities for decree management.
  *
- * Global admins short-circuit to full access. Otherwise three parallel
- * FGA self-checks determine viewer / editor / admin relations.
+ * Global admins short-circuit to full access. Otherwise reading comes from
+ * the role (LiturgicalCalendarAPI #1049): `canView` is the server-side rule,
+ * `AuthHelper::canViewType('rite_calendar')`, passed in as `config.canView` —
+ * no `viewer` relation is asked about. Two parallel FGA self-checks determine
+ * the editor / admin relations, and either one implies reading.
  *
  * Each relation is asked about every object in DECREES_OBJECTS, which is now the
  * rite-qualified one alone. `GET /admin/permissions/check` answers on the object
@@ -110,8 +113,9 @@ export async function detectCapabilities() {
     }
     const userSub = config.userSub || '';
     if (!userSub) {
-        // No sub available — cannot call self-check; deny all.
-        return { canView: false, canEdit: false, canAdmin: false };
+        // No sub available — cannot call the relation self-checks, so deny
+        // editing; reading does not need them (it comes from the role).
+        return { canView: config.canView === true, canEdit: false, canAdmin: false };
     }
     // URLSearchParams is what percent-encodes the `/` in `roman/decrees`; built
     // by hand it would read as a path segment and check the wrong route.
@@ -130,12 +134,11 @@ export async function detectCapabilities() {
         }
         return false;
     };
-    const [viewer, editor, admin] = await Promise.all([
-        check('viewer'),
+    const [editor, admin] = await Promise.all([
         check('editor'),
         check('admin'),
     ]);
-    return { canView: viewer || editor || admin, canEdit: editor || admin, canAdmin: admin };
+    return { canView: config.canView === true || editor || admin, canEdit: editor || admin, canAdmin: admin };
 }
 
 // ---- grade / color label helpers ------------------------------------------

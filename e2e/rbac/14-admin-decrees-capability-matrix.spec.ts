@@ -2,29 +2,33 @@
  * Scenario 14 — admin-decrees capability matrix (real FGA)
  *
  * The admin-decrees page (`admin-decrees.php` + `assets/js/admin-decrees.js`) gates its UI on three
- * capability tiers derived from the caller's relation on the FGA object `general_roman_calendar:decrees`
- * (plus the global-admin bypass):
+ * capability tiers. Reading comes from the role (LiturgicalCalendarAPI #1049): `canView` is
+ * `AuthHelper::canViewType('rite_calendar')`, true for a global admin and for every role whose scope
+ * includes rite_calendar (calendar_editor, developer). Editing and administering still come from the
+ * caller's relation on the FGA object `rite_calendar:roman/decrees` (plus the global-admin bypass):
  *
- *   | Tier        | Granted to                         | UI surface                                             |
- *   | ----------- | ---------------------------------- | ------------------------------------------------------ |
- *   | canView     | global admin, or viewer+           | page + read-only cards                                 |
- *   | canEdit     | global admin, or editor+           | + "New Decree" button, per-card Edit buttons           |
- *   | canAdmin    | global admin, or admin             | + per-card Delete buttons, page-level Manage-perms link |
- *   | (no grant)  | calendar_editor without a relation | a "no permission" notice, no cards                     |
- *   | (anonymous) | —                                  | redirected off the admin page                          |
+ *   | Tier        | Granted to                                | UI surface                                              |
+ *   | ----------- | ----------------------------------------- | ------------------------------------------------------- |
+ *   | canView     | global admin, or a role reading the type  | page + read-only cards                                  |
+ *   | canEdit     | global admin, or editor+                  | + "New Decree" button, per-card Edit buttons            |
+ *   | canAdmin    | global admin, or admin                    | + per-card Delete buttons, page-level Manage-perms link |
+ *   | (no role)   | test_editor (role does not read the type) | redirected to admin-dashboard.php                       |
+ *   | (anonymous) | —                                         | redirected off the admin page                           |
  *
  * This spec proves each tier end-to-end against the live stack. Rather than provision ephemeral users, it
- * grants a `general_roman_calendar:decrees` relation at runtime to existing seeded `calendar_editor` users
- * whose own scopes are on OTHER object types/ids (national/diocesan/wider_region), so those scopes can never
- * affect the decrees page — which only checks `general_roman_calendar:decrees`. The FGA model's union
- * semantics mean a single `editor` (resp. `admin`) tuple also satisfies the `viewer` (resp. `viewer`+`editor`)
- * self-checks, so one tuple per user yields the intended tier. All tuples are torn down in `afterAll`.
+ * grants a `rite_calendar:roman/decrees` relation at runtime to existing seeded `calendar_editor` users
+ * whose own scopes are on OTHER object types/ids (national/wider_region), so those scopes can never affect
+ * the decrees page — which only checks `rite_calendar:roman/decrees`. The FGA model's union semantics mean
+ * an `admin` tuple also satisfies the `editor` self-check, so one tuple per user yields the intended tier.
+ * The read-only tier needs NO tuple: a calendar_editor whose only scope is elsewhere reads through the role.
+ * All tuples are torn down in `afterAll`.
  *
  * Preconditions (seeded by rbac-setup):
  *   - super-admin: Zitadel `admin` role (global bypass); `.auth/super-admin.json` pre-written.
- *   - cei-editor / usccb-admin / europe-editor / rome-editor: Zitadel `calendar_editor` role with a scope on
- *     a non-`general_roman_calendar` object; `.auth/<id>.json` pre-written.
- *   - The decrees catalog served by the API must contain at least one decree: the viewer/editor/admin
+ *   - usccb-admin / europe-editor / rome-editor: Zitadel `calendar_editor` role with a scope on a
+ *     non-`rite_calendar` object; `.auth/<id>.json` pre-written.
+ *   - tests-editor-noscope: Zitadel `test_editor` role, no tuple; `.auth/tests-editor-noscope.json` pre-written.
+ *   - The decrees catalog served by the API must contain at least one decree: the read-only/editor/admin
  *     assertions use `.first()` locators against rendered cards and per-card edit/delete buttons.
  *   - env for the Fga helper: OPENFGA_API_URL / OPENFGA_STORE_ID / OPENFGA_MODEL_ID.
  *   - env for the ZitadelAdmin helper (subject resolution): ZITADEL_ISSUER / ZITADEL_MACHINE_TOKEN /
@@ -48,17 +52,20 @@ import { USERS } from './support/users';
 const DECREES_OBJECT = 'rite_calendar:roman/decrees';
 
 /**
- * Seeded calendar_editor users repurposed as decrees viewer/editor/admin by a runtime tuple.
+ * Seeded calendar_editor users repurposed as decrees editor/admin by a runtime tuple.
  * Each user's pre-existing scope is on a different object type/id, so it does not affect this page.
+ * `viewer` is not granted to people any more (API #1049): reading comes from the role.
  */
-const GRANTS: Array<{ userKey: string; relation: 'viewer' | 'editor' | 'admin' }> = [
-    { userKey: 'cei-editor', relation: 'viewer' }, // editor@national_calendar:IT   → decrees viewer
+const GRANTS: Array<{ userKey: string; relation: 'editor' | 'admin' }> = [
     { userKey: 'usccb-admin', relation: 'editor' }, // admin@national_calendar:US    → decrees editor
     { userKey: 'europe-editor', relation: 'admin' }, // editor@wider_region:europe    → decrees admin
 ];
 
-/** A seeded calendar_editor with NO decrees relation → must hit the no-access notice. */
-const NO_GRANT_USER = 'rome-editor'; // editor@diocesan_calendar:romamo_it
+/** A seeded calendar_editor with NO decrees relation → reads through the role: read-only cards. */
+const ROLE_ONLY_USER = 'rome-editor'; // editor@diocesan_calendar:romamo_it
+
+/** A seeded user whose role does not read rite_calendar → redirected off the page. */
+const NO_ROLE_USER = 'tests-editor-noscope'; // test_editor, no tuple
 
 async function subOf(email: string): Promise<string> {
     const id = await new ZitadelAdmin().findUserIdByEmail(email);
@@ -138,10 +145,11 @@ test.describe('admin-decrees capability matrix (real FGA)', () => {
         }
     });
 
-    test('decrees viewer sees read-only cards, no create/edit/delete/manage-permissions', async ({ browser }) => {
-        const s = await open(browser, 'cei-editor');
+    test('calendar_editor without a decrees tuple sees read-only cards through the role', async ({ browser }) => {
+        const s = await open(browser, ROLE_ONLY_USER);
         try {
             await expect(s.page.locator(CARD).first()).toBeVisible(); // canView: cards render
+            await expect(s.page.locator('#decreesContainer .alert-warning')).toHaveCount(0);
             await expect(s.page.locator('#btnCreateDecree')).toBeHidden();
             // Edit/delete buttons are always rendered but d-none-gated on canEdit/canAdmin,
             // so assert none are visible (not that none exist).
@@ -153,12 +161,13 @@ test.describe('admin-decrees capability matrix (real FGA)', () => {
         }
     });
 
-    test('calendar_editor without a decrees grant gets the no-access notice', async ({ browser }) => {
-        const s = await open(browser, NO_GRANT_USER);
+    test('a user whose role does not read decrees is redirected to the dashboard', async ({ browser }) => {
+        const s = await open(browser, NO_ROLE_USER);
         try {
-            await expect(s.page.locator('#decreesContainer .alert-warning')).toBeVisible();
+            // admin-decrees.php sends a reader-less role to admin-dashboard.php; test_editor
+            // passes the dashboard's own gate, so the redirect stops there.
+            await expect(s.page).toHaveURL(/admin-dashboard\.php/);
             await expect(s.page.locator(CARD)).toHaveCount(0);
-            await expect(s.page.locator('#btnCreateDecree')).toBeHidden();
         } finally {
             await s.context.close();
         }

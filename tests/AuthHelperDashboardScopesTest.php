@@ -10,7 +10,9 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use LiturgicalCalendar\Frontend\AuthHelper;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 use ReflectionProperty;
 
 #[CoversClass(AuthHelper::class)]
@@ -63,10 +65,10 @@ final class AuthHelperDashboardScopesTest extends TestCase
                 ['object_type' => 'national_calendar', 'object_id' => 'IT'],
             ],
             'viewer_scopes'     => [
-                'general_roman_calendar'      => ['temporale', 'decrees'],
-                'national_calendar_test'      => ['IT'],
-                'diocesan_calendar_test'      => [],
-                'general_roman_calendar_test' => [],
+                'rite_calendar'          => ['roman/temporale', 'roman/decrees'],
+                'national_calendar_test' => ['IT'],
+                'diocesan_calendar_test' => [],
+                'rite_calendar_test'     => [],
             ],
         ])));
 
@@ -78,7 +80,7 @@ final class AuthHelperDashboardScopesTest extends TestCase
             [['object_type' => 'national_calendar', 'object_id' => 'IT']],
             $result['admin_scopes']
         );
-        self::assertSame(['temporale', 'decrees'], $result['viewer_scopes']['general_roman_calendar']);
+        self::assertSame(['roman/temporale', 'roman/decrees'], $result['viewer_scopes']['rite_calendar']);
         self::assertSame(['IT'], $result['viewer_scopes']['national_calendar_test']);
     }
 
@@ -101,14 +103,14 @@ final class AuthHelperDashboardScopesTest extends TestCase
             'is_resource_admin' => false,
             'admin_scopes'      => [],
             'viewer_scopes'     => [
-                'general_roman_calendar' => ['temporale', 42, null],
-                'bogus_non_list'         => 'not-an-array',
+                'rite_calendar'  => ['roman/temporale', 42, null],
+                'bogus_non_list' => 'not-an-array',
             ],
         ])));
 
         $result = AuthHelper::fetchDashboardScopes('http://api.test', 'litcal_access_token=abc', $client);
 
-        self::assertSame(['temporale'], $result['viewer_scopes']['general_roman_calendar']);
+        self::assertSame(['roman/temporale'], $result['viewer_scopes']['rite_calendar']);
         self::assertArrayNotHasKey('bogus_non_list', $result['viewer_scopes']);
     }
 
@@ -129,7 +131,8 @@ final class AuthHelperDashboardScopesTest extends TestCase
 
             self::assertFalse($auth->dashboardScopes()['is_resource_admin']);
             self::assertSame([], $auth->dashboardScopes()['viewer_scopes']);
-            self::assertFalse($auth->canViewResource('general_roman_calendar', 'decrees'));
+            self::assertFalse($auth->canViewType('rite_calendar'));
+            self::assertFalse($auth->canViewResource('rite_calendar', 'roman/decrees'));
             self::assertFalse($auth->canViewRiteCalendarResource('roman', 'decrees'));
             self::assertFalse($auth->canViewAnyResourceOfType('national_calendar_test', 'diocesan_calendar_test'));
         } finally {
@@ -144,77 +147,118 @@ final class AuthHelperDashboardScopesTest extends TestCase
     }
 
     /**
-     * `rite_calendar` is ADDITIVE (LiturgicalCalendarAPI #955): both types come
-     * back from `/auth/dashboard-scopes` verbatim, and the endpoint does no
-     * widening of its own, so the frontend gate has to consult both — and has to
-     * reproduce the middleware's asymmetry while doing it.
-     *
-     * @param array<string, list<string>> $viewerScopes
+     * An authenticated instance holding exactly `$roles`, built through the
+     * real (private) constructor's legacy-token branch. It is not the
+     * singleton, and nothing on it may reach the API: reading is decided by
+     * the role alone (LiturgicalCalendarAPI #1049).
      */
-    private function authWithViewerScopes(array $viewerScopes): AuthHelper
+    private function authWithRoles(string ...$roles): AuthHelper
     {
-        $auth = AuthHelper::getInstance();
-
-        $prop = new ReflectionProperty(AuthHelper::class, 'dashboardScopesResult');
-        $prop->setValue($auth, [
-            'is_global_admin'   => false,
-            'is_resource_admin' => false,
-            'admin_scopes'      => [],
-            'viewer_scopes'     => $viewerScopes,
-        ]);
-
+        $class = new ReflectionClass(AuthHelper::class);
+        $auth  = $class->newInstanceWithoutConstructor();
+        $ctor  = $class->getConstructor();
+        self::assertNotNull($ctor);
+        $ctor->invoke($auth, (object) ['sub' => 'user-1', 'roles' => $roles]);
+        self::assertTrue($auth->isAuthenticated, 'Precondition: instance must be authenticated');
         return $auth;
     }
 
-    public function testRiteCalendarViewIsGrantedByTheRiteQualifiedScope(): void
+    /**
+     * Every role's readable set, plus global admin and no role, against two
+     * types that tell `calendar_editor` and `test_editor` apart.
+     *
+     * @return array<string, array{list<string>, bool, bool}>
+     */
+    public static function roleReadsProvider(): array
     {
-        AuthHelper::reset();
-        try {
-            $auth = $this->authWithViewerScopes([
-                'rite_calendar'          => ['roman/decrees', 'ambrosian/temporale'],
-                'general_roman_calendar' => [],
-            ]);
-
-            self::assertTrue($auth->canViewRiteCalendarResource('roman', 'decrees'));
-            self::assertTrue($auth->canViewRiteCalendarResource('ambrosian', 'temporale'));
-            self::assertFalse($auth->canViewRiteCalendarResource('roman', 'temporale'));
-        } finally {
-            AuthHelper::reset();
-        }
+        return [
+            'calendar_editor'  => [['calendar_editor'], true, false],
+            'test_editor'      => [['test_editor'], false, true],
+            'developer'        => [['developer'], true, true],
+            'no role'          => [[], false, false],
+            'global admin'     => [['admin'], true, true],
+            'unrelated role'   => [['translator'], false, false],
+            'two roles summed' => [['calendar_editor', 'test_editor'], true, true],
+        ];
     }
 
-    public function testALegacyBareScopeNoLongerGrantsTheRiteCalendarView(): void
+    /**
+     * @param list<string> $roles
+     */
+    #[DataProvider('roleReadsProvider')]
+    public function testCanViewTypeFollowsTheRole(array $roles, bool $readsRiteCalendar, bool $readsNationalTest): void
     {
-        // These three cases pinned the migration-window fallback, when a user
-        // holding only a legacy tuple was still authorized and a gate knowing
-        // only `rite_calendar` would have hidden a card they could use.
-        //
-        // The window is closed. The legacy tuples were migrated and deleted, the
-        // API's middleware dropped its own widening (LiturgicalCalendarAPI#970),
-        // and the `general_roman_calendar` type was removed from the FGA model
-        // outright (CatholicOS/cdcf-infra#44) — so `/auth/dashboard-scopes` can
-        // no longer report a viewer scope under it at all.
-        //
-        // Asserted as an ABSENCE rather than deleted: a fallback creeping back
-        // would restore an authorization path the model no longer has, and would
-        // show cards whose writes the API now refuses.
-        AuthHelper::reset();
-        try {
-            $auth = $this->authWithViewerScopes([
-                'rite_calendar'          => [],
-                'general_roman_calendar' => ['temporale', 'decrees', 'EDITIO_TYPICA_2024'],
-            ]);
+        $auth = $this->authWithRoles(...$roles);
 
-            self::assertFalse($auth->canViewRiteCalendarResource('roman', 'temporale'));
-            self::assertFalse($auth->canViewRiteCalendarResource('roman', 'decrees'));
-            // The cross-rite half of the old asymmetry: missal ids are unique
-            // across rites, so this id once denoted the Ambrosian edition.
-            self::assertFalse($auth->canViewRiteCalendarResource('ambrosian', 'EDITIO_TYPICA_2024'));
-            // And the Roman-only half, which was already false before the prune.
-            self::assertFalse($auth->canViewRiteCalendarResource('ambrosian', 'temporale'));
-        } finally {
-            AuthHelper::reset();
+        self::assertSame($readsRiteCalendar, $auth->canViewType('rite_calendar'));
+        self::assertSame($readsNationalTest, $auth->canViewType('national_calendar_test'));
+    }
+
+    /**
+     * The object id no longer matters for reading: any id of a readable type
+     * is readable, any id of an unreadable type is not.
+     *
+     * @param list<string> $roles
+     */
+    #[DataProvider('roleReadsProvider')]
+    public function testTheViewMethodsIgnoreTheObjectId(array $roles, bool $readsRiteCalendar, bool $readsNationalTest): void
+    {
+        $auth = $this->authWithRoles(...$roles);
+
+        foreach (['roman/decrees', 'roman/temporale', 'ambrosian/temporale', 'anything-at-all'] as $id) {
+            self::assertSame($readsRiteCalendar, $auth->canViewResource('rite_calendar', $id), $id);
         }
+        self::assertSame($readsRiteCalendar, $auth->canViewRiteCalendarResource('roman', 'decrees'));
+        self::assertSame($readsRiteCalendar, $auth->canViewRiteCalendarResource('ambrosian', 'temporale'));
+        foreach (['IT', 'roman/IT', 'nowhere'] as $id) {
+            self::assertSame($readsNationalTest, $auth->canViewResource('national_calendar_test', $id), $id);
+        }
+        self::assertSame(
+            $readsNationalTest,
+            $auth->canViewAnyResourceOfType('national_calendar_test', 'diocesan_calendar_test', 'rite_calendar_test')
+        );
+        self::assertSame($readsRiteCalendar || $readsNationalTest, $auth->canViewAnyResourceOfType('rite_calendar', 'national_calendar_test'));
+    }
+
+    public function testAnUnknownTypeIsReadableByAGlobalAdminOnly(): void
+    {
+        // `general_roman_calendar` was removed from the FGA model at the #955
+        // prune milestone (CatholicOS/cdcf-infra#44): no role lists it, so only
+        // a global admin — who reads everything — passes a check against it.
+        foreach ([['calendar_editor'], ['test_editor'], ['developer'], []] as $roles) {
+            $auth = $this->authWithRoles(...$roles);
+            self::assertFalse($auth->canViewType('general_roman_calendar'), implode(',', $roles));
+            self::assertFalse($auth->canViewType('no_such_type'), implode(',', $roles));
+            self::assertFalse($auth->canViewResource('general_roman_calendar', 'decrees'), implode(',', $roles));
+        }
+
+        $admin = $this->authWithRoles('admin');
+        self::assertTrue($admin->canViewType('general_roman_calendar'));
+        self::assertTrue($admin->canViewType('no_such_type'));
+    }
+
+    public function testTheReadableTypesTableMirrorsTheApiRoleScopes(): void
+    {
+        // Compared as sets: the frontend copy keeps a display order (rite-level
+        // first), the API validates set membership only.
+        $sorted = static function (array $types): array {
+            sort($types);
+            return $types;
+        };
+        $expected = [
+            'calendar_editor' => ['diocesan_calendar', 'national_calendar', 'rite_calendar', 'wider_region'],
+            'test_editor'     => ['diocesan_calendar_test', 'national_calendar_test', 'rite_calendar_test'],
+        ];
+        $expected['developer'] = $sorted(array_merge($expected['calendar_editor'], $expected['test_editor']));
+
+        self::assertSame(array_keys($expected), array_keys(AuthHelper::ROLE_READABLE_TYPES));
+        foreach ($expected as $role => $types) {
+            self::assertSame($types, $sorted(AuthHelper::ROLE_READABLE_TYPES[$role]), $role);
+        }
+        // Display order: the rite-level scope comes first for each role.
+        self::assertSame('rite_calendar', AuthHelper::ROLE_READABLE_TYPES['calendar_editor'][0]);
+        self::assertSame('rite_calendar_test', AuthHelper::ROLE_READABLE_TYPES['test_editor'][0]);
+        self::assertSame('rite_calendar', AuthHelper::ROLE_READABLE_TYPES['developer'][0]);
     }
 
     public function testFetchDashboardScopesParsesEditorScopes(): void

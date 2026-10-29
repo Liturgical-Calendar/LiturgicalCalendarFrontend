@@ -3,8 +3,9 @@
 /**
  * Admin Decrees Management Page
  *
- * Allows calendar_editor / admin users to create, edit, and delete
- * Dicastery for Divine Worship decree definitions via the /decrees API.
+ * Global admins, and users whose role reads `rite_calendar` (calendar_editor,
+ * developer), view the Dicastery for Divine Worship decree definitions via the
+ * /decrees API; holders of the editor/admin relation also create, edit and delete them.
  * Per-row edit/delete are gated against the caller's FGA relations;
  * the API is the hard backstop.
  */
@@ -18,14 +19,13 @@ if (!$authHelper->isAuthenticated) {
     exit;
 }
 
-// This page is accessible to global admins and calendar editors.
-// NOTE: the FGA viewer-or-above check happens client-side on load (Task 3);
-// users with the role but no relation get an empty-state message, and the
-// dashboard card (which performs the same check) will not have shown a link.
-$isAdmin          = $authHelper->hasRole('admin');
-$isCalendarEditor = $authHelper->hasRole('calendar_editor');
+// Reading comes from the role (LiturgicalCalendarAPI #1049): the page is open to
+// global admins and every role whose scope includes `rite_calendar`. Edit and
+// admin rights are still per-object FGA relations, checked client-side on load.
+$isAdmin = $authHelper->hasRole('admin');
+$canView = $authHelper->canViewType('rite_calendar');
 
-if (!$isAdmin && !$isCalendarEditor) {
+if (!$canView) {
     header('Location: admin-dashboard.php');
     exit;
 }
@@ -622,6 +622,8 @@ $formControls = new \LiturgicalCalendar\Frontend\FormControls($i18n);
             <?php // BCP-47 (en-US), not gettext/ICU (en_US): Intl.DateTimeFormat rejects underscore tags. ?>
             locale:        <?php echo json_encode(str_replace('_', '-', $i18n->LOCALE), JSON_HEX_TAG); ?>,
             isGlobalAdmin: <?php echo json_encode($isAdmin, JSON_HEX_TAG); ?>,
+            <?php // Read access by role (API #1049); edit/admin are checked per relation in JS. ?>
+            canView:       <?php echo json_encode($canView, JSON_HEX_TAG); ?>,
             userSub:       <?php echo json_encode($authHelper->sub ?? '', JSON_HEX_TAG); ?>,
             i18n: {
                 loading:           <?php echo json_encode(_('Loading…'), JSON_HEX_TAG); ?>,
