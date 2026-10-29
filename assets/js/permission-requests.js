@@ -25,6 +25,7 @@ import {
     buildWiderRegionObjectIdSelectFromConfig,
     WIDER_REGION_TYPE,
 } from './widerRegionObjectIdSelect.js';
+import { readSubmitOutcome, skipReasonText } from './skippedPermissions.js';
 
 // Initialize the API client once; CalendarSelect requires this to have resolved.
 // Since components-js 2.0.0 init() rejects on failure rather than resolving to
@@ -531,6 +532,43 @@ document.addEventListener('DOMContentLoaded', async function() {
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         `;
+    }
+
+    /**
+     * Append a pre-escaped HTML alert below the existing ones.
+     * Only for markup built from escapeHtml()/summarizePermissions(); never raw API text.
+     * @param {string} type - Alert type (success, danger, warning, info)
+     * @param {string} html - Already-escaped HTML
+     */
+    function appendAlert(type, html) {
+        const allowedTypes = ['success', 'danger', 'warning', 'info', 'primary', 'secondary', 'light', 'dark'];
+        const safeType = allowedTypes.includes(type) ? type : 'info';
+        formAlerts.insertAdjacentHTML('beforeend', `
+            <div class="alert alert-${safeType} alert-dismissible fade show" role="alert">
+                ${html}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `);
+        formAlerts.scrollIntoView({ block: 'nearest' });
+    }
+
+    /**
+     * Build the escaped HTML list of skipped permissions with the reason for each.
+     * Entries that are not objects are ignored.
+     * @param {Array<unknown>} skipped - Raw skipped_permissions from the API
+     * @returns {string} HTML, or '' when there is nothing to list
+     */
+    function buildSkippedHtml(skipped) {
+        const lines = [];
+        for (const skip of skipped) {
+            if (!skip || typeof skip !== 'object') continue;
+            lines.push(
+                '<li>' + summarizePermissions([skip]) + ' &mdash; '
+                + escapeHtml(skipReasonText(skip.reason, config.i18n)) + '</li>'
+            );
+        }
+        if (lines.length === 0) return '';
+        return '<ul class="mb-0 mt-1 list-unstyled">' + lines.join('') + '</ul>';
     }
 
     /**
@@ -1094,7 +1132,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     /**
      * POST the access request, handling new vs resubmit endpoints and
      * non-OK responses uniformly. Throws Error on failure with a
-     * user-readable message; returns parsed JSON on success.
+     * user-readable message; returns {status, body} for 2xx and for a
+     * 409 whose body reports skipped permissions (nothing left to request).
      */
     async function submitAccessRequest(body) {
         const endpoint = resubmitRequestId
@@ -1111,6 +1150,17 @@ document.addEventListener('DOMContentLoaded', async function() {
             body: JSON.stringify(body)
         });
 
+        if (response.status === 409) {
+            let errData = null;
+            try {
+                errData = await response.json();
+            } catch { /* non-JSON error response */ }
+            if (readSubmitOutcome(409, errData).kind === 'all_redundant') {
+                return { status: 409, body: errData };
+            }
+            throw new Error(( errData && ( errData.message || errData.error || errData.detail ) ) || config.i18n.failedToSubmit);
+        }
+
         if (!response.ok) {
             let errorMsg = config.i18n.failedToSubmit;
             try {
@@ -1119,7 +1169,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             } catch { /* non-JSON error response */ }
             throw new Error(errorMsg);
         }
-        return response.json();
+        return { status: response.status, body: await response.json() };
     }
 
     /**
@@ -1158,10 +1208,23 @@ document.addEventListener('DOMContentLoaded', async function() {
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>' + escapeHtml(config.i18n.submitting);
 
         try {
-            const data = await submitAccessRequest(body);
-            showAlert('success', data.message || config.i18n.submitSuccess);
-            resetFormAfterSuccess();
-            await loadExistingRequests();
+            const { status, body: data } = await submitAccessRequest(body);
+            const outcome = readSubmitOutcome(status, data);
+            const skippedHtml = buildSkippedHtml(outcome.skipped);
+            if (outcome.kind === 'all_redundant') {
+                // Nothing was submitted: keep the form and any resubmit mode as they are.
+                appendAlert('warning', escapeHtml(config.i18n.allRedundant) + skippedHtml);
+            } else {
+                showAlert('success', ( data && data.message ) || config.i18n.submitSuccess);
+                if (outcome.kind === 'role_only') {
+                    appendAlert('info', escapeHtml(config.i18n.roleOnly));
+                }
+                if (skippedHtml) {
+                    appendAlert('warning', escapeHtml(config.i18n.skippedHeading) + skippedHtml);
+                }
+                resetFormAfterSuccess();
+                await loadExistingRequests();
+            }
         } catch (error) {
             console.error('Error submitting access request:', error);
             showAlert('danger', error.message || config.i18n.failedToSubmit);
