@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-30 08:10+0000\n"
+"POT-Creation-Date: 2026-10-29 10:06+0000\n"
 "PO-Revision-Date: 2026-10-01 08:55+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
@@ -302,7 +302,7 @@ msgid "Example usage of the API"
 msgstr "Az API használatának példája"
 
 #. translators: accordion section header - examples of web-based calendar displays
-#: usage.php:57 layout/header.php:329
+#: usage.php:57 layout/header.php:314
 msgid "Web calendar"
 msgstr "Webes naptár"
 
@@ -359,7 +359,7 @@ msgid "View FullCalendar (messages first)"
 msgstr "TeljesNaptár megtekintése (üzenetek először)"
 
 #. translators: accordion section header - subscribing to the calendar via iCal/ICS URL
-#: usage.php:131 layout/header.php:333
+#: usage.php:131 layout/header.php:318
 msgid "Calendar subscription"
 msgstr "Naptár előfizetés"
 
@@ -551,7 +551,7 @@ msgstr ""
 "kicsit \"csinosabbak\" az Outlook számára."
 
 #. translators: accordion section header - Easter date calculation tool
-#: usage.php:291 layout/header.php:337
+#: usage.php:291 layout/header.php:322
 msgid "Dates of Easter"
 msgstr "A húsvét dátumai"
 
@@ -571,7 +571,7 @@ msgid "Calculate the Dates of Easter"
 msgstr "A húsvéti időpontok kiszámítása"
 
 #. translators: accordion section header - daily liturgy information and apps
-#: usage.php:327 layout/header.php:341
+#: usage.php:327 layout/header.php:326
 msgid "Liturgy of the Day"
 msgstr "A nap liturgiája"
 
@@ -1317,7 +1317,7 @@ msgstr "Fordítások"
 msgid "About us"
 msgstr "Rólunk"
 
-#: layout/header.php:71 layout/header.php:295
+#: layout/header.php:71 layout/header.php:280
 msgid "Accuracy Tests"
 msgstr "Pontossági tesztek"
 
@@ -1395,43 +1395,29 @@ msgstr "Szanctorále"
 msgid "Decrees"
 msgstr "Rendeletek"
 
-#: layout/header.php:273
+#. translators: first, linked item of the breadcrumb above a particular calendar form; points back to the navigator hub
+#: layout/header.php:274 includes/messages.php:483
 msgid "Particular Calendars"
 msgstr "Partikuláris naptárak"
 
-#. translators: label for wider region calendar name field
-#: layout/header.php:281 includes/messages.php:246 includes/admin-blocks.php:63
-#: admin-permissions.php:90 admin-permissions.php:323 admin-permissions.php:414
-#: permission-requests.php:266
-msgid "Wider Region"
-msgstr "Tágabb régió"
-
-#: layout/header.php:285 includes/admin-blocks.php:73
-msgid "National"
-msgstr "Nemzeti"
-
-#: layout/header.php:289 includes/admin-blocks.php:83
-msgid "Diocesan"
-msgstr "Egyházmegyei"
-
-#: layout/header.php:299 includes/admin-tests-card.php:17 admin-tests.php:37
+#: layout/header.php:284 includes/admin-tests-card.php:17 admin-tests.php:37
 #: admin-tests.php:49
 msgid "Test Definitions"
 msgstr "Teszt definíciók"
 
-#: layout/header.php:306
+#: layout/header.php:291
 msgid "Back to Website"
 msgstr "Vissza a weboldalra"
 
-#: layout/header.php:313
+#: layout/header.php:298
 msgid "Home"
 msgstr "Kezdőlap"
 
-#: layout/header.php:321
+#: layout/header.php:306
 msgid "Documentation"
 msgstr "Dokumentáció"
 
-#: layout/header.php:325
+#: layout/header.php:310
 msgid "Examples of Usage"
 msgstr "Használati példák"
 
@@ -2084,13 +2070,27 @@ msgstr ""
 "egyházmegye adatával a csoportban, akkor itt lehet meghatározni vagy "
 "beállítani a csoportot."
 
+#. translators: label for wider region calendar name field
+#: includes/messages.php:246 includes/admin-blocks.php:63
+#: admin-permissions.php:90 admin-permissions.php:323 admin-permissions.php:414
+#: permission-requests.php:266
+msgid "Wider Region"
+msgstr "Tágabb régió"
+
 #. translators: suffix appended to a prospective wider region's option label in the datalist
 #: includes/messages.php:248
 msgid "not yet created"
 msgstr "még nincs létrehozva"
 
-#. translators: error message when a wider region id typed by the user does not match the required shape
+#. translators: error toast when a link from the particular calendars navigator names a calendar the form cannot open
 #: includes/messages.php:250
+#, fuzzy
+#| msgid "Calendar Editor"
+msgid "Calendar not found"
+msgstr "Naptárszerkesztő"
+
+#. translators: error message when a wider region id typed by the user does not match the required shape
+#: includes/messages.php:252
 msgid ""
 "A wider region id is one or more lowercase words (a–z) joined by hyphens, "
 "e.g. german-language-area."
@@ -2099,12 +2099,12 @@ msgstr ""
 "kötőjellel kapcsolnak össze, például german-language-area."
 
 #. translators: heading of the wider region's label fields, one per language of the region
-#: includes/messages.php:252
+#: includes/messages.php:254
 msgid "Region name"
 msgstr "Régió neve"
 
 #. translators: hint under the wider region's label fields
-#: includes/messages.php:254
+#: includes/messages.php:256
 msgid ""
 "One name per language of the region. Languages without a name show the "
 "English one."
@@ -2113,232 +2113,232 @@ msgstr ""
 "mutatja."
 
 #. translators: tooltip of a wider region label pre-filled from the region's UN M.49 / CLDR name
-#: includes/messages.php:256
+#: includes/messages.php:258
 msgid "Suggested from UN M.49 / CLDR"
 msgstr "Az ENSZ M.49 / CLDR alapján javasolt."
 
 #. translators: tooltip of a wider region label field that the user may not change
-#: includes/messages.php:258
+#: includes/messages.php:260
 msgid "Only an editor of the whole wider region can change its names."
 msgstr "Csak a teljes szélesebb régió szerkesztője módosíthatja a neveit."
 
 #. translators: label of the list of wider regions a national calendar inherits from
-#: includes/messages.php:260
+#: includes/messages.php:262
 msgid "Wider regions"
 msgstr "Szélesebb régiók"
 
 #. translators: label for national calendar name field
-#: includes/messages.php:262 admin-permissions.php:88 admin-permissions.php:321
+#: includes/messages.php:264 admin-permissions.php:88 admin-permissions.php:321
 #: admin-permissions.php:412 admin-tests.php:147 admin-tests.php:351
 #: permission-requests.php:264
 msgid "National Calendar"
 msgstr "Nemzeti naptár"
 
 #. translators: label for diocesan calendar dependency
-#: includes/messages.php:264
+#: includes/messages.php:266
 msgid "Depends on national calendar"
 msgstr "A nemzeti naptártól függ"
 
 #. translators: label for diocese name field
-#: includes/messages.php:266
+#: includes/messages.php:268
 msgid "Diocese"
 msgstr "Egyházmegye"
 
 #. translators: label for diocesan group field
-#: includes/messages.php:268
+#: includes/messages.php:270
 msgid "Diocesan group"
 msgstr "Egyházmegyei csoport"
 
 #. translators: label for locales selection
-#: includes/messages.php:270
+#: includes/messages.php:272
 msgid "Locales"
 msgstr "Helyi beállítások"
 
 #. translators: label for current localization selection
-#: includes/messages.php:272
+#: includes/messages.php:274
 msgid "Current localization"
 msgstr "Jelenlegi lokalizáció"
 
 #. translators: label for published Roman Missals list
-#: includes/messages.php:274
+#: includes/messages.php:276
 msgid "Published Roman Missals"
 msgstr "Megjelent Római Misékönyvek"
 
 #. translators: card heading for creating wider region calendar
-#: includes/messages.php:280
+#: includes/messages.php:282
 msgid "Define a Calendar for a Wider Region"
 msgstr "A tágabb régió számára naptár meghatározása"
 
 #. translators: card heading for creating national calendar
-#: includes/messages.php:282
+#: includes/messages.php:284
 msgid "Define a National Calendar"
 msgstr "Határozz meg egy nemzeti naptárat"
 
 #. translators: card heading for creating diocesan calendar
-#: includes/messages.php:284
+#: includes/messages.php:286
 msgid "Define a Diocesan Calendar"
 msgstr "Határozz meg egy egyházmegyei naptárat"
 
 #. translators: section heading for national calendar settings
-#: includes/messages.php:286
+#: includes/messages.php:288
 msgid "National calendar settings"
 msgstr "Nemzeti naptár beállításai"
 
 #. translators: heading for diocesan overrides section
-#: includes/messages.php:288
+#: includes/messages.php:290
 msgid "Diocesan overrides to the national calendar for …"
 msgstr "Egyházmegyei eltérési lehetőségek az országos naptárhoz képest …"
 
 #. translators: label for Epiphany setting
-#: includes/messages.php:294
+#: includes/messages.php:296
 msgid "EPIPHANY"
 msgstr "VÍZKERESZT"
 
 #. translators: option for Epiphany on January 6
-#: includes/messages.php:296
+#: includes/messages.php:298
 msgid "January 6"
 msgstr "Január 6."
 
 #. translators: option for Epiphany on Sunday
-#: includes/messages.php:298
+#: includes/messages.php:300
 msgid "Sunday between January 2 and January 8"
 msgstr "Vasárnap január 2. és január 8. között"
 
 #. translators: label for Ascension setting
-#: includes/messages.php:300
+#: includes/messages.php:302
 msgid "ASCENSION"
 msgstr "MENNYBEMENETEL"
 
 #. translators: label for Corpus Christi setting
-#: includes/messages.php:302
+#: includes/messages.php:304
 msgid "CORPUS CHRISTI"
 msgstr "ÚRNAPJA"
 
 #. translators: label for Eternal High Priest setting
-#: includes/messages.php:304
+#: includes/messages.php:306
 msgid "ETERNAL HIGH PRIEST"
 msgstr "ÖRÖK FŐPAP"
 
 #. translators: label for the national calendar's holy days of obligation setting
-#: includes/messages.php:306
+#: includes/messages.php:308
 msgid "HOLY DAYS OF OBLIGATION"
 msgstr "Kötelező ünnepnapok"
 
 #. translators: a holy day of obligation (Nativity of the Lord)
-#: includes/messages.php:308 temporale.php:67
+#: includes/messages.php:310 temporale.php:67
 msgid "Christmas"
 msgstr "Karácsony"
 
 #. translators: a holy day of obligation
-#: includes/messages.php:310
+#: includes/messages.php:312
 msgid "Epiphany"
 msgstr "Vízkereszt"
 
 #. translators: a holy day of obligation
-#: includes/messages.php:312
+#: includes/messages.php:314
 msgid "Ascension"
 msgstr "Mennybemenetel"
 
 #. translators: a holy day of obligation
-#: includes/messages.php:314
+#: includes/messages.php:316
 msgid "Corpus Christi"
 msgstr "Úrnapja"
 
 #. translators: a holy day of obligation (Solemnity of Mary, Mother of God, January 1)
-#: includes/messages.php:316
+#: includes/messages.php:318
 msgid "Mary, Mother of God"
 msgstr "Mária, Isten Anyja"
 
 #. translators: a holy day of obligation
-#: includes/messages.php:318
+#: includes/messages.php:320
 msgid "Immaculate Conception"
 msgstr "Szeplőtelen fogantatás"
 
 #. translators: a holy day of obligation (Assumption of the Blessed Virgin Mary)
-#: includes/messages.php:320
+#: includes/messages.php:322
 msgid "Assumption"
 msgstr "Mennybevitel"
 
 #. translators: a holy day of obligation (Saint Joseph, Spouse of the Blessed Virgin Mary)
-#: includes/messages.php:322
+#: includes/messages.php:324
 msgid "St. Joseph"
 msgstr "Szent József"
 
 #. translators: a holy day of obligation
-#: includes/messages.php:324
+#: includes/messages.php:326
 msgid "Sts. Peter and Paul, Apostles"
 msgstr "Szent Péter és Pál apostolok"
 
 #. translators: a holy day of obligation
-#: includes/messages.php:326
+#: includes/messages.php:328
 msgid "All Saints"
 msgstr "Mindenszentek"
 
 #. translators: tab label for solemnities section
-#: includes/messages.php:332
+#: includes/messages.php:334
 msgid "Solemnities"
 msgstr "Főünnepek"
 
 #. translators: tab label for feasts section
-#: includes/messages.php:334
+#: includes/messages.php:336
 msgid "Feasts"
 msgstr "Ünnepek"
 
 #. translators: tab label for memorials section
-#: includes/messages.php:336
+#: includes/messages.php:338
 msgid "Memorials"
 msgstr "Emléknapok"
 
 #. translators: tab label for optional memorials section
-#: includes/messages.php:338
+#: includes/messages.php:340
 msgid "Optional memorials"
 msgstr "Választható emléknapok"
 
 #. translators: subtitle for defining solemnities
-#: includes/messages.php:344
+#: includes/messages.php:346
 msgid "Define the Solemnities"
 msgstr "Főünnepek meghatározása"
 
 #. translators: subtitle for defining feasts
-#: includes/messages.php:346
+#: includes/messages.php:348
 msgid "Define the Feasts"
 msgstr "Ünnepek meghatározása"
 
 #. translators: subtitle for defining memorials
-#: includes/messages.php:348
+#: includes/messages.php:350
 msgid "Define the Memorials"
 msgstr "Emléknapok meghatározása"
 
 #. translators: subtitle for defining optional memorials
-#: includes/messages.php:350
+#: includes/messages.php:352
 msgid "Define the Optional Memorials"
 msgstr "Választható emléknapok meghatározása"
 
 #. translators: row title for principal patron solemnity
-#: includes/messages.php:356
+#: includes/messages.php:358
 msgid ""
 "Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr "Hely, egyházmegye, régió, tartomány vagy terület fő védőszentje(i)"
 
 #. translators: row title for dedication of cathedral
-#: includes/messages.php:358
+#: includes/messages.php:360
 msgid "Dedication of the Cathedral"
 msgstr "A székesegyház felszentelése"
 
 #. translators: row title for patron feast
-#: includes/messages.php:360
+#: includes/messages.php:362
 msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr "Hely, egyházmegye, régió, tartomány vagy terület védőszentje(i)"
 
 #. translators: row title for secondary patron memorial
-#: includes/messages.php:362
+#: includes/messages.php:364
 msgid ""
 "Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
 "Hely, egyházmegye, régió, tartomány vagy terület másodlagos védőszentje(i)"
 
 #. translators: row title for local saints optional memorial
-#: includes/messages.php:364
+#: includes/messages.php:366
 msgid ""
 "Saints whose veneration is local to the Place, Diocese, Region, Province or "
 "Territory"
@@ -2347,52 +2347,52 @@ msgstr ""
 "tartomány vagy terület számára"
 
 #. translators: button to save wider region calendar data
-#: includes/messages.php:370
+#: includes/messages.php:372
 msgid "Save Wider Region Calendar Data"
 msgstr "A tágabb régió naptári adatainak mentése"
 
 #. translators: button to save national calendar data
-#: includes/messages.php:372
+#: includes/messages.php:374
 msgid "Save National Calendar Data"
 msgstr "Nemzeti naptári adatok mentése"
 
 #. translators: button to save diocesan calendar data
-#: includes/messages.php:374
+#: includes/messages.php:376
 msgid "Save Diocesan Calendar Data"
 msgstr "Egyházmegyei naptári adatok mentése"
 
 #. translators: modal title for changing name or grade
-#: includes/messages.php:380
+#: includes/messages.php:382
 msgid "Change the name or grade of an existing liturgical event"
 msgstr "Meglévő liturgikus esemény nevének vagy fokozatának módosítása"
 
 #. translators: modal title for moving event
-#: includes/messages.php:382
+#: includes/messages.php:384
 msgid "Move a liturgical event to a new date"
 msgstr "Egy liturgikus esemény áthelyezése új dátumra"
 
 #. translators: modal title for creating new event
-#: includes/messages.php:384
+#: includes/messages.php:386
 msgid "Create a new liturgical event"
 msgstr "Új liturgikus esemény létrehozása"
 
 #. translators: modal title for choosing missal
-#: includes/messages.php:386
+#: includes/messages.php:388
 msgid "Choose from known Roman Missal language editions"
 msgstr "Válasszon a Római Misekönyv ismert nyelvi kiadásai közül"
 
 #. translators: modal title for deleting a diocesan calendar
-#: includes/messages.php:388
+#: includes/messages.php:390
 msgid "Delete diocesan calendar"
 msgstr "Egyházmegyei naptár törlése"
 
 #. translators: validation error when field is empty
-#: includes/messages.php:394
+#: includes/messages.php:396
 msgid "This value cannot be empty."
 msgstr "Ez az érték nem lehet üres."
 
 #. translators: validation error for unknown missal
-#: includes/messages.php:396
+#: includes/messages.php:398
 msgid ""
 "This Missal is unknown to the Liturgical Calendar API. Please choose from a "
 "value in the list, or contact the curator of the API to have the Missal "
@@ -2403,7 +2403,7 @@ msgstr ""
 "kurátorával, hogy a Misekönyv felkerüljön a listára."
 
 #. translators: warning message when deleting a calendar
-#: includes/messages.php:402
+#: includes/messages.php:404
 msgid ""
 "If you choose to delete this calendar, the liturgical events defined for the "
 "calendar and the corresponding index entries will be removed and no longer "
@@ -2414,7 +2414,7 @@ msgstr ""
 "nem lesznek elérhetők a kliens alkalmazásokban."
 
 #. translators: tooltip explaining the first step in defining a national calendar
-#: includes/messages.php:408
+#: includes/messages.php:410
 msgid ""
 "please keep in mind that the first step to creating a national calendar, is "
 "to translate the already existing calendar data into the correct language. "
@@ -2425,14 +2425,14 @@ msgstr ""
 "LitCal fordítószerveren lehet megtenni (lásd a fenti részleteket)"
 
 #. translators: help text shown when diocese input is disabled
-#: includes/messages.php:410
+#: includes/messages.php:412
 msgid "Select a national calendar first to see available dioceses."
 msgstr ""
 "Válasszon ki először egy nemzeti naptárat, hogy lássa az elérhető "
 "egyházmegyéket."
 
 #. translators: tooltip explaining the Eternal High Priest feast
-#: includes/messages.php:412
+#: includes/messages.php:414
 msgid ""
 "In 2012, Pope Benedict XVI gave faculty to the Episcopal Conferences to "
 "insert the Feast of Jesus Christ Eternal High Priest in their own liturgical "
@@ -2443,7 +2443,7 @@ msgstr ""
 "Főpap ünnepét Pünkösd utáni csütörtökre."
 
 #. translators: tooltip explaining published Roman Missals selection
-#: includes/messages.php:414
+#: includes/messages.php:416
 msgid ""
 "if data from the Proper of Saints of a given Missal for this nation has "
 "already been incorporated into the main LitCal engine, you can choose the "
@@ -2458,7 +2458,7 @@ msgstr ""
 
 #. translators: tooltip explaining wider region association
 #. translators: tooltip of the wider regions of a national calendar
-#: includes/messages.php:417
+#: includes/messages.php:419
 msgid ""
 "The wider regions whose data this national calendar inherits. Only the wider "
 "regions that list this nation are offered."
@@ -2467,19 +2467,165 @@ msgstr ""
 "azok a szélesebb régiók érhetők el, amelyek listázzák ezt a nemzetet."
 
 #. translators: screen reader text for previous button
-#: includes/messages.php:423 temporale.php:173
+#: includes/messages.php:425 temporale.php:173
 msgid "Previous"
 msgstr "Előző"
 
 #. translators: screen reader text for next button
-#: includes/messages.php:425 temporale.php:179
+#: includes/messages.php:427 temporale.php:179
 msgid "Next"
 msgstr "Következő"
 
 #. translators: aria-label for diocesan calendar definition navigation
-#: includes/messages.php:427
+#: includes/messages.php:429
 msgid "Diocesan calendar definition"
 msgstr "Egyházmegyei naptár meghatározása"
+
+#. translators: navigator view toggle - only the calendars the user holds rights on
+#: includes/messages.php:435
+#, fuzzy
+#| msgid "Web calendar"
+msgid "My calendars"
+msgstr "Webes naptár"
+
+#. translators: navigator view toggle - every wider region, nation and diocese
+#: includes/messages.php:437
+#, fuzzy
+#| msgid "Show no rank"
+msgid "Show all"
+msgstr "Nincs rang megjelenítve."
+
+#. translators: placeholder and label of the navigator's text filter on calendar names
+#: includes/messages.php:439
+#, fuzzy
+#| msgid "Filters"
+msgid "Filter"
+msgstr "Szűrők"
+
+#. translators: screen reader text of the empty status dot of a calendar that does not exist yet
+#: includes/messages.php:441
+#, fuzzy
+#| msgid "not yet created"
+msgid "Not yet created"
+msgstr "még nincs létrehozva"
+
+#. translators: screen reader text of the filled status dot of a calendar that exists
+#: includes/messages.php:443 admin-applications.php:242
+#: developer-dashboard.php:279
+msgid "Created"
+msgstr "Létrehozva"
+
+#. translators: navigator action button - open an existing calendar in its form
+#: includes/messages.php:445 includes/admin-blocks.php:106
+#: admin-decrees.php:688 admin-tests.php:347 developer-dashboard.php:269
+#: sanctorale.php:320
+msgid "Edit"
+msgstr "Szerkesztés"
+
+#. translators: navigator action button - create a calendar that does not exist yet
+#: includes/messages.php:447
+#, fuzzy
+#| msgid "Created"
+msgid "Create"
+msgstr "Létrehozva"
+
+#. translators: navigator action button - translate a wider region into the user's nation's language
+#: includes/messages.php:449
+#, fuzzy
+#| msgid "translated"
+msgid "Translate"
+msgstr "fordított"
+
+#. translators: navigator action button - open the nation's Missal edition in the sanctorale editor. %1$s = the Missal ids, e.g. "IT_1983"
+#: includes/messages.php:451
+#, php-format
+msgid "Proper of Saints (%1$s)"
+msgstr ""
+
+#. translators: navigator action button - ask for rights on a calendar
+#: includes/messages.php:453
+#, fuzzy
+#| msgid "Requested access"
+msgid "Request access"
+msgstr "Hozzáférési kérelem"
+
+#. translators: note on a nation that has no national Missal edition
+#: includes/messages.php:455
+msgid "No national Missal data: the national calendar alone defines it"
+msgstr ""
+
+#. translators: note on an Ambrosian rite diocese in the navigator, which offers no Edit button for it
+#: includes/messages.php:457
+#, fuzzy
+#| msgid "New diocesan calendars (not yet created)"
+msgid "Ambrosian diocesan calendars cannot be edited here yet"
+msgstr "Új egyházmegyei naptárak (még nem készültek el)"
+
+#. translators: why a diocese's Create button is disabled
+#: includes/messages.php:459
+#, fuzzy
+#| msgid "National calendar test"
+msgid "Create the national calendar first"
+msgstr "Nemzeti naptár teszt"
+
+#. translators: navigator group of the nations that belong to no wider region
+#: includes/messages.php:461
+#, fuzzy
+#| msgid "Existing wider regions"
+msgid "Nations in no wider region"
+msgstr "Meglévő tágabb régiók"
+
+#. translators: navigator group of the Ambrosian rite's diocesan calendars
+#: includes/messages.php:463
+#, fuzzy
+#| msgid "Ambrosian Rite"
+msgid "Ambrosian rite"
+msgstr "Ambrozián rítus"
+
+#. translators: error shown under a nation when its list of dioceses could not be fetched
+#: includes/messages.php:465
+#, fuzzy
+#| msgid "Could not load notifications"
+msgid "Could not load the dioceses"
+msgstr "Értesítések betöltése nem sikerült"
+
+#. translators: button to fetch the list of dioceses again
+#: includes/messages.php:467 admin-permissions.php:458
+#: permission-requests.php:262
+msgid "Retry"
+msgstr "Újra"
+
+#. translators: "My calendars" view of a user who holds no rights on any calendar
+#: includes/messages.php:469
+#, fuzzy
+#| msgid "Particular Calendars"
+msgid "You have no particular calendars yet"
+msgstr "Partikuláris naptárak"
+
+#. translators: button of the empty "My calendars" view, switching to "Show all"
+#: includes/messages.php:471
+#, fuzzy
+#| msgid "National calendar"
+msgid "Browse all calendars"
+msgstr "Nemzeti naptár"
+
+#. translators: screen reader label of the button that expands a nation. %1$s = the nation's name
+#: includes/messages.php:473
+#, fuzzy, php-format
+#| msgid "Diocese"
+msgid "Dioceses of %1$s"
+msgstr "Egyházmegye"
+
+#. translators: shown while a nation's dioceses are being fetched
+#: includes/messages.php:475 admin-decrees.php:627 admin-locales.php:112
+#: sanctorale.php:193
+msgid "Loading…"
+msgstr "Betöltés…"
+
+#. translators: shown when no calendar name matches the navigator's text filter
+#: includes/messages.php:477
+msgid "No calendars match the filter"
+msgstr ""
 
 #: includes/admin-blocks.php:20
 msgid "Proprium de Tempore - temporal cycle events"
@@ -2497,9 +2643,17 @@ msgstr "Istentiszteleti Kongregáció rendeletei"
 msgid "Shared events for geographical regions"
 msgstr "Megosztott események földrajzi régiók szerint"
 
+#: includes/admin-blocks.php:73
+msgid "National"
+msgstr "Nemzeti"
+
 #: includes/admin-blocks.php:74
 msgid "National calendars by Bishops Conferences"
 msgstr "Nemzeti naptárak a püspöki konferenciák által"
+
+#: includes/admin-blocks.php:83
+msgid "Diocesan"
+msgstr "Egyházmegyei"
 
 #: includes/admin-blocks.php:84
 msgid "Diocesan calendars by liturgical offices"
@@ -2509,11 +2663,6 @@ msgstr "Egyházmegyei naptárak liturgikus hivatalok szerint"
 #: admin-dashboard.php:225
 msgid "View"
 msgstr "Megtekintés"
-
-#: includes/admin-blocks.php:106 admin-decrees.php:688 admin-tests.php:347
-#: developer-dashboard.php:269 sanctorale.php:320
-msgid "Edit"
-msgstr "Szerkesztés"
 
 #: includes/admin-decrees-card.php:24
 msgid "Create, edit and delete decrees of the Dicastery for Divine Worship"
@@ -2955,10 +3104,6 @@ msgstr "Határozat törlése"
 #: sanctorale.php:166 sanctorale.php:323
 msgid "Delete"
 msgstr "Törlés"
-
-#: admin-decrees.php:627 admin-locales.php:112 sanctorale.php:193
-msgid "Loading…"
-msgstr "Betöltés…"
 
 #: admin-decrees.php:628
 msgid "You do not have permission to view decrees administration."
@@ -3521,10 +3666,6 @@ msgstr ""
 "A naptárral még nem rendelkező egyházmegyéket nem lehetett betölteni; csak a "
 "meglévő naptárak kerültek felsorolásra."
 
-#: admin-permissions.php:458 permission-requests.php:262
-msgid "Retry"
-msgstr "Újra"
-
 #: admin-permissions.php:467
 msgid "All fields are required."
 msgstr "Minden mező kitöltése kötelező."
@@ -3977,10 +4118,6 @@ msgstr "Alkalmazás"
 #: admin-applications.php:241 developer-dashboard.php:299
 msgid "Website"
 msgstr "Weboldal"
-
-#: admin-applications.php:242 developer-dashboard.php:279
-msgid "Created"
-msgstr "Létrehozva"
 
 #: admin-applications.php:246
 msgid "Reviewed By"
