@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-29 11:32+0000\n"
-"PO-Revision-Date: 2026-10-29 11:32+0000\n"
+"PO-Revision-Date: 2026-10-29 11:44+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Hungarian <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/hu/>\n"
@@ -4046,32 +4046,33 @@ msgstr "Ismeretlen hiba"
 
 #: permission-requests.php:225
 msgid "You already have this access (or higher)."
-msgstr ""
+msgstr "Már van hozzáférésed ehhez (vagy annál magasabb)."
 
 #: permission-requests.php:226
 msgid "Already covered by another permission in this request."
-msgstr ""
+msgstr "Ez már egy másik engedéllyel lefedve van ebben a kérésben."
 
 #: permission-requests.php:227
-#, fuzzy
-#| msgid "Not yet created"
 msgid "Not needed."
-msgstr "Még nincs létrehozva"
+msgstr "Nem szükséges."
 
 #: permission-requests.php:228
 msgid "These permissions were left out of your request:"
-msgstr ""
+msgstr "Ezeket a jogosultságokat kihagytad a kérelmedből."
 
 #: permission-requests.php:229
 msgid ""
 "You already have, or have already requested, all of these permissions. "
 "Nothing was submitted."
 msgstr ""
+"Már rendelkezel ezekkel a jogosultságokkal, vagy már kérted őket. Semmi sem "
+"lett benyújtva."
 
 #: permission-requests.php:230
 msgid ""
 "You already have these permissions; your request asks for the role only."
 msgstr ""
+"Már rendelkezel ezekkel a jogosultságokkal; a kérelmed csak a szerepet kéri."
 
 #: permission-requests.php:238
 msgid "Reviewed"
