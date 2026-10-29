@@ -1,7 +1,9 @@
 <?php
 
 use LiturgicalCalendar\Frontend\ApiClient;
+use LiturgicalCalendar\Frontend\CatholicNations;
 use LiturgicalCalendar\Frontend\FormControls;
+use LiturgicalCalendar\Frontend\NavigatorData;
 use LiturgicalCalendar\Frontend\ProspectiveWiderRegions;
 use LiturgicalCalendar\Frontend\Utilities;
 
@@ -50,11 +52,51 @@ try {
     die('Error fetching metadata from API: ' . $e->getMessage());
 }
 
-try {
-    $litEventsJson             = $apiClient->fetchJsonWithKey($apiConfig->toInternal($apiConfig->eventsUrl), 'litcal_events');
-    $LiturgicalEventCollection = $litEventsJson['litcal_events'];
-} catch (\RuntimeException $e) {
-    die('Error fetching events from API: ' . $e->getMessage());
+// Without a `choice` the page is the particular calendars navigator (#66), which needs no events
+// but the national Missal editions, the catalogued nations and the user's calendar rights.
+$isNavigatorHub = empty($_GET['choice']);
+
+if ($isNavigatorHub) {
+    $LiturgicalEventCollection = [];
+
+    try {
+        $missalsJson      = $apiClient->fetchJsonWithKey($apiConfig->toInternal($apiConfig->missalsUrl . '/roman'), 'litcal_missals');
+        $navigatorMissals = NavigatorData::nationalMissals($missalsJson);
+    } catch (\RuntimeException $e) {
+        error_log('extending.php navigator: could not fetch /missals/roman: ' . $e->getMessage());
+        $navigatorMissals = [];
+    }
+
+    try {
+        $navigatorNations = CatholicNations::localized($i18n->LOCALE);
+    } catch (\RuntimeException $e) {
+        error_log('extending.php navigator: could not read the catalogued nations: ' . $e->getMessage());
+        $navigatorNations = [];
+    }
+
+    // A Zitadel admin is a global admin even when /auth/dashboard-scopes fails closed (no scopes,
+    // is_global_admin false): OR the role in here rather than in NavigatorData::rights(), which
+    // stays a pure mapping of the scopes response.
+    $navigatorRights                  = NavigatorData::rights($authHelper->dashboardScopes());
+    $navigatorRights['isGlobalAdmin'] = $authHelper->hasRole('admin') || $navigatorRights['isGlobalAdmin'];
+
+    $navigatorConfig = [
+        'metadata'           => $LitCalMetadata,
+        'prospectiveRegions' => ProspectiveWiderRegions::all($i18n->LOCALE),
+        // Objects, not lists, even when empty: the navigator looks nations and Missals up by ISO code.
+        'nations'            => (object) $navigatorNations,
+        'missals'            => (object) $navigatorMissals,
+        'rights'             => $navigatorRights,
+        'uiLocale'           => $i18n->LOCALE,
+        'messages'           => [],
+    ];
+} else {
+    try {
+        $litEventsJson             = $apiClient->fetchJsonWithKey($apiConfig->toInternal($apiConfig->eventsUrl), 'litcal_events');
+        $LiturgicalEventCollection = $litEventsJson['litcal_events'];
+    } catch (\RuntimeException $e) {
+        die('Error fetching events from API: ' . $e->getMessage());
+    }
 }
 
 /**
@@ -136,7 +178,7 @@ $DioceseGroupHelp    = $messages['DioceseGroupHelp'];
 $WiderRegionHeading = $messages['Particular Calendars wider region heading'];
 $NationalHeading    = $messages['Particular Calendars national heading'];
 $DiocesanHeading    = $messages['Particular Calendars diocesan heading'];
-$PageHeading        = isset($_GET['choice'])
+$PageHeading        = !$isNavigatorHub
     ? match ($_GET['choice']) {
         'widerRegion' => $WiderRegionHeading,
         'national'    => $NationalHeading,
@@ -174,7 +216,13 @@ $buttonGroup = '<hr><div class="d-flex justify-content-around">'
         ?></h1>
         <p class="mb-1 lh-sm"><small><i><?php echo $API_EXTEND_HOWTO_A0 . ' ' . $API_EXTEND_HOWTO_A1 . ' ' . $API_EXTEND_HOWTO_A2; ?></i></small></p>
 <?php
-if (isset($_GET['choice'])) {
+if (!$isNavigatorHub) {
+    // Populated by assets/js/extending.js (particularCalendarsTree.js's breadcrumbSegments())
+    // whenever the form's loaded calendar changes (#66 Part 5). Shared by the three forms:
+    // whichever one the switch below renders is the only one on the page.
+    ?>
+        <nav aria-label="breadcrumb" id="particularCalendarsBreadcrumb"></nav>
+    <?php
     switch ($_GET['choice']) {
         case 'widerRegion':
             //FormControls::$settings["untilYearField"] = true;
@@ -754,6 +802,10 @@ if (isset($_GET['choice'])) {
                 <?php
             break;
     }
+} else {
+    ?>
+                <div id="particularCalendarsNavigator" class="my-3"></div>
+    <?php
 }
 
 $messages = array_merge($messages, [
@@ -781,6 +833,16 @@ const CalendarEditRights = <?php echo json_encode([
 ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 let LiturgicalEventCollection = <?php echo json_encode($LiturgicalEventCollection, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 let LiturgicalEventCollectionKeys = <?php echo json_encode(array_column($LiturgicalEventCollection, 'event_key'), JSON_UNESCAPED_UNICODE); ?>;
+<?php if ($isNavigatorHub) :
+    // The navigator's own strings, for assets/js/particularCalendarsNavigator.js.
+    $navigatorConfig['messages'] = array_filter(
+        $messages,
+        fn($key) => str_starts_with($key, 'Navigator - '),
+        ARRAY_FILTER_USE_KEY
+    );
+    ?>
+window.ParticularCalendarsConfig = <?php echo json_encode($navigatorConfig, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+<?php endif; ?>
 </script>
 <?php include_once('./layout/footer.php'); ?>
 

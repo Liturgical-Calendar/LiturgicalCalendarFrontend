@@ -62,8 +62,8 @@ $adminBlocks = [
         'color'       => 'info',
         'title'       => _('Wider Region'),
         'description' => _('Shared events for geographical regions'),
-        'viewUrl'     => 'extending.php?choice=widerRegion',
-        'editUrl'     => 'extending.php?choice=widerRegion',
+        'viewUrl'     => 'extending.php',
+        'editUrl'     => 'extending.php',
         'permission'  => 'widerregion:write'
     ],
     [
@@ -72,8 +72,8 @@ $adminBlocks = [
         'color'       => 'danger',
         'title'       => _('National'),
         'description' => _('National calendars by Bishops Conferences'),
-        'viewUrl'     => 'extending.php?choice=national',
-        'editUrl'     => 'extending.php?choice=national',
+        'viewUrl'     => 'extending.php',
+        'editUrl'     => 'extending.php',
         'permission'  => 'national:write'
     ],
     [
@@ -82,8 +82,8 @@ $adminBlocks = [
         'color'       => 'secondary',
         'title'       => _('Diocesan'),
         'description' => _('Diocesan calendars by liturgical offices'),
-        'viewUrl'     => 'extending.php?choice=diocesan',
-        'editUrl'     => 'extending.php?choice=diocesan',
+        'viewUrl'     => 'extending.php',
+        'editUrl'     => 'extending.php',
         'permission'  => 'diocesan:write'
     ]
 ];
