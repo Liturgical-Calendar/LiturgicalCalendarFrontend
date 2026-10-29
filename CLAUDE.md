@@ -269,6 +269,13 @@ requests have loaded.
   diocesan calendars but no national tier or regions, so they are grouped under `ambrosian`; these dioceses
   show no actions (the diocesan form cannot load them yet).
 
+### Redundant access requests
+
+The API drops permissions that are already granted or duplicated within the same request, and reports them in `skipped_permissions`
+(see `assets/js/skippedPermissions.js`). Requests under different roles never block each other;
+a second pending request for the same role is refused, as before. A user lacking the role still gets a `role_only` request, and an all-redundant request is a 409,
+which `permission-requests.js` shows as a warning without resetting the form or leaving resubmit mode.
+
 ### Rite awareness
 
 The API routes a rite as a bare path segment between `calendar` and any nation or diocese pair —

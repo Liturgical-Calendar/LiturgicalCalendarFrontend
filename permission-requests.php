@@ -222,6 +222,12 @@ if (!$authHelper->emailVerified) {
                 maxPermissionsReached: <?php echo json_encode(_('You have reached the maximum of %1$d permissions per request.'), $jsonFlags); ?>,
                 permissionsTruncated: <?php echo json_encode(_('This request had more than %1$d permissions; only the first %2$d are shown.'), $jsonFlags); ?>,
                 unknownError: <?php echo json_encode(_('Unknown error'), $jsonFlags); ?>,
+                skipGranted: <?php echo json_encode(_('You already have this access (or higher).'), $jsonFlags); ?>,
+                skipDuplicate: <?php echo json_encode(_('Already covered by another permission in this request.'), $jsonFlags); ?>,
+                skipUnknown: <?php echo json_encode(_('Not needed.'), $jsonFlags); ?>,
+                skippedHeading: <?php echo json_encode(_('These permissions were left out of your request:'), $jsonFlags); ?>,
+                allRedundant: <?php echo json_encode(_('You already have, or have already requested, all of these permissions. Nothing was submitted.'), $jsonFlags); ?>,
+                roleOnly: <?php echo json_encode(_('You already have these permissions; your request asks for the role only.'), $jsonFlags); ?>,
                 // Table headers
                 role: <?php echo json_encode(_('Role'), $jsonFlags); ?>,
                 permissions: <?php echo json_encode(_('Permissions'), $jsonFlags); ?>,
