@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-29 11:32+0000\n"
-"PO-Revision-Date: 2026-10-29 11:32+0000\n"
+"PO-Revision-Date: 2026-10-29 11:43+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: German <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/de/>\n"
@@ -4090,32 +4090,33 @@ msgstr "Unbekannter Fehler"
 
 #: permission-requests.php:225
 msgid "You already have this access (or higher)."
-msgstr ""
+msgstr "Du hast diesen Zugriff (oder höher) bereits."
 
 #: permission-requests.php:226
 msgid "Already covered by another permission in this request."
-msgstr ""
+msgstr "Schon durch eine andere Berechtigung in dieser Anfrage abgedeckt."
 
 #: permission-requests.php:227
-#, fuzzy
-#| msgid "Not yet created"
 msgid "Not needed."
-msgstr "Noch nicht erstellt"
+msgstr "Nicht nötig."
 
 #: permission-requests.php:228
 msgid "These permissions were left out of your request:"
-msgstr ""
+msgstr "Diese Berechtigungen wurden in deiner Anfrage ausgelassen:"
 
 #: permission-requests.php:229
 msgid ""
 "You already have, or have already requested, all of these permissions. "
 "Nothing was submitted."
 msgstr ""
+"Du hast bereits alle diese Berechtigungen oder hast sie bereits angefordert. "
+"Es wurde nichts eingereicht."
 
 #: permission-requests.php:230
 msgid ""
 "You already have these permissions; your request asks for the role only."
 msgstr ""
+"Du hast bereits diese Berechtigungen; deine Anfrage verlangt nur die Rolle."
 
 #: permission-requests.php:238
 msgid "Reviewed"
