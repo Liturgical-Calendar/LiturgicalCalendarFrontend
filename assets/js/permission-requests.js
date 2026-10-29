@@ -919,8 +919,10 @@ document.addEventListener('DOMContentLoaded', async function() {
      *
      * @param {HTMLElement} row a row just appended by addPermissionRow()
      * @param {object} perm one stored permission
+     * @param {() => boolean} [stillWanted] re-checked once the object-id control
+     *     is mounted; when it returns false the row is left as the user has it
      */
-    async function restorePermissionRow(row, perm) {
+    async function restorePermissionRow(row, perm, stillWanted = () => true) {
         const objectType = perm.object_type || '';
         const typeSelect = row.querySelector('.perm-object-type');
         if (typeSelect) typeSelect.value = objectType;
@@ -928,6 +930,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         // Sync the object-id control (mounts a CalendarSelect for calendar
         // scopes; await so the <select> exists before we set its value).
         await syncRowObjectIdField(row, objectType);
+        if (!stillWanted()) return;
 
         // A stored object_id is rite-qualified (`ambrosian/lugano_ch`), while
         // the CalendarSelect's option values are bare — so split, restore the
@@ -1046,10 +1049,23 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         const row = permissionRows.lastElementChild;
         if (!row) return;
+        // Mounting the Calendar ID control is asynchronous, and the user can act
+        // meanwhile: write the prefill only if the row is still there with the
+        // role and scope it set, and the user has not chosen an ID or relation.
+        const fieldValue = function(selector) {
+            const el = row.querySelector(selector);
+            return el ? el.value : '';
+        };
         await restorePermissionRow(row, {
             object_type: prefill.object_type,
             object_id:   prefill.object_id,
             relation:    prefill.relation
+        }, function() {
+            return row.isConnected
+                && getRequestedRole() === 'calendar_editor'
+                && fieldValue('.perm-object-type') === prefill.object_type
+                && fieldValue('.perm-object-id') === ''
+                && fieldValue('.perm-relation') === '';
         });
     }
 
