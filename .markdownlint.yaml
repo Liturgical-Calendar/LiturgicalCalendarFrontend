@@ -32,5 +32,11 @@ MD033:
 MD041: false
 MD046:
   style: fenced
+# Emphasis and strong styles are the ones prettier writes; it has no option for
+# either, so any other choice would be undone by `yarn format:md`.
+MD049:
+  style: underscore
+MD050:
+  style: asterisk
 MD060:
   style: aligned

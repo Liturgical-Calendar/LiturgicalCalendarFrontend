@@ -22,10 +22,10 @@ also fixes the approval path's ignored return value.
 > even when it repeats a permission pending under another role (e.g. `developer`). The `pending` reason was therefore removed; reasons are `duplicate` then `granted`.
 
 - Three PRs, all targeting `development`, in this merge order:
-  1. **API PR A:** branch `fix/no-redundant-access-requests` (already created from `origin/development`).
-  2. **API PR B:** branch `feat/direct-grant-assigns-role`, from `origin/development`.
-  3. **Frontend PR:** branch `fix/no-redundant-access-requests` (current). Frontend CI builds the API from
-     `development`, so its E2E spec only passes once API PR A is merged.
+    1. **API PR A:** branch `fix/no-redundant-access-requests` (already created from `origin/development`).
+    2. **API PR B:** branch `feat/direct-grant-assigns-role`, from `origin/development`.
+    3. **Frontend PR:** branch `fix/no-redundant-access-requests` (current). Frontend CI builds the API from
+       `development`, so its E2E spec only passes once API PR A is merged.
 - Repos: API = `/home/johnrdorazio/development/LiturgicalCalendar/LiturgicalCalendarAPI`; frontend =
   `/home/johnrdorazio/development/LiturgicalCalendar/LiturgicalCalendarFrontend`.
 - Relation rank: `viewer` = 1, `editor` = 2, `admin` = 3, the same for every object type.
@@ -34,7 +34,7 @@ also fixes the approval path's ignored return value.
 - Response fields, exactly: `skipped_permissions` (array of `{object_type, object_id, relation, reason}`, present on
   every 201/200 from create/resubmit), `role_only` (bool, present on every create 201 and resubmit 200).
 - 409 body: `{ "success": false, "message": "You already have, or have already requested, all of the requested
-  permissions.", "skipped_permissions": [ … ] }`.
+permissions.", "skipped_permissions": [ … ] }`.
 - Fail open: OpenFGA unconfigured, erroring, or past its time budget means "not granted". No `roles` claim means
   "role missing".
 - Never use `--no-verify`. API: `composer analyse` (PHPStan level 10), `composer lint`, `composer test`. Frontend:
@@ -83,11 +83,11 @@ also fixes the approval path's ignored return value.
       returns only the second's permissions.
     - `testGetPendingPermissionsSkipsMalformedEntries`: insert a pending row by direct SQL whose `permissions` is
       `[{"object_type":"national_calendar"},{"object_type":"national_calendar","object_id":"roman/IT","relation":"owner"},
-      {"object_type":"national_calendar","object_id":"roman/IT","relation":"viewer"}]`. Only the last entry comes back.
+{"object_type":"national_calendar","object_id":"roman/IT","relation":"viewer"}]`. Only the last entry comes back.
 - [ ] **Step 2: Run** `vendor/bin/phpunit phpunit_tests/Repositories/AccessRequestRepositoryTest.php --filter
-  GetPendingPermissions`. Expected: FAIL, undefined method.
+GetPendingPermissions`. Expected: FAIL, undefined method.
 - [ ] **Step 3: Implement** `getPendingPermissions()`: one prepared SELECT of `permissions` (adding
-  `AND id <> :exclude` when given), `json_decode` each row, keep well-formed entries.
+      `AND id <> :exclude` when given), `json_decode` each row, keep well-formed entries.
 - [ ] **Step 4: Run** the same command. Expected: PASS. Then `composer analyse`. Expected: no errors.
 - [ ] **Step 5: Commit** `feat(access-requests): read a user's pending permissions`.
 
@@ -122,7 +122,7 @@ also fixes the approval path's ignored return value.
    `withinBudget()` pattern, reimplemented locally: they are private).
 
 - [ ] **Step 1: Write the failing tests.** Build the client from a Guzzle `MockHandler` exactly as
-  `ResourceAdminServiceTest::serviceWith()` does (an OpenFGA check response is `{"allowed": true|false}`).
+      `ResourceAdminServiceTest::serviceWith()` does (an OpenFGA check response is `{"allowed": true|false}`).
     - `testDuplicateKeepsHighestRelationPerObject`: input `[editor IT, admin IT, viewer FR]`, FGA all false → kept
       `[admin IT, viewer FR]`, skipped `[editor IT duplicate]`.
     - `testIdenticalTriplesKeepTheFirst`: `[editor IT, editor IT]` → one kept, one `duplicate`.
@@ -130,14 +130,14 @@ also fixes the approval path's ignored return value.
       made (the MockHandler queue is empty and must stay unused).
     - `testPendingLowerDoesNotSkip`: pending `[viewer IT]`, input `[admin IT]`, FGA false → kept.
     - `testPendingLegacyWiderRegionIdIsCanonicalized`: pending `[editor wider_region roman/Europe]`, input
-      `[editor wider_region roman/europe]` → skipped `pending`. *(Review Focus 1.)*
+      `[editor wider_region roman/europe]` → skipped `pending`. _(Review Focus 1.)_
     - `testGrantedSkips`: FGA true → skipped `granted`.
     - `testFgaErrorFailsOpen`: FGA 500 → kept, one log record.
     - `testNullClientGrantsNothing`: `new AccessRequestRedundancyFilter(null)`, input `[admin IT]` → kept.
     - `testBudgetExhaustedFailsOpen`: `$budgetSeconds = 0.0`, three distinct objects, empty MockHandler queue → all
-      kept, no request sent. *(Review Focus 3.)*
+      kept, no request sent. _(Review Focus 3.)_
 - [ ] **Step 2: Run** `vendor/bin/phpunit phpunit_tests/Services/AccessRequestRedundancyFilterTest.php`. Expected:
-  FAIL, class not found.
+      FAIL, class not found.
 - [ ] **Step 3: Implement** the class per the interface and algorithm.
 - [ ] **Step 4: Run** the test file, then `composer analyse`. Expected: PASS, no errors.
 - [ ] **Step 5: Commit** `feat(access-requests): filter redundant requested permissions`.
@@ -168,8 +168,8 @@ also fixes the approval path's ignored return value.
 - Create success message unchanged. Resubmit keeps its 200 and existing fields.
 
 - [ ] **Step 1: Write the failing tests.** Inject an `OpenFgaClient` built on a `MockHandler` (reuse the Task 2
-  construction; extract it into a small trait under `phpunit_tests/Support/` if both test classes need it). Users get
-  `roles` via a new optional `oidcUser()` parameter.
+      construction; extract it into a small trait under `phpunit_tests/Support/` if both test classes need it). Users get
+      `roles` via a new optional `oidcUser()` parameter.
     - `testCreateSkipsGrantedPermissionAndReportsIt`: roles `['calendar_editor']`, input `[viewer IT, admin FR]`, FGA
       `[true, false]` → 201, `skipped_permissions == [[…'roman/IT','viewer','reason' => 'granted']]`,
       `role_only === false`, the stored row's permissions are `[admin FR]` only.
@@ -177,19 +177,19 @@ also fixes the approval path's ignored return value.
       skipped entry, no new row for the user.
     - `testCreateAllRedundantWithoutRoleIsRoleOnly`: roles `[]`, FGA true → 201, `role_only === true`,
       `skipped_permissions === []`, permissions stored as submitted.
-    - `testCreateGlobalAdminCountsAsHoldingTheRole`: roles `['admin']`, FGA true → 409. *(Review Focus 4.)*
+    - `testCreateGlobalAdminCountsAsHoldingTheRole`: roles `['admin']`, FGA true → 409. _(Review Focus 4.)_
     - `testCreateSkipsPermissionPendingUnderAnotherRole`: seed a pending `developer` request with `admin IT`; then
       `calendar_editor` with `[editor IT, editor FR]`, FGA false → 201, IT skipped as `pending`.
     - `testResubmitStoresOnlyKeptPermissions`: a rejected request with `[viewer IT, admin FR]`; FGA `[true, false]` →
-      200, `getById()` shows `[admin FR]`, status `pending`. *(Review Focus 5.)*
+      200, `getById()` shows `[admin FR]`, status `pending`. _(Review Focus 5.)_
     - `testResubmitAllRedundantWithRoleIs409AndStaysRejected`.
     - The existing happy-path tests must still pass unchanged (roles `[]`, no FGA → nothing granted).
 - [ ] **Step 2: Run** `vendor/bin/phpunit phpunit_tests/Handlers/Auth/AccessRequestHandlerTest.php`. Expected: the
-  new tests FAIL.
+      new tests FAIL.
 - [ ] **Step 3: Implement** per Behavior. Build the 409 with `encodeResponseBody($response, [...],
-  StatusCode::CONFLICT)`, not an exception.
+StatusCode::CONFLICT)`, not an exception.
 - [ ] **Step 4: Run** the test file, `phpunit_tests/Handlers/Auth/AccessRequestHandlerValidationTest.php`, and
-  `composer analyse`. Expected: PASS, no errors.
+      `composer analyse`. Expected: PASS, no errors.
 - [ ] **Step 5: Commit** `feat(access-requests): refuse redundant permissions on create and resubmit`.
 
 ### Task 4: OpenAPI contract and PR
@@ -200,14 +200,14 @@ also fixes the approval path's ignored return value.
   `/auth/access-requests/{id}/resubmit` ~line 2989)
 
 - [ ] **Step 1:** Add a `SkippedPermission` component schema (the four fields, `reason` enum
-  `granted|pending|duplicate`). On both endpoints' success responses add required `skipped_permissions` (array of it)
-  and `role_only` (boolean). Add a `409` response with `success`, `message`, `skipped_permissions`. Describe the rule
-  in each operation's `description`.
+      `granted|pending|duplicate`). On both endpoints' success responses add required `skipped_permissions` (array of it)
+      and `role_only` (boolean). Add a `409` response with `success`, `message`, `skipped_permissions`. Describe the rule
+      in each operation's `description`.
 - [ ] **Step 2: Run** `composer lint:openapi` and `vendor/bin/phpunit phpunit_tests/Schemas`. Expected: no errors,
-  PASS. If a schema-conformance test validates handler responses against `openapi.json`, run it too.
+      PASS. If a schema-conformance test validates handler responses against `openapi.json`, run it too.
 - [ ] **Step 3: Run** the full gate: `composer lint && composer analyse && composer test`. Expected: all green.
 - [ ] **Step 4: Commit** `docs(openapi): skipped_permissions, role_only and the 409 on access requests`. When the user
-  asks, push and open the PR against `development`, linking frontend PR #616's follow-up and this design.
+      asks, push and open the PR against `development`, linking frontend PR #616's follow-up and this design.
 
 ## API PR B — `feat/direct-grant-assigns-role`
 
@@ -228,16 +228,16 @@ also fixes the approval path's ignored return value.
   result.
 
 - [ ] **Step 0: Verify the Zitadel premise** on the local stack (`docker compose up -d`; see frontend CLAUDE.md
-  "Docker Stack Operations"): POST a second `/management/v1/users/{id}/grants` for a user who already has a project
-  grant, and record the response. If Zitadel accepts it, `ensureRole()` still prefers `updateGrant()` (one grant per
-  user keeps `getUserRoles()` simple). Note the observed behavior in the PR body.
+      "Docker Stack Operations"): POST a second `/management/v1/users/{id}/grants` for a user who already has a project
+      grant, and record the response. If Zitadel accepts it, `ensureRole()` still prefers `updateGrant()` (one grant per
+      user keeps `getUserRoles()` simple). Note the observed behavior in the PR body.
 - [ ] **Step 1: Write the failing tests** (Guzzle `MockHandler`, as `ZitadelServiceTest` does):
-  `testEnsureRoleNoopWhenHeld` (one search response holding the role; no second request), `testEnsureRoleUpdatesExistingGrant`
-  (assert the PUT body's `roleKeys` is the union), `testEnsureRoleCreatesGrantWhenNone`, `testEnsureRoleReturnsFalseOnWriteFailure`.
-  In `AccessRequestAdminHandlerTest`, an approval whose role write fails records `zitadel_sync_status = 'failed'`.
+      `testEnsureRoleNoopWhenHeld` (one search response holding the role; no second request), `testEnsureRoleUpdatesExistingGrant`
+      (assert the PUT body's `roleKeys` is the union), `testEnsureRoleCreatesGrantWhenNone`, `testEnsureRoleReturnsFalseOnWriteFailure`.
+      In `AccessRequestAdminHandlerTest`, an approval whose role write fails records `zitadel_sync_status = 'failed'`.
 - [ ] **Step 2: Run** both test files. Expected: FAIL.
 - [ ] **Step 3: Implement** `ensureRole()`. Change `syncZitadelRole()` to call it and treat `false` like the caught
-  exception: status `failed`, error `'Zitadel role assignment failed'`.
+      exception: status `failed`, error `'Zitadel role assignment failed'`.
 - [ ] **Step 4: Run** both files and `composer analyse`. Expected: PASS.
 - [ ] **Step 5: Commit** `fix(zitadel): ensureRole updates an existing grant; approval honours a failed assignment`.
 
@@ -263,15 +263,15 @@ whose `ROLE_OBJECT_TYPES` covers the type (`developer` covers all). It runs afte
 never changes the 200 or the tuple: set `role_error` and log it.
 
 - [ ] **Step 1: Write the failing tests:** national grant to a user with no roles → `ensureRole(…, 'calendar_editor')`
-  called, `role_assigned === 'calendar_editor'`; a `*_test` grant → `test_editor`; a user holding `developer` → no
-  call, `role_assigned === 'developer'`; `ensureRole()` false → 200, `role_error` set, tuple still reported. Mock
-  `ZitadelService` with `createMock()` (the class is not final).
+      called, `role_assigned === 'calendar_editor'`; a `*_test` grant → `test_editor`; a user holding `developer` → no
+      call, `role_assigned === 'developer'`; `ensureRole()` false → 200, `role_error` set, tuple still reported. Mock
+      `ZitadelService` with `createMock()` (the class is not final).
 - [ ] **Step 2: Run** `vendor/bin/phpunit phpunit_tests/Handlers/Admin/PermissionAdminHandlerTest.php`. Expected:
-  FAIL.
+      FAIL.
 - [ ] **Step 3: Implement** per Rule and update the OpenAPI response schema.
 - [ ] **Step 4: Run** `composer lint:openapi && composer lint && composer analyse && composer test`. Expected: green.
 - [ ] **Step 5: Commit** `feat(permissions): a direct grant assigns the matching role`. Push and PR when the user
-  asks.
+      asks.
 
 ## Frontend PR — `fix/no-redundant-access-requests`
 
@@ -294,8 +294,8 @@ never changes the 200 or the tuple: set `role_error` and log it.
       else → `error`.
 
 - [ ] **Step 1: Write the failing tests:** each reason maps to its key; an unknown reason and `undefined` → `skipUnknown`;
-  `readSubmitOutcome` for 201 with skips, 201 with `role_only`, 200 resubmit, 409, 409 without the array (→ `error`),
-  and 500 (→ `error`).
+      `readSubmitOutcome` for 201 with skips, 201 with `role_only`, 200 resubmit, 409, 409 without the array (→ `error`),
+      and 500 (→ `error`).
 - [ ] **Step 2: Run** `yarn vitest run assets/js/__tests__/skippedPermissions.test.js`. Expected: FAIL.
 - [ ] **Step 3: Implement.** Pure, no DOM.
 - [ ] **Step 4: Run** it again plus `yarn lint`. Expected: PASS.
@@ -333,10 +333,10 @@ never changes the 200 or the tuple: set `role_error` and log it.
 - [ ] **Step 1:** Add the i18n keys to `permission-requests.php` through `_()`, `json_encode`d like their neighbours.
 - [ ] **Step 2:** Implement the Behavior.
 - [ ] **Step 3: Run** `node --check assets/js/permission-requests.js && yarn lint && composer lint && composer analyse`.
-  Expected: clean.
+      Expected: clean.
 - [ ] **Step 4:** Add to `CLAUDE.md`: the API drops permissions already granted, already pending (any role) or
-  duplicated, and reports them in `skipped_permissions`. A user lacking the role still gets a `role_only` request, and
-  an all-redundant request is a 409. Run `composer lint:md`.
+      duplicated, and reports them in `skipped_permissions`. A user lacking the role still gets a `role_only` request, and
+      an all-redundant request is a 409. Run `composer lint:md`.
 - [ ] **Step 5: Commit** `feat: tell the user which requested permissions were not needed`.
 
 ### Task 9: E2E and PR
@@ -363,11 +363,11 @@ never changes the 200 or the tuple: set `role_error` and log it.
       with the duplicate text. (Both rows target IT, so viewer is a `duplicate` of admin.)
     - `afterAll`: `truncateAppTables()` and `settleCleanup()`.
 - [ ] **Step 2: Run** `yarn typecheck`. Expected: clean. If the local stack runs the API from API PR A's branch, run
-  `yarn playwright test --project=rbac e2e/rbac/19-redundant-access-request.spec.ts`. Expected: PASS. Otherwise it is
-  verified by CI after API PR A merges, and the PR body says so.
+      `yarn playwright test --project=rbac e2e/rbac/19-redundant-access-request.spec.ts`. Expected: PASS. Otherwise it is
+      verified by CI after API PR A merges, and the PR body says so.
 - [ ] **Step 3: Run** the frontend gate: `composer parallel-lint && composer lint && composer analyse && composer
-  lint:md && yarn typecheck && yarn lint && yarn test:unit`. Expected: green.
+lint:md && yarn typecheck && yarn lint && yarn test:unit`. Expected: green.
 - [ ] **Step 4: Commit** `test(e2e): redundant access requests are refused (rbac)`.
 - [ ] **Step 5:** File the follow-up issue (row order Calendar scope → Calendar ID → Relation, Relation disabled
-  until both chosen, pruned via an API preflight) with `gh issue create`. Push and open the PR against `development`
-  when the user asks, noting the dependency on API PR A.
+      until both chosen, pruned via an API preflight) with `gh issue create`. Push and open the PR against `development`
+      when the user asks, noting the dependency on API PR A.

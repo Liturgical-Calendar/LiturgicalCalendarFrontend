@@ -139,7 +139,10 @@ Configuration: `captainhook.json`
 
 **JavaScript:** ES6+ syntax, vanilla JS. Global variables are declared in `eslint.config.mjs` (not inline comments).
 
-**Markdown:** See [parent CLAUDE.md](../CLAUDE.md#markdown) for formatting rules.
+**Markdown:** See [parent CLAUDE.md](../CLAUDE.md#markdown) for formatting rules. Write emphasis as `_text_` and strong
+as `**text**`: those are the styles prettier produces (it has no option for either), and `.markdownlint.yaml` enforces
+them (MD049, MD050). `.prettierrc` turns off `embeddedLanguageFormatting` for Markdown, so `yarn format:md` leaves code
+samples inside documents as written.
 
 ## Authentication
 
@@ -238,13 +241,13 @@ A nation without Missal data (e.g. the Netherlands) is edited by the national ca
 
 **Rights and actions** (no cascade; each item's actions are decided on its own rights):
 
-| Action       | Offered when                                                                            |
-|--------------|-----------------------------------------------------------------------------------------|
-| `edit`       | Calendar exists AND user is editor/admin on it OR is global admin                       |
-| `create`     | Calendar does not exist AND user is admin on it OR is global admin                      |
-| `sanctorale` | Nation has Missal edition AND user is editor/admin on `national_calendar:{rite}/{ISO}`  |
-| `translate`  | Region exists, user cannot edit whole region, but can edit a member nation              |
-| `request`    | Authenticated user with none of the above                                               |
+| Action       | Offered when                                                                           |
+| ------------ | -------------------------------------------------------------------------------------- |
+| `edit`       | Calendar exists AND user is editor/admin on it OR is global admin                      |
+| `create`     | Calendar does not exist AND user is admin on it OR is global admin                     |
+| `sanctorale` | Nation has Missal edition AND user is editor/admin on `national_calendar:{rite}/{ISO}` |
+| `translate`  | Region exists, user cannot edit whole region, but can edit a member nation             |
+| `request`    | Authenticated user with none of the above                                              |
 
 The `request` action links to `permission-requests.php?object_type=…&object_id=…` and preselects role
 `calendar_editor` and the first permission row. `assets/js/accessRequestPrefill.js` parses the query string
