@@ -200,6 +200,75 @@ When `ApiClient` listens to `ApiOptions`, the `Accept-Language` header is set au
 - **CalendarSelect standalone**: Vatican = General Roman Calendar (user's locale, not forced Latin)
 - **With PathBuilder**: `/calendar` = General Roman, `/calendar/nation/VA` = Vatican (Latin)
 
+### Particular calendars navigator
+
+The hub page (`extending.php` with no `choice` parameter) presents a unified entry point for managing
+particular calendars. It shows each user the calendars they can work on and lets them browse the
+hierarchy of regions, nations, and dioceses.
+
+**Hub behavior:**
+
+- **"My calendars" view (default):** Lists only calendars the user holds rights on, with ancestors
+  greyed for context. Global admins start in "Show all" mode.
+- **Filter and browse:** A text filter on labels and an accordion of regions, each with nations;
+  expanding a nation loads its dioceses on first open.
+- **Single sidebar entry:** "Particular Calendars" in the left nav points to the hub (`extending.php`
+  with no `choice`) and replaces the three separate entry points.
+
+**Deep-link parameters** (all forms validate and reject invalid/unknown calendars with a "Calendar
+not found" toast):
+
+- `?choice=widerRegion&calendar={id}[&locale=]` — region editor
+- `?choice=national&calendar={ISO}` — national calendar editor
+- `?choice=diocesan&calendar={id}&rite=roman` — diocesan calendar editor
+
+Each form shows a breadcrumb linking back to the hub and to the calendars above the current one.
+
+**The two editors per nation:**
+
+A nation's data lives in two places, both authorised by `national_calendar:{rite}/{ISO}`:
+
+1. **National calendar** (`extending.php?choice=national&calendar={ISO}`): operations like
+   `moveEvent`, `createNew`, `makePatron`.
+2. **Proper of Saints** (`sanctorale.php#rite={rite}&calendar={ISO}`): fixed-date entries from the
+   national Missal edition, available only where `/missals/{rite}` lists an edition (e.g. `IT_1983`,
+   `US_2011`).
+
+A nation without Missal data (e.g. the Netherlands) is edited by the national calendar editor alone.
+
+**Rights and actions** (no cascade; each item's actions are decided on its own rights):
+
+| Action       | Offered when                                                                            |
+|--------------|-----------------------------------------------------------------------------------------|
+| `edit`       | Calendar exists AND user is editor/admin on it OR is global admin                       |
+| `create`     | Calendar does not exist AND user is admin on it OR is global admin                      |
+| `sanctorale` | Nation has Missal edition AND user is editor/admin on `national_calendar:{rite}/{ISO}`  |
+| `translate`  | Region exists, user cannot edit whole region, but can edit a member nation              |
+| `request`    | Authenticated user with none of the above                                               |
+
+The `request` action links to `permission-requests.php?object_type=…&object_id=…` and preselects role
+`calendar_editor` and the first permission row. `assets/js/accessRequestPrefill.js` parses the query string
+and validates: non-Roman rite on Roman-only types (`national_calendar`, `wider_region`), an unknown type, or
+a malformed id leaves the form untouched. Nothing is submitted automatically. Cross-checks against
+`roleObjectTypes.calendar_editor` happen in `assets/js/permission-requests.js` after the user's existing
+requests have loaded.
+
+**Implementation:**
+
+- **Tree model:** `assets/js/particularCalendarsTree.js` — pure module (no DOM, no fetching) that
+  builds the `NavigatorNode[]` tree from metadata, prospective regions, nations, dioceses, rights,
+  and national Missal editions. Exports: `buildNavigatorTree()`, `filterMine()`, `parseDeepLink()`,
+  `actionUrl()`, `breadcrumbSegments()`, plus helpers for regions, nations, dioceses.
+- **Renderer:** `assets/js/particularCalendarsNavigator.js` — renders the hub UI (toolbar, filter,
+  accordion, status indicators, action buttons).
+- **Server:** `src/NavigatorData.php` — shapes `AuthHelper::dashboardScopes()` and `/missals/{rite}`
+  into the `rights` and national missal `missals` objects the tree expects.
+- **Vatican excluded:** The Vatican (`VA`) is the Roman rite's own calendar, not a particular one,
+  and does not appear in the navigator.
+- **Groups:** Nations belonging to no wider region are grouped under `no-region`. The Ambrosian rite has
+  diocesan calendars but no national tier or regions, so they are grouped under `ambrosian`; these dioceses
+  show no actions (the diocesan form cannot load them yet).
+
 ### Redundant access requests
 
 The API drops permissions that are already granted or duplicated within the same request, and reports them in `skipped_permissions`

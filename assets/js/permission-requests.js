@@ -18,6 +18,7 @@ import {
     ROMAN_RITE,
     splitObjectId,
 } from './riteScopedObjectId.js';
+import { parseAccessRequestPrefill } from './accessRequestPrefill.js';
 import { buildNationObjectIdSelectFromConfig, NATIONAL_CALENDAR_TYPE } from './nationObjectIdSelect.js';
 import { DIOCESAN_CALENDAR_TYPE, loadWorldDioceses, mountDioceseObjectIdPicker } from './dioceseObjectIdPicker.js';
 import {
@@ -956,8 +957,10 @@ document.addEventListener('DOMContentLoaded', async function() {
      *
      * @param {HTMLElement} row a row just appended by addPermissionRow()
      * @param {object} perm one stored permission
+     * @param {() => boolean} [stillWanted] re-checked once the object-id control
+     *     is mounted; when it returns false the row is left as the user has it
      */
-    async function restorePermissionRow(row, perm) {
+    async function restorePermissionRow(row, perm, stillWanted = () => true) {
         const objectType = perm.object_type || '';
         const typeSelect = row.querySelector('.perm-object-type');
         if (typeSelect) typeSelect.value = objectType;
@@ -965,6 +968,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         // Sync the object-id control (mounts a CalendarSelect for calendar
         // scopes; await so the <select> exists before we set its value).
         await syncRowObjectIdField(row, objectType);
+        if (!stillWanted()) return;
 
         // A stored object_id is rite-qualified (`ambrosian/lugano_ch`), while
         // the CalendarSelect's option values are bare — so split, restore the
@@ -1037,6 +1041,70 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         // Scroll to form
         document.getElementById('accessRequestForm').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    /**
+     * Prefill the form from a navigator "Request access" deep link
+     * (`?object_type=...&object_id=...[&relation=admin]`, built by
+     * `actionUrl()` in particularCalendarsTree.js: `admin` on a calendar not
+     * yet created, since creating one needs it). Only the three calendar
+     * scopes the `calendar_editor` role allows, and the `editor`/`admin`
+     * relations, are recognized; anything else leaves the form untouched.
+     *
+     * Called (see bottom of this handler) only after `loadExistingRequests()`
+     * has resolved, so `resubmitRequestId` cannot yet be non-null when this
+     * starts — `openResubmitForm()` only runs from a user's later click on a
+     * "Resubmit" button that rendering puts in the DOM. The guard below is
+     * therefore defensive/unreachable under the current call order, kept in
+     * case that order ever changes.
+     */
+    async function applyAccessRequestPrefill() {
+        if (resubmitRequestId !== null) return;
+
+        const prefill = parseAccessRequestPrefill(window.location.search);
+        if (!prefill) return;
+
+        // roleObjectTypes.calendar_editor is the source of truth for which
+        // scopes that role allows; parseAccessRequestPrefill() already
+        // restricts to the same three, but this keeps the two in sync
+        // rather than assuming it.
+        if (!roleObjectTypes['calendar_editor'].includes(prefill.object_type)) return;
+
+        // The prefill only runs once loadExistingRequests() has resolved, and the
+        // user may have picked a role or started a row while that was in flight:
+        // their choices win, and the prefill steps aside entirely.
+        if (getRequestedRole() !== '' || permissionRows.children.length > 0) return;
+
+        // Check the role radio the way a user clicking it would, so the
+        // existing 'change' listener (updatePermissionsSection) reveals the
+        // form body and adds the first empty permission row.
+        const roleRadio = Array.from(requestedRoleRadios).find(function(r) {
+            return r.value === 'calendar_editor';
+        });
+        if (!roleRadio) return;
+        roleRadio.checked = true;
+        roleRadio.dispatchEvent(new Event('change', { bubbles: true }));
+
+        const row = permissionRows.lastElementChild;
+        if (!row) return;
+        // Mounting the Calendar ID control is asynchronous, and the user can act
+        // meanwhile: write the prefill only if the row is still there with the
+        // role and scope it set, and the user has not chosen an ID or relation.
+        const fieldValue = function(selector) {
+            const el = row.querySelector(selector);
+            return el ? el.value : '';
+        };
+        await restorePermissionRow(row, {
+            object_type: prefill.object_type,
+            object_id:   prefill.object_id,
+            relation:    prefill.relation
+        }, function() {
+            return row.isConnected
+                && getRequestedRole() === 'calendar_editor'
+                && fieldValue('.perm-object-type') === prefill.object_type
+                && fieldValue('.perm-object-id') === ''
+                && fieldValue('.perm-relation') === '';
+        });
     }
 
     // ========================================================================
@@ -1173,6 +1241,26 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     });
 
-    // Load existing requests on page load
+    // Load existing requests first. This must never be blocked or aborted by
+    // the prefill below: awaiting it here, before the prefill even starts,
+    // guarantees the "My requests" table loads and its Resubmit buttons are
+    // bound regardless of whether the prefill succeeds, fails, or is slow
+    // (its CalendarSelect/diocese-picker mounts do their own network calls).
+    //
+    // The ordering does not by itself stop a Resubmit click from landing
+    // while the prefill's row restore is still awaiting those mounts. What
+    // protects that case is openResubmitForm(): it synchronously clears
+    // #permissionRows, detaching the prefill's row, so the prefill's awaited
+    // writes then land on a row no longer in the form and cannot leak into
+    // the resubmission.
     await loadExistingRequests();
+
+    // Prefill from a navigator "Request access" deep link, if present. Wrapped
+    // so a failure here (e.g. a picker mount throwing) can never propagate out
+    // of this handler.
+    try {
+        await applyAccessRequestPrefill();
+    } catch (err) {
+        console.error('[permission-requests] Access-request prefill failed:', err);
+    }
 });

@@ -182,3 +182,9 @@ if (file_exists("assets/js/{$pageName}.js")) {
     $scriptVersion = filemtime("assets/js/{$pageName}.js");
     echo "<script{$scriptType} src=\"assets/js/{$pageName}.js?v={$scriptVersion}\"></script>";
 }
+
+//extending.php without a `choice` is the particular calendars navigator (#66)
+if ('extending' === $pageName && empty($_GET['choice'])) {
+    $navigatorVersion = filemtime('assets/js/particularCalendarsNavigator.js');
+    echo "<script type=\"module\" src=\"assets/js/particularCalendarsNavigator.js?v={$navigatorVersion}\"></script>";
+}
