@@ -36,6 +36,40 @@ class AuthHelper
     private const ID_TOKEN_COOKIE      = 'litcal_id_token';
     private const SUPPORTED_ALGORITHMS = ['HS256', 'HS384', 'HS512'];
 
+    /**
+     * The object types each role reads (LiturgicalCalendarAPI #1049): people
+     * read admin data through the role they hold, not through a `viewer` tuple.
+     *
+     * Mirrors the API's `AccessRequestRepository::ROLE_OBJECT_TYPES` as SETS;
+     * keep the two in step. The order here is a display order (the rite-level
+     * scope first), which `permission-requests.js` receives through its page
+     * config. A global `admin` reads every type, including ones no role lists.
+     *
+     * @var array<string, list<string>>
+     */
+    public const ROLE_READABLE_TYPES = [
+        'calendar_editor' => [
+            'rite_calendar',
+            'national_calendar',
+            'diocesan_calendar',
+            'wider_region',
+        ],
+        'test_editor'     => [
+            'rite_calendar_test',
+            'national_calendar_test',
+            'diocesan_calendar_test',
+        ],
+        'developer'       => [
+            'rite_calendar',
+            'rite_calendar_test',
+            'national_calendar',
+            'diocesan_calendar',
+            'wider_region',
+            'national_calendar_test',
+            'diocesan_calendar_test',
+        ],
+    ];
+
     private static ?self $instance = null;
 
     public readonly bool $isAuthenticated;
@@ -375,29 +409,53 @@ class AuthHelper
     }
 
     /**
-     * Whether the caller can view (viewer-or-above) a specific OpenFGA object.
-     * Global admins (Zitadel role) always can — no API call is made for them.
+     * Whether the caller can read objects of `$objectType`: true for a global
+     * `admin`, or when any role they hold lists the type in
+     * {@see self::ROLE_READABLE_TYPES}. A type no role lists is readable by a
+     * global admin only. Decided from the token's roles; no API call is made.
      */
-    public function canViewResource(string $objectType, string $objectId): bool
+    public function canViewType(string $objectType): bool
     {
         if ($this->hasRole('admin')) {
             return true;
         }
-        return in_array($objectId, $this->dashboardScopes()['viewer_scopes'][$objectType] ?? [], true);
+        return in_array($objectType, $this->readableTypes(), true);
     }
 
     /**
-     * Whether the caller can view (viewer-or-above) a rite-level calendar
-     * sub-resource — `rite_calendar:{rite}/{subResource}`, the tier above
-     * nations, wider regions and dioceses (LiturgicalCalendarAPI #955).
+     * The object types the caller can read, for pages that pass the rule to JS.
+     * A global admin gets every type a role lists (and, through canViewType(),
+     * reads any other type as well).
      *
-     * This consulted the legacy `general_roman_calendar:{subResource}` object as
-     * well, through the #955 migration window, for a grant made before the API's
-     * tuple migration ran. The window is closed: the legacy tuples were migrated
-     * and deleted, the API's authorization middleware dropped its own fallback
-     * (LiturgicalCalendarAPI#970), and the type was removed from the FGA model
-     * outright (CatholicOS/cdcf-infra#44). Nothing resolves against it any more,
-     * so consulting it could only ever return false.
+     * @return list<string>
+     */
+    public function readableTypes(): array
+    {
+        $types = [];
+        foreach (self::ROLE_READABLE_TYPES as $role => $roleTypes) {
+            if ($this->hasRole('admin') || $this->hasRole($role)) {
+                $types = array_merge($types, $roleTypes);
+            }
+        }
+        return array_values(array_unique($types));
+    }
+
+    /**
+     * Whether the caller can view a specific OpenFGA object. Reading comes from
+     * the role (LiturgicalCalendarAPI #1049), so the object id does not matter:
+     * this is canViewType() on the object's type.
+     */
+    public function canViewResource(string $objectType, string $objectId): bool
+    {
+        return $this->canViewType($objectType);
+    }
+
+    /**
+     * Whether the caller can view a rite-level calendar sub-resource —
+     * `rite_calendar:{rite}/{subResource}`, the tier above nations, wider
+     * regions and dioceses (LiturgicalCalendarAPI #955). Like
+     * canViewResource(), it answers from the role: any rite and any
+     * sub-resource read the same.
      */
     public function canViewRiteCalendarResource(string $rite, string $subResource): bool
     {
@@ -405,17 +463,16 @@ class AuthHelper
     }
 
     /**
-     * Whether the caller can view (viewer-or-above) ANY object of any of the
-     * given OpenFGA object types. Global admins always can.
+     * Whether the caller can view objects of any of the given OpenFGA object
+     * types. Global admins always can.
      */
     public function canViewAnyResourceOfType(string ...$objectTypes): bool
     {
         if ($this->hasRole('admin')) {
             return true;
         }
-        $viewerScopes = $this->dashboardScopes()['viewer_scopes'];
         foreach ($objectTypes as $type) {
-            if (( $viewerScopes[$type] ?? [] ) !== []) {
+            if ($this->canViewType($type)) {
                 return true;
             }
         }

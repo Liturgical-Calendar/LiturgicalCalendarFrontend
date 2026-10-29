@@ -26,6 +26,7 @@ import {
     WIDER_REGION_TYPE,
 } from './widerRegionObjectIdSelect.js';
 import { readSubmitOutcome, skipReasonText } from './skippedPermissions.js';
+import { dropViewerRows } from './storedPermissionRows.js';
 
 // Initialize the API client once; CalendarSelect requires this to have resolved.
 // Since components-js 2.0.0 init() rejects on failure rather than resolving to
@@ -98,7 +99,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         'general_roman_calendar_test': config.i18n.testsGeneralRoman
     };
 
-    // Relation display names
+    // Relation display names. `viewer` is no longer offered (API #1049) but
+    // still names the rows of requests made before that.
     const relationNames = {
         'viewer': config.i18n.viewer,
         'editor': config.i18n.editor,
@@ -154,39 +156,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     ];
 
-    // Object types allowed per role, mirroring AccessRequestRepository::ROLE_OBJECT_TYPES
-    // (the API validates the SET, not the order; display order puts the
-    // rite-level scope first).
-    //
-    // Both `general_roman_calendar` spellings are GONE at the #955 prune
-    // milestone. They were offered through the migration window because a grant
-    // made on them was still picked up by the tuple migration — but the types no
-    // longer exist in the OpenFGA model at all (CatholicOS/cdcf-infra#44), so
-    // offering one now hands the user a write rejected by OpenFGA itself:
-    // `type 'general_roman_calendar' not found`. `rite_calendar` and
-    // `rite_calendar_test` are their successors.
-    const roleObjectTypes = {
-        'calendar_editor': [
-            'rite_calendar',
-            'national_calendar',
-            'diocesan_calendar',
-            'wider_region'
-        ],
-        'test_editor': [
-            'rite_calendar_test',
-            'national_calendar_test',
-            'diocesan_calendar_test'
-        ],
-        'developer': [
-            'rite_calendar',
-            'rite_calendar_test',
-            'national_calendar',
-            'diocesan_calendar',
-            'wider_region',
-            'national_calendar_test',
-            'diocesan_calendar_test'
-        ]
-    };
+    // Object types allowed per role, in display order (rite-level scope first).
+    // The page config carries them from AuthHelper::ROLE_READABLE_TYPES, the
+    // frontend's one copy of the API's AccessRequestRepository::ROLE_OBJECT_TYPES
+    // (the API validates the SET, not the order). The same table decides what
+    // each role reads (LiturgicalCalendarAPI #1049).
+    const roleObjectTypes = config.roleObjectTypes || {};
 
     let permissionRowCounter = 0;
 
@@ -631,7 +606,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                         <label class="form-label form-label-sm mb-1">${escapeHtml(config.i18n.relation)}</label>
                         <select class="form-select form-select-sm perm-relation" required>
                             <option value="">${escapeHtml(config.i18n.selectRelation)}</option>
-                            <option value="viewer">${escapeHtml(config.i18n.viewer)}</option>
                             <option value="editor">${escapeHtml(config.i18n.editor)}</option>
                             <option value="admin">${escapeHtml(config.i18n.admin)}</option>
                         </select>
@@ -924,12 +898,20 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     /**
      * Populate the permission rows from a stored permissions array
-     * (used during resubmit pre-fill). Truncates to MAX_PERMISSIONS
-     * with a single warning if the stored array exceeds the cap.
-     * @param {Array|undefined} stored - Stored permissions from the request
+     * (used during resubmit pre-fill). `viewer` rows are dropped first: people
+     * no longer request it, since the role gives read access (API #1049), and
+     * the API refuses a resubmit containing one. Truncates to MAX_PERMISSIONS
+     * with a single warning if what is left exceeds the cap, and adds one empty
+     * row when nothing is left.
+     * @param {Array|undefined} storedPermissions - Stored permissions from the request
+     * @returns {Promise<number>} How many viewer rows were dropped
      */
-    async function populateRowsFromStoredPermissions(stored) {
-        if (!Array.isArray(stored)) return;
+    async function populateRowsFromStoredPermissions(storedPermissions) {
+        const { kept: stored, dropped } = dropViewerRows(storedPermissions);
+        if (stored.length === 0) {
+            addPermissionRow();
+            return dropped;
+        }
         if (stored.length > MAX_PERMISSIONS) {
             const tmpl = config.i18n.permissionsTruncated
                 || 'This request had more than %1$d permissions; only the first %2$d are shown.';
@@ -945,6 +927,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             if (!row) continue;
             await restorePermissionRow(row, perm);
         }
+        return dropped;
     }
 
     /**
@@ -1022,7 +1005,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         updatePermissionsSection();
         permissionRows.innerHTML = '';
         permissionRowCounter = 0;
-        await populateRowsFromStoredPermissions(request.permissions);
+        const viewerRowsDropped = await populateRowsFromStoredPermissions(request.permissions);
 
         // Pre-fill justification
         const justificationEl = document.getElementById('justification');
@@ -1033,6 +1016,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         // Show rejection reason as alert
         if (request.review_notes) {
             showAlert('warning', (config.i18n.rejectionReason || 'Rejection reason') + ': ' + request.review_notes);
+        }
+
+        // Appended AFTER the rejection reason: showAlert() replaces #formAlerts,
+        // so this must come last for both to stay visible.
+        if (viewerRowsDropped > 0) {
+            appendAlert('info', escapeHtml(config.i18n.viewerDropped));
         }
 
         // Set resubmit mode
@@ -1068,7 +1057,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         // scopes that role allows; parseAccessRequestPrefill() already
         // restricts to the same three, but this keeps the two in sync
         // rather than assuming it.
-        if (!roleObjectTypes['calendar_editor'].includes(prefill.object_type)) return;
+        if (!(roleObjectTypes['calendar_editor'] || []).includes(prefill.object_type)) return;
 
         // The prefill only runs once loadExistingRequests() has resolved, and the
         // user may have picked a role or started a row while that was in flight:
