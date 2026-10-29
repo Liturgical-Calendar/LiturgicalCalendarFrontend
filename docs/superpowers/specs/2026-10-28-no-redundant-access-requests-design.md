@@ -16,6 +16,9 @@ for more than the user has, or will have once their pending requests are approve
 
 ## The rule
 
+> **Note, 2026-10-29.** Decided after implementation by the user: a request under a different role always goes through,
+> even when it repeats a permission pending under another role (e.g. `developer`). The `pending` reason was therefore removed; reasons are `duplicate` then `granted`.
+
 Relations are ranked `viewer` < `editor` < `admin`. A requested permission (object_type, object_id, relation) is
 **redundant**, and must not be submitted, when any of these holds:
 

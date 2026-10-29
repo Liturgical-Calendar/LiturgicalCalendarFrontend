@@ -18,6 +18,9 @@ also fixes the approval path's ignored return value.
 
 ## Global Constraints
 
+> **Note, 2026-10-29.** Decided after implementation by the user: a request under a different role always goes through,
+> even when it repeats a permission pending under another role (e.g. `developer`). The `pending` reason was therefore removed; reasons are `duplicate` then `granted`.
+
 - Three PRs, all targeting `development`, in this merge order:
   1. **API PR A:** branch `fix/no-redundant-access-requests` (already created from `origin/development`).
   2. **API PR B:** branch `feat/direct-grant-assigns-role`, from `origin/development`.

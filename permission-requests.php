@@ -223,7 +223,6 @@ if (!$authHelper->emailVerified) {
                 permissionsTruncated: <?php echo json_encode(_('This request had more than %1$d permissions; only the first %2$d are shown.'), $jsonFlags); ?>,
                 unknownError: <?php echo json_encode(_('Unknown error'), $jsonFlags); ?>,
                 skipGranted: <?php echo json_encode(_('You already have this access (or higher).'), $jsonFlags); ?>,
-                skipPending: <?php echo json_encode(_('This access (or higher) is already in one of your pending requests.'), $jsonFlags); ?>,
                 skipDuplicate: <?php echo json_encode(_('Already covered by another permission in this request.'), $jsonFlags); ?>,
                 skipUnknown: <?php echo json_encode(_('Not needed.'), $jsonFlags); ?>,
                 skippedHeading: <?php echo json_encode(_('These permissions were left out of your request:'), $jsonFlags); ?>,

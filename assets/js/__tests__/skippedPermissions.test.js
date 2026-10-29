@@ -11,7 +11,6 @@ import { SKIP_REASONS, readSubmitOutcome, skipReasonText } from '../skippedPermi
 
 const I18N = {
     skipGranted:   'Already granted',
-    skipPending:   'Already pending',
     skipDuplicate: 'Duplicate',
     skipUnknown:   'Skipped'
 };
@@ -19,21 +18,21 @@ const I18N = {
 const SKIP = { object_type: 'diocesan_calendar', object_id: 'roma_it', relation: 'editor', reason: 'granted' };
 
 describe('SKIP_REASONS', () => {
-    it('lists the three reasons the API emits', () => {
-        expect(SKIP_REASONS).toEqual(['granted', 'pending', 'duplicate']);
+    it('lists the two reasons the API emits', () => {
+        expect(SKIP_REASONS).toEqual(['granted', 'duplicate']);
     });
 });
 
 describe('skipReasonText', () => {
     it('maps each reason to its key', () => {
         expect(skipReasonText('granted', I18N)).toBe('Already granted');
-        expect(skipReasonText('pending', I18N)).toBe('Already pending');
         expect(skipReasonText('duplicate', I18N)).toBe('Duplicate');
     });
 
     it('falls back to skipUnknown for an unknown reason or undefined', () => {
         expect(skipReasonText('whatever', I18N)).toBe('Skipped');
         expect(skipReasonText(undefined, I18N)).toBe('Skipped');
+        expect(skipReasonText('pending', I18N)).toBe('Skipped');
     });
 });
 

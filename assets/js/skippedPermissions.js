@@ -6,7 +6,7 @@
  *
  *   {
  *     "skipped_permissions": [
- *       { "object_type": "…", "object_id": "…", "relation": "…", "reason": "granted|pending|duplicate" }
+ *       { "object_type": "…", "object_id": "…", "relation": "…", "reason": "granted|duplicate" }
  *     ],
  *     "role_only": false
  *   }
@@ -23,14 +23,13 @@
  * Every reason the API gives for skipping a permission.
  * @type {ReadonlyArray<string>}
  */
-export const SKIP_REASONS = Object.freeze(['granted', 'pending', 'duplicate']);
+export const SKIP_REASONS = Object.freeze(['granted', 'duplicate']);
 
 /**
  * The localized strings skipReasonText() needs.
  *
  * @typedef {Object} SkippedPermissionsMessages
  * @prop {string} skipGranted   The user already holds this permission.
- * @prop {string} skipPending   A request for it is already pending.
  * @prop {string} skipDuplicate It was listed more than once in this request.
  * @prop {string} skipUnknown   Any other reason.
  */
@@ -54,8 +53,6 @@ export function skipReasonText(reason, i18n) {
     switch (reason) {
         case 'granted':
             return i18n.skipGranted;
-        case 'pending':
-            return i18n.skipPending;
         case 'duplicate':
             return i18n.skipDuplicate;
         default:

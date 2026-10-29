@@ -202,8 +202,9 @@ When `ApiClient` listens to `ApiOptions`, the `Accept-Language` header is set au
 
 ### Redundant access requests
 
-The API drops permissions that are already granted, already pending (any role) or duplicated, and reports them in `skipped_permissions`
-(see `assets/js/skippedPermissions.js`). A user lacking the role still gets a `role_only` request, and an all-redundant request is a 409,
+The API drops permissions that are already granted or duplicated within the same request, and reports them in `skipped_permissions`
+(see `assets/js/skippedPermissions.js`). Requests under different roles never block each other;
+a second pending request for the same role is refused, as before. A user lacking the role still gets a `role_only` request, and an all-redundant request is a 409,
 which `permission-requests.js` shows as a warning without resetting the form or leaving resubmit mode.
 
 ### Rite awareness
