@@ -226,7 +226,7 @@ if (!$authHelper->emailVerified) {
                 skipPending: <?php echo json_encode(_('This access (or higher) is already in one of your pending requests.'), $jsonFlags); ?>,
                 skipDuplicate: <?php echo json_encode(_('Already covered by another permission in this request.'), $jsonFlags); ?>,
                 skipUnknown: <?php echo json_encode(_('Not needed.'), $jsonFlags); ?>,
-                skippedHeading: <?php echo json_encode(_('These permissions were not requested:'), $jsonFlags); ?>,
+                skippedHeading: <?php echo json_encode(_('These permissions were left out of your request:'), $jsonFlags); ?>,
                 allRedundant: <?php echo json_encode(_('You already have, or have already requested, all of these permissions. Nothing was submitted.'), $jsonFlags); ?>,
                 roleOnly: <?php echo json_encode(_('You already have these permissions; your request asks for the role only.'), $jsonFlags); ?>,
                 // Table headers

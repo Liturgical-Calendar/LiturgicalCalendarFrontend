@@ -101,7 +101,7 @@ test.describe('19 — redundant access requests', () => {
             await expect(warning).toBeVisible();
             await expect(warning).toContainText(i18n.allRedundant);
             await expect(warning).toContainText(i18n.skipGranted);
-            await expect(warning).toContainText('IT');
+            await expect(warning.locator('li code')).toContainText('IT');
             await expect(page.locator('#formAlerts .alert-success')).toHaveCount(0);
 
             // The form is kept for the user to change.
