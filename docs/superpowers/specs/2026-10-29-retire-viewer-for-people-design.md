@@ -91,35 +91,50 @@ stops depending on it for read access (below). No API endpoint gates a read on `
 
 ### The sweep
 
-A script under `bin/` (or wherever the existing reconcilers are invoked), modelled on `ResourceTuplePurgeReconciler` and
-`CascadeReconciler`:
+The script is `scripts/retire-viewer-tuples.php` in the API repo. The work itself is `ViewerRetirementSweep` and `ViewerRetirementCli`
+in `src/Services/`, so PHPStan and the tests cover it.
 
-- **Dry run by default.** Without `--apply` it lists every `viewer` tuple on a `user:` subject, and every pending request
-  that contains `viewer`, with what it would do to each.
-- **With `--apply`:**
-    - deletes each `user:*` `viewer` tuple through the outbox (`DELETE_TUPLE`), so a failed delete is retried rather than
-      lost;
-    - rewrites each pending request's `permissions` without the `viewer` entries;
-    - rejects a pending request left empty, with the review note from decision 4 and a system reviewer id such as
-      `system:viewer-retirement`, the way `cascadeRevokeByRole()` records `system:cascade`;
-    - then, for each person whose `viewer` tuples it deleted, calls `RoleCascadeService::maybeCascadeRoleRevoke()` for
-      each role they hold. Since LiturgicalCalendarAPI#1048 the cascade counts only `editor` and `admin` tuples for
-      `calendar_editor` and `test_editor`. For `developer` it counts every tuple, and none are left once the viewers
-      are deleted. So a role held only through `viewer` is revoked in Zitadel, and its approved requests are marked
-      revoked, while a role backed by write access stays. The dry run lists these role revocations in their own
-      section, so they can be reviewed before `--apply`;
-    - writes one audit-log entry per change.
-- **Idempotent.** A second run finds nothing to do.
-- Listing `viewer` tuples: use OpenFGA `read` with a type filter and keep only `user:` subjects. Do not enumerate users.
+- **Dry run by default.** It is a dry run unless `--apply` is passed; any other argument also means a dry run. The dry run lists:
+    - every `viewer` tuple on a `user:` subject;
+    - the Zitadel roles read for each holder;
+    - every pending request that contains `viewer`, with what it would drop and keep;
+    - the roles it would revoke;
+    - the queued `viewer` writes in the outbox, which are not touched and would recreate tuples after the sweep.
+- **What it reads.** It reads the whole OpenFGA store with no tuple key, paging through the continuation token, and keeps only `viewer` tuples
+  on `user:` subjects. It skips the `user:*` wildcard, which means public access. OpenFGA Read rejects a tuple key that has a relation but no
+  object, which is why it filters itself.
+- **Deletes.** Tuple deletes are synchronous. A delete falls back to an outbox `DELETE_TUPLE` row only when it fails.
+- **Pending requests.** `viewer` entries are removed from each pending request. Malformed entries are kept as stored. A request left empty is
+  rejected, with the reviewer id `system:viewer-retirement` and the review note from decision 4.
+- **Roles.** A role is revoked only when a deleted `viewer` tuple sits in its scope and no justifying tuple remains, counting queued
+  editor/admin writes as justifying. Roles are read through a strict Zitadel read: any failure aborts the plan, with exit code 1, because an
+  unreadable role list must not pass for an empty one. The revocation goes through `RoleCascadeService::maybeCascadeRoleRevoke()`. Since
+  LiturgicalCalendarAPI#1048 the cascade counts only `editor` and `admin` tuples for `calendar_editor` and `test_editor`, while for
+  `developer` it counts every tuple.
+- **Revocations that did not happen.** Every planned revocation that did not happen is reported with its user, role and reason:
+    - `deferred`: only for `developer`, when the user's in-scope viewer delete was queued rather than done;
+    - `kept`: the cascade's re-check kept the role;
+    - `failed`: the revoke failed, or the role was still present on the strict re-read.
 
-A Doctrine migration is the wrong tool here: it cannot safely call OpenFGA, and the change must be reviewable before it
-applies.
+    Each of these outcomes gets an audit entry, and together they make the script exit with code 2.
+
+- **Audit.** One audit-log entry is written per change.
+- **Failure handling.** One item failing does not stop the role phase. An abort prints the counts so far and the revocations not carried out.
+- **Idempotent**, except for deletes still queued in the outbox.
+
+A Doctrine migration is the wrong tool here: it cannot safely call OpenFGA, and the change must be reviewable before it applies.
 
 ### Release order
 
 1. API PR: refuse `viewer` from people, and add the sweep. Deploy.
 2. Frontend PR: role-based read, and drop `viewer` from the forms. Deploy.
 3. Run the sweep in production: dry run, review the listing, then `--apply`.
+
+Runbook notes for step 3:
+
+- Before `--apply`, confirm that the production OpenFGA check-query cache is off, so `ListObjects` reflects the deletes just made.
+- Capture stdout, for example with `| tee`.
+- Approval of an old pending request containing `viewer` is now refused with a 400, so such a request has to be rejected or left to the sweep.
 
 Until step 3 nobody loses anything they use. After step 2 read access no longer depends on `viewer` tuples, so deleting
 them changes nothing anyone sees.
