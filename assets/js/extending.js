@@ -41,6 +41,9 @@ import { widerRegionsForNation } from './widerRegionForNation.js';
 import { eligibleWiderRegions, nationWiderRegions, widerRegionKey, widerRegionLabelById, widerRegionRoster, widerRegionsByNation } from './widerRegions.js';
 import { buildWiderRegionLabelFields, country2flag, labelFieldsFor, labelsToSave, m49Suggestions, readLabelInputs, rebuiltLabelState } from './widerRegionLabels.js';
 import { isOfficialLocale, newNationalCalendarLocaleOptions, unofficialLocales } from './nationalCalendarLocales.js';
+import { breadcrumbSegments, dioceseNation, nationDioceses, parseDeepLink, widerRegionOpeningLocale } from './particularCalendarsTree.js';
+import { diocesesByNation } from './dioceseObjectIdPicker.js';
+import { AMBROSIAN_RITE, ROMAN_RITE } from './riteScopedObjectId.js';
 import {
     findProspectiveRegion,
     idToWords,
@@ -516,9 +519,9 @@ const cldrDataRequest = new Request('https://raw.githubusercontent.com/unicode-o
 const urlParams = new URLSearchParams(window.location.search);
 const choice = urlParams.get('choice');
 
-const fetchRequests = [
-    fetch(missalsRequest)
-];
+// Without a `choice` the page is the particular calendars navigator (#66,
+// particularCalendarsNavigator.js), which has none of the forms these fetches feed.
+const fetchRequests = choice ? [fetch(missalsRequest)] : [];
 
 if (choice === 'diocesan') {
     fetchRequests.push(fetch(tzdataRequest));
@@ -542,7 +545,7 @@ Promise.all(fetchRequests).then(responses => {
         }
     }));
 }).then(data => {
-    if (data[0].hasOwnProperty('litcal_missals')) {
+    if (data[0]?.hasOwnProperty('litcal_missals')) {
         console.log('retrieved /missals metadata:');
         console.log(data[0]);
         MissalsIndex = data[0].litcal_missals;
@@ -570,8 +573,186 @@ Promise.all(fetchRequests).then(responses => {
     toastr["error"](error, Messages['Error']);
 }).finally(() => {
     document.querySelector('#overlay').classList.add('hidden');
-});
+}).then(whenDomReady).then(() => openDeepLink(window.location.search));
 
+/**
+ * Particular calendars navigator deep links (#66): `?choice=…&calendar=…[&locale=…][&rite=…]`
+ * (see `actionUrl()` in particularCalendarsTree.js). Each opens the calendar by filling the form's
+ * own controls and dispatching the `change` a user edit dispatches, so the forms' existing
+ * handlers do the loading.
+ */
+
+/**
+ * Resolves once DOMContentLoaded has run (and with it domContentLoadedCallback's multiselects).
+ * @returns {Promise<void>}
+ */
+function whenDomReady() {
+    if (document.readyState !== 'loading') return Promise.resolve();
+    return new Promise((resolve) => document.addEventListener('DOMContentLoaded', () => resolve(), { once: true }));
+}
+
+/**
+ * Sets a control's value and dispatches the bubbling `change` the document-level handlers listen for.
+ * @param {HTMLInputElement|HTMLSelectElement} control
+ * @param {string} value
+ */
+function setValueAsUser(control, value) {
+    control.value = value;
+    control.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
+/**
+ * @param {string} listId - A `<datalist>` or `<select>` id
+ * @param {(value: string) => boolean} matches
+ * @returns {boolean} Whether any of its options' values matches
+ */
+function offersOption(listId, matches) {
+    return Array.from(document.querySelectorAll(`#${listId} > option`)).some((option) => matches(option.value));
+}
+
+/**
+ * An existing region loads one locale at a time, so a link without a locale (see
+ * widerRegionOpeningLocale()) opens one; a prospective region opens by its bare id.
+ * @param {{calendar: string, locale: string|null}} link
+ * @returns {boolean} False when the region is neither an existing nor a prospective one, or
+ *   does not offer the link's locale
+ */
+function openWiderRegionDeepLink({ calendar, locale }) {
+    const id = normalizeWiderRegionKey(calendar);
+    if (!offersOption('WiderRegionsList', (value) => value.split(' - ')[0] === id)) return false;
+    if (locale && !offersOption('WiderRegionsList', (value) => value === `${id} - ${locale}`)) return false;
+    const openingLocale = locale ?? widerRegionOpeningLocale(id, LitCalMetadata, Messages.LOCALE_WITH_REGION);
+    setValueAsUser(document.querySelector('#widerRegionCalendarName'), openingLocale ? `${id} - ${openingLocale}` : id);
+    return true;
+}
+
+/**
+ * @param {{calendar: string}} link
+ * @returns {boolean} False when the nation is not one the national form offers
+ */
+function openNationalDeepLink({ calendar }) {
+    const nation = calendar.toUpperCase();
+    if (!offersOption('nationalCalendarsList', (value) => value === nation)) return false;
+    setValueAsUser(document.querySelector('#nationalCalendarName'), nation);
+    return true;
+}
+
+/**
+ * Selects the diocese's nation, then the diocese, as a user would. The form reads and writes
+ * `/data/diocese/{id}`, the Roman rite's path, so it opens Roman-rite dioceses only.
+ * @param {{calendar: string, rite: string}} link
+ * @returns {boolean} False for a diocese the form cannot open: not of the Roman rite (by the link
+ *   or by its existing calendar), unknown to both the metadata and the world's dioceses, or of a
+ *   nation with no national calendar
+ */
+function openDiocesanDeepLink({ calendar, rite }) {
+    const existing = LitCalMetadata.diocesan_calendars.find((entry) => entry.calendar_id === calendar);
+    if (rite !== ROMAN_RITE || (existing && (existing.rite ?? ROMAN_RITE) !== ROMAN_RITE)) return false;
+    const worldDioceses = diocesesByNation({ catholic_dioceses_latin_rite: DiocesesList });
+    const nation = dioceseNation(calendar, LitCalMetadata, worldDioceses);
+    if (nation === null
+        || !offersOption('diocesanCalendarNationalDependency', (value) => value === nation)
+        || !nationDioceses(nation, worldDioceses).some((diocese) => diocese.id === calendar)) {
+        return false;
+    }
+    setValueAsUser(document.querySelector('#diocesanCalendarNationalDependency'), nation);
+    // The nation's `change` rebuilt #DiocesesList; its options carry the id in data-value.
+    const option = Array.from(document.querySelectorAll('#DiocesesList > option'))
+        .find((candidate) => candidate.dataset.value === calendar);
+    if (!option) return false;
+    setValueAsUser(document.querySelector('#diocesanCalendarDioceseName'), option.value);
+    return true;
+}
+
+/**
+ * Opens the calendar a deep link names, or says it cannot. A form page without `calendar`,
+ * `locale` or `rite` in its query string is not a deep link and is left alone.
+ * @param {string} search - `location.search`
+ * @returns {void}
+ */
+function openDeepLink(search) {
+    const params = new URLSearchParams(search);
+    if (!['calendar', 'locale', 'rite'].some((key) => params.has(key))) return;
+
+    const link = parseDeepLink(search);
+    const openers = {
+        widerRegion: openWiderRegionDeepLink,
+        national: openNationalDeepLink,
+        diocesan: openDiocesanDeepLink,
+    };
+    const opened = link !== null && link.choice === choice && openers[link.choice](link);
+    if (!opened) {
+        toastr["error"](Messages['Calendar not found'], Messages['Error']);
+        document.querySelector('#overlay').classList.add('hidden');
+    }
+}
+
+/**
+ * Renders the `#particularCalendarsBreadcrumb` nav from `breadcrumbSegments()`'s output (#66
+ * Part 5): a Bootstrap `<ol class="breadcrumb">`, real `<a>` elements for every segment but the
+ * last, which is plain text with `aria-current="page"`. Built with createElement/textContent,
+ * since segment labels come from calendar data. An empty list (no calendar loaded, or the hub
+ * itself) leaves the nav empty.
+ * @param {import('./particularCalendarsTree.js').BreadcrumbSegment[]} segments
+ * @returns {void}
+ */
+function renderBreadcrumb(segments) {
+    const nav = document.querySelector('#particularCalendarsBreadcrumb');
+    if (!nav) return;
+
+    const list = document.createElement('ol');
+    list.className = 'breadcrumb';
+    segments.forEach((segment) => {
+        const item = document.createElement('li');
+        item.className = 'breadcrumb-item';
+        if (segment.href === null) {
+            item.classList.add('active');
+            item.setAttribute('aria-current', 'page');
+            item.textContent = segment.label;
+        } else {
+            const link = document.createElement('a');
+            link.href = segment.href;
+            link.textContent = segment.label;
+            item.append(link);
+        }
+        list.append(item);
+    });
+    nav.replaceChildren(...(segments.length > 0 ? [list] : []));
+}
+
+/**
+ * Rebuilds the breadcrumb above the current form for the calendar it just loaded (or is about
+ * to create). Called from the same handlers that set `API.key` (#66 Part 5): the shared
+ * region/national name-change handler, and the diocesan name-change handler. `breadcrumbSegments()`
+ * returns English placeholder labels for the hub and, on an Ambrosian diocese, the rite segment
+ * (the same convention the navigator's group labels use); this localizes them via `Messages`
+ * before rendering.
+ * @param {string} calendarKey - `API.key`; a falsy value clears the breadcrumb
+ * @param {string} [rite] - `roman` (default) or `ambrosian`; diocesan only
+ * @returns {void}
+ */
+function updateBreadcrumb(calendarKey, rite = ROMAN_RITE) {
+    if (!calendarKey) {
+        renderBreadcrumb([]);
+        return;
+    }
+    const worldDioceses = choice === 'diocesan'
+        ? diocesesByNation({ catholic_dioceses_latin_rite: DiocesesList })
+        : undefined;
+    const segments = breadcrumbSegments({
+        choice,
+        calendar: calendarKey,
+        rite,
+        metadata: LitCalMetadata,
+        uiLocale: Messages.LOCALE_WITH_REGION,
+        worldDioceses,
+    });
+    segments[0].label = Messages['Breadcrumb - Particular Calendars'] ?? segments[0].label;
+    if (choice === 'diocesan' && rite === AMBROSIAN_RITE && segments.length === 3) {
+        segments[1].label = Messages['Navigator - ambrosian'] ?? segments[1].label;
+    }
+    renderBreadcrumb(segments);
+}
 
 /**
  * Build the RegionalData API path from the current category and key.
@@ -2511,6 +2692,7 @@ const regionalNationalCalendarNameChanged = (ev) => {
         // Clear API state so downstream auth/UI logic treats this as "no calendar selected"
         // Use API.clear() to bypass Proxy validation which rejects empty strings
         API.clear();
+        updateBreadcrumb('');
 
         return;
     }
@@ -2537,6 +2719,7 @@ const regionalNationalCalendarNameChanged = (ev) => {
     API.category = category;
     // our proxy will take care of splitting locale from wider region, when we are setting a wider region key
     API.key = ev.target.value;
+    updateBreadcrumb(API.key);
     console.log(`regionalNationalCalendarNameChanged called, API.category set to ${API.category} and API.key set to ${API.key}. Proceeding to call fetchEventsAndCalendarData...`);
     fetchEventsAndCalendarData();
 }
@@ -4240,6 +4423,7 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
         }
         API.category = 'diocese';
         API.key = selectedOption.getAttribute('data-value');
+        updateBreadcrumb(API.key);
         console.log('selected diocese with key = ' + API.key);
         if (LitCalMetadata.diocesan_calendars_keys.includes(API.key)) {
             API.method = 'PATCH';
@@ -4283,6 +4467,7 @@ const diocesanCalendarDioceseNameChanged = (ev) => {
         // Disable save button when no valid diocese is selected
         const saveBtnInvalid = document.getElementById('saveDiocesanCalendar_btn');
         if (saveBtnInvalid) saveBtnInvalid.disabled = true;
+        updateBreadcrumb('');
     }
 }
 

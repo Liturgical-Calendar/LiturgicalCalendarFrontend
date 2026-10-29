@@ -269,24 +269,9 @@ asort($langsAssoc);
                                 <span><?php echo _('Decrees'); ?></span>
                             </a>
 
-                            <div class="sb-sidenav-menu-heading text-white-50">
-                                <?php echo _('Particular Calendars'); ?>
-                            </div>
-                            <?php
-                            // Get current choice parameter for extending.php active state
-                            $extendingChoice = $_GET['choice'] ?? '';
-                            ?>
-                            <a class="nav-link<?php echo $currentPage === 'extending' && $extendingChoice === 'widerRegion' ? ' active' : ''; ?>" href="extending.php?choice=widerRegion">
-                                <i class="sb-nav-link-icon fas fa-fw fa-globe-americas text-info"></i>
-                                <span><?php echo _('Wider Region'); ?></span>
-                            </a>
-                            <a class="nav-link<?php echo $currentPage === 'extending' && $extendingChoice === 'national' ? ' active' : ''; ?>" href="extending.php?choice=national">
-                                <i class="sb-nav-link-icon fas fa-fw fa-flag text-danger"></i>
-                                <span><?php echo _('National'); ?></span>
-                            </a>
-                            <a class="nav-link<?php echo $currentPage === 'extending' && $extendingChoice === 'diocesan' ? ' active' : ''; ?>" href="extending.php?choice=diocesan">
-                                <i class="sb-nav-link-icon fas fa-fw fa-church text-secondary"></i>
-                                <span><?php echo _('Diocesan'); ?></span>
+                            <a class="nav-link<?php echo $currentPage === 'extending' ? ' active' : ''; ?>" href="extending.php">
+                                <i class="sb-nav-link-icon fas fa-fw fa-sitemap text-info"></i>
+                                <span><?php echo _('Particular Calendars'); ?></span>
                             </a>
                         <?php endif; // end $sidebarHasCalendarRole ?>
 
