@@ -166,14 +166,18 @@ gettext (frontend).
 
 **Algorithm:**
 
-1. **Read the tuples.** Page through `readTuples('', '', 'viewer', 100, $token)` until the token is empty, keeping only
-   tuples whose user starts with `user:`.
+1. **Read the tuples.** Page through an unfiltered read, `readTuples('', '', null, 100, $token)`, until the token is
+   empty. Empty `$user` and `$object` and a null `$relation` make the wrapper send no `tuple_key`, which reads the whole
+   store: OpenFGA rejects a tuple key that has a relation but no object. The sweep itself keeps only the tuples whose
+   relation is `viewer` and whose user starts with `user:`.
 2. **Find the pending requests to change.** Read every pending request. For each one containing `viewer`, drop those
    entries. What is left decides the action: `rewrite`, or `reject` when nothing is left.
 3. **Find the roles to revoke**, for each user who has a `viewer` tuple:
     - Take each role they hold (`getUserRoles`) that is in `ROLE_OBJECT_TYPES`.
-    - For `calendar_editor` and `test_editor`, list the role when the user has no `editor` or `admin` tuple in the
-      role's types. Use the same `listObjects` check as `RoleCascadeService::userHasAnyTupleInRoleScope()`.
+    - For `calendar_editor` and `test_editor`, list the role only when the user has no committed `editor` or `admin`
+      tuple in the role's types, and no queued `editor` or `admin` write for those types in the outbox. Use the same
+      checks as `RoleCascadeService::maybeCascadeRoleRevoke()`: `userHasAnyTupleInRoleScope()` and
+      `OutboxRepository::hasPendingWrite()`.
     - For `developer`, list it when the user has no other tuple in its types besides the `viewer` tuples being deleted.
 4. **Apply.** Delete each tuple. A benign "not found" counts as done. Any other failure enqueues an outbox
    `DELETE_TUPLE`, the way `RoleCascadeService::deleteTuplesInRoleScope()` does. Then rewrite or reject each pending

@@ -136,8 +136,10 @@ Runbook notes for step 3:
 - Capture stdout, for example with `| tee`.
 - Approval of an old pending request containing `viewer` is now refused with a 400, so such a request has to be rejected or left to the sweep.
 
-Until step 3 nobody loses anything they use. After step 2 read access no longer depends on `viewer` tuples, so deleting
-them changes nothing anyone sees.
+Until step 3 nobody loses anything they use. After step 2 read access no longer depends on `viewer` tuples, so for
+anyone whose role is backed by write access, deleting them changes nothing they see. The exception is intended: a person
+who held a role only through `viewer` loses that role in step 3, and with it their read-only admin access, once their
+token next refreshes (decision 4).
 
 ## Frontend design (LiturgicalCalendarFrontend)
 
