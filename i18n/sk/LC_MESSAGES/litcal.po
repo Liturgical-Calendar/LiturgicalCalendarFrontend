@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-10-29 11:32+0000\n"
-"PO-Revision-Date: 2026-10-29 11:32+0000\n"
+"PO-Revision-Date: 2026-10-29 11:43+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Slovak <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/sk/>\n"
@@ -4029,32 +4029,31 @@ msgstr "Neznáma chyba"
 
 #: permission-requests.php:225
 msgid "You already have this access (or higher)."
-msgstr ""
+msgstr "Už máš tento prístup (alebo vyšší)."
 
 #: permission-requests.php:226
 msgid "Already covered by another permission in this request."
-msgstr ""
+msgstr "Už je to kryté iným oprávnením v tejto žiadosti."
 
 #: permission-requests.php:227
-#, fuzzy
-#| msgid "Not yet created"
 msgid "Not needed."
-msgstr "Ešte nevytvorené"
+msgstr "Nie je potrebné."
 
 #: permission-requests.php:228
 msgid "These permissions were left out of your request:"
-msgstr ""
+msgstr "Tieto oprávnenia boli vynechané z tvojej žiadosti:"
 
 #: permission-requests.php:229
 msgid ""
 "You already have, or have already requested, all of these permissions. "
 "Nothing was submitted."
 msgstr ""
+"Už máš, alebo si už vyžiadal všetky tieto oprávnenia. Nič nebolo odoslané."
 
 #: permission-requests.php:230
 msgid ""
 "You already have these permissions; your request asks for the role only."
-msgstr ""
+msgstr "Už máš tieto oprávnenia; tvoja žiadosť vyžaduje iba túto rolu."
 
 #: permission-requests.php:238
 msgid "Reviewed"
