@@ -155,7 +155,10 @@ Configuration: `captainhook.json`
 
 **JavaScript:** ES6+ syntax, vanilla JS. Global variables are declared in `eslint.config.mjs` (not inline comments).
 
-**Markdown:** See [parent CLAUDE.md](../CLAUDE.md#markdown) for formatting rules.
+**Markdown:** See [parent CLAUDE.md](../CLAUDE.md#markdown) for formatting rules. Write emphasis as `_text_` and strong
+as `**text**`: those are the styles prettier produces (it has no option for either), and `.markdownlint.yaml` enforces
+them (MD049, MD050). `.prettierrc` turns off `embeddedLanguageFormatting` for Markdown, so `yarn format:md` leaves code
+samples inside documents as written.
 
 ## Authentication
 

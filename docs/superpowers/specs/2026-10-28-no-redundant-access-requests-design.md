@@ -8,12 +8,12 @@ from its `development`. One PR per repo, both targeting `development`.
 
 A user who was granted `admin` on `national_calendar` `roman/FR` could log in later and request exactly the same
 access again, producing a new pending request. Nothing stops it: the request form never looks at what the user
-already holds, and the API only refuses a second *pending* request for the same **role**
+already holds, and the API only refuses a second _pending_ request for the same **role**
 (`AccessRequestRepository::hasPendingRequest()`), not one for permissions already granted.
 
 Unnecessary requests cost reviewers time and make the queue misleading. A request is only meaningful when it asks
-for more than the user has. *(Originally "…or will have once their pending requests are approved"; superseded
-2026-10-29: pending requests under other roles are not consulted.)*
+for more than the user has. _(Originally "…or will have once their pending requests are approved"; superseded
+2026-10-29: pending requests under other roles are not consulted.)_
 
 ## The rule
 
@@ -30,7 +30,7 @@ Relations are ranked `viewer` < `editor` < `admin`. A requested permission (obje
    defining "viewer" as anyone given viewer, editor or admin, and "editor" as anyone given editor or admin.) So one
    global ranking is valid for every type, and asking OpenFGA whether the user has the requested tier is exactly
    `OpenFgaClient::check("user:{sub}", relation, "{object_type}:{object_id}") === true`.
-2. ~~**pending**~~ — *superseded 2026-10-29, see the note above: other pending requests are no longer consulted.*
+2. ~~**pending**~~ — _superseded 2026-10-29, see the note above: other pending requests are no longer consulted._
    Originally: another of the user's requests with `status = 'pending'` (any role) contains a permission on the same
    object_type + object_id with a relation of equal or higher rank.
 3. **duplicate** — another permission in the same submission targets the same object with a higher relation, or
@@ -46,8 +46,8 @@ for a user who lacks the requested role:
 
 - The API reads the user's roles from the token (`oidc_user.roles`), the same source `AuthorizationMiddleware` gates
   routes on, so "has the role" means exactly what the rest of the API treats as having it. The global `admin` role
-  counts as holding every role, as it does in the middleware. *(Changed during planning from a
-  `ZitadelService::getUserRoles()` lookup: the token is authoritative for access already and needs no external call.)*
+  counts as holding every role, as it does in the middleware. _(Changed during planning from a
+  `ZitadelService::getUserRoles()` lookup: the token is authoritative for access already and needs no external call.)_
 - **User has the role:** the rule above applies as written.
 - **User lacks the role:** the permissions are filtered the same way. If none is left, the request is still created,
   with the de-duplicated permissions as submitted (the API requires at least one, and writing a tuple that already
@@ -75,8 +75,8 @@ holding `editor` and asking for `admin` is allowed; holding `editor` and asking 
 - Cleaning up redundant pending requests that already exist (for example the second `roman/FR` admin request). The
   reviewer rejects those by hand.
 - Changing the existing "one pending request per role" rule. It stays as it is. The new rule covers what it
-  misses: permissions already granted. *(Originally also overlap with pending requests under a different role;
-  superseded 2026-10-29: requests under different roles never block each other.)*
+  misses: permissions already granted. _(Originally also overlap with pending requests under a different role;
+  superseded 2026-10-29: requests under different roles never block each other.)_
 
 ## Anti-goals
 
@@ -95,13 +95,13 @@ in a small, unit-testable service (suggested: `Services/AccessRequestRedundancyF
 `OpenFgaClient` (via the existing `ResolvesFgaClient` concern) and the `AccessRequestRepository`.
 
 Order of checks: **duplicate** first (collapse within the submission), then **granted**. The first reason that
-applies is the one reported. *(Originally duplicate, then pending, then granted; the pending check was removed
-2026-10-29.)*
+applies is the one reported. _(Originally duplicate, then pending, then granted; the pending check was removed
+2026-10-29.)_
 
 ### Pending lookup (superseded 2026-10-29)
 
-*Removed with the `pending` reason: the filter no longer reads other pending requests, and
-`getPendingPermissions()` was not kept. The original design follows.*
+_Removed with the `pending` reason: the filter no longer reads other pending requests, and
+`getPendingPermissions()` was not kept. The original design follows._
 
 Add a repository method returning the permissions of the user's pending requests, for example
 `getPendingPermissions(string $userId, ?string $excludeRequestId = null): array`. It decodes the `permissions` JSON
@@ -117,8 +117,8 @@ failure is logged, like `ResourceAdminService::logFailure()` does. Respect the w
 remaining permissions fail open the same way.
 
 Global admins (Zitadel `admin` role) are treated like everyone else: only FGA tuples count as "granted". A global
-admin who requests access gets the same filtering by tuples. *(My call: the role gives them every capability anyway,
-so they have no reason to request, and special-casing them adds a path to test for no benefit.)*
+admin who requests access gets the same filtering by tuples. _(My call: the role gives them every capability anyway,
+so they have no reason to request, and special-casing them adds a path to test for no benefit.)_
 
 ### Responses
 
@@ -128,7 +128,7 @@ Each skipped permission is reported as:
 { "object_type": "national_calendar", "object_id": "roman/FR", "relation": "admin", "reason": "granted" }
 ```
 
-`reason` is one of `granted` | `duplicate`. *(Originally also `pending`; removed 2026-10-29.)*
+`reason` is one of `granted` | `duplicate`. _(Originally also `pending`; removed 2026-10-29.)_
 
 - **Some kept:** `201 Created`, the request is created with the kept permissions only, and the body gains
   `"skipped_permissions": [ … ]`. The field is present (possibly empty) on every 201.
@@ -157,11 +157,12 @@ In `assets/js/permission-requests.js`:
   each skipped permission. Use the badge/type/id rendering `summarizePermissions()` already produces, followed by a
   translated reason:
     - `granted` → "You already have this access (or higher)."
-    - ~~`pending` → "This access (or higher) is already in one of your pending requests."~~ *Removed 2026-10-29
-      with the `pending` reason; an unknown reason falls back to "Not needed."*
+    - ~~`pending` → "This access (or higher) is already in one of your pending requests."~~ _Removed 2026-10-29
+      with the `pending` reason; an unknown reason falls back to "Not needed."_
     - `duplicate` → "Already covered by another permission in this request."
 
-  The form resets as it does today.
+    The form resets as it does today.
+
 - **201 with `role_only: true`:** show the success alert plus an info alert saying the permissions are already in
   place and the request asks for the role alone.
 - **409:** do not reset the form. Show a warning alert with the API message replaced by a translated equivalent and
@@ -200,8 +201,8 @@ permissions page) must also give the user the matching Zitadel role, so permissi
 
 ## Follow-up (issue, not this PR)
 
-*Superseded by LiturgicalCalendarFrontend#617 (2026-10-29): Relation is pruned by what the user holds only, and a role
-that already has a pending request is disabled in the form, pointing to that request. The original text follows.*
+_Superseded by LiturgicalCalendarFrontend#617 (2026-10-29): Relation is pruned by what the user holds only, and a role
+that already has a pending request is disabled in the form, pointing to that request. The original text follows._
 
 Reorder each permission row to **Calendar scope → Calendar ID → Relation** (Relation is first today). Keep
 Relation disabled until both scope and ID are chosen, then prune it to the relations still meaningful for that
