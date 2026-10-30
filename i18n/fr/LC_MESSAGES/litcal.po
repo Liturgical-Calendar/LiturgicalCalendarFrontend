@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-09-28 10:41+0000\n"
-"PO-Revision-Date: 2026-09-28 13:42+0000\n"
-"Last-Translator: \"John R. D'Orazio\" <priest@johnromanodorazio.com>\n"
+"POT-Creation-Date: 2026-10-29 16:46+0000\n"
+"PO-Revision-Date: 2026-10-30 16:55+0000\n"
+"Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: French <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/fr/>\n"
 "Language: fr\n"
@@ -128,13 +128,13 @@ msgstr "Paramètres de requête disponibles sur tous les chemins %1$s"
 #. translators: part of page title - refers to the Catholic liturgical calendar
 #: index.php:65 usage.php:35 examples.php:106 liturgyOfAnyDay.php:23
 #: layout/header.php:257 includes/change-request-i18n.php:56
-#: admin-permissions.php:85 admin-permissions.php:417 admin-tests.php:144
-#: admin-tests.php:350 permission-requests.php:256 sanctorale.php:195
+#: admin-permissions.php:86 admin-permissions.php:421 admin-tests.php:154
+#: admin-tests.php:360 permission-requests.php:291 sanctorale.php:195
 msgid "General Roman Calendar"
 msgstr "Calendrier Romain Général"
 
 #: index.php:74 layout/header.php:19 layout/header.php:229 admin-decrees.php:43
-#: admin-permissions.php:39 admin-tests.php:38 permission-requests.php:34
+#: admin-permissions.php:40 admin-tests.php:48 permission-requests.php:36
 #: admin-applications.php:34 admin-dashboard.php:40 admin-users.php:34
 #: admin-locales.php:39 admin-changes.php:46 change-requests.php:38
 #: developer-dashboard.php:35 temporale.php:25 sanctorale.php:61
@@ -310,7 +310,7 @@ msgid "Example usage of the API"
 msgstr "Exemple d'utilisation de l'API"
 
 #. translators: accordion section header - examples of web-based calendar displays
-#: usage.php:57 layout/header.php:329
+#: usage.php:57 layout/header.php:314
 msgid "Web calendar"
 msgstr "Calendrier HTML"
 
@@ -367,7 +367,7 @@ msgid "View FullCalendar (messages first)"
 msgstr "Voir l'exemple FullCalendar (messages ci-dessus)"
 
 #. translators: accordion section header - subscribing to the calendar via iCal/ICS URL
-#: usage.php:131 layout/header.php:333
+#: usage.php:131 layout/header.php:318
 msgid "Calendar subscription"
 msgstr "Abonnement au calendrier"
 
@@ -565,7 +565,7 @@ msgstr ""
 "générées à partir de l'URL d'abonnement sont plus « embellies » pour Outlook."
 
 #. translators: accordion section header - Easter date calculation tool
-#: usage.php:291 layout/header.php:337
+#: usage.php:291 layout/header.php:322
 msgid "Dates of Easter"
 msgstr "Dates de Pâques"
 
@@ -585,7 +585,7 @@ msgid "Calculate the Dates of Easter"
 msgstr "Calcule les dates de Pâques"
 
 #. translators: accordion section header - daily liturgy information and apps
-#: usage.php:327 layout/header.php:341
+#: usage.php:327 layout/header.php:326
 msgid "Liturgy of the Day"
 msgstr "Liturgie du jour"
 
@@ -908,7 +908,7 @@ msgstr "rose"
 #. translators: context = liturgical color (Ambrosian rite)
 #: src/LitColor.php:51
 msgid "morello"
-msgstr "Morello"
+msgstr "violet foncé"
 
 #. translators: context = liturgical color (Ambrosian rite)
 #: src/LitColor.php:54
@@ -1136,7 +1136,7 @@ msgstr "jour de la semaine"
 #. translators: liturgical grade 1 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: src/LitGrade.php:105 admin-decrees.php:732 sanctorale.php:275
+#: src/LitGrade.php:105 admin-decrees.php:734 sanctorale.php:275
 msgid "Commemoration"
 msgstr "Commémoration"
 
@@ -1149,7 +1149,7 @@ msgstr "Mémoire facultative"
 #. translators: liturgical grade 3 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: src/LitGrade.php:111 admin-decrees.php:720 sanctorale.php:277
+#: src/LitGrade.php:111 admin-decrees.php:722 sanctorale.php:277
 msgid "Memorial"
 msgstr "Mémoire"
 
@@ -1275,7 +1275,7 @@ msgstr "Propriété à modifier"
 
 #. translators: form field label for the name of a liturgical event
 #: src/Utilities.php:301 src/FormControls.php:156 includes/messages.php:19
-#: admin-tests.php:108 temporale.php:135
+#: admin-tests.php:118 temporale.php:135
 msgid "Name"
 msgstr "Nom"
 
@@ -1335,7 +1335,7 @@ msgid "Usage"
 msgstr "Utilisation"
 
 #. translators: link to translations page
-#: layout/header.php:51 includes/messages.php:237 admin-decrees.php:645
+#: layout/header.php:51 includes/messages.php:237 admin-decrees.php:647
 msgid "Translations"
 msgstr "Traductions"
 
@@ -1343,7 +1343,7 @@ msgstr "Traductions"
 msgid "About us"
 msgstr "À propos de nous"
 
-#: layout/header.php:71 layout/header.php:295
+#: layout/header.php:71 layout/header.php:280
 msgid "Accuracy Tests"
 msgstr "Tests de précision"
 
@@ -1356,11 +1356,11 @@ msgid "Notifications"
 msgstr "Notifications"
 
 #: layout/header.php:140 includes/change-request-i18n.php:19
-#: admin-permissions.php:142 admin-permissions.php:201
-#: admin-permissions.php:208 admin-permissions.php:215
-#: admin-permissions.php:222 admin-permissions.php:384
-#: admin-permissions.php:449 admin-tests.php:332 permission-requests.php:66
-#: permission-requests.php:208 admin-applications.php:136
+#: admin-permissions.php:145 admin-permissions.php:204
+#: admin-permissions.php:211 admin-permissions.php:218
+#: admin-permissions.php:225 admin-permissions.php:388
+#: admin-permissions.php:471 admin-tests.php:342 permission-requests.php:68
+#: permission-requests.php:215 admin-applications.php:136
 #: admin-applications.php:145 admin-applications.php:154
 #: admin-applications.php:163 admin-applications.php:228 admin-users.php:70
 #: admin-users.php:85 admin-users.php:151 admin-changes.php:156
@@ -1393,8 +1393,8 @@ msgstr "Es-tu sûr de vouloir te déconnecter ?"
 msgid "Logout"
 msgstr "Déconnexion"
 
-#: layout/header.php:188 layout/header.php:251 admin-permissions.php:485
-#: permission-requests.php:92 permission-requests.php:275 admin-users.php:144
+#: layout/header.php:188 layout/header.php:251 admin-permissions.php:507
+#: permission-requests.php:94 permission-requests.php:310 admin-users.php:144
 msgid "Developer"
 msgstr "Développeur"
 
@@ -1406,58 +1406,44 @@ msgstr "Admin"
 msgid "Dashboard"
 msgstr "Tableau de bord"
 
-#: layout/header.php:261 includes/admin-blocks.php:19 admin-permissions.php:421
-#: permission-requests.php:260 temporale.php:24 temporale.php:37
+#: layout/header.php:261 includes/admin-blocks.php:19 admin-permissions.php:425
+#: permission-requests.php:295 temporale.php:24 temporale.php:37
 msgid "Temporale"
 msgstr "Temporal"
 
-#: layout/header.php:265 includes/admin-blocks.php:37 sanctorale.php:60
+#: layout/header.php:265 includes/admin-blocks.php:32 sanctorale.php:60
 #: sanctorale.php:72
 msgid "Sanctorale"
 msgstr "Sanctoral"
 
-#: layout/header.php:269 includes/admin-blocks.php:49
+#: layout/header.php:269 includes/admin-blocks.php:44
 #: includes/admin-decrees-card.php:22 admin-decrees.php:42 admin-decrees.php:54
 msgid "Decrees"
 msgstr "Décrets"
 
-#: layout/header.php:273
+#. translators: first, linked item of the breadcrumb above a particular calendar form; points back to the navigator hub
+#: layout/header.php:274 includes/messages.php:483
 msgid "Particular Calendars"
 msgstr "Calendriers particuliers"
 
-#. translators: label for wider region calendar name field
-#: layout/header.php:281 includes/messages.php:246 includes/admin-blocks.php:63
-#: admin-permissions.php:89 admin-permissions.php:322 admin-permissions.php:411
-#: permission-requests.php:246
-msgid "Wider Region"
-msgstr "Région élargie"
-
-#: layout/header.php:285 includes/admin-blocks.php:73
-msgid "National"
-msgstr "National"
-
-#: layout/header.php:289 includes/admin-blocks.php:83
-msgid "Diocesan"
-msgstr "Diocésain"
-
-#: layout/header.php:299 includes/admin-tests-card.php:17 admin-tests.php:37
-#: admin-tests.php:49
+#: layout/header.php:284 includes/admin-tests-card.php:18 admin-tests.php:47
+#: admin-tests.php:59
 msgid "Test Definitions"
 msgstr "Définitions de test"
 
-#: layout/header.php:306
+#: layout/header.php:291
 msgid "Back to Website"
 msgstr "Retour au site"
 
-#: layout/header.php:313
+#: layout/header.php:298
 msgid "Home"
 msgstr "Accueil"
 
-#: layout/header.php:321
+#: layout/header.php:306
 msgid "Documentation"
 msgstr "Documentation"
 
-#: layout/header.php:325
+#: layout/header.php:310
 msgid "Examples of Usage"
 msgstr "Exemples d'utilisation"
 
@@ -1477,7 +1463,7 @@ msgstr "Impossible de charger les notifications"
 msgid "Just now"
 msgstr "À l'instant"
 
-#: layout/footer.php:96 admin-permissions.php:481
+#: layout/footer.php:96 admin-permissions.php:503
 msgid "Requested"
 msgstr "Demandé"
 
@@ -1561,8 +1547,8 @@ msgstr "Se souvenir de moi"
 
 #. translators: button label for canceling an action
 #: includes/login-modal.php:55 includes/messages.php:172 admin-decrees.php:581
-#: admin-decrees.php:608 admin-permissions.php:339 admin-permissions.php:365
-#: admin-tests.php:259 admin-tests.php:286 admin-tests.php:313
+#: admin-decrees.php:608 admin-permissions.php:341 admin-permissions.php:367
+#: admin-tests.php:269 admin-tests.php:296 admin-tests.php:323
 #: admin-applications.php:207 admin-users.php:112 admin-changes.php:233
 #: developer-dashboard.php:134 developer-dashboard.php:183
 #: developer-dashboard.php:246 sanctorale.php:169 sanctorale.php:322
@@ -1747,7 +1733,7 @@ msgstr ""
 "calendrier."
 
 #. translators: %s is the change request batch id. The changes were queued for review, not saved
-#: includes/messages.php:84 admin-decrees.php:638 admin-tests.php:341
+#: includes/messages.php:84 admin-decrees.php:640 admin-tests.php:351
 #: admin-locales.php:135
 #, php-format
 msgid ""
@@ -1758,7 +1744,7 @@ msgstr ""
 "été enregistré."
 
 #. translators: %s is the change request batch id. The changes were approved but are not published yet
-#: includes/messages.php:86 admin-decrees.php:639 admin-tests.php:342
+#: includes/messages.php:86 admin-decrees.php:641 admin-tests.php:352
 #: admin-locales.php:136
 #, php-format
 msgid ""
@@ -1769,7 +1755,7 @@ msgstr ""
 "publication. Elles ne sont pas encore en ligne."
 
 #. translators: %s is a comma separated list of change request batch ids folded into the current one
-#: includes/messages.php:88 admin-decrees.php:640 admin-tests.php:343
+#: includes/messages.php:88 admin-decrees.php:642 admin-tests.php:353
 #: admin-locales.php:137
 #, php-format
 msgid ""
@@ -1780,7 +1766,7 @@ msgstr ""
 "n'apparaissent plus dans votre file d'attente : %s"
 
 #. translators: %s is the unrecognized outcome value the server sent
-#: includes/messages.php:90 admin-decrees.php:642 admin-tests.php:344
+#: includes/messages.php:90 admin-decrees.php:644 admin-tests.php:354
 #: admin-locales.php:139
 #, php-format
 msgid ""
@@ -2116,195 +2102,251 @@ msgstr ""
 "avec les données de tous les diocèses du groupe, ce groupe peut être défini "
 "ou configuré ici."
 
+#. translators: label for wider region calendar name field
+#: includes/messages.php:246 includes/admin-blocks.php:55
+#: admin-permissions.php:90 admin-permissions.php:324 admin-permissions.php:415
+#: permission-requests.php:281
+msgid "Wider Region"
+msgstr "Région élargie"
+
+#. translators: suffix appended to a prospective wider region's option label in the datalist
+#: includes/messages.php:248
+msgid "not yet created"
+msgstr "pas encore créé"
+
+#. translators: error toast when a link from the particular calendars navigator names a calendar the form cannot open
+#: includes/messages.php:250
+msgid "Calendar not found"
+msgstr "Calendrier introuvable"
+
+#. translators: error message when a wider region id typed by the user does not match the required shape
+#: includes/messages.php:252
+msgid ""
+"A wider region id is one or more lowercase words (a–z) joined by hyphens, "
+"e.g. german-language-area."
+msgstr ""
+"Un identifiant de région élargie est constitué d'un ou plusieurs mots en "
+"minuscules (a–z) reliés par des tirets, par exemple german-language-area."
+
+#. translators: heading of the wider region's label fields, one per language of the region
+#: includes/messages.php:254
+msgid "Region name"
+msgstr "Nom de la région"
+
+#. translators: hint under the wider region's label fields
+#: includes/messages.php:256
+msgid ""
+"One name per language of the region. Languages without a name show the "
+"English one."
+msgstr ""
+"Un nom par langue de la région. Les langues sans nom affichent celui en "
+"anglais."
+
+#. translators: tooltip of a wider region label pre-filled from the region's UN M.49 / CLDR name
+#: includes/messages.php:258
+msgid "Suggested from UN M.49 / CLDR"
+msgstr "Proposé par l'ONU M.49 / CLDR"
+
+#. translators: tooltip of a wider region label field that the user may not change
+#: includes/messages.php:260
+msgid "Only an editor of the whole wider region can change its names."
+msgstr ""
+"Seul l'éditeur de l'ensemble de la région élargie peut modifier ses noms."
+
+#. translators: label of the list of wider regions a national calendar inherits from
+#: includes/messages.php:262
+msgid "Wider regions"
+msgstr "Régions plus vastes"
+
 #. translators: label for national calendar name field
-#: includes/messages.php:248 admin-permissions.php:87 admin-permissions.php:320
-#: admin-permissions.php:409 admin-tests.php:147 admin-tests.php:351
-#: permission-requests.php:244
+#: includes/messages.php:264 admin-permissions.php:88 admin-permissions.php:322
+#: admin-permissions.php:413 admin-tests.php:157 admin-tests.php:361
+#: permission-requests.php:279
 msgid "National Calendar"
 msgstr "Calendrier national"
 
 #. translators: label for diocesan calendar dependency
-#: includes/messages.php:250
+#: includes/messages.php:266
 msgid "Depends on national calendar"
 msgstr "Dépend du calendrier national"
 
 #. translators: label for diocese name field
-#: includes/messages.php:252
+#: includes/messages.php:268
 msgid "Diocese"
 msgstr "Diocèse"
 
 #. translators: label for diocesan group field
-#: includes/messages.php:254
+#: includes/messages.php:270
 msgid "Diocesan group"
 msgstr "Groupe de diocèses"
 
 #. translators: label for locales selection
-#: includes/messages.php:256
+#: includes/messages.php:272
 msgid "Locales"
 msgstr "Langues"
 
 #. translators: label for current localization selection
-#: includes/messages.php:258
+#: includes/messages.php:274
 msgid "Current localization"
 msgstr "Localisation actuelle"
 
 #. translators: label for published Roman Missals list
-#: includes/messages.php:260
+#: includes/messages.php:276
 msgid "Published Roman Missals"
 msgstr "Missels Romains Publiés"
 
 #. translators: card heading for creating wider region calendar
-#: includes/messages.php:266
+#: includes/messages.php:282
 msgid "Define a Calendar for a Wider Region"
 msgstr "Définir un calendrier pour une région élargie"
 
 #. translators: card heading for creating national calendar
-#: includes/messages.php:268
+#: includes/messages.php:284
 msgid "Define a National Calendar"
 msgstr "Définir un calendrier national"
 
 #. translators: card heading for creating diocesan calendar
-#: includes/messages.php:270
+#: includes/messages.php:286
 msgid "Define a Diocesan Calendar"
 msgstr "Définir un calendrier diocésain"
 
 #. translators: section heading for national calendar settings
-#: includes/messages.php:272
+#: includes/messages.php:288
 msgid "National calendar settings"
 msgstr "Paramètres du calendrier national"
 
 #. translators: heading for diocesan overrides section
-#: includes/messages.php:274
+#: includes/messages.php:290
 msgid "Diocesan overrides to the national calendar for …"
 msgstr "Personnalisation diocésaine par rapport au calendrier national pour …"
 
 #. translators: label for Epiphany setting
-#: includes/messages.php:280
+#: includes/messages.php:296
 msgid "EPIPHANY"
 msgstr "ÉPIPHANIE"
 
 #. translators: option for Epiphany on January 6
-#: includes/messages.php:282
+#: includes/messages.php:298
 msgid "January 6"
 msgstr "6 janvier"
 
 #. translators: option for Epiphany on Sunday
-#: includes/messages.php:284
+#: includes/messages.php:300
 msgid "Sunday between January 2 and January 8"
 msgstr "Dimanche entre le 2 janvier et le 8 janvier"
 
 #. translators: label for Ascension setting
-#: includes/messages.php:286
+#: includes/messages.php:302
 msgid "ASCENSION"
 msgstr "ASCENSION"
 
 #. translators: label for Corpus Christi setting
-#: includes/messages.php:288
+#: includes/messages.php:304
 msgid "CORPUS CHRISTI"
 msgstr "CORPUS CHRISTI"
 
 #. translators: label for Eternal High Priest setting
-#: includes/messages.php:290
+#: includes/messages.php:306
 msgid "ETERNAL HIGH PRIEST"
 msgstr "PRÊTRE ÉTERNEL ET SOUVERAIN"
 
 #. translators: label for the national calendar's holy days of obligation setting
-#: includes/messages.php:292
+#: includes/messages.php:308
 msgid "HOLY DAYS OF OBLIGATION"
 msgstr "Jours de précepte"
 
 #. translators: a holy day of obligation (Nativity of the Lord)
-#: includes/messages.php:294 temporale.php:67
+#: includes/messages.php:310 temporale.php:67
 msgid "Christmas"
 msgstr "Noël"
 
 #. translators: a holy day of obligation
-#: includes/messages.php:296
+#: includes/messages.php:312
 msgid "Epiphany"
 msgstr "Épiphanie"
 
 #. translators: a holy day of obligation
-#: includes/messages.php:298
+#: includes/messages.php:314
 msgid "Ascension"
 msgstr "Ascension"
 
 #. translators: a holy day of obligation
-#: includes/messages.php:300
+#: includes/messages.php:316
 msgid "Corpus Christi"
 msgstr "Fête-Dieu"
 
 #. translators: a holy day of obligation (Solemnity of Mary, Mother of God, January 1)
-#: includes/messages.php:302
+#: includes/messages.php:318
 msgid "Mary, Mother of God"
 msgstr "Marie, Mère de Dieu"
 
 #. translators: a holy day of obligation
-#: includes/messages.php:304
+#: includes/messages.php:320
 msgid "Immaculate Conception"
 msgstr "Immaculée Conception"
 
 #. translators: a holy day of obligation (Assumption of the Blessed Virgin Mary)
-#: includes/messages.php:306
+#: includes/messages.php:322
 msgid "Assumption"
 msgstr "Assomption"
 
 #. translators: a holy day of obligation (Saint Joseph, Spouse of the Blessed Virgin Mary)
-#: includes/messages.php:308
+#: includes/messages.php:324
 msgid "St. Joseph"
 msgstr "Saint Joseph"
 
 #. translators: a holy day of obligation
-#: includes/messages.php:310
+#: includes/messages.php:326
 msgid "Sts. Peter and Paul, Apostles"
 msgstr "Saints Pierre et Paul, Apôtres"
 
 #. translators: a holy day of obligation
-#: includes/messages.php:312
+#: includes/messages.php:328
 msgid "All Saints"
 msgstr "Tous les Saints"
 
 #. translators: tab label for solemnities section
-#: includes/messages.php:318
+#: includes/messages.php:334
 msgid "Solemnities"
 msgstr "Solennités"
 
 #. translators: tab label for feasts section
-#: includes/messages.php:320
+#: includes/messages.php:336
 msgid "Feasts"
 msgstr "Fêtes"
 
 #. translators: tab label for memorials section
-#: includes/messages.php:322
+#: includes/messages.php:338
 msgid "Memorials"
 msgstr "Mémoires"
 
 #. translators: tab label for optional memorials section
-#: includes/messages.php:324
+#: includes/messages.php:340
 msgid "Optional memorials"
 msgstr "Mémoires facultatives"
 
 #. translators: subtitle for defining solemnities
-#: includes/messages.php:330
+#: includes/messages.php:346
 msgid "Define the Solemnities"
 msgstr "Définis les Solennités"
 
 #. translators: subtitle for defining feasts
-#: includes/messages.php:332
+#: includes/messages.php:348
 msgid "Define the Feasts"
 msgstr "Définis les Fêtes"
 
 #. translators: subtitle for defining memorials
-#: includes/messages.php:334
+#: includes/messages.php:350
 msgid "Define the Memorials"
 msgstr "Définis les mémoires"
 
 #. translators: subtitle for defining optional memorials
-#: includes/messages.php:336
+#: includes/messages.php:352
 msgid "Define the Optional Memorials"
 msgstr "Définis les mémoires facultatives"
 
 #. translators: row title for principal patron solemnity
-#: includes/messages.php:342
+#: includes/messages.php:358
 msgid ""
 "Principal Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
@@ -2312,18 +2354,18 @@ msgstr ""
 "du territoire"
 
 #. translators: row title for dedication of cathedral
-#: includes/messages.php:344
+#: includes/messages.php:360
 msgid "Dedication of the Cathedral"
 msgstr "Dédicace de la cathédrale"
 
 #. translators: row title for patron feast
-#: includes/messages.php:346
+#: includes/messages.php:362
 msgid "Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
 "Patron(s) du lieu, du diocèse, de la région, de la province ou du territoire"
 
 #. translators: row title for secondary patron memorial
-#: includes/messages.php:348
+#: includes/messages.php:364
 msgid ""
 "Secondary Patron(s) of the Place, Diocese, Region, Province or Territory"
 msgstr ""
@@ -2331,7 +2373,7 @@ msgstr ""
 "du territoire"
 
 #. translators: row title for local saints optional memorial
-#: includes/messages.php:350
+#: includes/messages.php:366
 msgid ""
 "Saints whose veneration is local to the Place, Diocese, Region, Province or "
 "Territory"
@@ -2340,52 +2382,52 @@ msgstr ""
 "province ou au territoire"
 
 #. translators: button to save wider region calendar data
-#: includes/messages.php:356
+#: includes/messages.php:372
 msgid "Save Wider Region Calendar Data"
 msgstr "Enregistrer les données du calendrier de la région élargie"
 
 #. translators: button to save national calendar data
-#: includes/messages.php:358
+#: includes/messages.php:374
 msgid "Save National Calendar Data"
 msgstr "Enregistrer les données du calendrier national"
 
 #. translators: button to save diocesan calendar data
-#: includes/messages.php:360
+#: includes/messages.php:376
 msgid "Save Diocesan Calendar Data"
 msgstr "Enregistrer les données du calendrier diocésain"
 
 #. translators: modal title for changing name or grade
-#: includes/messages.php:366
+#: includes/messages.php:382
 msgid "Change the name or grade of an existing liturgical event"
 msgstr "Modifier le nom ou le grade d'un événement liturgique existant"
 
 #. translators: modal title for moving event
-#: includes/messages.php:368
+#: includes/messages.php:384
 msgid "Move a liturgical event to a new date"
 msgstr "Déplacer un événement liturgique à une nouvelle date"
 
 #. translators: modal title for creating new event
-#: includes/messages.php:370
+#: includes/messages.php:386
 msgid "Create a new liturgical event"
 msgstr "Créer un nouvel événement liturgique"
 
 #. translators: modal title for choosing missal
-#: includes/messages.php:372
+#: includes/messages.php:388
 msgid "Choose from known Roman Missal language editions"
 msgstr "Choisis parmi les éditions connues du Missel romain"
 
 #. translators: modal title for deleting a diocesan calendar
-#: includes/messages.php:374
+#: includes/messages.php:390
 msgid "Delete diocesan calendar"
 msgstr "Supprimer le calendrier diocésain"
 
 #. translators: validation error when field is empty
-#: includes/messages.php:380
+#: includes/messages.php:396
 msgid "This value cannot be empty."
 msgstr "Cette valeur ne peut pas être vide."
 
 #. translators: validation error for unknown missal
-#: includes/messages.php:382
+#: includes/messages.php:398
 msgid ""
 "This Missal is unknown to the Liturgical Calendar API. Please choose from a "
 "value in the list, or contact the curator of the API to have the Missal "
@@ -2396,7 +2438,7 @@ msgstr ""
 "Missel aux éditions linguistiques de missels répertoriées."
 
 #. translators: warning message when deleting a calendar
-#: includes/messages.php:388
+#: includes/messages.php:404
 msgid ""
 "If you choose to delete this calendar, the liturgical events defined for the "
 "calendar and the corresponding index entries will be removed and no longer "
@@ -2407,7 +2449,7 @@ msgstr ""
 "et ne seront plus disponibles dans les applications clientes."
 
 #. translators: tooltip explaining the first step in defining a national calendar
-#: includes/messages.php:394
+#: includes/messages.php:410
 msgid ""
 "please keep in mind that the first step to creating a national calendar, is "
 "to translate the already existing calendar data into the correct language. "
@@ -2419,14 +2461,14 @@ msgstr ""
 "plus de détails)"
 
 #. translators: help text shown when diocese input is disabled
-#: includes/messages.php:396
+#: includes/messages.php:412
 msgid "Select a national calendar first to see available dioceses."
 msgstr ""
 "Sélectionne d'abord un calendrier national pour voir les diocèses "
 "disponibles."
 
 #. translators: tooltip explaining the Eternal High Priest feast
-#: includes/messages.php:398
+#: includes/messages.php:414
 msgid ""
 "In 2012, Pope Benedict XVI gave faculty to the Episcopal Conferences to "
 "insert the Feast of Jesus Christ Eternal High Priest in their own liturgical "
@@ -2437,7 +2479,7 @@ msgstr ""
 "propres calendriers liturgiques le jeudi après la Pentecôte."
 
 #. translators: tooltip explaining published Roman Missals selection
-#: includes/messages.php:400
+#: includes/messages.php:416
 msgid ""
 "if data from the Proper of Saints of a given Missal for this nation has "
 "already been incorporated into the main LitCal engine, you can choose the "
@@ -2452,83 +2494,204 @@ msgstr ""
 "LitCal)"
 
 #. translators: tooltip explaining wider region association
-#: includes/messages.php:402
+#. translators: tooltip of the wider regions of a national calendar
+#: includes/messages.php:419
 msgid ""
-"if data for a Wider Region that regards this National Calendar has already "
-"been defined, you can associate the Wider Region data with the National "
-"Calendar here"
+"The wider regions whose data this national calendar inherits. Only the wider "
+"regions that list this nation are offered."
 msgstr ""
-"si des données pour une région élargie concernant ce calendrier national ont "
-"déjà été définies, tu peux associer les données de la région élargie avec le "
-"calendrier national ici"
+"Les régions plus vastes dont les données alimentent ce calendrier national. "
+"Seules les régions plus vastes qui répertorient cette nation sont proposées."
 
 #. translators: screen reader text for previous button
-#: includes/messages.php:408 temporale.php:173
+#: includes/messages.php:425 temporale.php:173
 msgid "Previous"
 msgstr "Précédent"
 
 #. translators: screen reader text for next button
-#: includes/messages.php:410 temporale.php:179
+#: includes/messages.php:427 temporale.php:179
 msgid "Next"
 msgstr "Suivant"
 
 #. translators: aria-label for diocesan calendar definition navigation
-#: includes/messages.php:412
+#: includes/messages.php:429
 msgid "Diocesan calendar definition"
 msgstr "Définition du calendrier diocésain"
+
+#. translators: navigator view toggle - only the calendars the user holds rights on
+#: includes/messages.php:435
+msgid "My calendars"
+msgstr "Mes calendriers"
+
+#. translators: navigator view toggle - every wider region, nation and diocese
+#: includes/messages.php:437
+msgid "Show all"
+msgstr "Afficher tout"
+
+#. translators: placeholder and label of the navigator's text filter on calendar names
+#: includes/messages.php:439
+msgid "Filter"
+msgstr "Filtrer"
+
+#. translators: screen reader text of the empty status dot of a calendar that does not exist yet
+#: includes/messages.php:441
+msgid "Not yet created"
+msgstr "Pas encore créé"
+
+#. translators: screen reader text of the filled status dot of a calendar that exists
+#: includes/messages.php:443 admin-applications.php:242
+#: developer-dashboard.php:279
+msgid "Created"
+msgstr "Créé"
+
+#. translators: navigator action button - open an existing calendar in its form
+#: includes/messages.php:445 includes/admin-blocks.php:98 admin-decrees.php:690
+#: admin-tests.php:357 developer-dashboard.php:269 sanctorale.php:320
+msgid "Edit"
+msgstr "Modifier"
+
+#. translators: navigator action button - create a calendar that does not exist yet
+#: includes/messages.php:447
+msgid "Create"
+msgstr "Créer"
+
+#. translators: navigator action button - translate a wider region into the user's nation's language
+#: includes/messages.php:449
+msgid "Translate"
+msgstr "Traduire"
+
+#. translators: navigator action button - open the nation's Missal edition in the sanctorale editor. %1$s = the Missal ids, e.g. "IT_1983"
+#: includes/messages.php:451
+#, php-format
+msgid "Proper of Saints (%1$s)"
+msgstr "Propre des saints (%1$s)"
+
+#. translators: navigator action button - ask for rights on a calendar
+#: includes/messages.php:453
+msgid "Request access"
+msgstr "Demander l'accès"
+
+#. translators: note on a nation that has no national Missal edition
+#: includes/messages.php:455
+msgid "No national Missal data: the national calendar alone defines it"
+msgstr ""
+"Aucune donnée du Missel national : seul le calendrier national le définit."
+
+#. translators: note on an Ambrosian rite diocese in the navigator, which offers no Edit button for it
+#: includes/messages.php:457
+msgid "Ambrosian diocesan calendars cannot be edited here yet"
+msgstr ""
+"Les calendriers diocésains ambrosiens ne peuvent pas encore être modifiés "
+"ici."
+
+#. translators: why a diocese's Create button is disabled
+#: includes/messages.php:459
+msgid "Create the national calendar first"
+msgstr "Crée d'abord le calendrier national"
+
+#. translators: navigator group of the nations that belong to no wider region
+#: includes/messages.php:461
+msgid "Nations in no wider region"
+msgstr "Des nations sans région plus étendue"
+
+#. translators: navigator group of the Ambrosian rite's diocesan calendars
+#: includes/messages.php:463
+msgid "Ambrosian rite"
+msgstr "rite ambrosien"
+
+#. translators: error shown under a nation when its list of dioceses could not be fetched
+#: includes/messages.php:465
+msgid "Could not load the dioceses"
+msgstr "Impossible de charger les diocèses."
+
+#. translators: button to fetch the list of dioceses again
+#: includes/messages.php:467 admin-permissions.php:459
+#: permission-requests.php:277
+msgid "Retry"
+msgstr "Réessayer"
+
+#. translators: "My calendars" view of a user who holds no rights on any calendar
+#: includes/messages.php:469
+msgid "You have no particular calendars yet"
+msgstr "Tu n'as pas encore de calendriers particuliers."
+
+#. translators: button of the empty "My calendars" view, switching to "Show all"
+#: includes/messages.php:471
+msgid "Browse all calendars"
+msgstr "Parcourez tous les calendriers"
+
+#. translators: screen reader label of the button that expands a nation. %1$s = the nation's name
+#: includes/messages.php:473
+#, php-format
+msgid "Dioceses of %1$s"
+msgstr "Diocèses de %1$s"
+
+#. translators: shown while a nation's dioceses are being fetched
+#: includes/messages.php:475 admin-decrees.php:629 admin-locales.php:112
+#: sanctorale.php:193
+msgid "Loading…"
+msgstr "Chargement…"
+
+#. translators: shown when no calendar name matches the navigator's text filter
+#: includes/messages.php:477
+msgid "No calendars match the filter"
+msgstr "Aucun calendrier ne correspond au filtre."
 
 #: includes/admin-blocks.php:20
 msgid "Proprium de Tempore - temporal cycle events"
 msgstr "Proprium de Tempore - événements du cycle temporal"
 
-#: includes/admin-blocks.php:38
+#: includes/admin-blocks.php:33
 msgid "Proprium de Sanctis - Missal editions, by rite"
 msgstr "Proprium de Sanctis - éditions du Missel, selon le rite"
 
-#: includes/admin-blocks.php:50
+#: includes/admin-blocks.php:45
 msgid "Congregation for Divine Worship decrees"
 msgstr "Décrets de la Congrégation pour le culte divin"
 
-#: includes/admin-blocks.php:64
+#: includes/admin-blocks.php:56
 msgid "Shared events for geographical regions"
 msgstr "Événements partagés par régions géographiques"
 
-#: includes/admin-blocks.php:74
+#: includes/admin-blocks.php:65
+msgid "National"
+msgstr "National"
+
+#: includes/admin-blocks.php:66
 msgid "National calendars by Bishops Conferences"
 msgstr "Calendriers nationaux par Conférences épiscopales"
 
-#: includes/admin-blocks.php:84
+#: includes/admin-blocks.php:75
+msgid "Diocesan"
+msgstr "Diocésain"
+
+#: includes/admin-blocks.php:76
 msgid "Diocesan calendars by liturgical offices"
 msgstr "Calendriers diocésains par bureaux liturgiques"
 
-#: includes/admin-blocks.php:105 includes/change-request-i18n.php:21
-#: admin-dashboard.php:225
+#: includes/admin-blocks.php:97 includes/change-request-i18n.php:21
+#: admin-dashboard.php:222
 msgid "View"
 msgstr "Voir"
-
-#: includes/admin-blocks.php:106 admin-decrees.php:688 admin-tests.php:347
-#: developer-dashboard.php:269 sanctorale.php:320
-msgid "Edit"
-msgstr "Modifier"
 
 #: includes/admin-decrees-card.php:24
 msgid "Create, edit and delete decrees of the Dicastery for Divine Worship"
 msgstr ""
 "Créer, éditer et supprimer des décrets du Dicastère pour le Culte Divin"
 
-#: includes/admin-decrees-card.php:28 includes/admin-tests-card.php:23
+#: includes/admin-decrees-card.php:28 includes/admin-tests-card.php:24
 #: admin-dashboard.php:80 admin-dashboard.php:98 admin-dashboard.php:116
 msgid "Manage"
 msgstr "Gérer"
 
-#: includes/admin-tests-card.php:19
+#: includes/admin-tests-card.php:20
 msgid "Manage liturgical accuracy tests"
 msgstr "Gérer les tests d'exactitude liturgique"
 
 #: includes/change-request-i18n.php:20 admin-decrees.php:157
-#: admin-decrees.php:600 admin-permissions.php:237 admin-permissions.php:269
-#: admin-permissions.php:291 admin-permissions.php:357 admin-tests.php:131
-#: admin-tests.php:278 admin-tests.php:305 admin-applications.php:184
+#: admin-decrees.php:600 admin-permissions.php:240 admin-permissions.php:272
+#: admin-permissions.php:294 admin-permissions.php:359 admin-tests.php:141
+#: admin-tests.php:288 admin-tests.php:315 admin-applications.php:184
 #: admin-users.php:104 admin-locales.php:93 admin-changes.php:210
 #: change-requests.php:97 change-requests.php:104 developer-dashboard.php:84
 #: developer-dashboard.php:154 developer-dashboard.php:239 temporale.php:163
@@ -2536,18 +2699,18 @@ msgstr "Gérer les tests d'exactitude liturgique"
 msgid "Close"
 msgstr "Fermer"
 
-#: includes/change-request-i18n.php:22 admin-permissions.php:406
-#: admin-permissions.php:476 admin-tests.php:113 admin-applications.php:244
+#: includes/change-request-i18n.php:22 admin-permissions.php:410
+#: admin-permissions.php:498 admin-tests.php:123 admin-applications.php:244
 #: temporale.php:140
 msgid "Actions"
 msgstr "Actions"
 
-#: includes/change-request-i18n.php:23 admin-permissions.php:480
-#: permission-requests.php:225 admin-applications.php:243 admin-locales.php:77
+#: includes/change-request-i18n.php:23 admin-permissions.php:502
+#: permission-requests.php:243 admin-applications.php:243 admin-locales.php:77
 msgid "Status"
 msgstr "Statut"
 
-#: includes/change-request-i18n.php:24 admin-permissions.php:402
+#: includes/change-request-i18n.php:24 admin-permissions.php:406
 msgid "Unknown user"
 msgstr "Utilisateur inconnu"
 
@@ -2560,7 +2723,7 @@ msgid "Files"
 msgstr "Fichiers"
 
 #: includes/change-request-i18n.php:29 includes/change-request-i18n.php:35
-#: permission-requests.php:228 admin-changes.php:77 admin-changes.php:121
+#: permission-requests.php:246 admin-changes.php:77 admin-changes.php:121
 msgid "Submitted"
 msgstr "Soumis"
 
@@ -2576,16 +2739,16 @@ msgstr "Demande de fusion"
 msgid "Proposed changes"
 msgstr "Modifications proposées"
 
-#: includes/change-request-i18n.php:36 admin-permissions.php:175
-#: admin-permissions.php:488 permission-requests.php:282
+#: includes/change-request-i18n.php:36 admin-permissions.php:178
+#: admin-permissions.php:510 permission-requests.php:317
 #: admin-applications.php:68 admin-applications.php:108
 #: admin-applications.php:251 admin-changes.php:88 admin-changes.php:128
 #: developer-dashboard.php:304
 msgid "Approved"
 msgstr "Approuvé"
 
-#: includes/change-request-i18n.php:37 admin-permissions.php:182
-#: admin-permissions.php:489 permission-requests.php:283
+#: includes/change-request-i18n.php:37 admin-permissions.php:185
+#: admin-permissions.php:511 permission-requests.php:318
 #: admin-applications.php:79 admin-applications.php:114
 #: admin-applications.php:252 admin-changes.php:99 admin-changes.php:134
 #: developer-dashboard.php:305
@@ -2719,8 +2882,8 @@ msgstr ""
 "Lisez et décidez des modifications de données sources proposées pour les "
 "calendriers que vous administrez"
 
-#: includes/admin-changes-card.php:33 admin-permissions.php:477
-#: admin-applications.php:245 admin-dashboard.php:136 admin-dashboard.php:194
+#: includes/admin-changes-card.php:33 admin-permissions.php:499
+#: admin-applications.php:245 admin-dashboard.php:136 admin-dashboard.php:191
 #: admin-changes.php:253
 msgid "Review"
 msgstr "Revue"
@@ -2730,7 +2893,7 @@ msgid "Create, edit and delete decrees of the Dicastery for Divine Worship."
 msgstr ""
 "Créer, éditer et supprimer des décrets du Dicastère pour le Culte Divin."
 
-#: admin-decrees.php:71 admin-decrees.php:647
+#: admin-decrees.php:71 admin-decrees.php:649
 msgid "New Decree"
 msgstr "Nouveau Décret"
 
@@ -2817,7 +2980,7 @@ msgstr "Protocole"
 msgid "Since year"
 msgstr "Depuis l'année"
 
-#: admin-decrees.php:258 admin-tests.php:204 admin-applications.php:240
+#: admin-decrees.php:258 admin-tests.php:214 admin-applications.php:240
 #: developer-dashboard.php:98
 msgid "Description"
 msgstr "Description"
@@ -2931,7 +3094,7 @@ msgstr "Langue de base — ne peut pas être supprimée"
 msgid "Add translation"
 msgstr "Ajouter la traduction"
 
-#: admin-decrees.php:561 admin-decrees.php:646 sanctorale.php:198
+#: admin-decrees.php:561 admin-decrees.php:648 sanctorale.php:198
 msgid "Lectionary readings"
 msgstr "Lectures du lectionnaire"
 
@@ -2939,7 +3102,7 @@ msgstr "Lectures du lectionnaire"
 msgid "Add readings for locale"
 msgstr "Ajouter des lectures pour la langue"
 
-#: admin-decrees.php:584 admin-tests.php:262 developer-dashboard.php:323
+#: admin-decrees.php:584 admin-tests.php:272 developer-dashboard.php:323
 #: sanctorale.php:172 sanctorale.php:321
 msgid "Save"
 msgstr "Enregistrer"
@@ -2948,72 +3111,68 @@ msgstr "Enregistrer"
 msgid "Delete Decree"
 msgstr "Supprimer le décret"
 
-#: admin-decrees.php:611 admin-decrees.php:689 admin-tests.php:316
-#: admin-tests.php:348 developer-dashboard.php:249 developer-dashboard.php:270
+#: admin-decrees.php:611 admin-decrees.php:691 admin-tests.php:326
+#: admin-tests.php:358 developer-dashboard.php:249 developer-dashboard.php:270
 #: sanctorale.php:166 sanctorale.php:323
 msgid "Delete"
 msgstr "Supprimer"
 
-#: admin-decrees.php:627 admin-locales.php:112 sanctorale.php:193
-msgid "Loading…"
-msgstr "Chargement…"
-
-#: admin-decrees.php:628
+#: admin-decrees.php:630
 msgid "You do not have permission to view decrees administration."
 msgstr "Vous n'avez pas la permission de voir l'administration des décrets."
 
-#: admin-decrees.php:629
+#: admin-decrees.php:631
 msgid "Could not load decrees from the API."
 msgstr "Impossible de charger les décrets depuis l'API."
 
-#: admin-decrees.php:630
+#: admin-decrees.php:632
 msgid "No decrees found."
 msgstr "Aucun décret trouvé."
 
-#: admin-decrees.php:631
+#: admin-decrees.php:633
 msgid ""
 "Are you sure you want to delete this decree? This action cannot be undone."
 msgstr ""
 "Êtes-vous sûr de vouloir supprimer ce décret ? Cette action ne peut pas être "
 "annulée."
 
-#: admin-decrees.php:632
+#: admin-decrees.php:634
 msgid "Decree created."
 msgstr "Décret créé."
 
-#: admin-decrees.php:633
+#: admin-decrees.php:635
 msgid "Decree updated."
 msgstr "Décret mis à jour."
 
-#: admin-decrees.php:634
+#: admin-decrees.php:636
 msgid "Decree deleted."
 msgstr "Décret supprimé."
 
-#: admin-decrees.php:648
+#: admin-decrees.php:650
 msgid "Edit Decree"
 msgstr "Modifier le décret"
 
-#: admin-decrees.php:649
+#: admin-decrees.php:651
 msgid "Select locale"
 msgstr "Sélectionner la langue"
 
-#: admin-decrees.php:650 permission-requests.php:233
+#: admin-decrees.php:652 permission-requests.php:251
 msgid "Remove"
 msgstr "Supprimer"
 
-#: admin-decrees.php:651
+#: admin-decrees.php:653
 msgid "First reading"
 msgstr "Première lecture"
 
-#: admin-decrees.php:652
+#: admin-decrees.php:654
 msgid "Responsorial psalm"
 msgstr "Psaume responsorial"
 
-#: admin-decrees.php:653
+#: admin-decrees.php:655
 msgid "Second reading"
 msgstr "Deuxième lecture"
 
-#: admin-decrees.php:656
+#: admin-decrees.php:658
 msgid ""
 "Feast and below take the ferial readings: first reading, responsorial psalm, "
 "gospel acclamation and gospel."
@@ -3021,7 +3180,7 @@ msgstr ""
 "La Fête et les grades inférieurs utilisent les lectures fériales : première "
 "lecture, psaume responsorial, acclamation de l'Évangile et Évangile."
 
-#: admin-decrees.php:660
+#: admin-decrees.php:662
 msgid ""
 "Feast of the Lord and above take the festive readings, which also require a "
 "second reading."
@@ -3029,31 +3188,31 @@ msgstr ""
 "La Fête du Seigneur et les grades supérieurs utilisent les lectures "
 "festives, qui exigent également une deuxième lecture."
 
-#: admin-decrees.php:663
+#: admin-decrees.php:665
 msgid "Gospel acclamation"
 msgstr "Acclamation de l'Évangile"
 
-#: admin-decrees.php:664 sanctorale.php:245
+#: admin-decrees.php:666 sanctorale.php:245
 msgid "Gospel"
 msgstr "Évangile"
 
-#: admin-decrees.php:665
+#: admin-decrees.php:667
 msgid "No readings defined for this locale yet"
 msgstr "Aucune lecture définie pour cette langue pour le moment"
 
-#: admin-decrees.php:666
+#: admin-decrees.php:668
 msgid "Vatican URL code (e.g. ge, sp, po)"
 msgstr "Code URL du Vatican (ex. ge, sp, po)"
 
-#: admin-decrees.php:667
+#: admin-decrees.php:669
 msgid "Full URL for this language"
 msgstr "URL complète pour cette langue"
 
-#: admin-decrees.php:669 sanctorale.php:288
+#: admin-decrees.php:671 sanctorale.php:288
 msgid "override"
 msgstr "remplacement"
 
-#: admin-decrees.php:671
+#: admin-decrees.php:673
 #, php-format
 msgid ""
 "Duplicate language code \"%s\" in the URL overrides — each language may be "
@@ -3062,7 +3221,7 @@ msgstr ""
 "Code de langue en double \"%s\" dans les remplacements d'URL — chaque langue "
 "ne peut être remplacée qu'une seule fois"
 
-#: admin-decrees.php:673
+#: admin-decrees.php:675
 #, php-format
 msgid ""
 "Duplicate language code \"%s\" in the source URL languages — each language "
@@ -3071,36 +3230,36 @@ msgstr ""
 "Code langue en double \"%s\" dans les langues sources de l'URL — chaque "
 "langue ne peut apparaître qu'une seule fois"
 
-#: admin-decrees.php:674
+#: admin-decrees.php:676
 msgid "Please fix the following errors before saving:"
 msgstr "Veuillez corriger les erreurs avant de sauvegarder :"
 
-#: admin-decrees.php:675
+#: admin-decrees.php:677
 #, php-format
 msgid "Since %s"
 msgstr "Depuis %s"
 
-#: admin-decrees.php:676
+#: admin-decrees.php:678
 msgid "Source"
 msgstr "Source"
 
-#: admin-decrees.php:677
+#: admin-decrees.php:679
 msgid "Your session has expired. Please log in again."
 msgstr "Ta session a expiré. Reconnecte-toi."
 
-#: admin-decrees.php:678
+#: admin-decrees.php:680
 msgid "Log in"
 msgstr "Se connecter"
 
-#: admin-decrees.php:679 admin-tests.php:354
+#: admin-decrees.php:681 admin-tests.php:364
 msgid "You do not have permission to perform this action."
 msgstr "Vous n'avez pas la permission d'effectuer cette action."
 
-#: admin-decrees.php:680
+#: admin-decrees.php:682
 msgid "Not in the General Roman Calendar — a new event will be created."
 msgstr "Pas dans le Calendrier Romain Général — un nouvel événement sera créé."
 
-#: admin-decrees.php:682
+#: admin-decrees.php:684
 #, php-format
 msgid ""
 "Already in the General Roman Calendar as \"%s\" — choose a different event "
@@ -3109,73 +3268,73 @@ msgstr ""
 "Déjà dans le Calendrier Romain Général comme \"%s\" — choisissez une autre "
 "clé d'événement."
 
-#: admin-decrees.php:683
+#: admin-decrees.php:685
 msgid ""
 "Not in the General Roman Calendar — this decree will not match any event."
 msgstr ""
 "Pas dans le Calendrier Romain Général — ce décret ne correspondra à aucun "
 "événement."
 
-#: admin-decrees.php:685
+#: admin-decrees.php:687
 #, php-format
 msgid "Matches \"%s\" in the General Roman Calendar."
 msgstr "Correspond à \"%s\" dans le Calendrier Romain Général."
 
-#: admin-decrees.php:687
+#: admin-decrees.php:689
 msgid "No decrees match the current search and filters."
 msgstr "Aucun décret ne correspond à la recherche et aux filtres actuels."
 
-#: admin-decrees.php:690
+#: admin-decrees.php:692
 msgid "(error)"
 msgstr "(erreur)"
 
 #. translators: liturgical grade 7 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:696
+#: admin-decrees.php:698
 msgid "Higher Solemnity"
 msgstr "Solemnité plus élevée"
 
 #. translators: liturgical grade 6 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:702 sanctorale.php:280
+#: admin-decrees.php:704 sanctorale.php:280
 msgid "Solemnity"
 msgstr "Solemnité"
 
 #. translators: liturgical grade 5 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:708 sanctorale.php:279
+#: admin-decrees.php:710 sanctorale.php:279
 msgid "Feast of the Lord"
 msgstr "Fête du Seigneur"
 
 #. translators: liturgical grade 4 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:714 sanctorale.php:278
+#: admin-decrees.php:716 sanctorale.php:278
 msgid "Feast"
 msgstr "Fête"
 
 #. translators: liturgical grade 2 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:726
+#: admin-decrees.php:728
 msgid "Optional Memorial"
 msgstr "Mémoire facultative"
 
 #. translators: liturgical grade 0 of 7. These eight labels form a strict precedence ladder; each must be rendered
 #. distinctly and none may reuse another rank's word. Machine translation has shifted this whole ladder
 #. by one rank before
-#: admin-decrees.php:738 sanctorale.php:274
+#: admin-decrees.php:740 sanctorale.php:274
 msgid "Weekday"
 msgstr "Férie"
 
-#: admin-permissions.php:38 admin-permissions.php:50
+#: admin-permissions.php:39 admin-permissions.php:51
 msgid "Permissions Management"
 msgstr "Gestion des permissions"
 
-#: admin-permissions.php:54
+#: admin-permissions.php:55
 msgid ""
 "Manage fine-grained permissions for calendar resources. Grant or revoke user "
 "access to specific calendars and test definitions."
@@ -3184,233 +3343,233 @@ msgstr ""
 "ou révoquer l'accès des utilisateurs à des calendriers spécifiques et tester "
 "des définitions."
 
-#: admin-permissions.php:63 temporale.php:51
+#: admin-permissions.php:64 temporale.php:51
 msgid "Filters"
 msgstr "Filtres"
 
-#: admin-permissions.php:69 admin-permissions.php:459
+#: admin-permissions.php:70 admin-permissions.php:481
 #: admin-applications.php:238 admin-users.php:213 admin-users.php:290
 msgid "User"
 msgstr "Utilisateur"
 
-#: admin-permissions.php:72
+#: admin-permissions.php:73
 msgid "Filter by user ID..."
 msgstr "Filtrer par ID utilisateur..."
 
-#: admin-permissions.php:75 admin-permissions.php:403 admin-permissions.php:462
+#: admin-permissions.php:76 admin-permissions.php:407 admin-permissions.php:484
 msgid "Object Type"
 msgstr "Type d'objet"
 
-#: admin-permissions.php:78 admin-permissions.php:104
+#: admin-permissions.php:79 admin-permissions.php:105
 msgid "All"
 msgstr "Tous"
 
-#: admin-permissions.php:83 admin-permissions.php:318 admin-permissions.php:413
-#: permission-requests.php:250
+#: admin-permissions.php:84 admin-permissions.php:320 admin-permissions.php:417
+#: permission-requests.php:285
 msgid "Rite Calendar"
 msgstr "Calendrier du rite"
 
-#: admin-permissions.php:84 admin-permissions.php:319 admin-permissions.php:414
-#: permission-requests.php:251
+#: admin-permissions.php:85 admin-permissions.php:321 admin-permissions.php:418
+#: permission-requests.php:286
 msgid "Rite Calendar Tests"
 msgstr "Tests du calendrier du rite"
 
-#: admin-permissions.php:86 admin-permissions.php:440 admin-permissions.php:471
-#: permission-requests.php:255
+#: admin-permissions.php:87 admin-permissions.php:462 admin-permissions.php:493
+#: permission-requests.php:290
 msgid "General Roman Calendar Tests"
 msgstr "Tests du calendrier général romain"
 
-#: admin-permissions.php:88 admin-permissions.php:321 admin-permissions.php:410
-#: admin-tests.php:150 admin-tests.php:352 permission-requests.php:245
+#: admin-permissions.php:89 admin-permissions.php:323 admin-permissions.php:414
+#: admin-tests.php:160 admin-tests.php:362 permission-requests.php:280
 msgid "Diocesan Calendar"
 msgstr "Calendrier diocésain"
 
-#: admin-permissions.php:90 admin-permissions.php:323 admin-permissions.php:438
-#: admin-permissions.php:469 permission-requests.php:248
+#: admin-permissions.php:91 admin-permissions.php:325 admin-permissions.php:460
+#: admin-permissions.php:491 permission-requests.php:283
 msgid "National Calendar Tests"
 msgstr "Tests du calendrier national"
 
-#: admin-permissions.php:91 admin-permissions.php:324 admin-permissions.php:439
-#: admin-permissions.php:470 permission-requests.php:249
+#: admin-permissions.php:92 admin-permissions.php:326 admin-permissions.php:461
+#: admin-permissions.php:492 permission-requests.php:284
 msgid "Diocesan Calendar Tests"
 msgstr "Tests du calendrier diocésain"
 
-#: admin-permissions.php:95 admin-permissions.php:404 admin-permissions.php:463
+#: admin-permissions.php:96 admin-permissions.php:408 admin-permissions.php:485
 msgid "Object ID"
 msgstr "ID de l'objet"
 
-#: admin-permissions.php:98
+#: admin-permissions.php:99
 msgid "Filter by object ID..."
 msgstr "Filtrer par ID d'objet..."
 
-#: admin-permissions.php:101 admin-permissions.php:300
-#: admin-permissions.php:405 admin-permissions.php:472
-#: permission-requests.php:231
+#: admin-permissions.php:102 admin-permissions.php:303
+#: admin-permissions.php:409 admin-permissions.php:494
+#: permission-requests.php:249
 msgid "Relation"
 msgstr "Relation"
 
-#: admin-permissions.php:105 admin-permissions.php:303
-#: admin-permissions.php:442 permission-requests.php:277
+#: admin-permissions.php:108 admin-permissions.php:464
+#: permission-requests.php:312
 msgid "Viewer"
 msgstr "Lecteur"
 
-#: admin-permissions.php:106 admin-permissions.php:304
-#: admin-permissions.php:443 permission-requests.php:278
+#: admin-permissions.php:109 admin-permissions.php:306
+#: admin-permissions.php:465 permission-requests.php:313
 msgid "Editor"
 msgstr "Éditeur"
 
-#: admin-permissions.php:107 admin-permissions.php:305
-#: admin-permissions.php:444 permission-requests.php:279
+#: admin-permissions.php:110 admin-permissions.php:307
+#: admin-permissions.php:466 permission-requests.php:314
 msgctxt "permission relation"
 msgid "Admin"
 msgstr "Administrateur"
 
-#: admin-permissions.php:113
+#: admin-permissions.php:116
 msgid "Apply Filters"
 msgstr "Appliquer les filtres"
 
-#: admin-permissions.php:116
+#: admin-permissions.php:119
 msgid "Clear Filters"
 msgstr "Effacer les filtres"
 
-#: admin-permissions.php:125 admin-permissions.php:289
-#: admin-permissions.php:342
+#: admin-permissions.php:128 admin-permissions.php:292
+#: admin-permissions.php:344
 msgid "Grant Permission"
 msgstr "Accorder la permission"
 
-#: admin-permissions.php:128 admin-permissions.php:157 admin-tests.php:79
+#: admin-permissions.php:131 admin-permissions.php:160 admin-tests.php:89
 #: admin-applications.php:125 admin-users.php:56 admin-locales.php:68
 #: admin-changes.php:145 change-requests.php:70
 msgid "Refresh"
 msgstr "Rafraîchir"
 
-#: admin-permissions.php:136
+#: admin-permissions.php:139
 msgid "Permission Tuples"
 msgstr "Tuples d'autorisations"
 
-#: admin-permissions.php:152 permission-requests.php:33
-#: permission-requests.php:46
+#: admin-permissions.php:155 permission-requests.php:35
+#: permission-requests.php:48
 msgid "Access Requests"
 msgstr "Demandes d'accès"
 
-#: admin-permissions.php:168 admin-permissions.php:487
-#: permission-requests.php:281 admin-applications.php:57
+#: admin-permissions.php:171 admin-permissions.php:509
+#: permission-requests.php:316 admin-applications.php:57
 #: admin-applications.php:101 admin-applications.php:250
 #: developer-dashboard.php:303
 msgid "Pending"
 msgstr "En attente"
 
-#: admin-permissions.php:189 admin-permissions.php:490
-#: permission-requests.php:284 admin-applications.php:90
+#: admin-permissions.php:192 admin-permissions.php:512
+#: permission-requests.php:319 admin-applications.php:90
 #: admin-applications.php:120 admin-applications.php:253
 #: developer-dashboard.php:306
 msgid "Revoked"
 msgstr "Révoqué"
 
-#: admin-permissions.php:235
+#: admin-permissions.php:238
 msgid "Review Access Request"
 msgstr "Examiner la demande d'accès"
 
-#: admin-permissions.php:246 admin-applications.php:193
+#: admin-permissions.php:249 admin-applications.php:193
 msgid "Notes"
 msgstr "Notes"
 
-#: admin-permissions.php:247 permission-requests.php:154
+#: admin-permissions.php:250 permission-requests.php:156
 #: admin-applications.php:194 admin-changes.php:220
 msgid "optional"
 msgstr "facultatif"
 
-#: admin-permissions.php:252 admin-applications.php:199
+#: admin-permissions.php:255 admin-applications.php:199
 msgid "Add notes about your decision..."
 msgstr "Ajoute des notes sur ta décision..."
 
-#: admin-permissions.php:260 admin-applications.php:216 admin-changes.php:239
+#: admin-permissions.php:263 admin-applications.php:216 admin-changes.php:239
 msgid "Approve"
 msgstr "Approuver"
 
-#: admin-permissions.php:263 admin-applications.php:210 admin-changes.php:236
+#: admin-permissions.php:266 admin-applications.php:210 admin-changes.php:236
 msgid "Reject"
 msgstr "Rejeter"
 
-#: admin-permissions.php:266 admin-permissions.php:407
+#: admin-permissions.php:269 admin-permissions.php:411
 #: admin-applications.php:213 developer-dashboard.php:271
 msgid "Revoke"
 msgstr "Révoquer"
 
-#: admin-permissions.php:278 admin-applications.php:172 admin-users.php:92
+#: admin-permissions.php:281 admin-applications.php:172 admin-users.php:92
 #: admin-changes.php:192 change-requests.php:82
 msgid "Back to Dashboard"
 msgstr "Retour au tableau de bord"
 
-#: admin-permissions.php:295 admin-users.php:215 admin-users.php:292
+#: admin-permissions.php:298 admin-users.php:215 admin-users.php:292
 #: user-profile.php:113
 msgid "User ID"
 msgstr "ID utilisateur"
 
-#: admin-permissions.php:297
+#: admin-permissions.php:300
 msgid "Enter user ID..."
 msgstr "Saisir l'ID utilisateur..."
 
-#: admin-permissions.php:302 permission-requests.php:232
+#: admin-permissions.php:305 permission-requests.php:250
 msgid "Select relation..."
 msgstr "Sélectionner la relation..."
 
-#: admin-permissions.php:309 admin-permissions.php:430
-#: admin-permissions.php:464 permission-requests.php:234
+#: admin-permissions.php:311 admin-permissions.php:434
+#: admin-permissions.php:486 permission-requests.php:252
 msgid "Calendar scope"
 msgstr "Portée du calendrier"
 
-#: admin-permissions.php:311 permission-requests.php:236
+#: admin-permissions.php:313 permission-requests.php:254
 msgid "Select calendar scope..."
 msgstr "Sélectionner la portée du calendrier..."
 
-#: admin-permissions.php:328 admin-permissions.php:431
-#: admin-permissions.php:465 permission-requests.php:235
+#: admin-permissions.php:330 admin-permissions.php:435
+#: admin-permissions.php:487 permission-requests.php:253
 msgid "Calendar ID"
 msgstr "ID du calendrier"
 
-#: admin-permissions.php:331 admin-permissions.php:432
-#: admin-permissions.php:466 permission-requests.php:237
+#: admin-permissions.php:333 admin-permissions.php:436
+#: admin-permissions.php:488 permission-requests.php:255
 msgid "Select calendar ID..."
 msgstr "Sélectionner l'ID du calendrier..."
 
-#: admin-permissions.php:355 admin-permissions.php:368
+#: admin-permissions.php:357 admin-permissions.php:370
 msgid "Revoke Permission"
 msgstr "Révoquer la permission"
 
-#: admin-permissions.php:385
+#: admin-permissions.php:389
 msgid "No permissions found."
 msgstr "Aucune permission trouvée."
 
-#: admin-permissions.php:386
+#: admin-permissions.php:390
 msgid "Failed to load permissions. Please try again later."
 msgstr "Échec du chargement des permissions. Réessaie plus tard."
 
-#: admin-permissions.php:387
+#: admin-permissions.php:391
 msgid "Permission granted successfully."
 msgstr "Permission accordée avec succès."
 
-#: admin-permissions.php:388
+#: admin-permissions.php:392
 msgid "Permission revoked successfully."
 msgstr "Permission révoquée avec succès."
 
-#: admin-permissions.php:389
+#: admin-permissions.php:393
 msgid "Failed to grant permission. Please try again."
 msgstr "Échec de l'octroi de la permission. Réessaie."
 
-#: admin-permissions.php:390
+#: admin-permissions.php:394
 msgid "Failed to revoke permission. Please try again."
 msgstr "Échec de la révocation de la permission. Réessaie."
 
-#: admin-permissions.php:391
+#: admin-permissions.php:395
 msgid "Granting..."
 msgstr "Octroi en cours..."
 
-#: admin-permissions.php:392 admin-users.php:353
+#: admin-permissions.php:396 admin-users.php:353
 msgid "Revoking..."
 msgstr "Révocation en cours..."
 
-#: admin-permissions.php:393
+#: admin-permissions.php:397
 msgid "Are you sure you want to revoke this permission?"
 msgstr "Es-tu sûr de vouloir révoquer cette permission ?"
 
@@ -3418,226 +3577,267 @@ msgstr "Es-tu sûr de vouloir révoquer cette permission ?"
 #. granted TO — an OpenFGA tuple subject, i.e. a user. Not the thing the permission
 #. applies to: that is the adjacent "Object Type" / "Object ID". Several locales have
 #. rendered this as "topic" or "email subject line", which collides with those columns.
-#: admin-permissions.php:400
+#: admin-permissions.php:404
 msgid "Subject"
 msgstr "Sujet"
 
-#: admin-permissions.php:412 admin-tests.php:128 permission-requests.php:247
+#: admin-permissions.php:416 admin-tests.php:138 permission-requests.php:282
 msgid "Test Definition"
 msgstr "Définition du test"
 
-#: admin-permissions.php:419 permission-requests.php:258
+#: admin-permissions.php:423 permission-requests.php:293
 msgid "Roman Rite"
 msgstr "Rite romain"
 
-#: admin-permissions.php:420 permission-requests.php:259 sanctorale.php:318
+#: admin-permissions.php:424 permission-requests.php:294 sanctorale.php:318
 msgid "Ambrosian Rite"
 msgstr "Rite ambrosien"
 
-#: admin-permissions.php:422 permission-requests.php:262
+#: admin-permissions.php:426 permission-requests.php:297
 msgid "Sanctorale — Editio Typica 1970"
 msgstr "Sanctorale — Editio Typica 1970"
 
-#: admin-permissions.php:423 permission-requests.php:264
+#: admin-permissions.php:427 permission-requests.php:299
 msgid "Sanctorale — Editio Typica 2002"
 msgstr "Sanctorale — Editio Typica 2002"
 
-#: admin-permissions.php:424 permission-requests.php:266
+#: admin-permissions.php:428 permission-requests.php:301
 msgid "Sanctorale — Editio Typica 2008"
 msgstr "Sanctorale — Editio Typica 2008"
 
-#: admin-permissions.php:425 permission-requests.php:268
+#: admin-permissions.php:429 permission-requests.php:303
 msgid "Sanctorale — Editio Typica 2024"
 msgstr "Sanctorale — Édition Typica 2024"
 
-#: admin-permissions.php:426 permission-requests.php:270
+#: admin-permissions.php:430 permission-requests.php:305
 msgid "Decrees of the Dicastery for Divine Worship"
 msgstr "Décrets du Dicastère pour le Culte Divin"
 
-#: admin-permissions.php:427 permission-requests.php:271
+#: admin-permissions.php:431 permission-requests.php:306
 msgid "Supported locales"
 msgstr "Locales prises en charge"
 
-#: admin-permissions.php:428
+#: admin-permissions.php:432
 msgid "Enter object ID..."
 msgstr "Saisir l'ID de l'objet..."
 
-#: admin-permissions.php:429
+#: admin-permissions.php:433
 msgid "Select object ID..."
 msgstr "Sélectionner l'ID de l'objet..."
 
-#: admin-permissions.php:434 admin-permissions.php:468
-#: permission-requests.php:239
+#: admin-permissions.php:438 admin-permissions.php:490
+#: permission-requests.php:257
 msgid "Could not load calendars — try reloading the page"
 msgstr "Impossible de charger les calendriers — essayez de recharger la page"
 
-#: admin-permissions.php:435 permission-requests.php:240
+#: admin-permissions.php:439 permission-requests.php:258
 msgid "Existing national calendars"
 msgstr "Calendriers nationaux existants"
 
-#: admin-permissions.php:437 permission-requests.php:242
+#: admin-permissions.php:441 permission-requests.php:260
 msgid "New national calendars (not yet created)"
 msgstr "Nouveaux calendriers nationaux (pas encore créés)"
 
-#: admin-permissions.php:446
+#: admin-permissions.php:443 permission-requests.php:262
+msgid "Existing wider regions"
+msgstr "Régions existantes plus vastes"
+
+#: admin-permissions.php:445 permission-requests.php:264
+msgid "New wider regions (not yet created)"
+msgstr "Nouvelles régions plus vastes (pas encore créées)"
+
+#: admin-permissions.php:448 permission-requests.php:267
+#, php-format
+msgid "%d nations"
+msgstr "%d nations"
+
+#: admin-permissions.php:450
+msgid "Nation"
+msgstr "Nation"
+
+#: admin-permissions.php:451 permission-requests.php:269
+msgid "Select a nation..."
+msgstr "Choisis une nation..."
+
+#: admin-permissions.php:452 permission-requests.php:270
+msgid "Select a diocese..."
+msgstr "Choisis un diocèse..."
+
+#: admin-permissions.php:453 permission-requests.php:271
+msgid "Existing diocesan calendars"
+msgstr "calendriers diocésains existants"
+
+#: admin-permissions.php:455 permission-requests.php:273
+msgid "New diocesan calendars (not yet created)"
+msgstr "Nouveaux calendriers diocésains (pas encore créés)"
+
+#: admin-permissions.php:457 permission-requests.php:275
+msgid ""
+"The dioceses without a calendar yet could not be loaded; only existing "
+"calendars are listed."
+msgstr ""
+"Les diocèses sans calendrier n'ont pas encore pu être chargés ; seuls les "
+"calendriers existants sont affichés."
+
+#: admin-permissions.php:468
 msgid "All fields are required."
 msgstr "Tous les champs sont obligatoires."
 
-#: admin-permissions.php:450
+#: admin-permissions.php:472
 msgid "No requests found."
 msgstr "Aucune demande trouvée."
 
-#: admin-permissions.php:451
+#: admin-permissions.php:473
 msgid "No pending access requests. All caught up!"
 msgstr "Aucune demande d'accès en attente. Tout est à jour !"
 
-#: admin-permissions.php:452
+#: admin-permissions.php:474
 msgid "Failed to load access requests. Please try again later."
 msgstr "Échec du chargement des demandes d'accès. Réessaie plus tard."
 
-#: admin-permissions.php:453 admin-applications.php:232 admin-changes.php:259
+#: admin-permissions.php:475 admin-applications.php:232 admin-changes.php:259
 #: change-requests.php:118
 msgid "Processing..."
 msgstr "Traitement en cours..."
 
-#: admin-permissions.php:454
+#: admin-permissions.php:476
 msgid "Access request approved successfully."
 msgstr "Demande d'accès approuvée avec succès."
 
-#: admin-permissions.php:455
+#: admin-permissions.php:477
 msgid "Access request rejected."
 msgstr "Demande d'accès rejetée."
 
-#: admin-permissions.php:456
+#: admin-permissions.php:478
 msgid "Access revoked successfully."
 msgstr "Accès révoqué avec succès."
 
-#: admin-permissions.php:457 admin-applications.php:236
+#: admin-permissions.php:479 admin-applications.php:236
 msgid "Failed to process request. Please try again."
 msgstr "Échec du traitement de la demande. Réessaie."
 
-#: admin-permissions.php:460 permission-requests.php:223
+#: admin-permissions.php:482 permission-requests.php:241
 msgid "Role"
 msgstr "Rôle"
 
-#: admin-permissions.php:461 permission-requests.php:135
-#: permission-requests.php:224 admin-dashboard.php:110 user-profile.php:178
+#: admin-permissions.php:483 permission-requests.php:137
+#: permission-requests.php:242 admin-dashboard.php:110 user-profile.php:178
 msgid "Permissions"
 msgstr "Autorisations"
 
-#: admin-permissions.php:473 permission-requests.php:153
-#: permission-requests.php:226
+#: admin-permissions.php:495 permission-requests.php:155
+#: permission-requests.php:244
 msgid "Justification"
 msgstr "Justification"
 
-#: admin-permissions.php:474 permission-requests.php:168
+#: admin-permissions.php:496 permission-requests.php:170
 msgid "Credentials"
 msgstr "Identifiants"
 
-#: admin-permissions.php:475 sanctorale.php:263
+#: admin-permissions.php:497 sanctorale.php:263
 msgid "Date"
 msgstr "Date"
 
-#: admin-permissions.php:478 admin-applications.php:247
+#: admin-permissions.php:500 admin-applications.php:247
 msgid "Reviewed At"
 msgstr "Revu le"
 
-#: admin-permissions.php:479 permission-requests.php:227
+#: admin-permissions.php:501 permission-requests.php:245
 #: admin-applications.php:248
 msgid "Review Notes"
 msgstr "Notes de révision"
 
-#: admin-permissions.php:483 permission-requests.php:82
-#: permission-requests.php:273 admin-users.php:145
+#: admin-permissions.php:505 permission-requests.php:84
+#: permission-requests.php:308 admin-users.php:145
 msgid "Calendar Editor"
 msgstr "Éditeur de calendrier"
 
-#: admin-permissions.php:484 permission-requests.php:87
-#: permission-requests.php:274 admin-users.php:146
+#: admin-permissions.php:506 permission-requests.php:89
+#: permission-requests.php:309 admin-users.php:146
 msgid "Accuracy Test Editor"
 msgstr "Éditeur de test de précision"
 
-#: admin-tests.php:54
+#: admin-tests.php:64
 msgid "Create, edit, and delete liturgical accuracy test definitions."
 msgstr ""
 "Créer, modifier et supprimer les définitions des tests de précision "
 "liturgique."
 
-#: admin-tests.php:66
+#: admin-tests.php:76
 msgid "Filter by name"
 msgstr "Filtrer par nom"
 
-#: admin-tests.php:72
+#: admin-tests.php:82
 msgid "Filter by scope"
 msgstr "Filtrer par champ"
 
-#: admin-tests.php:75
+#: admin-tests.php:85
 msgid "USA, diocese id, ..."
 msgstr "États-Unis, id diocèse, ..."
 
 #. translators: "test" here is an accuracy-test definition checking the calendar produces the expected
 #. result, not a scientific experiment or an examination
-#: admin-tests.php:85
+#: admin-tests.php:95
 msgid "New Test"
 msgstr "Nouveau test"
 
 #. translators: accuracy-test definitions checking the calendar produces the expected results, not scientific experiments
 #. or examinations
-#: admin-tests.php:99
+#: admin-tests.php:109
 msgid "Tests"
 msgstr "Tests"
 
-#: admin-tests.php:109
+#: admin-tests.php:119
 msgid "Event"
 msgstr "Événement"
 
-#: admin-tests.php:110 admin-tests.php:140 developer-dashboard.php:166
+#: admin-tests.php:120 admin-tests.php:150 developer-dashboard.php:166
 #: developer-dashboard.php:273
 msgid "Scope"
 msgstr "Portée"
 
-#: admin-tests.php:111 temporale.php:138
+#: admin-tests.php:121 temporale.php:138
 msgid "Type"
 msgstr "Type"
 
-#: admin-tests.php:112
+#: admin-tests.php:122
 msgid "Years"
 msgstr "Années"
 
-#: admin-tests.php:160
+#: admin-tests.php:170
 msgid "Liturgical event"
 msgstr "Événement liturgique"
 
-#: admin-tests.php:170
+#: admin-tests.php:180
 msgid "Base date"
 msgstr "Date de base"
 
-#: admin-tests.php:180
+#: admin-tests.php:190
 msgid "Test type"
 msgstr "Type de test"
 
-#: admin-tests.php:186
+#: admin-tests.php:196
 msgid "Exact date"
 msgstr "Date exacte"
 
-#: admin-tests.php:191
+#: admin-tests.php:201
 msgid "Exact since year"
 msgstr "Exact depuis l'année"
 
-#: admin-tests.php:196
+#: admin-tests.php:206
 msgid "Exact until year"
 msgstr "Exact jusqu'à l'année"
 
-#: admin-tests.php:212
+#: admin-tests.php:222
 msgid "Year range"
 msgstr "Plage d'années"
 
 #. translators: year-grid legend: the test asserts the liturgical event DOES occur in that year
-#: admin-tests.php:226
+#: admin-tests.php:236
 msgid "event expected"
 msgstr "événement attendu"
 
-#: admin-tests.php:228
+#: admin-tests.php:238
 msgid "falls on a Sunday"
 msgstr "tombe un dimanche"
 
@@ -3645,113 +3845,113 @@ msgstr "tombe un dimanche"
 #. expected to exist, for an "until" test the last. Years beyond it are asserted NOT to
 #. occur. A domain term - not a hinge, turning point or midpoint. Use ONE term for it
 #. throughout
-#: admin-tests.php:234
+#: admin-tests.php:244
 msgid "pivot year"
 msgstr "année pivot"
 
 #. translators: year-grid legend: the test asserts the liturgical event does NOT occur in that year
-#: admin-tests.php:238
+#: admin-tests.php:248
 msgid "event not expected"
 msgstr "événement non attendu"
 
 #. translators: year-grid legend for years left out of the test. "click" is the mouse action - it
 #. needs translating too
-#: admin-tests.php:243
+#: admin-tests.php:253
 msgid "excluded — click to restore"
 msgstr "exclu — cliquez pour restaurer"
 
-#: admin-tests.php:251
+#: admin-tests.php:261
 msgid "Per-year assertions"
 msgstr "Assertions par année"
 
-#: admin-tests.php:275
+#: admin-tests.php:285
 msgid "Assertion comment"
 msgstr "Commentaire d'assertion"
 
-#: admin-tests.php:289
+#: admin-tests.php:299
 msgid "Save comment"
 msgstr "Enregistrer le commentaire"
 
-#: admin-tests.php:302
+#: admin-tests.php:312
 msgid "Delete Test"
 msgstr "Supprimer le test"
 
-#: admin-tests.php:333
+#: admin-tests.php:343
 msgid "No tests found."
 msgstr "Aucun test trouvé."
 
-#: admin-tests.php:334
+#: admin-tests.php:344
 msgid "Failed to load tests. Please try again later."
 msgstr "Échec du chargement des tests. Veuillez réessayer plus tard."
 
-#: admin-tests.php:335
+#: admin-tests.php:345
 msgid "Test created successfully."
 msgstr "Test créé avec succès."
 
-#: admin-tests.php:336
+#: admin-tests.php:346
 msgid "Test updated successfully."
 msgstr "Test mis à jour avec succès."
 
-#: admin-tests.php:337
+#: admin-tests.php:347
 msgid "Test deleted successfully."
 msgstr "Test supprimé avec succès."
 
-#: admin-tests.php:345
+#: admin-tests.php:355
 msgid "Saving..."
 msgstr "Enregistrement..."
 
-#: admin-tests.php:346
+#: admin-tests.php:356
 msgid "Deleting..."
 msgstr "Suppression..."
 
-#: admin-tests.php:349
+#: admin-tests.php:359
 #, php-format
 msgid "Are you sure you want to delete the test \"%s\"?"
 msgstr "Êtes-vous sûr de vouloir supprimer le test \"%s\" ?"
 
-#: admin-tests.php:353
+#: admin-tests.php:363
 msgid "Please fill in all required fields."
 msgstr "Veuillez remplir tous les champs requis."
 
-#: admin-tests.php:355
+#: admin-tests.php:365
 msgid "A test with that name already exists."
 msgstr "Un test portant ce nom existe déjà."
 
 #. translators: action label for the same boundary year; use the same term as the "pivot year" legend chip
-#: admin-tests.php:358
+#: admin-tests.php:368
 msgid "set pivot year"
 msgstr "définir l'année pivot"
 
 #. translators: an assertion is one expected-result check for a single year of the test
-#: admin-tests.php:362
+#: admin-tests.php:372
 msgid "toggle assertion"
 msgstr "basculer l'assertion"
 
-#: admin-tests.php:364
+#: admin-tests.php:374
 msgid "remove"
 msgstr "supprimer"
 
 #. translators: %1$s is a year, %2$s is the name of a liturgical event. Keep both placeholders and their order
-#: admin-tests.php:367
+#: admin-tests.php:377
 #, php-format
 msgid "In the year %1$s, %2$s falls on a Sunday"
 msgstr "En l'année %1$s, %2$s tombe un dimanche"
 
 #. translators: %s is a year, e.g. 2015. "click" is the mouse action - it needs translating too
-#: admin-tests.php:371
+#: admin-tests.php:381
 #, php-format
 msgid "%s excluded — click to restore"
 msgstr "%s exclu — cliquez pour restaurer"
 
-#: admin-tests.php:373
+#: admin-tests.php:383
 msgid "Test name:"
 msgstr "Nom du test :"
 
-#: admin-tests.php:374
+#: admin-tests.php:384
 msgid "Select a valid liturgical event from the list."
 msgstr "Sélectionnez un événement liturgique valide dans la liste."
 
-#: permission-requests.php:51
+#: permission-requests.php:53
 msgid ""
 "Request access to the Liturgical Calendar system. Select a role and specify "
 "the resource permissions you need. Your request will be reviewed by an "
@@ -3761,23 +3961,23 @@ msgstr ""
 "spécifie les autorisations de ressources dont tu as besoin. Ta demande sera "
 "examinée par un administrateur."
 
-#: permission-requests.php:61
+#: permission-requests.php:63
 msgid "Your Access Requests"
 msgstr "Tes demandes d'accès"
 
-#: permission-requests.php:75
+#: permission-requests.php:77
 msgid "Request Access"
 msgstr "Demander l'accès"
 
-#: permission-requests.php:83
+#: permission-requests.php:85
 msgid "Edit national and diocesan calendar data."
 msgstr "Modifier les données du calendrier national et diocésain."
 
-#: permission-requests.php:88
+#: permission-requests.php:90
 msgid "Create and manage accuracy tests."
 msgstr "Créer et gérer des tests de précision."
 
-#: permission-requests.php:94
+#: permission-requests.php:96
 msgid ""
 "API consumer. Request access to all resources you may need — individual API "
 "keys can be scoped further at generation time."
@@ -3786,85 +3986,85 @@ msgstr ""
 "avoir besoin - les clés API individuelles peuvent être davantage spécifiées "
 "lors de la génération."
 
-#: permission-requests.php:101
+#: permission-requests.php:103
 msgid "Select a Role"
 msgstr "Sélectionner un rôle"
 
-#: permission-requests.php:138
+#: permission-requests.php:140
 msgid ""
 "Specify the resources you need access to. Add one or more permission rows."
 msgstr ""
 "Indique les ressources auxquelles tu as besoin d'accéder. Ajoute une ou "
 "plusieurs lignes de permission."
 
-#: permission-requests.php:147
+#: permission-requests.php:149
 msgid "Add Permission"
 msgstr "Ajouter une permission"
 
-#: permission-requests.php:155
+#: permission-requests.php:157
 msgid ""
 "Providing a justification helps administrators review your request faster."
 msgstr ""
 "Fournir une justification aide les administrateurs à examiner ta demande "
 "plus rapidement."
 
-#: permission-requests.php:162
+#: permission-requests.php:164
 msgid "Please describe why you need this access..."
 msgstr "Décris pourquoi tu as besoin de cet accès..."
 
-#: permission-requests.php:169
+#: permission-requests.php:171
 msgid ""
 "Optionally provide any credentials or references that support your request."
 msgstr ""
 "Fournis éventuellement toutes les références ou justificatifs qui appuient "
 "ta demande."
 
-#: permission-requests.php:176
+#: permission-requests.php:178
 msgid "Any relevant credentials or references..."
 msgstr "Tous justificatifs ou références pertinents..."
 
-#: permission-requests.php:183 permission-requests.php:214
+#: permission-requests.php:185 permission-requests.php:221
 #: developer-dashboard.php:138 developer-dashboard.php:322
 msgid "Submit Request"
 msgstr "Soumettre la demande"
 
-#: permission-requests.php:192
+#: permission-requests.php:194
 msgid "Back to Profile"
 msgstr "Retour au profil"
 
-#: permission-requests.php:209
+#: permission-requests.php:216
 msgid "You have not made any access requests yet."
 msgstr "Tu n'as pas encore fait de demandes d'accès."
 
-#: permission-requests.php:210
+#: permission-requests.php:217
 msgid "Could not load your existing requests."
 msgstr "Impossible de charger tes demandes existantes."
 
-#: permission-requests.php:211
+#: permission-requests.php:218
 msgid "Your access request has been submitted successfully."
 msgstr "Ta demande d'accès a été soumise avec succès."
 
-#: permission-requests.php:212
+#: permission-requests.php:219
 msgid "Failed to submit request. Please try again."
 msgstr "Échec de la soumission de la demande. Réessaie."
 
-#: permission-requests.php:213
+#: permission-requests.php:220
 msgid "Submitting..."
 msgstr "En cours de soumission..."
 
-#: permission-requests.php:215
+#: permission-requests.php:222
 msgid "Resubmit"
 msgstr "Soumettre à nouveau"
 
-#: permission-requests.php:216
+#: permission-requests.php:223
 msgid "Rejection reason"
 msgstr "Raison du refus"
 
-#: permission-requests.php:217
+#: permission-requests.php:224
 msgid "Please select a role."
 msgstr "Sélectionne un rôle."
 
-#: permission-requests.php:218
+#: permission-requests.php:225
 msgid ""
 "Each permission row must have a calendar scope, calendar ID, and relation "
 "filled in."
@@ -3872,12 +4072,12 @@ msgstr ""
 "Chaque ligne d'autorisation doit comporter un champ de portée du calendrier, "
 "un ID de calendrier et un champ de relation remplis."
 
-#: permission-requests.php:219
+#: permission-requests.php:226
 #, php-format
 msgid "You have reached the maximum of %1$d permissions per request."
 msgstr "Tu as atteint le maximum de %1$d autorisations par demande."
 
-#: permission-requests.php:220
+#: permission-requests.php:227
 #, php-format
 msgid ""
 "This request had more than %1$d permissions; only the first %2$d are shown."
@@ -3885,11 +4085,53 @@ msgstr ""
 "Cette demande avait plus de %1$d autorisations ; seules les %2$d premières "
 "sont affichées."
 
-#: permission-requests.php:221
+#: permission-requests.php:228
 msgid "Unknown error"
 msgstr "Erreur inconnue"
 
 #: permission-requests.php:229
+msgid "You already have this access (or higher)."
+msgstr "Vous avez déjà cet accès (ou un niveau supérieur)."
+
+#: permission-requests.php:230
+msgid "Already covered by another permission in this request."
+msgstr "Déjà couvert par une autre autorisation dans cette demande."
+
+#: permission-requests.php:231
+msgid "Not needed."
+msgstr "Non nécessaire."
+
+#: permission-requests.php:232
+msgid "These permissions were left out of your request:"
+msgstr "Ces autorisations n'ont pas été incluses dans votre demande :"
+
+#: permission-requests.php:233
+msgid ""
+"You already have, or have already requested, all of these permissions. "
+"Nothing was submitted."
+msgstr ""
+"Vous possédez déjà toutes ces autorisations, ou vous les avez déjà "
+"demandées. Rien n'a été soumis."
+
+#: permission-requests.php:234
+msgid ""
+"You already have these permissions; your request asks for the role only."
+msgstr ""
+"Vous possédez déjà ces autorisations ; votre demande ne porte que sur le "
+"rôle."
+
+#: permission-requests.php:237
+msgid ""
+"Viewer access can no longer be requested: read access comes with the role. "
+"The viewer rows were removed; request editor or admin on the calendars you "
+"want to work on."
+msgstr ""
+"L'accès en tant que Lecteur ne peut plus être demandé : l'accès en lecture "
+"est inclus dans ce rôle. Les lignes des lecteurs ont été supprimées ; "
+"demandez à un éditeur ou à un administrateur les calendriers sur lesquels "
+"vous souhaitez travailler."
+
+#: permission-requests.php:247
 msgid "Reviewed"
 msgstr "Révisé"
 
@@ -3933,10 +4175,6 @@ msgstr "Application"
 msgid "Website"
 msgstr "Site web"
 
-#: admin-applications.php:242 developer-dashboard.php:279
-msgid "Created"
-msgstr "Créé"
-
 #: admin-applications.php:246
 msgid "Reviewed By"
 msgstr "Revu par"
@@ -3967,8 +4205,8 @@ msgstr ""
 "Gérer les données du calendrier liturgique, les informations du Missel "
 "Romain, et les calendriers régionaux."
 
-#: admin-dashboard.php:65 admin-dashboard.php:150 admin-dashboard.php:169
-#: admin-dashboard.php:179
+#: admin-dashboard.php:65 admin-dashboard.php:150 admin-dashboard.php:166
+#: admin-dashboard.php:176
 msgid "Administration"
 msgstr "Administration"
 
@@ -4004,25 +4242,25 @@ msgstr ""
 "Voir quelles localisations sont officiellement prises en charge, et si un "
 "candidat a tout ce dont il a besoin"
 
-#: admin-dashboard.php:188
+#: admin-dashboard.php:185
 msgid "Access Requests to Review"
 msgstr "Demandes d'accès à examiner"
 
-#: admin-dashboard.php:190
+#: admin-dashboard.php:187
 msgid "Review and approve access requests for the resources you administer"
 msgstr ""
 "Examine et approuve les demandes d'accès aux ressources que tu administres"
 
-#: admin-dashboard.php:206
+#: admin-dashboard.php:203
 msgid "Your Contributions"
 msgstr "Vos contributions"
 
-#: admin-dashboard.php:215 admin-changes.php:195 change-requests.php:37
+#: admin-dashboard.php:212 admin-changes.php:195 change-requests.php:37
 #: change-requests.php:50 change-requests.php:66
 msgid "Your Change Requests"
 msgstr "Vos demandes de modification"
 
-#: admin-dashboard.php:219
+#: admin-dashboard.php:216
 msgid ""
 "Track the source data changes you have proposed, read what became of them, "
 "and withdraw one that is still awaiting review"
@@ -5409,6 +5647,15 @@ msgstr "La session expire dans 30 secondes"
 #: user-profile.php:407
 msgid "Session expired"
 msgstr "Session expirée"
+
+#~ msgid ""
+#~ "if data for a Wider Region that regards this National Calendar has "
+#~ "already been defined, you can associate the Wider Region data with the "
+#~ "National Calendar here"
+#~ msgstr ""
+#~ "si des données pour une région élargie concernant ce calendrier national "
+#~ "ont déjà été définies, tu peux associer les données de la région élargie "
+#~ "avec le calendrier national ici"
 
 #~ msgid "0 — Weekday"
 #~ msgstr "0 — Jour de la semaine"
