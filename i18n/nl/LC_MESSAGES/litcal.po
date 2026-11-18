@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-11-18 03:07+0000\n"
-"PO-Revision-Date: 2026-10-30 16:55+0000\n"
+"PO-Revision-Date: 2026-11-19 03:57+0000\n"
 "Last-Translator: OpenAI <noreply-mt-openai@weblate.org>\n"
 "Language-Team: Dutch <https://translate.johnromanodorazio.com/projects/"
 "liturgical-calendar/frontend/nl/>\n"
@@ -1664,10 +1664,8 @@ msgstr "Ontbrekende vertalingen"
 
 #. translators: note shown next to a disabled Save button of a diocesan or wider region calendar that has no events yet
 #: includes/messages.php:61
-#, fuzzy
-#| msgid "New liturgical event from existing"
 msgid "Add at least one liturgical event before saving."
-msgstr "Nieuwe liturgische gebeurtenis vanuit bestaande"
+msgstr "Voeg ten minste één liturgisch evenement toe voordat je opslaat."
 
 #. translators: error message when translations are missing. %s is the locale code (e.g., "en_US")
 #: includes/messages.php:67
