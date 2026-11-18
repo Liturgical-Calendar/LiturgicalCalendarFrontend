@@ -141,8 +141,12 @@ const refreshMissingEventsRule = () => {
         }
     }
     if (note) {
-        // Only once a calendar is chosen: before that the whole form is inert anyway.
-        note.hidden = !(blocked && (API.key || diocesanButton));
+        // Only once a calendar is chosen: before that the whole form is inert anyway. On the
+        // diocesan page that means a diocese the list knows, the same test that re-enables Save.
+        const calendarChosen = diocesanButton
+            ? Boolean(findDioceseOption(document.getElementById('diocesanCalendarDioceseName')?.value ?? ''))
+            : Boolean(API.key);
+        note.hidden = !(blocked && calendarChosen);
     }
 };
 
