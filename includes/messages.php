@@ -57,6 +57,8 @@ $messages = [
     'Pending Review'                                  => _('Pending review'),
     /** translators: notification title when translations are missing for a locale */
     'Missing Translations'                            => _('Missing Translations'),
+    /** translators: note shown next to a disabled Save button of a diocesan or wider region calendar that has no events yet */
+    'Add at least one liturgical event before saving' => _('Add at least one liturgical event before saving.'),
 
     // =========================================================================
     // Translation-related error messages

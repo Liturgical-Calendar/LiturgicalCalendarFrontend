@@ -57,6 +57,8 @@ const FIXTURE_HTML = `
     <select id="diocesanCalendarTimezone"><option value="America/New_York" selected>America/New_York</option></select>
     <input type="text" id="diocesanCalendarGroup" value="">
 
+    <div class="carousel-item"><form><div class="row"><input class="litEventName" value="Saint Testville" data-valuewas=""></div></form></div>
+
     <form id="diocesanOverridesForm">
         <select id="diocesanCalendarOverrideEpiphany"><option value="" selected></option></select>
         <select id="diocesanCalendarOverrideAscension"><option value="" selected></option></select>
