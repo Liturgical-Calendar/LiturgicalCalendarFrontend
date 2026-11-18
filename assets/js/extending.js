@@ -118,6 +118,10 @@ const refreshMissingEventsRule = () => {
     const regionalButton = document.querySelector('.serializeRegionalNationalData');
     const diocesanButton = document.getElementById('saveDiocesanCalendar_btn');
     const authenticated = typeof Auth !== 'undefined' && Auth.isAuthenticated();
+    // A diocese the list knows. Not the empty name: #DiocesesList starts with a placeholder
+    // `<option value="">`, which findDioceseOption('') would match.
+    const dioceseName = document.getElementById('diocesanCalendarDioceseName')?.value ?? '';
+    const dioceseChosen = dioceseName !== '' && Boolean(findDioceseOption(dioceseName));
     let blocked = false;
 
     if (regionalButton && regionalButton.dataset.category === 'widerregion') {
@@ -136,16 +140,14 @@ const refreshMissingEventsRule = () => {
         diocesanButton.dataset.missingEvents = blocked ? '1' : '';
         if (blocked) {
             diocesanButton.disabled = true;
-        } else if (wasBlocking && authenticated && findDioceseOption(document.getElementById('diocesanCalendarDioceseName')?.value ?? '')) {
+        } else if (wasBlocking && authenticated && dioceseChosen) {
             diocesanButton.disabled = false;
         }
     }
     if (note) {
         // Only once a calendar is chosen: before that the whole form is inert anyway. On the
-        // diocesan page that means a diocese the list knows, the same test that re-enables Save.
-        const calendarChosen = diocesanButton
-            ? Boolean(findDioceseOption(document.getElementById('diocesanCalendarDioceseName')?.value ?? ''))
-            : Boolean(API.key);
+        // diocesan page that means dioceseChosen, the same test that re-enables Save.
+        const calendarChosen = diocesanButton ? dioceseChosen : Boolean(API.key);
         note.hidden = !(blocked && calendarChosen);
     }
 };
